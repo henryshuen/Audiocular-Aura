@@ -64,6 +64,7 @@ AuraPEQ features a multi-protocol hardware communication layer that automaticall
 >
 > **FreeDSP (VID `0x35D8`, PID `0x1496`):** Powered by a Conexant (Freeman) DSP core. The application automatically renders a custom 9-band PEQ layout and communicates via Conexant's modular `Caf` package format. Coefficient updates are scaled using Q22 fixed-point math (`2^22`) and pushed to the DSP RAM (command `190`) for instant real-time tuning, or saved permanently to Flash (command `220` + commit sequence).
 
+Please do not use for JM98 MAX 2 , JM98 MAX (Cirrus Logic chips as it can cause irreversible problems in these devices)
 ---
 
 ## 🛠️ Quick Start (Local Development)
