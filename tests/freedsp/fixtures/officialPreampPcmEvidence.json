@@ -1,0 +1,455 @@
+{
+  "apkSha256": "04756b49acfea523758d86101c96c1824b7b209ae3a8836c07837088e795d2d5",
+  "scope": "Targeted PCM/master gain Java methods, callers and native setter after boundary scan; static only.",
+  "methods": [
+    {
+      "class": "Lcom/airoha/sdk/api/message/AirohaEQPayload;",
+      "method": "getMasterGain",
+      "descriptor": "()F",
+      "instructions": [
+        {
+          "offset": 0,
+          "opcode": "iget",
+          "args": "v0, v0, Lcom/airoha/sdk/api/message/AirohaEQPayload;->leftGain F"
+        },
+        {
+          "offset": 4,
+          "opcode": "return",
+          "args": "v0"
+        }
+      ]
+    },
+    {
+      "class": "Lcom/airoha/sdk/api/message/AirohaEQPayload;",
+      "method": "setMasterGain",
+      "descriptor": "(F)V",
+      "instructions": [
+        {
+          "offset": 0,
+          "opcode": "iput",
+          "args": "v1, v0, Lcom/airoha/sdk/api/message/AirohaEQPayload;->leftGain F"
+        },
+        {
+          "offset": 4,
+          "opcode": "return-void",
+          "args": ""
+        }
+      ]
+    },
+    {
+      "class": "Lcom/moondroplab/moondrop/moondrop_app/native/PcmMixerNative$Companion;",
+      "method": "process",
+      "descriptor": "(J [[F [[F [F [F I)V",
+      "instructions": [
+        {
+          "offset": 0,
+          "opcode": "invoke-static/range",
+          "args": "v1 ... v7, Lcom/moondroplab/moondrop/moondrop_app/native/PcmMixerNative;->process(J [[F [[F [F [F I)V"
+        },
+        {
+          "offset": 6,
+          "opcode": "return-void",
+          "args": ""
+        }
+      ]
+    },
+    {
+      "class": "Lcom/moondroplab/moondrop/moondrop_app/native/PcmMixerNative$Companion;",
+      "method": "setGlobalGain",
+      "descriptor": "(J F)V",
+      "instructions": [
+        {
+          "offset": 0,
+          "opcode": "invoke-static",
+          "args": "v1, v2, v3, Lcom/moondroplab/moondrop/moondrop_app/native/PcmMixerNative;->setGlobalGain(J F)V"
+        },
+        {
+          "offset": 6,
+          "opcode": "return-void",
+          "args": ""
+        }
+      ]
+    }
+  ],
+  "pcmGainCallers": [
+    {
+      "class": "Lcom/moondroplab/moondrop/moondrop_app/native/PcmMixerNative$Companion;",
+      "method": "setGlobalGain",
+      "offset": 0,
+      "call": "v1, v2, v3, Lcom/moondroplab/moondrop/moondrop_app/native/PcmMixerNative;->setGlobalGain(J F)V"
+    }
+  ],
+  "pcmSymbols": [
+    "Java_com_moondroplab_moondrop_moondrop_1app_native_PcmMixerNative_create",
+    "Java_com_moondroplab_moondrop_moondrop_1app_native_PcmMixerNative_init",
+    "Java_com_moondroplab_moondrop_moondrop_1app_native_PcmMixerNative_process",
+    "Java_com_moondroplab_moondrop_moondrop_1app_native_PcmMixerNative_release",
+    "Java_com_moondroplab_moondrop_moondrop_1app_native_PcmMixerNative_setGlobalGain",
+    "Java_com_moondroplab_moondrop_moondrop_1app_native_PcmMixerNative_setGlobalRandomGainRange",
+    "Java_com_moondroplab_moondrop_moondrop_1app_native_PcmMixerNative_setGlobalRandomGainSmoothTime",
+    "Java_com_moondroplab_moondrop_moondrop_1app_native_PcmMixerNative_setNumSources",
+    "Java_com_moondroplab_moondrop_moondrop_1app_native_PcmMixerNative_setSourceGain",
+    "Java_com_moondroplab_moondrop_moondrop_1app_native_PcmMixerNative_writePcm16",
+    "pcm_mixer_init",
+    "pcm_mixer_porcess",
+    "pcm_mixer_set_globle_gain",
+    "pcm_mixer_set_globle_random_gain_range",
+    "pcm_mixer_set_globle_random_gain_smooth_time",
+    "pcm_mixer_set_num_sources",
+    "pcm_mixer_set_source_gain"
+  ],
+  "functions": [
+    {
+      "name": "pcm_mixer_set_globle_gain",
+      "address": 47584,
+      "size": 48,
+      "instructions": [
+        "b9e0: stp x29, x30, [sp, #-0x20]!",
+        "b9e4: str x19, [sp, #0x10]",
+        "b9e8: mov x29, sp",
+        "b9ec: fmov s1, #20.00000000",
+        "b9f0: mov x19, x0",
+        "b9f4: fdiv s1, s0, s1",
+        "b9f8: fmov s0, #10.00000000",
+        "b9fc: bl #0x14540",
+        "ba00: str s0, [x19, #4]",
+        "ba04: ldr x19, [sp, #0x10]",
+        "ba08: ldp x29, x30, [sp], #0x20",
+        "ba0c: ret "
+      ]
+    },
+    {
+      "name": "Java_com_moondroplab_moondrop_moondrop_1app_native_PcmMixerNative_setGlobalGain",
+      "address": 44192,
+      "size": 16,
+      "instructions": [
+        "aca0: cbz x2, #0xacac",
+        "aca4: mov x0, x2",
+        "aca8: b #0x144a0",
+        "acac: ret "
+      ]
+    }
+  ],
+  "pltTargets": [
+    {
+      "address": 83024,
+      "symbol": "__cxa_finalize"
+    },
+    {
+      "address": 83040,
+      "symbol": "calloc"
+    },
+    {
+      "address": 83056,
+      "symbol": "pcm_mixer_init"
+    },
+    {
+      "address": 83072,
+      "symbol": "free"
+    },
+    {
+      "address": 83088,
+      "symbol": "pcm_mixer_set_num_sources"
+    },
+    {
+      "address": 83104,
+      "symbol": "pcm_mixer_set_globle_gain"
+    },
+    {
+      "address": 83120,
+      "symbol": "pcm_mixer_set_source_gain"
+    },
+    {
+      "address": 83136,
+      "symbol": "pcm_mixer_set_globle_random_gain_range"
+    },
+    {
+      "address": 83152,
+      "symbol": "pcm_mixer_set_globle_random_gain_smooth_time"
+    },
+    {
+      "address": 83168,
+      "symbol": "_Znwm"
+    },
+    {
+      "address": 83184,
+      "symbol": "memset"
+    },
+    {
+      "address": 83200,
+      "symbol": "pcm_mixer_porcess"
+    },
+    {
+      "address": 83216,
+      "symbol": "_ZdlPvm"
+    },
+    {
+      "address": 83232,
+      "symbol": "__stack_chk_fail"
+    },
+    {
+      "address": 83248,
+      "symbol": "time"
+    },
+    {
+      "address": 83264,
+      "symbol": "powf"
+    },
+    {
+      "address": 83280,
+      "symbol": "tanhf"
+    },
+    {
+      "address": 83296,
+      "symbol": "__cxa_get_globals"
+    },
+    {
+      "address": 83312,
+      "symbol": "__cxa_get_globals_fast"
+    },
+    {
+      "address": 83328,
+      "symbol": "_ZSt14get_unexpectedv"
+    },
+    {
+      "address": 83344,
+      "symbol": "_ZSt9terminatev"
+    },
+    {
+      "address": 83360,
+      "symbol": "_ZSt13get_terminatev"
+    },
+    {
+      "address": 83376,
+      "symbol": "_ZSt15get_new_handlerv"
+    },
+    {
+      "address": 83392,
+      "symbol": "_ZNSt9exceptionD2Ev"
+    },
+    {
+      "address": 83408,
+      "symbol": "_ZNSt9exceptionD1Ev"
+    },
+    {
+      "address": 83424,
+      "symbol": "_ZNSt13bad_exceptionD1Ev"
+    },
+    {
+      "address": 83440,
+      "symbol": "_ZNSt9bad_allocD1Ev"
+    },
+    {
+      "address": 83456,
+      "symbol": "_ZNSt20bad_array_new_lengthD1Ev"
+    },
+    {
+      "address": 83472,
+      "symbol": "_ZNSt9bad_allocC1Ev"
+    },
+    {
+      "address": 83488,
+      "symbol": "_ZNSt9type_infoD2Ev"
+    },
+    {
+      "address": 83504,
+      "symbol": "_ZNSt9type_infoD1Ev"
+    },
+    {
+      "address": 83520,
+      "symbol": "_ZNSt8bad_castD1Ev"
+    },
+    {
+      "address": 83536,
+      "symbol": "_ZNSt10bad_typeidD1Ev"
+    },
+    {
+      "address": 83552,
+      "symbol": "__dynamic_cast"
+    },
+    {
+      "address": 83568,
+      "symbol": "malloc"
+    },
+    {
+      "address": 83584,
+      "symbol": "__cxa_allocate_exception"
+    },
+    {
+      "address": 83600,
+      "symbol": "__cxa_throw"
+    },
+    {
+      "address": 83616,
+      "symbol": "__cxa_begin_catch"
+    },
+    {
+      "address": 83632,
+      "symbol": "__cxa_end_catch"
+    },
+    {
+      "address": 83648,
+      "symbol": "_Znam"
+    },
+    {
+      "address": 83664,
+      "symbol": "_ZdlPv"
+    },
+    {
+      "address": 83680,
+      "symbol": "_ZdaPv"
+    },
+    {
+      "address": 83696,
+      "symbol": "_ZnwmSt11align_val_t"
+    },
+    {
+      "address": 83712,
+      "symbol": "posix_memalign"
+    },
+    {
+      "address": 83728,
+      "symbol": "_ZnamSt11align_val_t"
+    },
+    {
+      "address": 83744,
+      "symbol": "_ZdlPvSt11align_val_t"
+    },
+    {
+      "address": 83760,
+      "symbol": "_ZdaPvSt11align_val_t"
+    },
+    {
+      "address": 83776,
+      "symbol": "__emutls_get_address"
+    },
+    {
+      "address": 83792,
+      "symbol": "fwrite"
+    },
+    {
+      "address": 83808,
+      "symbol": "vfprintf"
+    },
+    {
+      "address": 83824,
+      "symbol": "fputc"
+    },
+    {
+      "address": 83840,
+      "symbol": "vasprintf"
+    },
+    {
+      "address": 83856,
+      "symbol": "android_set_abort_message"
+    },
+    {
+      "address": 83872,
+      "symbol": "openlog"
+    },
+    {
+      "address": 83888,
+      "symbol": "syslog"
+    },
+    {
+      "address": 83904,
+      "symbol": "closelog"
+    },
+    {
+      "address": 83920,
+      "symbol": "abort"
+    },
+    {
+      "address": 83936,
+      "symbol": "strcmp"
+    },
+    {
+      "address": 83952,
+      "symbol": "__cxa_init_primary_exception"
+    },
+    {
+      "address": 83968,
+      "symbol": "__cxa_rethrow"
+    },
+    {
+      "address": 83984,
+      "symbol": "pthread_mutex_lock"
+    },
+    {
+      "address": 84000,
+      "symbol": "pthread_mutex_unlock"
+    },
+    {
+      "address": 84016,
+      "symbol": "pthread_getspecific"
+    },
+    {
+      "address": 84032,
+      "symbol": "realloc"
+    },
+    {
+      "address": 84048,
+      "symbol": "pthread_once"
+    },
+    {
+      "address": 84064,
+      "symbol": "pthread_setspecific"
+    },
+    {
+      "address": 84080,
+      "symbol": "memcpy"
+    },
+    {
+      "address": 84096,
+      "symbol": "pthread_key_delete"
+    },
+    {
+      "address": 84112,
+      "symbol": "pthread_key_create"
+    },
+    {
+      "address": 84128,
+      "symbol": "getauxval"
+    },
+    {
+      "address": 84144,
+      "symbol": "__system_property_get"
+    },
+    {
+      "address": 84160,
+      "symbol": "strncmp"
+    },
+    {
+      "address": 84176,
+      "symbol": "fprintf"
+    },
+    {
+      "address": 84192,
+      "symbol": "fflush"
+    },
+    {
+      "address": 84208,
+      "symbol": "pthread_rwlock_wrlock"
+    },
+    {
+      "address": 84224,
+      "symbol": "pthread_rwlock_unlock"
+    },
+    {
+      "address": 84240,
+      "symbol": "dl_iterate_phdr"
+    },
+    {
+      "address": 84256,
+      "symbol": "pthread_rwlock_rdlock"
+    },
+    {
+      "address": 84272,
+      "symbol": "__errno"
+    },
+    {
+      "address": 84288,
+      "symbol": "syscall"
+    }
+  ]
+}

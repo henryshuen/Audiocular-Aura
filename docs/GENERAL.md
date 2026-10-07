@@ -420,3 +420,10 @@ Preserve original main UI and other DAC behavior. Add FreeDSP controls only with
 8. The Windows native HID helper is currently a verified transport requirement for FreeDSP because browser WebHID lacks host-initiated Input GET_REPORT. Keep this exception minimal and well documented; the helper remains transport-only.
 
 Current priorities: PEQ RAM is hardware PASS. Preamp is the highest-priority unresolved feature. Next research must seek a real FreeDSP global gain/preamp control, not emulate it with PEQ. Flash/persistence stays last.
+
+
+## M2U real preamp evidence boundary — 2026-10-08
+FreeDSP nine-band stereo PEQ RAM is Henry hardware PASS. Real global gain/preamp remains the highest-priority unresolved feature; Flash/persistence remains LAST. Never emulate preamp by modifying PEQ coefficients, allocating a PEQ slot, or silently changing Windows/app playback volume.
+USB Audio endpoint volume and DSP preamp are different claims: a standard volume control requires exact device descriptors, entity/interface/channel permissions and range; preamp/headroom additionally requires evidence of placement before the PEQ cascade. Neither OS volume behavior nor generic UAC support proves that placement.
+M2U found no HIGH/MEDIUM device-specific real-gain mapping. Keep normal Preamp/Auto Preamp disabled and native helper transport-only. No guessed CAF commands, Feature Unit IDs, brute-force USB requests or new hardware diagnostic are authorized by research alone.
+The existing UPSTREAM PR COMPATIBILITY RULE remains mandatory: before PR compare against upstream, remove temporary debug surfaces/redundant entry points, preserve original semantics/style, isolate verified device exceptions and minimize the native helper surface. Never globally alter other DAC behavior for FreeDSP convenience.

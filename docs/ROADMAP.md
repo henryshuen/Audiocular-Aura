@@ -2449,3 +2449,72 @@ Focused controls/editor/native-transport tests:51 PASS. Final verify.ps1: TypeSc
 - Shared files changed: src/fn.ts, src/main.ts, index.html (exact-FreeDSP UI guards/display only); four project docs.
 - Non-FreeDSP protocol code changed: NO.
 - CAF/native transport, command190, coefficients, mapping, RAM plan and Flash behavior changed: NO. Other-DAC control/reset regression mocks PASS.
+
+## M2U Preamp deep research — checkpoint 1
+Examined: existing M2T pinned APK evidence/57 official helper pairs/HID-only metadata; fresh public upstream Issue #3 and fork list; commit-pinned FreeDSP Studio, devicePEQ Conexant handler/capture and DacVolumeFix USB Audio source; USB-IF Audio1.0 specification.
+Verified: FreeDSP Studio routes35D8:1496 to gen1/baked preamp and scales an existing biquad numerator; its separate preamp register is gen2, not this device. This is excluded PEQ emulation, not a new global-gain command. devicePEQ capture contains non-byte integers and no replies, so its write-only claims are not primary USB capture evidence. Current local descriptor fixture is HID metadata only, not AudioControl/Feature Unit descriptors.
+Hypotheses: USB Audio Feature Unit volume is the remaining plausible non-CAF route; device-specific entity/control support and placement relative to DSP are unproved.
+Discarded: gen2 register transplant; public coefficient preamp as independent control; generic USB volume success as proof of pre-DSP headroom.
+Unresolved: full FreeDSP AudioControl topology/control/range, dedicated master gain CAF command.
+Next target: one additional targeted all-DEX call/data-flow and all-arm64 symbol/string scan, actual UAC topology evidence, upstream fork/history deltas. No hardware actions or speculative commands.
+
+
+### Research checkpoint — M2U boundary and native data-flow complete
+Examined: all DEX boundary calls (11,398 +487 classes), all36 arm64 ELF symbol/targeted-string inventories, nine Conexant JNI declarations; targeted PCM JNI/body/PLT resolution; cached Freeman command constructors and volume-button callbacks; refreshed upstream history/Issue3/forks; public implementations; USB-IF UAC1/UAC2 and Windows endpoint volume documentation.
+Verified facts: 23 relevant Android API boundary calls, five direct USB controlTransfer sites. Two vendor transfers are Comtrue type0x43/0xC3, requests0xA0/0xA1, index0x09A0; one is string GET_DESCRIPTOR; two are generic HID forwarding wrappers. No direct getRawDescriptors invocation found by this DEX pass. No recovered UAC volume request in these direct sites. PCM setter calls powf(10,gain/20) then stores the software mixer float. HID volume keys dispatch IUsbKeyEventListener callbacks, not a gain setter.
+Hypotheses: actual Feature Unit volume may offer independent attenuation; hidden Dart/FFI pregain routing may apply to a different supported device. Both lack an exact FreeDSP mapping.
+Discarded: JNI gain conversion as hardware transmission; software PCM gain as CAF preamp; generation2 pregain transplant; biquad numerator scaling as real preamp; host volume as proof of pre-PEQ headroom.
+Unresolved: exact1496 full USB Audio topology and writable controls; an official Dart-to-device pregain dispatch/call graph; firmware/SDK globalgain mapping.
+Next search target: exact-device descriptor/control evidence or an official1496 gain-transfer mapping. No guessed packet or hardware test. All requested major evidence classes have been checked within the documented scope; absence of a mapping is not proof of absent firmware capability.
+
+### M2U candidate evidence table
+| Source | Control / transport | Payload / selector / gain representation | Strength for exact1496 real preamp | Remaining unknown / decision |
+|---|---|---|---|---|
+| USB-IF Audio1/2; exact device registered as USB audio in public host log | Feature Unit volume / endpoint0 class control | CS=2; wValue=(2<<8)|channel; wIndex=(unitID<<8)|ACinterface; signed16 LE dB/256 | LOW device-specific; HIGH standard definition | Missing bcdADC, topology, permissions, entity/interface/channel IDs, range and pre/post DSP position; no harness |
+| Official libapp.so | setPreGain / getSpvPreGain / USB/BLE pregain debug strings; transport unassigned | No recovered exact1496 payload or scale | LOW | Dart AOT dispatch/dataflow unresolved; names alone not evidence of FreeDSP support |
+| Official PCM JNI/ELF | setGlobalGain / in-process PCM mixer | JNI(long handle,float gain); 10^(gain/20), store object+4 | HIGH software classification; rejected hardware candidate | Setter has no USB/HID call; software playback gain is outside requested preamp |
+| Official Conexant CommonUtilNative | convertGainIndex and fixed-point helpers / JNI arithmetic | Gain-index formulas / Q conversions, no transfer | HIGH rejected classification | No hardware command caller recovered; command190 Gain is coefficient exponent |
+| FreeDSP Studio exact35D8:1496 gen1 | baked preamp / CAF coefficient write | Multiply a selected biquad numerator by10^(preamp/20) | HIGH excluded emulation | No independent global-gain register in this implementation; does not prove firmware absence |
+| Hub_Moon Mini98D4/newer Hub; FreeDSP Studio gen2 | pregain / HID0x4B command0x23 | signed16 dB/256 in other-generation protocol | LOW for1496; reject transplant | Different IDs/report/protocol; no1496 mapping |
+| Airoha SDK get/setMasterGain | leftGain float / Airoha payload object | Float field, not Freeman CAF | Rejected | Other chip family; no bridge to exact FreeDSP |
+| DacVolumeFix generic USB Audio implementation | Feature Unit / class control | Parsed entities plus speculative fallbacks | LOW for1496 | Apple reports and expected CX31993 compatibility do not validate this FreeDSP; do not reuse brute-force fallbacks |
+| devicePEQ Conexant handler and capture | EQ90/220; deviceHandlesPregain=false | Derived arrays include values outside byte range; no reply capture | No real gain mapping | Not primary transfer evidence; no AudioControl descriptor |
+
+### Official CAF / packet inventory reviewed
+All57 existing helper TX/RX pairs:90x1,220x55,259x1. They are helper buffers, not a USB Audio endpoint0 capture. No distinct globalgain exchange can be identified from them.
+Cached official Freeman method constructors:187 bypass,188 EQ enable,190 per-path/per-slot RAM coefficient,220 EQ Flash,259 chip/firmware query,346 query subkeys62 currentrate and84/64 feature configuration,442 Freeman EQ configuration,446 Freeman per-band parameter query,477 older EQ parameter list,90 mode switch. Source methods and surrounding constants are stored in officialPreampCommandEvidence.json. Constant extraction is textual, not a branch-aware proof; method names alone do not exhaust firmware semantics. No globalgain setter recovered in these constructors. No packets sent; query recognition is not hardware readback verification.
+190 [path,slot,Gain,B0,B1,B2,A0,A1,...] exponent/scaled coefficients remain unchanged. Initialization188/187/346 and18 paired190 writes are unchanged. Neither spare payload words nor unclassified firmware command space justify invented gain writes.
+
+### Evidence inventory / provenance and search limits
+- Pinned official APK2.25.0c-260813ai102034, SHA25604756b49acfea523758d86101c96c1824b7b209ae3a8836c07837088e795d2d5, official download retrieved2026-10-07. M2U inspect-preamp.py reuses M2D extraction and adds all-DEX boundaries/all36 arm64 symbols/targeted strings plus targeted JNI disassembly. Static only, no app/native execution. Fixtures record original instructions and PLT targets.
+- Official Conexant JNI declarations/config/gain conversion from M2T retained. Cx libraries expose no discovered independent mastergain symbol in reviewed inventory. libapp.so has53 pregain/volume-related strings, including /usbPeqPreGainDebug and /blePeqPreGainDebug; Dart AOT call graph was not reconstructed. Native libusb presence alone does not identify actual requests. This is a specific remaining analysis gap, not a claim all binary functions were semantically decompiled.
+- Upstream [af0bcf7057860307bf81b00746f0cbdb93366514](https://github.com/mandy321/Audiocular-Aura/tree/af0bcf7057860307bf81b00746f0cbdb93366514),2026-09-29; DSP history retains setGlobalGainConexant no-op introduced ine7da5b5, not a removed working setter. Issue3 refreshed2026-10-08:31 comments/latest update2026-10-06; no actual gain control capture. Henry's old -20dB/no-effect report does not reveal a gain command.
+- Four public forks examined including this fork:jo3tp6tw/phucho2306 no ahead commits at comparison; Ircama's two ahead commits only deployment workflow; our fork is known integration. No new gain mapping in those deltas.
+- [FreeDSP Studio100c533](https://github.com/EffectiveEquivalent/FreeDSP-Studio/blob/100c533370a2ecde350a56d4fa04c2ac82e0bbfc/tools/app/src-tauri/src/dsp.rs),2026-09-21: exact1496 baked preamp; gen2 separate register does not transfer. [devicePEQ0617f38](https://github.com/jeromeof/devicePEQ/tree/0617f382e76629792a5933e6933e4b396a756a93),2026-08-26: inspected config/handler/capture/test, no real preamp. [DacVolumeFixb102f09](https://github.com/DeveshTone/DacVolumeFix/tree/b102f0921ea484037f1728caf36ef03805f1630f),2026-09-07: generic UAC code, not this device evidence.
+- [Hub_Moon](https://github.com/MiyukiVigil/Hub_Moon/blob/main/moondrop_hub_reverse_engineering.md): different generation pregain. jgoodliffe/moondrop_macOS explicitly excludes Conexant FreeDSP. Conexant-authored CX2077x short marketing datasheet discusses volume buttons/mic gain/AGC but provides no exact FreeDSP firmware command table. Generic freeDSP/ADAU project search hits discarded as unrelated.
+- [Public exactVID/PID host log](https://paste.cachyos.org/p/5f62904.log) identifies USB audio/HID interfaces but lacks AudioControl entity/range descriptors. linux-hardware exact-ID page was unavailable and was not treated as inspected evidence. No complete descriptor found in repository/fixtures/public sources reviewed.
+
+### USB Audio control findings
+[USB-IF Audio1.0](https://usb.org/sites/default/files/audio10.pdf) Feature Unit volume: channel0 master,1..n logical channels only if descriptor permits; SET_CUR request1, GET_CUR0x81/MIN0x82/MAX0x83/RES0x84; direction/type0x21/0xA1, two-byte signed1/256dB. [Audio2 with ECNs through2026-09-14](https://www.usb.org/sites/default/files/Audio2_with_Errata_and_ECN_through_Sep_14_2026.pdf): CUR1/RANGE2; volume permission bits3..2 per master/channel; 00absent/01read/11read-write,10reserved. RANGE describes MIN/MAX/RES. Device version/support cannot be inferred from VID/PID or HID descriptor.
+Mixer/Processing/Extension units likewise require descriptors and supported control semantics; no recovered FreeDSP entities. The known reportID1/data61 and HID consumer usage are unrelated to these AudioControl descriptors. HID GET_REPORT is not UAC GET_CUR.
+[Windows endpoint volume](https://learn.microsoft.com/en-us/windows/win32/coreaudio/endpoint-volume-controls) may use hardware or software, depending on endpoint capability; playback volume success would not prove physical Feature Unit support or pre-PEQ placement. No OS endpoint/device probe performed.
+
+### Problem / hypothesis / next action
+Observed problem: PEQ RAM is hardware PASS, but main-page Preamp has no proven real FreeDSP control and stays disabled; old Conexant setter is a no-op.
+Verified facts: reviewed CAF APIs/packet families and JNI gain helpers provide no identified independent gain mapping; PCM globalgain is software; public exact-device preamp implementation uses excluded PEQ scaling; local descriptor is HID-only.
+Possible causes: firmware may expose a UAC volume unit, an undocumented CAF control, or an exact-device Dart/FFI path absent from reviewed mappings. Endpoint volume might be post-DSP and therefore unsuitable for internal headroom.
+Ruled out / weakened: coefficient exponent as preamp; software PCM/JNI arithmetic as transport; copied gen2/Comtrue/Airoha commands; PEQ emulation; Windows volume as proof of pre-DSP control.
+Next validation: obtain exact35D8:1496 full USB configuration/AudioControl descriptors including source topology/bcdADC/control bits, then confirmed CUR/RANGE or MIN/MAX/RES evidence and gain location; alternatively official firmware/SDK or exact-device official pregain call/transfer with payload/reply. No hardware action requested this round.
+Possible fix direction: only after exact mechanism evidence reaches MEDIUM/HIGH, use an isolated bounded negative-gain diagnostic or existing main Preamp UI respectively. Preserve shared TypeScript semantics/native transport-only split. No positive gain, Flash or speculative fallback.
+
+## Evidence for upstream / Issue #3 — M2U real preamp
+PEQ nine wires x LEFT/RIGHT RAM and native transport are Henry hardware PASS. Independent preamp remains unresolved; setGlobalGainConexant is a no-op. Pinned official APK boundary/arm64/targeted JNI research separates software PCM gain from USB controls; no independent1496 gain command established. Existing57 helper pairs cover90/220/259 only. FreeDSP Studio gen1 implements preamp through PEQ numerator scaling, excluded here; newer Hub pregain is another protocol. UAC Feature Unit volume is the best remaining research route, but full exact-device AudioControl descriptor/control/range and pre-DSP placement are missing. Dart USB/BLE pregain strings remain unassigned to exact1496. Need that primary evidence before a real Preamp implementation; no invented packets, no firmware-absence claim, Flash remains last.
+
+### Scope / regression check — M2U
+- FreeDSP-specific files changed: offline inspect-preamp.py and pinned forensic fixtures/test only.
+- Shared runtime files changed: NONE.
+- Non-FreeDSP protocol code changed: NO.
+- Hardware actions, CAF/RAM transport/math/mapping changes: NONE.
+
+### M2U automated verification
+Focused preamp evidence tests:5 PASS. Final verify.ps1: TypeScript/production build PASS;240 tests across25 files PASS, no hardware. git diff --check PASS. No production runtime changes; analysis/test/docs only.

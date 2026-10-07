@@ -403,3 +403,11 @@ Decision: temporary development/debug UX differences are permitted to accelerate
 7. Retain the minimal, documented Windows native HID transport exception: FreeDSP requires host-initiated Input GET_REPORT, which browser WebHID does not expose. This requirement is verified for the current FreeDSP response flow; the helper remains transport-only.
 
 Priority decision: PEQ RAM is hardware PASS. Preamp remains the highest-priority unresolved feature; seek a real FreeDSP global gain/preamp control rather than PEQ emulation. Flash/persistence remains last.
+
+
+## M2U — real preamp remains blocked; distinguish endpoint volume from DSP headroom
+Decision: no production or diagnostic gain writes this round. PEQ RAM hardware PASS is unchanged; real preamp research has highest priority and persistence stays last. Preamp must not be synthesized through PEQ.
+Verified static path: official APK PCM JNI setGlobalGain -> pcm_mixer_set_globle_gain -> powf(10,gain/20) -> float at mixer-object offset4. This setter updates software PCM state, not a CAF/USB register. Airoha master gain and newer Moondrop Hub pregain belong to other protocol/device families. FreeDSP Studio's exact1496 gen1 preamp is explicitly baked into a biquad, therefore excluded.
+USB Audio Feature Unit volume is a valid standard mechanism but LOW/unknown for this device: no complete AudioControl topology, permissions, range or pre-DSP placement has been recovered. No speculative entity-ID probe. Master/per-channel output attenuation would not automatically establish a true PEQ headroom control.
+Dart AOT libapp.so contains USB/BLE pregain names; strings lack an exact1496 dispatcher/payload association. This remains an unresolved static lead, not a verified command and not proof hardware lacks preamp.
+Before PR the existing upstream cleanup rule applies to all FreeDSP UX and the verified Windows Input GET_REPORT transport exception: preserve author semantics/style, remove debug-only surfaces, minimize isolated overrides/helper dependency, preserve other DACs. M2U adds analysis/evidence only, no architecture/transport/runtime change.

@@ -1,0 +1,3256 @@
+{
+  "apkSha256": "04756b49acfea523758d86101c96c1824b7b209ae3a8836c07837088e795d2d5",
+  "scope": "All DEX call sites for USB controlTransfer/raw descriptors and Android volume APIs; all Conexant native declarations; all arm64 ELF symbols and targeted ASCII strings.",
+  "limitations": "Static call/name/string evidence; no firmware, raw USB configuration descriptor, dynamic Dart AOT call graph, JNI execution or hardware probe. OS volume need not be DSP preamp.",
+  "dexes": [
+    {
+      "file": "classes.dex",
+      "classes": 11398
+    },
+    {
+      "file": "classes2.dex",
+      "classes": 487
+    }
+  ],
+  "boundaryCalls": [
+    {
+      "dex": "classes.dex",
+      "class": "Las2;",
+      "method": "y",
+      "descriptor": "(I Ljava/lang/Object;)V",
+      "call": {
+        "offset": 698,
+        "opcode": "invoke-virtual",
+        "args": "v8, v9, Landroid/media/AudioTrack;->setVolume(F)I"
+      },
+      "instructions": [
+        {
+          "offset": 674,
+          "opcode": "invoke-virtual",
+          "args": "v1, Lwy0;->m()Z"
+        },
+        {
+          "offset": 680,
+          "opcode": "move-result",
+          "args": "v8"
+        },
+        {
+          "offset": 682,
+          "opcode": "if-eqz",
+          "args": "v8, +00bh"
+        },
+        {
+          "offset": 686,
+          "opcode": "iget-object",
+          "args": "v8, v1, Lwy0;->t Lyn;"
+        },
+        {
+          "offset": 690,
+          "opcode": "iget",
+          "args": "v9, v1, Lwy0;->H F"
+        },
+        {
+          "offset": 694,
+          "opcode": "iget-object",
+          "args": "v8, v8, Lyn;->a Landroid/media/AudioTrack;"
+        },
+        {
+          "offset": 698,
+          "opcode": "invoke-virtual",
+          "args": "v8, v9, Landroid/media/AudioTrack;->setVolume(F)I"
+        },
+        {
+          "offset": 704,
+          "opcode": "return-void",
+          "args": ""
+        }
+      ]
+    },
+    {
+      "dex": "classes.dex",
+      "class": "Lba4;",
+      "method": "run",
+      "descriptor": "()V",
+      "call": {
+        "offset": 456,
+        "opcode": "invoke-virtual/range",
+        "args": "v1 ... v8, Landroid/hardware/usb/UsbDeviceConnection;->controlTransfer(I I I I [B I I)I"
+      },
+      "instructions": [
+        {
+          "offset": 0,
+          "opcode": "iget",
+          "args": "v0, v12, Lba4;->a I"
+        },
+        {
+          "offset": 4,
+          "opcode": "packed-switch",
+          "args": "v0, +00001e0h"
+        },
+        {
+          "offset": 10,
+          "opcode": "iget-object",
+          "args": "v0, v12, Lba4;->b Ljava/lang/Object;"
+        },
+        {
+          "offset": 14,
+          "opcode": "check-cast",
+          "args": "v0, Lvm;"
+        },
+        {
+          "offset": 18,
+          "opcode": "iget-object",
+          "args": "v12, v12, Lba4;->c Ljava/lang/Object;"
+        },
+        {
+          "offset": 22,
+          "opcode": "check-cast",
+          "args": "v12, Ley0;"
+        },
+        {
+          "offset": 26,
+          "opcode": "monitor-enter",
+          "args": "v12"
+        },
+        {
+          "offset": 28,
+          "opcode": "monitor-exit",
+          "args": "v12"
+        },
+        {
+          "offset": 30,
+          "opcode": "iget-object",
+          "args": "v0, v0, Lvm;->b Lmf1;"
+        },
+        {
+          "offset": 34,
+          "opcode": "sget-object",
+          "args": "v1, Llv4;->a Ljava/lang/String;"
+        },
+        {
+          "offset": 38,
+          "opcode": "iget-object",
+          "args": "v0, v0, Lmf1;->a Lqf1;"
+        },
+        {
+          "offset": 42,
+          "opcode": "iget-object",
+          "args": "v0, v0, Lqf1;->s Lqy0;"
+        },
+        {
+          "offset": 46,
+          "opcode": "iget-object",
+          "args": "v1, v0, Lqy0;->d Lug;"
+        },
+        {
+          "offset": 50,
+          "opcode": "iget-object",
+          "args": "v1, v1, Lug;->e Ljava/lang/Object;"
+        },
+        {
+          "offset": 54,
+          "opcode": "check-cast",
+          "args": "v1, Lut2;"
+        },
+        {
+          "offset": 58,
+          "opcode": "invoke-virtual",
+          "args": "v0, v1, Lqy0;->J(Lut2;)Lrb;"
+        },
+        {
+          "offset": 64,
+          "opcode": "move-result-object",
+          "args": "v1"
+        },
+        {
+          "offset": 66,
+          "opcode": "new-instance",
+          "args": "v2, Lhr0;"
+        },
+        {
+          "offset": 70,
+          "opcode": "const/16",
+          "args": "v3, 16"
+        },
+        {
+          "offset": 74,
+          "opcode": "invoke-direct",
+          "args": "v2, v1, v12, v3, Lhr0;-><init>(Lrb; Ljava/lang/Object; I)V"
+        },
+        {
+          "offset": 80,
+          "opcode": "const/16",
+          "args": "v12, 1020"
+        },
+        {
+          "offset": 84,
+          "opcode": "invoke-virtual",
+          "args": "v0, v1, v12, v2, Lqy0;->N(Lrb; I Lrl2;)V"
+        },
+        {
+          "offset": 90,
+          "opcode": "return-void",
+          "args": ""
+        },
+        {
+          "offset": 92,
+          "opcode": "iget-object",
+          "args": "v0, v12, Lba4;->b Ljava/lang/Object;"
+        },
+        {
+          "offset": 96,
+          "opcode": "check-cast",
+          "args": "v0, Lvm;"
+        },
+        {
+          "offset": 100,
+          "opcode": "iget-object",
+          "args": "v12, v12, Lba4;->c Ljava/lang/Object;"
+        },
+        {
+          "offset": 104,
+          "opcode": "check-cast",
+          "args": "v12, Lqy4;"
+        },
+        {
+          "offset": 108,
+          "opcode": "iget-object",
+          "args": "v0, v0, Lvm;->b Lmf1;"
+        },
+        {
+          "offset": 112,
+          "opcode": "sget-object",
+          "args": "v1, Llv4;->a Ljava/lang/String;"
+        },
+        {
+          "offset": 116,
+          "opcode": "iget-object",
+          "args": "v0, v0, Lmf1;->a Lqf1;"
+        },
+        {
+          "offset": 120,
+          "opcode": "iget-object",
+          "args": "v0, v0, Lqf1;->n Lul2;"
+        },
+        {
+          "offset": 124,
+          "opcode": "new-instance",
+          "args": "v1, Loy0;"
+        },
+        {
+          "offset": 128,
+          "opcode": "invoke-direct",
+          "args": "v1, v12, Loy0;-><init>(Lqy4;)V"
+        },
+        {
+          "offset": 134,
+          "opcode": "const/16",
+          "args": "v12, 25"
+        },
+        {
+          "offset": 138,
+          "opcode": "invoke-virtual",
+          "args": "v0, v12, v1, Lul2;->e(I Lrl2;)V"
+        },
+        {
+          "offset": 144,
+          "opcode": "return-void",
+          "args": ""
+        },
+        {
+          "offset": 146,
+          "opcode": "iget-object",
+          "args": "v0, v12, Lba4;->b Ljava/lang/Object;"
+        },
+        {
+          "offset": 150,
+          "opcode": "check-cast",
+          "args": "v0, Lvm;"
+        },
+        {
+          "offset": 154,
+          "opcode": "iget-object",
+          "args": "v12, v12, Lba4;->c Ljava/lang/Object;"
+        },
+        {
+          "offset": 158,
+          "opcode": "check-cast",
+          "args": "v12, Lii0;"
+        },
+        {
+          "offset": 162,
+          "opcode": "iget-object",
+          "args": "v0, v0, Lvm;->b Lmf1;"
+        },
+        {
+          "offset": 166,
+          "opcode": "sget-object",
+          "args": "v1, Llv4;->a Ljava/lang/String;"
+        },
+        {
+          "offset": 170,
+          "opcode": "iget-object",
+          "args": "v0, v0, Lmf1;->a Lqf1;"
+        },
+        {
+          "offset": 174,
+          "opcode": "iget-object",
+          "args": "v0, v0, Lqf1;->G Lbn0;"
+        },
+        {
+          "offset": 178,
+          "opcode": "invoke-virtual",
+          "args": "v0, v12, Lbn0;->q(Lii0;)V"
+        },
+        {
+          "offset": 184,
+          "opcode": "return-void",
+          "args": ""
+        },
+        {
+          "offset": 186,
+          "opcode": "iget-object",
+          "args": "v0, v12, Lba4;->b Ljava/lang/Object;"
+        },
+        {
+          "offset": 190,
+          "opcode": "check-cast",
+          "args": "v0, Lyw4;"
+        },
+        {
+          "offset": 194,
+          "opcode": "iget-object",
+          "args": "v12, v12, Lba4;->c Ljava/lang/Object;"
+        },
+        {
+          "offset": 198,
+          "opcode": "check-cast",
+          "args": "v12, Lh14;"
+        },
+        {
+          "offset": 202,
+          "opcode": "iget-object",
+          "args": "v1, v12, Lg14;->b Lym4;"
+        },
+        {
+          "offset": 206,
+          "opcode": "iget-object",
+          "args": "v1, v1, Lym4;->s Ljava/lang/Object;"
+        },
+        {
+          "offset": 210,
+          "opcode": "check-cast",
+          "args": "v1, Ljava/util/ArrayList;"
+        },
+        {
+          "offset": 214,
+          "opcode": "invoke-virtual",
+          "args": "v1, v0, Ljava/util/ArrayList;->remove(Ljava/lang/Object;)Z"
+        },
+        {
+          "offset": 220,
+          "opcode": "iget-object",
+          "args": "v12, v12, Lg14;->e Ljava/util/ArrayList;"
+        },
+        {
+          "offset": 224,
+          "opcode": "invoke-virtual",
+          "args": "v12, v0, Ljava/util/ArrayList;->remove(Ljava/lang/Object;)Z"
+        },
+        {
+          "offset": 230,
+          "opcode": "return-void",
+          "args": ""
+        },
+        {
+          "offset": 232,
+          "opcode": "iget-object",
+          "args": "v0, v12, Lba4;->b Ljava/lang/Object;"
+        },
+        {
+          "offset": 236,
+          "opcode": "check-cast",
+          "args": "v0, Lcx4;"
+        },
+        {
+          "offset": 240,
+          "opcode": "iget-object",
+          "args": "v12, v12, Lba4;->c Ljava/lang/Object;"
+        },
+        {
+          "offset": 244,
+          "opcode": "check-cast",
+          "args": "v12, Lp21;"
+        },
+        {
+          "offset": 248,
+          "opcode": "iget-object",
+          "args": "v1, v0, Lcx4;->r Lp21;"
+        },
+        {
+          "offset": 252,
+          "opcode": "if-ne",
+          "args": "v12, v1, +005h"
+        },
+        {
+          "offset": 256,
+          "opcode": "invoke-virtual",
+          "args": "v0, Lcx4;->L()V"
+        },
+        {
+          "offset": 262,
+          "opcode": "return-void",
+          "args": ""
+        },
+        {
+          "offset": 264,
+          "opcode": "iget-object",
+          "args": "v0, v12, Lba4;->b Ljava/lang/Object;"
+        },
+        {
+          "offset": 268,
+          "opcode": "check-cast",
+          "args": "v0, Lcom/qualcomm/qti/gaiaclient/core/bluetooth/client/rfcomm/uuids/UuidFetcher;"
+        },
+        {
+          "offset": 272,
+          "opcode": "iget-object",
+          "args": "v12, v12, Lba4;->c Ljava/lang/Object;"
+        },
+        {
+          "offset": 276,
+          "opcode": "check-cast",
+          "args": "v12, Landroid/content/Context;"
+        },
+        {
+          "offset": 280,
+          "opcode": "invoke-static",
+          "args": "v0, v12, Lcom/qualcomm/qti/gaiaclient/core/bluetooth/client/rfcomm/uuids/UuidFetcher;->c(Lcom/qualcomm/qti/gaiaclient/core/bluetooth/client/rfcomm/uuids/UuidFetcher; Landroid/content/Context;)V"
+        },
+        {
+          "offset": 286,
+          "opcode": "return-void",
+          "args": ""
+        },
+        {
+          "offset": 288,
+          "opcode": "iget-object",
+          "args": "v0, v12, Lba4;->b Ljava/lang/Object;"
+        },
+        {
+          "offset": 292,
+          "opcode": "check-cast",
+          "args": "v0, Lcom/moondroplab/moondrop/moondrop_app/native/handlers/UtilsHandler;"
+        },
+        {
+          "offset": 296,
+          "opcode": "iget-object",
+          "args": "v12, v12, Lba4;->c Ljava/lang/Object;"
+        },
+        {
+          "offset": 300,
+          "opcode": "check-cast",
+          "args": "v12, Ljava/lang/Exception;"
+        },
+        {
+          "offset": 304,
+          "opcode": "invoke-static",
+          "args": "v0, v12, Lcom/moondroplab/moondrop/moondrop_app/native/handlers/UtilsHandler;->a(Lcom/moondroplab/moondrop/moondrop_app/native/handlers/UtilsHandler; Ljava/lang/Exception;)V"
+        },
+        {
+          "offset": 310,
+          "opcode": "return-void",
+          "args": ""
+        },
+        {
+          "offset": 312,
+          "opcode": "iget-object",
+          "args": "v0, v12, Lba4;->b Ljava/lang/Object;"
+        },
+        {
+          "offset": 316,
+          "opcode": "check-cast",
+          "args": "v0, Lcom/moondroplab/moondrop/moondrop_app/native/handlers/UtilsHandler;"
+        },
+        {
+          "offset": 320,
+          "opcode": "iget-object",
+          "args": "v12, v12, Lba4;->c Ljava/lang/Object;"
+        },
+        {
+          "offset": 324,
+          "opcode": "check-cast",
+          "args": "v12, Lcom/moondroplab/moondrop/moondrop_app/native/utils/MixResult;"
+        },
+        {
+          "offset": 328,
+          "opcode": "invoke-static",
+          "args": "v0, v12, Lcom/moondroplab/moondrop/moondrop_app/native/handlers/UtilsHandler;->i(Lcom/moondroplab/moondrop/moondrop_app/native/handlers/UtilsHandler; Lcom/moondroplab/moondrop/moondrop_app/native/utils/MixResult;)V"
+        },
+        {
+          "offset": 334,
+          "opcode": "return-void",
+          "args": ""
+        },
+        {
+          "offset": 336,
+          "opcode": "iget-object",
+          "args": "v0, v12, Lba4;->b Ljava/lang/Object;"
+        },
+        {
+          "offset": 340,
+          "opcode": "check-cast",
+          "args": "v0, Ltu4;"
+        },
+        {
+          "offset": 344,
+          "opcode": "iget-object",
+          "args": "v12, v12, Lba4;->c Ljava/lang/Object;"
+        },
+        {
+          "offset": 348,
+          "opcode": "check-cast",
+          "args": "v12, Ljava/lang/Runnable;"
+        },
+        {
+          "offset": 352,
+          "opcode": "iget-object",
+          "args": "v1, v0, Ltu4;->d Ljava/lang/ThreadLocal;"
+        },
+        {
+          "offset": 356,
+          "opcode": "sget-object",
+          "args": "v0, Ljava/lang/Boolean;->TRUE Ljava/lang/Boolean;"
+        },
+        {
+          "offset": 360,
+          "opcode": "invoke-virtual",
+          "args": "v1, v0, Ljava/lang/ThreadLocal;->set(Ljava/lang/Object;)V"
+        },
+        {
+          "offset": 366,
+          "opcode": "invoke-interface",
+          "args": "v12, Ljava/lang/Runnable;->run()V"
+        },
+        {
+          "offset": 372,
+          "opcode": "invoke-virtual",
+          "args": "v1, Ljava/lang/ThreadLocal;->remove()V"
+        },
+        {
+          "offset": 378,
+          "opcode": "return-void",
+          "args": ""
+        },
+        {
+          "offset": 380,
+          "opcode": "move-exception",
+          "args": "v0"
+        },
+        {
+          "offset": 382,
+          "opcode": "move-object",
+          "args": "v12, v0"
+        },
+        {
+          "offset": 384,
+          "opcode": "invoke-virtual",
+          "args": "v1, Ljava/lang/ThreadLocal;->remove()V"
+        },
+        {
+          "offset": 390,
+          "opcode": "throw",
+          "args": "v12"
+        },
+        {
+          "offset": 392,
+          "opcode": "iget-object",
+          "args": "v0, v12, Lba4;->b Ljava/lang/Object;"
+        },
+        {
+          "offset": 396,
+          "opcode": "check-cast",
+          "args": "v0, Lbt4;"
+        },
+        {
+          "offset": 400,
+          "opcode": "iget-object",
+          "args": "v12, v12, Lba4;->c Ljava/lang/Object;"
+        },
+        {
+          "offset": 404,
+          "opcode": "move-object",
+          "args": "v6, v12"
+        },
+        {
+          "offset": 406,
+          "opcode": "check-cast",
+          "args": "v6, [B"
+        },
+        {
+          "offset": 410,
+          "opcode": "invoke-virtual",
+          "args": "v0, Ljava/lang/Object;->getClass()Ljava/lang/Class;"
+        },
+        {
+          "offset": 416,
+          "opcode": "const-string",
+          "args": "v12, \"UsbMessageTransmitter\""
+        },
+        {
+          "offset": 420,
+          "opcode": "const-string",
+          "args": "v9, \"[Comture] sendMessage() sent successfully, \""
+        },
+        {
+          "offset": 424,
+          "opcode": "const-string",
+          "args": "v10, \"[Comture] sendMessage() partial send: expected 7 bytes, sent \""
+        },
+        {
+          "offset": 428,
+          "opcode": "const-string",
+          "args": "v11, \"[Comture] sendMessage() failed, result: \""
+        },
+        {
+          "offset": 432,
+          "opcode": "iget-object",
+          "args": "v1, v0, Lbt4;->d Landroid/hardware/usb/UsbDeviceConnection;"
+        },
+        {
+          "offset": 436,
+          "opcode": "const/4",
+          "args": "v7, 7"
+        },
+        {
+          "offset": 438,
+          "opcode": "const/16",
+          "args": "v8, 100"
+        },
+        {
+          "offset": 442,
+          "opcode": "const/16",
+          "args": "v2, 67"
+        },
+        {
+          "offset": 446,
+          "opcode": "const/16",
+          "args": "v3, 160"
+        },
+        {
+          "offset": 450,
+          "opcode": "const/4",
+          "args": "v4, 0"
+        },
+        {
+          "offset": 452,
+          "opcode": "const/16",
+          "args": "v5, 2464"
+        },
+        {
+          "offset": 456,
+          "opcode": "invoke-virtual/range",
+          "args": "v1 ... v8, Landroid/hardware/usb/UsbDeviceConnection;->controlTransfer(I I I I [B I I)I"
+        },
+        {
+          "offset": 462,
+          "opcode": "move-result",
+          "args": "v0"
+        },
+        {
+          "offset": 464,
+          "opcode": "if-gez",
+          "args": "v0, +014h"
+        },
+        {
+          "offset": 468,
+          "opcode": "new-instance",
+          "args": "v1, Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 472,
+          "opcode": "invoke-direct",
+          "args": "v1, v11, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V"
+        },
+        {
+          "offset": 478,
+          "opcode": "invoke-virtual",
+          "args": "v1, v0, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 484,
+          "opcode": "invoke-virtual",
+          "args": "v1, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;"
+        },
+        {
+          "offset": 490,
+          "opcode": "move-result-object",
+          "args": "v0"
+        },
+        {
+          "offset": 492,
+          "opcode": "invoke-static",
+          "args": "v12, v0, Landroid/util/Log;->e(Ljava/lang/String; Ljava/lang/String;)I"
+        },
+        {
+          "offset": 498,
+          "opcode": "goto",
+          "args": "+35h"
+        },
+        {
+          "offset": 500,
+          "opcode": "move-exception",
+          "args": "v0"
+        },
+        {
+          "offset": 502,
+          "opcode": "goto",
+          "args": "+29h"
+        },
+        {
+          "offset": 504,
+          "opcode": "const/4",
+          "args": "v1, 7"
+        },
+        {
+          "offset": 506,
+          "opcode": "if-eq",
+          "args": "v0, v1, +012h"
+        },
+        {
+          "offset": 510,
+          "opcode": "new-instance",
+          "args": "v1, Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 514,
+          "opcode": "invoke-direct",
+          "args": "v1, v10, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V"
+        },
+        {
+          "offset": 520,
+          "opcode": "invoke-virtual",
+          "args": "v1, v0, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 526,
+          "opcode": "invoke-virtual",
+          "args": "v1, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;"
+        },
+        {
+          "offset": 532,
+          "opcode": "move-result-object",
+          "args": "v0"
+        },
+        {
+          "offset": 534,
+          "opcode": "invoke-static",
+          "args": "v12, v0, Landroid/util/Log;->w(Ljava/lang/String; Ljava/lang/String;)I"
+        },
+        {
+          "offset": 540,
+          "opcode": "goto",
+          "args": "+20h"
+        },
+        {
+          "offset": 542,
+          "opcode": "new-instance",
+          "args": "v1, Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 546,
+          "opcode": "invoke-direct",
+          "args": "v1, v9, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V"
+        },
+        {
+          "offset": 552,
+          "opcode": "invoke-virtual",
+          "args": "v1, v0, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 558,
+          "opcode": "const-string",
+          "args": "v0, \" bytes\""
+        },
+        {
+          "offset": 562,
+          "opcode": "invoke-virtual",
+          "args": "v1, v0, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 568,
+          "opcode": "invoke-virtual",
+          "args": "v1, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;"
+        },
+        {
+          "offset": 574,
+          "opcode": "move-result-object",
+          "args": "v0"
+        },
+        {
+          "offset": 576,
+          "opcode": "invoke-static",
+          "args": "v12, v0, Landroid/util/Log;->d(Ljava/lang/String; Ljava/lang/String;)I"
+        },
+        {
+          "offset": 582,
+          "opcode": "goto",
+          "args": "+bh"
+        },
+        {
+          "offset": 584,
+          "opcode": "new-instance",
+          "args": "v1, Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 588,
+          "opcode": "const-string",
+          "args": "v2, \"[Comture] sendMessage() exception: \""
+        },
+        {
+          "offset": 592,
+          "opcode": "invoke-direct",
+          "args": "v1, v2, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V"
+        },
+        {
+          "offset": 598,
+          "opcode": "invoke-static",
+          "args": "v0, v1, v12, v0, Ljy2;->s(Ljava/lang/Exception; Ljava/lang/StringBuilder; Ljava/lang/String; Ljava/lang/Exception;)V"
+        },
+        {
+          "offset": 604,
+          "opcode": "return-void",
+          "args": ""
+        },
+        {
+          "offset": 606,
+          "opcode": "iget-object",
+          "args": "v0, v12, Lba4;->b Ljava/lang/Object;"
+        },
+        {
+          "offset": 610,
+          "opcode": "check-cast",
+          "args": "v0, Lio/flutter/plugin/common/MethodChannel$Result;"
+        },
+        {
+          "offset": 614,
+          "opcode": "iget-object",
+          "args": "v12, v12, Lba4;->c Ljava/lang/Object;"
+        },
+        {
+          "offset": 618,
+          "opcode": "check-cast",
+          "args": "v12, Ljava/lang/String;"
+        },
+        {
+          "offset": 622,
+          "opcode": "invoke-static",
+          "args": "v0, v12, Lcom/moondroplab/moondrop/moondrop_app/native/handlers/UsbDeviceHandler;->K1(Lio/flutter/plugin/common/MethodChannel$Result; Ljava/lang/String;)V"
+        },
+        {
+          "offset": 628,
+          "opcode": "return-void",
+          "args": ""
+        },
+        {
+          "offset": 630,
+          "opcode": "iget-object",
+          "args": "v0, v12, Lba4;->b Ljava/lang/Object;"
+        },
+        {
+          "offset": 634,
+          "opcode": "check-cast",
+          "args": "v0, Lcom/qualcomm/qti/gaiaclient/repository/upgrade/UpgradeRepositoryData;"
+        },
+        {
+          "offset": 638,
+          "opcode": "iget-object",
+          "args": "v12, v12, Lba4;->c Ljava/lang/Object;"
+        },
+        {
+          "offset": 642,
+          "opcode": "check-cast",
+          "args": "v12, Landroid/content/Context;"
+        },
+        {
+          "offset": 646,
+          "opcode": "invoke-static",
+          "args": "v0, v12, Lcom/qualcomm/qti/gaiaclient/repository/upgrade/UpgradeRepositoryData;->a(Lcom/qualcomm/qti/gaiaclient/repository/upgrade/UpgradeRepositoryData; Landroid/content/Context;)V"
+        },
+        {
+          "offset": 652,
+          "opcode": "return-void",
+          "args": ""
+        },
+        {
+          "offset": 654,
+          "opcode": "iget-object",
+          "args": "v0, v12, Lba4;->b Ljava/lang/Object;"
+        },
+        {
+          "offset": 658,
+          "opcode": "check-cast",
+          "args": "v0, Ljo4;"
+        },
+        {
+          "offset": 662,
+          "opcode": "iget-object",
+          "args": "v12, v12, Lba4;->c Ljava/lang/Object;"
+        },
+        {
+          "offset": 666,
+          "opcode": "check-cast",
+          "args": "v12, Lha3;"
+        },
+        {
+          "offset": 670,
+          "opcode": "iget-object",
+          "args": "v1, v12, Lha3;->a Lla3;"
+        },
+        {
+          "offset": 674,
+          "opcode": "iget-object",
+          "args": "v12, v12, Lha3;->b Lbj;"
+        },
+        {
+          "offset": 678,
+          "opcode": "invoke-virtual",
+          "args": "v0, v1, v12, Ljo4;->d(Lla3; Lbj;)V"
+        },
+        {
+          "offset": 684,
+          "opcode": "return-void",
+          "args": ""
+        },
+        {
+          "offset": 686,
+          "opcode": "iget-object",
+          "args": "v0, v12, Lba4;->b Ljava/lang/Object;"
+        },
+        {
+          "offset": 690,
+          "opcode": "check-cast",
+          "args": "v0, Lo11;"
+        },
+        {
+          "offset": 694,
+          "opcode": "iget-object",
+          "args": "v12, v12, Lba4;->c Ljava/lang/Object;"
+        },
+        {
+          "offset": 698,
+          "opcode": "check-cast",
+          "args": "v12, Ljava/util/concurrent/CountDownLatch;"
+        },
+        {
+          "offset": 702,
+          "opcode": "invoke-virtual",
+          "args": "v0, Lo11;->run()V"
+        },
+        {
+          "offset": 708,
+          "opcode": "invoke-virtual",
+          "args": "v12, Ljava/util/concurrent/CountDownLatch;->countDown()V"
+        },
+        {
+          "offset": 714,
+          "opcode": "return-void",
+          "args": ""
+        },
+        {
+          "offset": 716,
+          "opcode": "move-exception",
+          "args": "v0"
+        },
+        {
+          "offset": 718,
+          "opcode": "invoke-virtual",
+          "args": "v12, Ljava/util/concurrent/CountDownLatch;->countDown()V"
+        },
+        {
+          "offset": 724,
+          "opcode": "throw",
+          "args": "v0"
+        },
+        {
+          "offset": 726,
+          "opcode": "iget-object",
+          "args": "v0, v12, Lba4;->b Ljava/lang/Object;"
+        },
+        {
+          "offset": 730,
+          "opcode": "check-cast",
+          "args": "v0, Lcr3;"
+        },
+        {
+          "offset": 734,
+          "opcode": "iget-object",
+          "args": "v12, v12, Lba4;->c Ljava/lang/Object;"
+        },
+        {
+          "offset": 738,
+          "opcode": "check-cast",
+          "args": "v12, Lcr3;"
+        },
+        {
+          "offset": 742,
+          "opcode": "iget-object",
+          "args": "v0, v0, Lcr3;->a Ljava/lang/Object;"
+        },
+        {
+          "offset": 746,
+          "opcode": "check-cast",
+          "args": "v0, Lxr0;"
+        },
+        {
+          "offset": 750,
+          "opcode": "invoke-static",
+          "args": "v0, Lty5;->b(Lxr0;)V"
+        },
+        {
+          "offset": 756,
+          "opcode": "iget-object",
+          "args": "v12, v12, Lcr3;->a Ljava/lang/Object;"
+        },
+        {
+          "offset": 760,
+          "opcode": "check-cast",
+          "args": "v12, Lxr0;"
+        },
+        {
+          "offset": 764,
+          "opcode": "invoke-static",
+          "args": "v12, Lty5;->b(Lxr0;)V"
+        },
+        {
+          "offset": 770,
+          "opcode": "return-void",
+          "args": ""
+        },
+        {
+          "offset": 772,
+          "opcode": "iget-object",
+          "args": "v0, v12, Lba4;->b Ljava/lang/Object;"
+        },
+        {
+          "offset": 776,
+          "opcode": "check-cast",
+          "args": "v0, Lsr;"
+        },
+        {
+          "offset": 780,
+          "opcode": "iget-object",
+          "args": "v12, v12, Lba4;->c Ljava/lang/Object;"
+        },
+        {
+          "offset": 784,
+          "opcode": "check-cast",
+          "args": "v12, Lpc6;"
+        },
+        {
+          "offset": 788,
+          "opcode": "iget-object",
+          "args": "v0, v0, Lsr;->d Lp52;"
+        },
+        {
+          "offset": 792,
+          "opcode": "invoke-static",
+          "args": "v12, Ljava/util/Objects;->requireNonNull(Ljava/lang/Object;)Ljava/lang/Object;"
+        },
+        {
+          "offset": 798,
+          "opcode": "iget-object",
+          "args": "v12, v0, Lp52;->b Ljava/lang/Object;"
+        },
+        {
+          "offset": 802,
+          "opcode": "check-cast",
+          "args": "v12, Ljava/io/File;"
+        },
+        {
+          "offset": 806,
+          "opcode": "invoke-virtual",
+          "args": "v12, Ljava/io/File;->getAbsolutePath()Ljava/lang/String;"
+        },
+        {
+          "offset": 812,
+          "opcode": "move-result-object",
+          "args": "v12"
+        },
+        {
+          "offset": 814,
+          "opcode": "iget-object",
+          "args": "v0, v0, Lp52;->c Ljava/lang/Object;"
+        },
+        {
+          "offset": 818,
+          "opcode": "check-cast",
+          "args": "v0, Lwa2;"
+        },
+        {
+          "offset": 822,
+          "opcode": "invoke-static",
+          "args": "v12, v0, Lev3;->b(Ljava/lang/Object; Ljava/lang/Object;)V"
+        },
+        {
+          "offset": 828,
+          "opcode": "return-void",
+          "args": ""
+        },
+        {
+          "offset": 830,
+          "opcode": "iget-object",
+          "args": "v0, v12, Lba4;->b Ljava/lang/Object;"
+        },
+        {
+          "offset": 834,
+          "opcode": "check-cast",
+          "args": "v0, Lsr;"
+        },
+        {
+          "offset": 838,
+          "opcode": "iget-object",
+          "args": "v12, v12, Lba4;->c Ljava/lang/Object;"
+        },
+        {
+          "offset": 842,
+          "opcode": "check-cast",
+          "args": "v12, Lia2;"
+        },
+        {
+          "offset": 846,
+          "opcode": "iget-object",
+          "args": "v0, v0, Lsr;->d Lp52;"
+        },
+        {
+          "offset": 850,
+          "opcode": "invoke-virtual",
+          "args": "v0, v12, Lp52;->T(Lia2;)V"
+        },
+        {
+          "offset": 856,
+          "opcode": "return-void",
+          "args": ""
+        },
+        {
+          "offset": 858,
+          "opcode": "iget-object",
+          "args": "v0, v12, Lba4;->b Ljava/lang/Object;"
+        },
+        {
+          "offset": 862,
+          "opcode": "check-cast",
+          "args": "v0, Lli4;"
+        },
+        {
+          "offset": 866,
+          "opcode": "iget-object",
+          "args": "v12, v12, Lba4;->c Ljava/lang/Object;"
+        },
+        {
+          "offset": 870,
+          "opcode": "check-cast",
+          "args": "v12, Lnt3;"
+        },
+        {
+          "offset": 874,
+          "opcode": "iget-object",
+          "args": "v0, v0, Lli4;->s Ljava/util/ArrayList;"
+        },
+        {
+          "offset": 878,
+          "opcode": "invoke-virtual",
+          "args": "v0, v12, Ljava/util/ArrayList;->remove(Ljava/lang/Object;)Z"
+        },
+        {
+          "offset": 884,
+          "opcode": "return-void",
+          "args": ""
+        },
+        {
+          "offset": 886,
+          "opcode": "iget-object",
+          "args": "v0, v12, Lba4;->b Ljava/lang/Object;"
+        },
+        {
+          "offset": 890,
+          "opcode": "check-cast",
+          "args": "v0, Lxg4;"
+        },
+        {
+          "offset": 894,
+          "opcode": "iget-object",
+          "args": "v12, v12, Lba4;->c Ljava/lang/Object;"
+        },
+        {
+          "offset": 898,
+          "opcode": "check-cast",
+          "args": "v12, Ljava/util/concurrent/atomic/AtomicReference;"
+        },
+        {
+          "offset": 902,
+          "opcode": "invoke-virtual",
+          "args": "v12, Ljava/util/concurrent/atomic/AtomicReference;->get()Ljava/lang/Object;"
+        },
+        {
+          "offset": 908,
+          "opcode": "move-result-object",
+          "args": "v12"
+        },
+        {
+          "offset": 910,
+          "opcode": "check-cast",
+          "args": "v12, Lwp0;"
+        },
+        {
+          "offset": 914,
+          "opcode": "new-instance",
+          "args": "v1, Lmr;"
+        },
+        {
+          "offset": 918,
+          "opcode": "invoke-direct",
+          "args": "v1, v0, Lmr;-><init>(Lxg4;)V"
+        },
+        {
+          "offset": 924,
+          "opcode": "invoke-interface",
+          "args": "v12, v1, Lwp0;->accept(Ljava/lang/Object;)V"
+        },
+        {
+          "offset": 930,
+          "opcode": "return-void",
+          "args": ""
+        },
+        {
+          "offset": 932,
+          "opcode": "iget-object",
+          "args": "v0, v12, Lba4;->b Ljava/lang/Object;"
+        },
+        {
+          "offset": 936,
+          "opcode": "check-cast",
+          "args": "v0, Lca4;"
+        },
+        {
+          "offset": 940,
+          "opcode": "iget-object",
+          "args": "v12, v12, Lba4;->c Ljava/lang/Object;"
+        },
+        {
+          "offset": 944,
+          "opcode": "check-cast",
+          "args": "v12, [B"
+        },
+        {
+          "offset": 948,
+          "opcode": "iget-object",
+          "args": "v0, v0, Lca4;->e Lex;"
+        },
+        {
+          "offset": 952,
+          "opcode": "if-eqz",
+          "args": "v0, +005h"
+        },
+        {
+          "offset": 956,
+          "opcode": "invoke-interface",
+          "args": "v0, v12, Lex;->onSend([B)V"
+        },
+        {
+          "offset": 962,
+          "opcode": "return-void",
+          "args": ""
+        },
+        {
+          "offset": 964,
+          "opcode": "packed-switch-payload",
+          "args": "0 1 2 3 4 5 6 7 8 9 a b c d e f 10 11 12"
+        }
+      ]
+    },
+    {
+      "dex": "classes.dex",
+      "class": "Lcom/conexant/cnxtusbcheadset/UsbHelper;",
+      "method": "getDeviceString",
+      "descriptor": "(Landroid/hardware/usb/UsbDeviceConnection; I)Ljava/lang/String;",
+      "call": {
+        "offset": 28,
+        "opcode": "invoke-virtual/range",
+        "args": "v0 ... v7, Landroid/hardware/usb/UsbDeviceConnection;->controlTransfer(I I I I [B I I)I"
+      },
+      "instructions": [
+        {
+          "offset": 0,
+          "opcode": "const/16",
+          "args": "v6, 255"
+        },
+        {
+          "offset": 4,
+          "opcode": "new-array",
+          "args": "v5, v6, [B"
+        },
+        {
+          "offset": 8,
+          "opcode": "or-int/lit16",
+          "args": "v3, v9, 768"
+        },
+        {
+          "offset": 12,
+          "opcode": "const/16",
+          "args": "v4, 1033"
+        },
+        {
+          "offset": 16,
+          "opcode": "const/16",
+          "args": "v7, 1000"
+        },
+        {
+          "offset": 20,
+          "opcode": "const/16",
+          "args": "v1, 128"
+        },
+        {
+          "offset": 24,
+          "opcode": "const/4",
+          "args": "v2, 6"
+        },
+        {
+          "offset": 26,
+          "opcode": "move-object",
+          "args": "v0, v8"
+        },
+        {
+          "offset": 28,
+          "opcode": "invoke-virtual/range",
+          "args": "v0 ... v7, Landroid/hardware/usb/UsbDeviceConnection;->controlTransfer(I I I I [B I I)I"
+        },
+        {
+          "offset": 34,
+          "opcode": "move-result",
+          "args": "v8"
+        },
+        {
+          "offset": 36,
+          "opcode": "const/4",
+          "args": "v9, 2"
+        },
+        {
+          "offset": 38,
+          "opcode": "if-le",
+          "args": "v8, v9, +011h"
+        },
+        {
+          "offset": 42,
+          "opcode": "sub-int/2addr",
+          "args": "v8, v9"
+        },
+        {
+          "offset": 44,
+          "opcode": "new-array",
+          "args": "v0, v8, [B"
+        },
+        {
+          "offset": 48,
+          "opcode": "const/4",
+          "args": "v1, 0"
+        },
+        {
+          "offset": 50,
+          "opcode": "invoke-static",
+          "args": "v5, v9, v0, v1, v8, Ljava/lang/System;->arraycopy(Ljava/lang/Object; I Ljava/lang/Object; I I)V"
+        },
+        {
+          "offset": 56,
+          "opcode": "new-instance",
+          "args": "v8, Ljava/lang/String;"
+        },
+        {
+          "offset": 60,
+          "opcode": "sget-object",
+          "args": "v9, Ljava/nio/charset/StandardCharsets;->UTF_16LE Ljava/nio/charset/Charset;"
+        },
+        {
+          "offset": 64,
+          "opcode": "invoke-direct",
+          "args": "v8, v0, v9, Ljava/lang/String;-><init>([B Ljava/nio/charset/Charset;)V"
+        },
+        {
+          "offset": 70,
+          "opcode": "return-object",
+          "args": "v8"
+        },
+        {
+          "offset": 72,
+          "opcode": "const-string",
+          "args": "v8, \"\""
+        },
+        {
+          "offset": 76,
+          "opcode": "return-object",
+          "args": "v8"
+        }
+      ]
+    },
+    {
+      "dex": "classes.dex",
+      "class": "Lcom/conexant/cnxtusbcheadset/UsbHelper;",
+      "method": "receiveHIDReport",
+      "descriptor": "(Landroid/hardware/usb/UsbDeviceConnection; I I I I [B)[B",
+      "call": {
+        "offset": 18,
+        "opcode": "invoke-virtual/range",
+        "args": "v0 ... v7, Landroid/hardware/usb/UsbDeviceConnection;->controlTransfer(I I I I [B I I)I"
+      },
+      "instructions": [
+        {
+          "offset": 0,
+          "opcode": "array-length",
+          "args": "v6, v13"
+        },
+        {
+          "offset": 2,
+          "opcode": "const/16",
+          "args": "v7, 1000"
+        },
+        {
+          "offset": 6,
+          "opcode": "move-object",
+          "args": "v0, v8"
+        },
+        {
+          "offset": 8,
+          "opcode": "move",
+          "args": "v1, v9"
+        },
+        {
+          "offset": 10,
+          "opcode": "move",
+          "args": "v2, v10"
+        },
+        {
+          "offset": 12,
+          "opcode": "move",
+          "args": "v3, v11"
+        },
+        {
+          "offset": 14,
+          "opcode": "move",
+          "args": "v4, v12"
+        },
+        {
+          "offset": 16,
+          "opcode": "move-object",
+          "args": "v5, v13"
+        },
+        {
+          "offset": 18,
+          "opcode": "invoke-virtual/range",
+          "args": "v0 ... v7, Landroid/hardware/usb/UsbDeviceConnection;->controlTransfer(I I I I [B I I)I"
+        },
+        {
+          "offset": 24,
+          "opcode": "move-result",
+          "args": "v8"
+        },
+        {
+          "offset": 26,
+          "opcode": "const/4",
+          "args": "v9, -1"
+        },
+        {
+          "offset": 28,
+          "opcode": "if-le",
+          "args": "v8, v9, +003h"
+        },
+        {
+          "offset": 32,
+          "opcode": "return-object",
+          "args": "v5"
+        },
+        {
+          "offset": 34,
+          "opcode": "const/4",
+          "args": "v8, 0"
+        },
+        {
+          "offset": 36,
+          "opcode": "return-object",
+          "args": "v8"
+        }
+      ]
+    },
+    {
+      "dex": "classes.dex",
+      "class": "Lcom/conexant/cnxtusbcheadset/UsbHelper;",
+      "method": "sendHIDReport",
+      "descriptor": "(Landroid/hardware/usb/UsbDeviceConnection; I I I I [B)I",
+      "call": {
+        "offset": 18,
+        "opcode": "invoke-virtual/range",
+        "args": "v0 ... v7, Landroid/hardware/usb/UsbDeviceConnection;->controlTransfer(I I I I [B I I)I"
+      },
+      "instructions": [
+        {
+          "offset": 0,
+          "opcode": "array-length",
+          "args": "v6, v13"
+        },
+        {
+          "offset": 2,
+          "opcode": "const/16",
+          "args": "v7, 1000"
+        },
+        {
+          "offset": 6,
+          "opcode": "move-object",
+          "args": "v0, v8"
+        },
+        {
+          "offset": 8,
+          "opcode": "move",
+          "args": "v1, v9"
+        },
+        {
+          "offset": 10,
+          "opcode": "move",
+          "args": "v2, v10"
+        },
+        {
+          "offset": 12,
+          "opcode": "move",
+          "args": "v3, v11"
+        },
+        {
+          "offset": 14,
+          "opcode": "move",
+          "args": "v4, v12"
+        },
+        {
+          "offset": 16,
+          "opcode": "move-object",
+          "args": "v5, v13"
+        },
+        {
+          "offset": 18,
+          "opcode": "invoke-virtual/range",
+          "args": "v0 ... v7, Landroid/hardware/usb/UsbDeviceConnection;->controlTransfer(I I I I [B I I)I"
+        },
+        {
+          "offset": 24,
+          "opcode": "move-result",
+          "args": "v8"
+        },
+        {
+          "offset": 26,
+          "opcode": "return",
+          "args": "v8"
+        }
+      ]
+    },
+    {
+      "dex": "classes.dex",
+      "class": "Lcom/moondroplab/moondrop/moondrop_app/native/handlers/M4aPlayerHandler;",
+      "method": "handleMethod",
+      "descriptor": "(Lio/flutter/plugin/common/MethodCall; Lio/flutter/plugin/common/MethodChannel$Result;)Z",
+      "call": {
+        "offset": 314,
+        "opcode": "invoke-virtual",
+        "args": "v6, v5, Lcom/moondroplab/moondrop/moondrop_app/native/utils/DrcFreeM4aPlayer;->setVolume(F)V"
+      },
+      "instructions": [
+        {
+          "offset": 290,
+          "opcode": "const-wide/high16",
+          "args": "v5, 4607182418800017408"
+        },
+        {
+          "offset": 294,
+          "opcode": "invoke-static",
+          "args": "v5, v6, Ljava/lang/Double;->valueOf(D)Ljava/lang/Double;"
+        },
+        {
+          "offset": 300,
+          "opcode": "move-result-object",
+          "args": "v5"
+        },
+        {
+          "offset": 302,
+          "opcode": "invoke-virtual",
+          "args": "v5, Ljava/lang/Number;->floatValue()F"
+        },
+        {
+          "offset": 308,
+          "opcode": "move-result",
+          "args": "v5"
+        },
+        {
+          "offset": 310,
+          "opcode": "sget-object",
+          "args": "v6, Lcom/moondroplab/moondrop/moondrop_app/native/utils/DrcFreeM4aPlayer;->INSTANCE Lcom/moondroplab/moondrop/moondrop_app/native/utils/DrcFreeM4aPlayer;"
+        },
+        {
+          "offset": 314,
+          "opcode": "invoke-virtual",
+          "args": "v6, v5, Lcom/moondroplab/moondrop/moondrop_app/native/utils/DrcFreeM4aPlayer;->setVolume(F)V"
+        },
+        {
+          "offset": 320,
+          "opcode": "invoke-interface",
+          "args": "v7, v3, Lio/flutter/plugin/common/MethodChannel$Result;->success(Ljava/lang/Object;)V"
+        },
+        {
+          "offset": 326,
+          "opcode": "return",
+          "args": "v4"
+        }
+      ]
+    },
+    {
+      "dex": "classes.dex",
+      "class": "Lcom/moondroplab/moondrop/moondrop_app/native/utils/AudioPcmMixer;",
+      "method": "muteAudioTrackForSessionSwitch",
+      "descriptor": "(Landroid/media/AudioTrack;)V",
+      "call": {
+        "offset": 2,
+        "opcode": "invoke-virtual",
+        "args": "v2, v1, Landroid/media/AudioTrack;->setVolume(F)I"
+      },
+      "instructions": [
+        {
+          "offset": 0,
+          "opcode": "const/4",
+          "args": "v1, 0"
+        },
+        {
+          "offset": 2,
+          "opcode": "invoke-virtual",
+          "args": "v2, v1, Landroid/media/AudioTrack;->setVolume(F)I"
+        },
+        {
+          "offset": 8,
+          "opcode": "return-void",
+          "args": ""
+        },
+        {
+          "offset": 10,
+          "opcode": "move-exception",
+          "args": "v1"
+        }
+      ]
+    },
+    {
+      "dex": "classes.dex",
+      "class": "Lcom/moondroplab/moondrop/moondrop_app/native/utils/AudioPcmMixer;",
+      "method": "stopAudioTrackForSessionSwitch",
+      "descriptor": "(Landroid/media/AudioTrack;)V",
+      "call": {
+        "offset": 6,
+        "opcode": "invoke-virtual",
+        "args": "v3, v0, Landroid/media/AudioTrack;->setVolume(F)I"
+      },
+      "instructions": [
+        {
+          "offset": 0,
+          "opcode": "const-string",
+          "args": "v2, \"AudioPcmMixer\""
+        },
+        {
+          "offset": 4,
+          "opcode": "const/4",
+          "args": "v0, 0"
+        },
+        {
+          "offset": 6,
+          "opcode": "invoke-virtual",
+          "args": "v3, v0, Landroid/media/AudioTrack;->setVolume(F)I"
+        },
+        {
+          "offset": 12,
+          "opcode": "goto",
+          "args": "+8h"
+        },
+        {
+          "offset": 14,
+          "opcode": "move-exception",
+          "args": "v0"
+        }
+      ]
+    },
+    {
+      "dex": "classes.dex",
+      "class": "Lcom/moondroplab/moondrop/moondrop_app/native/utils/AudioPcmMixer;",
+      "method": "stopAudioTrackSafely",
+      "descriptor": "(Landroid/media/AudioTrack;)V",
+      "call": {
+        "offset": 32,
+        "opcode": "invoke-virtual",
+        "args": "v5, v2, Landroid/media/AudioTrack;->setVolume(F)I"
+      },
+      "instructions": [
+        {
+          "offset": 14,
+          "opcode": "if-ne",
+          "args": "v1, v0, +029h"
+        },
+        {
+          "offset": 18,
+          "opcode": "const/4",
+          "args": "v1, 6"
+        },
+        {
+          "offset": 20,
+          "opcode": "if-lez",
+          "args": "v1, +013h"
+        },
+        {
+          "offset": 24,
+          "opcode": "int-to-float",
+          "args": "v2, v1"
+        },
+        {
+          "offset": 26,
+          "opcode": "const/high16",
+          "args": "v3, 1086324736"
+        },
+        {
+          "offset": 30,
+          "opcode": "div-float/2addr",
+          "args": "v2, v3"
+        },
+        {
+          "offset": 32,
+          "opcode": "invoke-virtual",
+          "args": "v5, v2, Landroid/media/AudioTrack;->setVolume(F)I"
+        },
+        {
+          "offset": 38,
+          "opcode": "const-wide/16",
+          "args": "v2, 6"
+        },
+        {
+          "offset": 42,
+          "opcode": "invoke-static",
+          "args": "v2, v3, Ljava/lang/Thread;->sleep(J)V"
+        }
+      ]
+    },
+    {
+      "dex": "classes.dex",
+      "class": "Lcom/moondroplab/moondrop/moondrop_app/native/utils/AudioPcmMixer;",
+      "method": "stopAudioTrackSafely",
+      "descriptor": "(Landroid/media/AudioTrack;)V",
+      "call": {
+        "offset": 60,
+        "opcode": "invoke-virtual",
+        "args": "v5, v1, Landroid/media/AudioTrack;->setVolume(F)I"
+      },
+      "instructions": [
+        {
+          "offset": 42,
+          "opcode": "invoke-static",
+          "args": "v2, v3, Ljava/lang/Thread;->sleep(J)V"
+        },
+        {
+          "offset": 48,
+          "opcode": "add-int/lit8",
+          "args": "v1, v1, -1"
+        },
+        {
+          "offset": 52,
+          "opcode": "goto",
+          "args": "-10h"
+        },
+        {
+          "offset": 54,
+          "opcode": "move-exception",
+          "args": "v1"
+        },
+        {
+          "offset": 56,
+          "opcode": "goto",
+          "args": "+6h"
+        },
+        {
+          "offset": 58,
+          "opcode": "const/4",
+          "args": "v1, 0"
+        },
+        {
+          "offset": 60,
+          "opcode": "invoke-virtual",
+          "args": "v5, v1, Landroid/media/AudioTrack;->setVolume(F)I"
+        },
+        {
+          "offset": 66,
+          "opcode": "goto",
+          "args": "+fh"
+        },
+        {
+          "offset": 68,
+          "opcode": "const-string/jumbo",
+          "args": "v2, stopAudioTrackSafely: fade-out failed"
+        }
+      ]
+    },
+    {
+      "dex": "classes.dex",
+      "class": "Lcom/moondroplab/moondrop/moondrop_app/native/utils/DrcFreeM4aPlayer;",
+      "method": "runPlaybackLoop",
+      "descriptor": "(Ljava/lang/String; J J)V",
+      "call": {
+        "offset": 1642,
+        "opcode": "invoke-virtual",
+        "args": "v2, v7, Landroid/media/AudioTrack;->setVolume(F)I"
+      },
+      "instructions": [
+        {
+          "offset": 1616,
+          "opcode": "invoke-static",
+          "args": "v6, v7, Landroid/util/Log;->i(Ljava/lang/String; Ljava/lang/String;)I"
+        },
+        {
+          "offset": 1622,
+          "opcode": "move-object/from16",
+          "args": "v6, v37"
+        },
+        {
+          "offset": 1626,
+          "opcode": "invoke-direct",
+          "args": "v6, v4, v5, v0, Lcom/moondroplab/moondrop/moondrop_app/native/utils/DrcFreeM4aPlayer;->createAudioTrack(I I I)Landroid/media/AudioTrack;"
+        },
+        {
+          "offset": 1632,
+          "opcode": "move-result-object",
+          "args": "v2"
+        },
+        {
+          "offset": 1634,
+          "opcode": "sput-object",
+          "args": "v2, Lcom/moondroplab/moondrop/moondrop_app/native/utils/DrcFreeM4aPlayer;->audioTrack Landroid/media/AudioTrack;"
+        },
+        {
+          "offset": 1638,
+          "opcode": "sget",
+          "args": "v7, Lcom/moondroplab/moondrop/moondrop_app/native/utils/DrcFreeM4aPlayer;->volume F"
+        },
+        {
+          "offset": 1642,
+          "opcode": "invoke-virtual",
+          "args": "v2, v7, Landroid/media/AudioTrack;->setVolume(F)I"
+        },
+        {
+          "offset": 1648,
+          "opcode": "invoke-virtual",
+          "args": "v2, Landroid/media/AudioTrack;->play()V"
+        },
+        {
+          "offset": 1654,
+          "opcode": "move",
+          "args": "v15, v0"
+        }
+      ]
+    },
+    {
+      "dex": "classes.dex",
+      "class": "Lcom/moondroplab/moondrop/moondrop_app/native/utils/DrcFreeM4aPlayer;",
+      "method": "runPlaybackLoop",
+      "descriptor": "(Ljava/lang/String; J J)V",
+      "call": {
+        "offset": 1824,
+        "opcode": "invoke-virtual",
+        "args": "v2, v5, Landroid/media/AudioTrack;->setVolume(F)I"
+      },
+      "instructions": [
+        {
+          "offset": 1800,
+          "opcode": "move-result-object",
+          "args": "v11"
+        },
+        {
+          "offset": 1802,
+          "opcode": "invoke-static",
+          "args": "v5, v11, Landroid/util/Log;->w(Ljava/lang/String; Ljava/lang/String;)I"
+        },
+        {
+          "offset": 1808,
+          "opcode": "invoke-direct",
+          "args": "v6, v7, v8, v15, Lcom/moondroplab/moondrop/moondrop_app/native/utils/DrcFreeM4aPlayer;->createAudioTrack(I I I)Landroid/media/AudioTrack;"
+        },
+        {
+          "offset": 1814,
+          "opcode": "move-result-object",
+          "args": "v2"
+        },
+        {
+          "offset": 1816,
+          "opcode": "sput-object",
+          "args": "v2, Lcom/moondroplab/moondrop/moondrop_app/native/utils/DrcFreeM4aPlayer;->audioTrack Landroid/media/AudioTrack;"
+        },
+        {
+          "offset": 1820,
+          "opcode": "sget",
+          "args": "v5, Lcom/moondroplab/moondrop/moondrop_app/native/utils/DrcFreeM4aPlayer;->volume F"
+        },
+        {
+          "offset": 1824,
+          "opcode": "invoke-virtual",
+          "args": "v2, v5, Landroid/media/AudioTrack;->setVolume(F)I"
+        },
+        {
+          "offset": 1830,
+          "opcode": "invoke-virtual",
+          "args": "v2, Landroid/media/AudioTrack;->play()V"
+        },
+        {
+          "offset": 1836,
+          "opcode": "goto",
+          "args": "+3h"
+        }
+      ]
+    },
+    {
+      "dex": "classes.dex",
+      "class": "Lcom/moondroplab/moondrop/moondrop_app/native/utils/DrcFreeM4aPlayer;",
+      "method": "setVolume",
+      "descriptor": "(F)V",
+      "call": {
+        "offset": 30,
+        "opcode": "invoke-virtual",
+        "args": "v1, v2, Landroid/media/AudioTrack;->setVolume(F)I"
+      },
+      "instructions": [
+        {
+          "offset": 6,
+          "opcode": "invoke-static",
+          "args": "v2, v1, v0, Log6;->a(F F F)F"
+        },
+        {
+          "offset": 12,
+          "opcode": "move-result",
+          "args": "v1"
+        },
+        {
+          "offset": 14,
+          "opcode": "sput",
+          "args": "v1, Lcom/moondroplab/moondrop/moondrop_app/native/utils/DrcFreeM4aPlayer;->volume F"
+        },
+        {
+          "offset": 18,
+          "opcode": "sget-object",
+          "args": "v1, Lcom/moondroplab/moondrop/moondrop_app/native/utils/DrcFreeM4aPlayer;->audioTrack Landroid/media/AudioTrack;"
+        },
+        {
+          "offset": 22,
+          "opcode": "if-eqz",
+          "args": "v1, +007h"
+        },
+        {
+          "offset": 26,
+          "opcode": "sget",
+          "args": "v2, Lcom/moondroplab/moondrop/moondrop_app/native/utils/DrcFreeM4aPlayer;->volume F"
+        },
+        {
+          "offset": 30,
+          "opcode": "invoke-virtual",
+          "args": "v1, v2, Landroid/media/AudioTrack;->setVolume(F)I"
+        },
+        {
+          "offset": 36,
+          "opcode": "return-void",
+          "args": ""
+        }
+      ]
+    },
+    {
+      "dex": "classes.dex",
+      "class": "Lym2;",
+      "method": "s",
+      "descriptor": "(D Z Lnn;)V",
+      "call": {
+        "offset": 44,
+        "opcode": "invoke-virtual",
+        "args": "v2, v6, v3, v5, Landroid/media/AudioManager;->setStreamVolume(I I I)V"
+      },
+      "instructions": [
+        {
+          "offset": 28,
+          "opcode": "move-result",
+          "args": "v0"
+        },
+        {
+          "offset": 30,
+          "opcode": "invoke-virtual",
+          "args": "v6, Lnn;->getStreamType()I"
+        },
+        {
+          "offset": 36,
+          "opcode": "move-result",
+          "args": "v6"
+        },
+        {
+          "offset": 38,
+          "opcode": "int-to-double",
+          "args": "v0, v0"
+        },
+        {
+          "offset": 40,
+          "opcode": "mul-double/2addr",
+          "args": "v0, v3"
+        },
+        {
+          "offset": 42,
+          "opcode": "double-to-int",
+          "args": "v3, v0"
+        },
+        {
+          "offset": 44,
+          "opcode": "invoke-virtual",
+          "args": "v2, v6, v3, v5, Landroid/media/AudioManager;->setStreamVolume(I I I)V"
+        },
+        {
+          "offset": 50,
+          "opcode": "return-void",
+          "args": ""
+        }
+      ]
+    },
+    {
+      "dex": "classes.dex",
+      "class": "Lfq1;",
+      "method": "onMethodCall",
+      "descriptor": "(Lio/flutter/plugin/common/MethodCall; Lio/flutter/plugin/common/MethodChannel$Result;)V",
+      "call": {
+        "offset": 220,
+        "opcode": "invoke-virtual",
+        "args": "v9, v10, v2, v1, Landroid/media/AudioManager;->adjustStreamVolume(I I I)V"
+      },
+      "instructions": [
+        {
+          "offset": 198,
+          "opcode": "iget-object",
+          "args": "v9, v9, Lym2;->b Ljava/lang/Object;"
+        },
+        {
+          "offset": 202,
+          "opcode": "check-cast",
+          "args": "v9, Landroid/media/AudioManager;"
+        },
+        {
+          "offset": 206,
+          "opcode": "invoke-virtual",
+          "args": "v10, Lnn;->getStreamType()I"
+        },
+        {
+          "offset": 212,
+          "opcode": "move-result",
+          "args": "v10"
+        },
+        {
+          "offset": 214,
+          "opcode": "if-eqz",
+          "args": "v0, +003h"
+        },
+        {
+          "offset": 218,
+          "opcode": "move",
+          "args": "v2, v3"
+        },
+        {
+          "offset": 220,
+          "opcode": "invoke-virtual",
+          "args": "v9, v10, v2, v1, Landroid/media/AudioManager;->adjustStreamVolume(I I I)V"
+        },
+        {
+          "offset": 226,
+          "opcode": "invoke-interface",
+          "args": "v11, v8, Lio/flutter/plugin/common/MethodChannel$Result;->success(Ljava/lang/Object;)V"
+        },
+        {
+          "offset": 232,
+          "opcode": "return-void",
+          "args": ""
+        }
+      ]
+    },
+    {
+      "dex": "classes.dex",
+      "class": "Lfq1;",
+      "method": "onMethodCall",
+      "descriptor": "(Lio/flutter/plugin/common/MethodCall; Lio/flutter/plugin/common/MethodChannel$Result;)V",
+      "call": {
+        "offset": 1028,
+        "opcode": "invoke-virtual",
+        "args": "v2, v9, v10, v1, Landroid/media/AudioManager;->adjustStreamVolume(I I I)V"
+      },
+      "instructions": [
+        {
+          "offset": 1006,
+          "opcode": "iget-object",
+          "args": "v2, v9, Lym2;->b Ljava/lang/Object;"
+        },
+        {
+          "offset": 1010,
+          "opcode": "check-cast",
+          "args": "v2, Landroid/media/AudioManager;"
+        },
+        {
+          "offset": 1014,
+          "opcode": "if-nez",
+          "args": "v0, +00bh"
+        },
+        {
+          "offset": 1018,
+          "opcode": "invoke-virtual",
+          "args": "v10, Lnn;->getStreamType()I"
+        },
+        {
+          "offset": 1024,
+          "opcode": "move-result",
+          "args": "v9"
+        },
+        {
+          "offset": 1026,
+          "opcode": "const/4",
+          "args": "v10, 1"
+        },
+        {
+          "offset": 1028,
+          "opcode": "invoke-virtual",
+          "args": "v2, v9, v10, v1, Landroid/media/AudioManager;->adjustStreamVolume(I I I)V"
+        },
+        {
+          "offset": 1034,
+          "opcode": "goto",
+          "args": "+dh"
+        },
+        {
+          "offset": 1036,
+          "opcode": "invoke-static",
+          "args": "v2, v10, Lj46;->a(Landroid/media/AudioManager; Lnn;)D"
+        }
+      ]
+    },
+    {
+      "dex": "classes.dex",
+      "class": "Lfq1;",
+      "method": "onMethodCall",
+      "descriptor": "(Lio/flutter/plugin/common/MethodCall; Lio/flutter/plugin/common/MethodChannel$Result;)V",
+      "call": {
+        "offset": 1244,
+        "opcode": "invoke-virtual",
+        "args": "v9, v10, v2, v0, Landroid/media/AudioManager;->adjustStreamVolume(I I I)V"
+      },
+      "instructions": [
+        {
+          "offset": 1222,
+          "opcode": "invoke-virtual",
+          "args": "v9, v1, Landroid/media/AudioManager;->isStreamMute(I)Z"
+        },
+        {
+          "offset": 1228,
+          "opcode": "move-result",
+          "args": "v1"
+        },
+        {
+          "offset": 1230,
+          "opcode": "invoke-virtual",
+          "args": "v10, Lnn;->getStreamType()I"
+        },
+        {
+          "offset": 1236,
+          "opcode": "move-result",
+          "args": "v10"
+        },
+        {
+          "offset": 1238,
+          "opcode": "if-nez",
+          "args": "v1, +003h"
+        },
+        {
+          "offset": 1242,
+          "opcode": "move",
+          "args": "v2, v3"
+        },
+        {
+          "offset": 1244,
+          "opcode": "invoke-virtual",
+          "args": "v9, v10, v2, v0, Landroid/media/AudioManager;->adjustStreamVolume(I I I)V"
+        },
+        {
+          "offset": 1250,
+          "opcode": "invoke-interface",
+          "args": "v11, v8, Lio/flutter/plugin/common/MethodChannel$Result;->success(Ljava/lang/Object;)V"
+        },
+        {
+          "offset": 1256,
+          "opcode": "return-void",
+          "args": ""
+        }
+      ]
+    },
+    {
+      "dex": "classes.dex",
+      "class": "Lfq1;",
+      "method": "onMethodCall",
+      "descriptor": "(Lio/flutter/plugin/common/MethodCall; Lio/flutter/plugin/common/MethodChannel$Result;)V",
+      "call": {
+        "offset": 1428,
+        "opcode": "invoke-virtual",
+        "args": "v2, v9, v10, v1, Landroid/media/AudioManager;->adjustStreamVolume(I I I)V"
+      },
+      "instructions": [
+        {
+          "offset": 1406,
+          "opcode": "iget-object",
+          "args": "v2, v9, Lym2;->b Ljava/lang/Object;"
+        },
+        {
+          "offset": 1410,
+          "opcode": "check-cast",
+          "args": "v2, Landroid/media/AudioManager;"
+        },
+        {
+          "offset": 1414,
+          "opcode": "if-nez",
+          "args": "v0, +00bh"
+        },
+        {
+          "offset": 1418,
+          "opcode": "invoke-virtual",
+          "args": "v10, Lnn;->getStreamType()I"
+        },
+        {
+          "offset": 1424,
+          "opcode": "move-result",
+          "args": "v9"
+        },
+        {
+          "offset": 1426,
+          "opcode": "const/4",
+          "args": "v10, -1"
+        },
+        {
+          "offset": 1428,
+          "opcode": "invoke-virtual",
+          "args": "v2, v9, v10, v1, Landroid/media/AudioManager;->adjustStreamVolume(I I I)V"
+        },
+        {
+          "offset": 1434,
+          "opcode": "goto",
+          "args": "+dh"
+        },
+        {
+          "offset": 1436,
+          "opcode": "invoke-static",
+          "args": "v2, v10, Lj46;->a(Landroid/media/AudioManager; Lnn;)D"
+        }
+      ]
+    },
+    {
+      "dex": "classes.dex",
+      "class": "Lom0;",
+      "method": "call",
+      "descriptor": "()Ljava/lang/Object;",
+      "call": {
+        "offset": 60,
+        "opcode": "invoke-virtual/range",
+        "args": "v1 ... v8, Landroid/hardware/usb/UsbDeviceConnection;->controlTransfer(I I I I [B I I)I"
+      },
+      "instructions": [
+        {
+          "offset": 0,
+          "opcode": "iget",
+          "args": "v0, v10, Lom0;->a I"
+        },
+        {
+          "offset": 4,
+          "opcode": "packed-switch",
+          "args": "v0, +0000090h"
+        },
+        {
+          "offset": 10,
+          "opcode": "iget-object",
+          "args": "v0, v10, Lom0;->b Ljava/lang/Object;"
+        },
+        {
+          "offset": 14,
+          "opcode": "check-cast",
+          "args": "v0, Lbt4;"
+        },
+        {
+          "offset": 18,
+          "opcode": "iget-object",
+          "args": "v10, v10, Lom0;->c Ljava/lang/Object;"
+        },
+        {
+          "offset": 22,
+          "opcode": "move-object",
+          "args": "v6, v10"
+        },
+        {
+          "offset": 24,
+          "opcode": "check-cast",
+          "args": "v6, [B"
+        },
+        {
+          "offset": 28,
+          "opcode": "sget-object",
+          "args": "v10, Lbt4;->n [B"
+        },
+        {
+          "offset": 32,
+          "opcode": "const-string",
+          "args": "v9, \"UsbMessageTransmitter\""
+        },
+        {
+          "offset": 36,
+          "opcode": "iget-object",
+          "args": "v1, v0, Lbt4;->d Landroid/hardware/usb/UsbDeviceConnection;"
+        },
+        {
+          "offset": 40,
+          "opcode": "const/4",
+          "args": "v7, 7"
+        },
+        {
+          "offset": 42,
+          "opcode": "const/16",
+          "args": "v8, 100"
+        },
+        {
+          "offset": 46,
+          "opcode": "const/16",
+          "args": "v2, 195"
+        },
+        {
+          "offset": 50,
+          "opcode": "const/16",
+          "args": "v3, 161"
+        },
+        {
+          "offset": 54,
+          "opcode": "const/4",
+          "args": "v4, 0"
+        },
+        {
+          "offset": 56,
+          "opcode": "const/16",
+          "args": "v5, 2464"
+        },
+        {
+          "offset": 60,
+          "opcode": "invoke-virtual/range",
+          "args": "v1 ... v8, Landroid/hardware/usb/UsbDeviceConnection;->controlTransfer(I I I I [B I I)I"
+        },
+        {
+          "offset": 66,
+          "opcode": "move-result",
+          "args": "v0"
+        },
+        {
+          "offset": 68,
+          "opcode": "const/4",
+          "args": "v1, 7"
+        },
+        {
+          "offset": 70,
+          "opcode": "if-ne",
+          "args": "v0, v1, +009h"
+        },
+        {
+          "offset": 74,
+          "opcode": "invoke-virtual",
+          "args": "v6, [B->clone()Ljava/lang/Object;"
+        },
+        {
+          "offset": 80,
+          "opcode": "move-result-object",
+          "args": "v10"
+        },
+        {
+          "offset": 82,
+          "opcode": "check-cast",
+          "args": "v10, [B"
+        },
+        {
+          "offset": 86,
+          "opcode": "goto",
+          "args": "+32h"
+        },
+        {
+          "offset": 88,
+          "opcode": "if-lez",
+          "args": "v0, +01ah"
+        },
+        {
+          "offset": 92,
+          "opcode": "new-instance",
+          "args": "v1, Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 96,
+          "opcode": "const-string",
+          "args": "v2, \"Partial receive: expected 7 bytes, received \""
+        },
+        {
+          "offset": 100,
+          "opcode": "invoke-direct",
+          "args": "v1, v2, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V"
+        },
+        {
+          "offset": 106,
+          "opcode": "invoke-virtual",
+          "args": "v1, v0, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 112,
+          "opcode": "invoke-virtual",
+          "args": "v1, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;"
+        },
+        {
+          "offset": 118,
+          "opcode": "move-result-object",
+          "args": "v0"
+        },
+        {
+          "offset": 120,
+          "opcode": "invoke-static",
+          "args": "v9, v0, Landroid/util/Log;->w(Ljava/lang/String; Ljava/lang/String;)I"
+        },
+        {
+          "offset": 126,
+          "opcode": "invoke-virtual",
+          "args": "v10, [B->clone()Ljava/lang/Object;"
+        },
+        {
+          "offset": 132,
+          "opcode": "move-result-object",
+          "args": "v10"
+        },
+        {
+          "offset": 134,
+          "opcode": "check-cast",
+          "args": "v10, [B"
+        },
+        {
+          "offset": 138,
+          "opcode": "goto",
+          "args": "+18h"
+        },
+        {
+          "offset": 140,
+          "opcode": "new-instance",
+          "args": "v1, Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 144,
+          "opcode": "const-string",
+          "args": "v2, \"Receive failed with result: \""
+        },
+        {
+          "offset": 148,
+          "opcode": "invoke-direct",
+          "args": "v1, v2, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V"
+        },
+        {
+          "offset": 154,
+          "opcode": "invoke-virtual",
+          "args": "v1, v0, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 160,
+          "opcode": "invoke-virtual",
+          "args": "v1, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;"
+        },
+        {
+          "offset": 166,
+          "opcode": "move-result-object",
+          "args": "v0"
+        },
+        {
+          "offset": 168,
+          "opcode": "invoke-static",
+          "args": "v9, v0, Landroid/util/Log;->e(Ljava/lang/String; Ljava/lang/String;)I"
+        },
+        {
+          "offset": 174,
+          "opcode": "invoke-virtual",
+          "args": "v10, [B->clone()Ljava/lang/Object;"
+        },
+        {
+          "offset": 180,
+          "opcode": "move-result-object",
+          "args": "v10"
+        },
+        {
+          "offset": 182,
+          "opcode": "check-cast",
+          "args": "v10, [B"
+        },
+        {
+          "offset": 186,
+          "opcode": "return-object",
+          "args": "v10"
+        },
+        {
+          "offset": 188,
+          "opcode": "iget-object",
+          "args": "v0, v10, Lom0;->b Ljava/lang/Object;"
+        },
+        {
+          "offset": 192,
+          "opcode": "check-cast",
+          "args": "v0, Lpm0;"
+        },
+        {
+          "offset": 196,
+          "opcode": "iget-object",
+          "args": "v10, v10, Lom0;->c Ljava/lang/Object;"
+        },
+        {
+          "offset": 200,
+          "opcode": "check-cast",
+          "args": "v10, Lrm0;"
+        },
+        {
+          "offset": 204,
+          "opcode": "iget-object",
+          "args": "v1, v0, Lpm0;->b Lfn0;"
+        },
+        {
+          "offset": 208,
+          "opcode": "monitor-enter",
+          "args": "v1"
+        },
+        {
+          "offset": 210,
+          "opcode": "iget-object",
+          "args": "v0, v1, Lfn0;->a Landroid/content/Context;"
+        },
+        {
+          "offset": 214,
+          "opcode": "iget-object",
+          "args": "v2, v1, Lfn0;->b Ljava/lang/String;"
+        },
+        {
+          "offset": 218,
+          "opcode": "const/4",
+          "args": "v3, 0"
+        },
+        {
+          "offset": 220,
+          "opcode": "invoke-virtual",
+          "args": "v0, v2, v3, Landroid/content/Context;->openFileOutput(Ljava/lang/String; I)Ljava/io/FileOutputStream;"
+        },
+        {
+          "offset": 226,
+          "opcode": "move-result-object",
+          "args": "v2"
+        },
+        {
+          "offset": 228,
+          "opcode": "iget-object",
+          "args": "v10, v10, Lrm0;->a Lorg/json/JSONObject;"
+        },
+        {
+          "offset": 232,
+          "opcode": "invoke-virtual",
+          "args": "v10, Lorg/json/JSONObject;->toString()Ljava/lang/String;"
+        },
+        {
+          "offset": 238,
+          "opcode": "move-result-object",
+          "args": "v10"
+        },
+        {
+          "offset": 240,
+          "opcode": "const-string",
+          "args": "v0, \"UTF-8\""
+        },
+        {
+          "offset": 244,
+          "opcode": "invoke-virtual",
+          "args": "v10, v0, Ljava/lang/String;->getBytes(Ljava/lang/String;)[B"
+        },
+        {
+          "offset": 250,
+          "opcode": "move-result-object",
+          "args": "v10"
+        },
+        {
+          "offset": 252,
+          "opcode": "invoke-virtual",
+          "args": "v2, v10, Ljava/io/FileOutputStream;->write([B)V"
+        },
+        {
+          "offset": 258,
+          "opcode": "invoke-virtual",
+          "args": "v2, Ljava/io/FileOutputStream;->close()V"
+        },
+        {
+          "offset": 264,
+          "opcode": "monitor-exit",
+          "args": "v1"
+        },
+        {
+          "offset": 266,
+          "opcode": "const/4",
+          "args": "v10, 0"
+        },
+        {
+          "offset": 268,
+          "opcode": "return-object",
+          "args": "v10"
+        },
+        {
+          "offset": 270,
+          "opcode": "move-exception",
+          "args": "v0"
+        },
+        {
+          "offset": 272,
+          "opcode": "move-object",
+          "args": "v10, v0"
+        },
+        {
+          "offset": 274,
+          "opcode": "goto",
+          "args": "+7h"
+        },
+        {
+          "offset": 276,
+          "opcode": "move-exception",
+          "args": "v0"
+        },
+        {
+          "offset": 278,
+          "opcode": "move-object",
+          "args": "v10, v0"
+        },
+        {
+          "offset": 280,
+          "opcode": "invoke-virtual",
+          "args": "v2, Ljava/io/FileOutputStream;->close()V"
+        },
+        {
+          "offset": 286,
+          "opcode": "throw",
+          "args": "v10"
+        },
+        {
+          "offset": 288,
+          "opcode": "monitor-exit",
+          "args": "v1"
+        },
+        {
+          "offset": 290,
+          "opcode": "throw",
+          "args": "v10"
+        },
+        {
+          "offset": 292,
+          "opcode": "packed-switch-payload",
+          "args": "0"
+        }
+      ]
+    },
+    {
+      "dex": "classes.dex",
+      "class": "Ltc;",
+      "method": "onMethodCall",
+      "descriptor": "(Lio/flutter/plugin/common/MethodCall; Lio/flutter/plugin/common/MethodChannel$Result;)V",
+      "call": {
+        "offset": 1118,
+        "opcode": "invoke-virtual",
+        "args": "v8, v1, v3, v0, Landroid/media/AudioManager;->setStreamVolume(I I I)V"
+      },
+      "instructions": [
+        {
+          "offset": 1092,
+          "opcode": "check-cast",
+          "args": "v0, Ljava/lang/Integer;"
+        },
+        {
+          "offset": 1096,
+          "opcode": "invoke-virtual",
+          "args": "v0, Ljava/lang/Integer;->intValue()I"
+        },
+        {
+          "offset": 1102,
+          "opcode": "move-result",
+          "args": "v0"
+        },
+        {
+          "offset": 1104,
+          "opcode": "iget-object",
+          "args": "v8, v8, Ly81;->u Ljava/lang/Object;"
+        },
+        {
+          "offset": 1108,
+          "opcode": "check-cast",
+          "args": "v8, Landroid/media/AudioManager;"
+        },
+        {
+          "offset": 1112,
+          "opcode": "invoke-virtual",
+          "args": "v8, Ljava/lang/Object;->getClass()Ljava/lang/Class;"
+        },
+        {
+          "offset": 1118,
+          "opcode": "invoke-virtual",
+          "args": "v8, v1, v3, v0, Landroid/media/AudioManager;->setStreamVolume(I I I)V"
+        },
+        {
+          "offset": 1124,
+          "opcode": "invoke-interface",
+          "args": "v9, v7, Lio/flutter/plugin/common/MethodChannel$Result;->success(Ljava/lang/Object;)V"
+        },
+        {
+          "offset": 1130,
+          "opcode": "return-void",
+          "args": ""
+        }
+      ]
+    },
+    {
+      "dex": "classes.dex",
+      "class": "Ltc;",
+      "method": "onMethodCall",
+      "descriptor": "(Lio/flutter/plugin/common/MethodCall; Lio/flutter/plugin/common/MethodChannel$Result;)V",
+      "call": {
+        "offset": 3032,
+        "opcode": "invoke-virtual",
+        "args": "v8, v1, v3, v0, Landroid/media/AudioManager;->adjustStreamVolume(I I I)V"
+      },
+      "instructions": [
+        {
+          "offset": 3006,
+          "opcode": "check-cast",
+          "args": "v0, Ljava/lang/Integer;"
+        },
+        {
+          "offset": 3010,
+          "opcode": "invoke-virtual",
+          "args": "v0, Ljava/lang/Integer;->intValue()I"
+        },
+        {
+          "offset": 3016,
+          "opcode": "move-result",
+          "args": "v0"
+        },
+        {
+          "offset": 3018,
+          "opcode": "iget-object",
+          "args": "v8, v8, Ly81;->u Ljava/lang/Object;"
+        },
+        {
+          "offset": 3022,
+          "opcode": "check-cast",
+          "args": "v8, Landroid/media/AudioManager;"
+        },
+        {
+          "offset": 3026,
+          "opcode": "invoke-virtual",
+          "args": "v8, Ljava/lang/Object;->getClass()Ljava/lang/Class;"
+        },
+        {
+          "offset": 3032,
+          "opcode": "invoke-virtual",
+          "args": "v8, v1, v3, v0, Landroid/media/AudioManager;->adjustStreamVolume(I I I)V"
+        },
+        {
+          "offset": 3038,
+          "opcode": "invoke-interface",
+          "args": "v9, v7, Lio/flutter/plugin/common/MethodChannel$Result;->success(Ljava/lang/Object;)V"
+        },
+        {
+          "offset": 3044,
+          "opcode": "return-void",
+          "args": ""
+        }
+      ]
+    },
+    {
+      "dex": "classes.dex",
+      "class": "Lwy0;",
+      "method": "l",
+      "descriptor": "()Z",
+      "call": {
+        "offset": 418,
+        "opcode": "invoke-virtual",
+        "args": "v0, v3, Landroid/media/AudioTrack;->setVolume(F)I"
+      },
+      "instructions": [
+        {
+          "offset": 394,
+          "opcode": "invoke-virtual",
+          "args": "v13, Lwy0;->m()Z"
+        },
+        {
+          "offset": 400,
+          "opcode": "move-result",
+          "args": "v0"
+        },
+        {
+          "offset": 402,
+          "opcode": "if-eqz",
+          "args": "v0, +00bh"
+        },
+        {
+          "offset": 406,
+          "opcode": "iget-object",
+          "args": "v0, v13, Lwy0;->t Lyn;"
+        },
+        {
+          "offset": 410,
+          "opcode": "iget",
+          "args": "v3, v13, Lwy0;->H F"
+        },
+        {
+          "offset": 414,
+          "opcode": "iget-object",
+          "args": "v0, v0, Lyn;->a Landroid/media/AudioTrack;"
+        },
+        {
+          "offset": 418,
+          "opcode": "invoke-virtual",
+          "args": "v0, v3, Landroid/media/AudioTrack;->setVolume(F)I"
+        },
+        {
+          "offset": 424,
+          "opcode": "iget-object",
+          "args": "v0, v13, Lwy0;->S Lyr;"
+        },
+        {
+          "offset": 428,
+          "opcode": "invoke-virtual",
+          "args": "v0, Ljava/lang/Object;->getClass()Ljava/lang/Class;"
+        }
+      ]
+    },
+    {
+      "dex": "classes.dex",
+      "class": "Ly81;",
+      "method": "J",
+      "descriptor": "(Z)V",
+      "call": {
+        "offset": 14,
+        "opcode": "invoke-virtual",
+        "args": "v0, v1, Landroid/media/AudioManager;->setMicrophoneMute(Z)V"
+      },
+      "instructions": [
+        {
+          "offset": 0,
+          "opcode": "iget-object",
+          "args": "v0, v0, Ly81;->u Ljava/lang/Object;"
+        },
+        {
+          "offset": 4,
+          "opcode": "check-cast",
+          "args": "v0, Landroid/media/AudioManager;"
+        },
+        {
+          "offset": 8,
+          "opcode": "invoke-virtual",
+          "args": "v0, Ljava/lang/Object;->getClass()Ljava/lang/Class;"
+        },
+        {
+          "offset": 14,
+          "opcode": "invoke-virtual",
+          "args": "v0, v1, Landroid/media/AudioManager;->setMicrophoneMute(Z)V"
+        },
+        {
+          "offset": 20,
+          "opcode": "return-void",
+          "args": ""
+        }
+      ]
+    }
+  ],
+  "conexantNativeDeclarations": [
+    {
+      "class": "Lcom/conexant/cnxtusbcheadset/Eq2Coeff;",
+      "method": "native_cxaudio_convert_coeffs_2_eqparams",
+      "descriptor": "(I Ljava/lang/Object; Ljava/lang/Object; I)I"
+    },
+    {
+      "class": "Lcom/conexant/cnxtusbcheadset/Eq2Coeff;",
+      "method": "native_cxaudio_convert_eqparams_2_coeffs",
+      "descriptor": "(I Ljava/lang/Object; Ljava/lang/Object; I)I"
+    },
+    {
+      "class": "Lcom/conexant/cnxtusbcheadset/Eq2Coeff;",
+      "method": "native_finalize",
+      "descriptor": "()V"
+    },
+    {
+      "class": "Lcom/conexant/cnxtusbcheadset/Eq2Coeff;",
+      "method": "native_init",
+      "descriptor": "()V"
+    },
+    {
+      "class": "Lcom/conexant/universalfunction/CommonUtilNative;",
+      "method": "convertGainIndex",
+      "descriptor": "(F I)I"
+    },
+    {
+      "class": "Lcom/conexant/universalfunction/CommonUtilNative;",
+      "method": "floatFromQ31T",
+      "descriptor": "(J)F"
+    },
+    {
+      "class": "Lcom/conexant/universalfunction/CommonUtilNative;",
+      "method": "floatFromQ8_23T",
+      "descriptor": "(J)F"
+    },
+    {
+      "class": "Lcom/conexant/universalfunction/CommonUtilNative;",
+      "method": "q31T",
+      "descriptor": "(F)J"
+    },
+    {
+      "class": "Lcom/conexant/universalfunction/CommonUtilNative;",
+      "method": "q8_23T",
+      "descriptor": "(F)J"
+    }
+  ],
+  "dexControlStrings": [
+    {
+      "dex": "classes.dex",
+      "value": "getMasterGain"
+    },
+    {
+      "dex": "classes.dex",
+      "value": "setMasterGain"
+    }
+  ],
+  "arm64Libraries": [
+    {
+      "file": "lib/arm64-v8a/libCxAudioHidLib.so",
+      "bytes": 231256,
+      "sha256": "e3b58275c7421029be587218c35d8b997a9616a98c8e9795fc4c7db88d6e22cd",
+      "controlSymbols": [],
+      "controlStrings": []
+    },
+    {
+      "file": "lib/arm64-v8a/libCxAudioHidLib_EMBCB_jni.so",
+      "bytes": 14496,
+      "sha256": "9838ad94ad736faec9caf3fb3442ee871eda30ede47b2b70e48ae78dc44961f9",
+      "controlSymbols": [],
+      "controlStrings": []
+    },
+    {
+      "file": "lib/arm64-v8a/libapp.so",
+      "bytes": 12649432,
+      "sha256": "d7a36533a469218685d7ffe4670bfa6c01e66897fc4f907de3e20ce9843420ac",
+      "controlSymbols": [],
+      "controlStrings": [
+        "/blePeqPreGainDebug",
+        "/usbPeqPreGainDebug",
+        "BLE PEQ PreGain Debug",
+        "BlePeqPreGainDebugPage",
+        "Failed to calculate PEQ PreGain",
+        "FlutterVolumeController",
+        "MoonSliderVolumeControl",
+        "TARGET_CURVE_URI",
+        "TouchVolumeControl",
+        "USB PEQ PreGain Debug",
+        "UsbPeqPreGainDebugPage",
+        "_BlePeqPreGainDebugPageState@1453450495",
+        "_BlePeqPreGainDebugPageState@1453450495.",
+        "_MoonSliderVolumeControlState@1461315984",
+        "_TouchVolumeControlState@1467222669",
+        "_UsbPeqPreGainDebugPageState@1477196283",
+        "_buildInnerVolumeControl@169174234",
+        "_readPreGain@1453450495",
+        "_readPreGain@1477196283",
+        "_setPeqPreGain@1494305955",
+        "applyPEQ SPV: Failed to read current preGain: ",
+        "applyPEQ SPV: Failed to restore preGain: ",
+        "applyPEQ SPV: Failed to set preGain to minimum: ",
+        "applyPEQ SPV: Restored preGain to ",
+        "applyPEQ: Failed to read current preGain: ",
+        "applyPEQ: Failed to restore preGain: ",
+        "applyPEQ: Failed to set preGain to minimum: ",
+        "applyPEQ: Restored preGain to ",
+        "assets/default_target_curve.txt",
+        "bleSourceSetPeqPreGain",
+        "bleSourceSetPeqPreGain(preGainDb=",
+        "calculatePeqPreGain",
+        "directReadPEQProfile: Failed to restore preGain: ",
+        "directReadPEQProfile: Restored PreGain raw=",
+        "get:spvPreGain",
+        "getSpvPreGain",
+        "package:moondrop_app/pages/device/BlePeqPreGainDebugPage.dart",
+        "package:moondrop_app/pages/device_usb/UsbPeqPreGainDebugPage.dart",
+        "package:moondrop_app/view/MoonSliderVolumeControl.dart",
+        "package:moondrop_app/view/TouchVolumeControl.dart",
+        "preGain",
+        "preGain(dB)",
+        "preGainDb",
+        "preGainRaw",
+        "preampGain",
+        "pregain",
+        "set:spvPreGainD",
+        "setPreGain",
+        "setSpvPreGain",
+        "setSpvPreGain -1.5",
+        "setSpvPreGain -9.5",
+        "setSpvPreGain 0$",
+        "showInnerVolumeControl"
+      ]
+    },
+    {
+      "file": "lib/arm64-v8a/libautoeq-lib.so",
+      "bytes": 806800,
+      "sha256": "f46e5802a886c1f137db4ca3cb1761ddfaabe015af83aafc5eaee3dc3b6d5765",
+      "controlSymbols": [],
+      "controlStrings": [
+        "Java_com_moondroplab_moondrop_moondrop_1app_AutoEqLib_calculatePeqPregain",
+        "Java_com_moondroplab_moondrop_moondrop_1app_AutoEqLib_calculatePregain",
+        "_Z16calculatePregainiRKNSt6__ndk16vectorIdNS_9allocatorIdEEEERKNS0_I6FilterNS1_IS6_EEEE",
+        "_Z21calculate_peq_pregainRKNSt6__ndk16vectorIdNS_9allocatorIdEEEE"
+      ]
+    },
+    {
+      "file": "lib/arm64-v8a/libavcodec.so",
+      "bytes": 18848192,
+      "sha256": "93b0f0f19704b39ef13eaf54bb3b7408c760ea600acbd0e42cce10728e5e66be",
+      "controlSymbols": [],
+      "controlStrings": []
+    },
+    {
+      "file": "lib/arm64-v8a/libavdevice.so",
+      "bytes": 760392,
+      "sha256": "cf1307791832d6a2d826c8296630b165771234a732a9370d88bc84175fdb5d12",
+      "controlSymbols": [],
+      "controlStrings": []
+    },
+    {
+      "file": "lib/arm64-v8a/libavfilter.so",
+      "bytes": 8526672,
+      "sha256": "a24742e83e1f3494570ad6b64bf4f78193e062004e4a7342b4db94439ffdbf89",
+      "controlSymbols": [],
+      "controlStrings": [
+        "replaygain_preamp",
+        "set stop-band attenuation"
+      ]
+    },
+    {
+      "file": "lib/arm64-v8a/libavformat.so",
+      "bytes": 3430072,
+      "sha256": "69ec03c3704ae580710ef0911756469b9ad458a538a61e11bb49a424fc65222a",
+      "controlSymbols": [],
+      "controlStrings": []
+    },
+    {
+      "file": "lib/arm64-v8a/libavutil.so",
+      "bytes": 489296,
+      "sha256": "4001d396bd522daa7a5955109d4fddf7de9dfab932fe074494a64a5b19eb5e49",
+      "controlSymbols": [],
+      "controlStrings": []
+    },
+    {
+      "file": "lib/arm64-v8a/libbarhopper_v3.so",
+      "bytes": 4946720,
+      "sha256": "ec09597e9eb3aee0eb55ae3366da0d4ba416f5aa35a1af0b3811f50ff46743a1",
+      "controlSymbols": [],
+      "controlStrings": [
+        "./third_party/absl/time/internal/get_current_time_posix.inc"
+      ]
+    },
+    {
+      "file": "lib/arm64-v8a/libc++_shared.so",
+      "bytes": 1027408,
+      "sha256": "3edb4b72df708f9296f784ff13eb26feb08b1ad22d0dc3ad508bce9054905291",
+      "controlSymbols": [],
+      "controlStrings": []
+    },
+    {
+      "file": "lib/arm64-v8a/libcronet.151.0.7922.47.so",
+      "bytes": 7147648,
+      "sha256": "da7a6ecd12da5cb5e3e897a10a1ab27aa892637dd4dd795d3e12809ca5c29204",
+      "controlSymbols": [],
+      "controlStrings": [
+        "../../third_party/abseil-cpp/absl/time/internal/get_current_time_posix.inc"
+      ]
+    },
+    {
+      "file": "lib/arm64-v8a/libcrypto-lib.so",
+      "bytes": 753976,
+      "sha256": "95417ae9aa1bcf22e2a9cc77be6ec13a6e47b26a61321f49151ed32c80e0751b",
+      "controlSymbols": [],
+      "controlStrings": []
+    },
+    {
+      "file": "lib/arm64-v8a/libcxaudiodsplib_embca_jni.so",
+      "bytes": 31240,
+      "sha256": "702b5facf4f741b34cc4acee4e9ab5f5b7d803fcd13a0ed6717949b4d9a5f277",
+      "controlSymbols": [],
+      "controlStrings": []
+    },
+    {
+      "file": "lib/arm64-v8a/libdartjni.so",
+      "bytes": 131400,
+      "sha256": "a99901633335a2f6ae9e3e66d0b71166ed8e6a0ae359da88ee4148dbdf61f5ef",
+      "controlSymbols": [],
+      "controlStrings": []
+    },
+    {
+      "file": "lib/arm64-v8a/libdatastore_shared_counter.so",
+      "bytes": 7112,
+      "sha256": "d3e48717c9aa147e0ab21063ba0e8e0211cabf8bf40b222640829519edbf58e1",
+      "controlSymbols": [],
+      "controlStrings": []
+    },
+    {
+      "file": "lib/arm64-v8a/libffmpegkit.so",
+      "bytes": 464696,
+      "sha256": "a63f31c4afd10e683b48442f537be2902e9c80497870caeefd6fd99bae6655fd",
+      "controlSymbols": [],
+      "controlStrings": []
+    },
+    {
+      "file": "lib/arm64-v8a/libffmpegkit_abidetect.so",
+      "bytes": 30784,
+      "sha256": "65922ae6a8d8ee749fee0ec643cb92e8ea21e3bd9c785885742e73675c44ba90",
+      "controlSymbols": [],
+      "controlStrings": []
+    },
+    {
+      "file": "lib/arm64-v8a/libflutter.so",
+      "bytes": 11781152,
+      "sha256": "357b5b4d771391479889f033f22a3eec2bedce0d9cab660b1d22a3ae1723c109",
+      "controlSymbols": [],
+      "controlStrings": [
+        "../../../third_party/abseil-cpp/absl/time/internal/get_current_time_posix.inc"
+      ]
+    },
+    {
+      "file": "lib/arm64-v8a/libflutter_zxing.so",
+      "bytes": 1900720,
+      "sha256": "783a4d942dd4be0895d515b9be1da8b728479352a68b9cd3f66900ca90578dec",
+      "controlSymbols": [],
+      "controlStrings": []
+    },
+    {
+      "file": "lib/arm64-v8a/libimage_processing_util_jni.so",
+      "bytes": 32528,
+      "sha256": "0292b063fafccf734472cbb59588e756c2dbca907c72021ba6fbf126385508a2",
+      "controlSymbols": [],
+      "controlStrings": []
+    },
+    {
+      "file": "lib/arm64-v8a/libjl_ota_auth.so",
+      "bytes": 14968,
+      "sha256": "611234b1ab9670ba6f7fc446f0e9bb03f6bdea1ccf3cd3125b1379d0b7739b5f",
+      "controlSymbols": [],
+      "controlStrings": []
+    },
+    {
+      "file": "lib/arm64-v8a/libmoondrop_rust_test.so",
+      "bytes": 309416,
+      "sha256": "ffe132e0bb917d036009e9b7b51437d32dd47d331d60c33a568b9a77a83427a2",
+      "controlSymbols": [],
+      "controlStrings": []
+    },
+    {
+      "file": "lib/arm64-v8a/libnative-anc-1568.so",
+      "bytes": 624784,
+      "sha256": "0a099d44d7a5483e5639f034ab8c8afc08c885646271c083faad8309f1a0e778",
+      "controlSymbols": [],
+      "controlStrings": []
+    },
+    {
+      "file": "lib/arm64-v8a/libnative-anc-158x.so",
+      "bytes": 469752,
+      "sha256": "79b036f4feb70c17c183a6d2ff7e4003d54a4aa69bc76aa51bb15dfe2b58ab02",
+      "controlSymbols": [],
+      "controlStrings": []
+    },
+    {
+      "file": "lib/arm64-v8a/libnative-anc.so",
+      "bytes": 34168,
+      "sha256": "5462ffe1efb5047483e5a39229629df74ea52b268415d73b317b77fb07041c98",
+      "controlSymbols": [],
+      "controlStrings": []
+    },
+    {
+      "file": "lib/arm64-v8a/libnative-ha.so",
+      "bytes": 381776,
+      "sha256": "2ffa977d3800d58827051fc684f63b657161d906d132e009d5809289f678d568",
+      "controlSymbols": [],
+      "controlStrings": []
+    },
+    {
+      "file": "lib/arm64-v8a/libnative-peq.so",
+      "bytes": 293912,
+      "sha256": "ffa603fecd3e496a12c5b1f541b56b2c83566801f19200db9ed92cc27bb0ee68",
+      "controlSymbols": [],
+      "controlStrings": []
+    },
+    {
+      "file": "lib/arm64-v8a/libpcmmixer-lib.so",
+      "bytes": 92128,
+      "sha256": "c7f270a384882c0942d6af7d021423ac03d9083a231b0bdc4a35e6476118c6ce",
+      "controlSymbols": [
+        "Java_com_moondroplab_moondrop_moondrop_1app_native_PcmMixerNative_setGlobalGain",
+        "Java_com_moondroplab_moondrop_moondrop_1app_native_PcmMixerNative_setGlobalRandomGainRange",
+        "Java_com_moondroplab_moondrop_moondrop_1app_native_PcmMixerNative_setGlobalRandomGainSmoothTime"
+      ],
+      "controlStrings": [
+        "Java_com_moondroplab_moondrop_moondrop_1app_native_PcmMixerNative_setGlobalGain"
+      ]
+    },
+    {
+      "file": "lib/arm64-v8a/libpdfium.cr.so",
+      "bytes": 4721224,
+      "sha256": "63ce766a306d56e03423c0b7b2464020777f434cbff5e8a6029ab7b270645845",
+      "controlSymbols": [],
+      "controlStrings": []
+    },
+    {
+      "file": "lib/arm64-v8a/libpdfiumandroid.so",
+      "bytes": 369384,
+      "sha256": "420ad7075126af2c6f4291c7ac4d6a2c6c2b57cd2454fc3774a406a1c1d43d10",
+      "controlSymbols": [],
+      "controlStrings": []
+    },
+    {
+      "file": "lib/arm64-v8a/libsurface_util_jni.so",
+      "bytes": 4896,
+      "sha256": "a5c9d1928ea92ec7a94dff8cf666e7739cd734198b9f0ae1d4e28ea3c86516ba",
+      "controlSymbols": [],
+      "controlStrings": []
+    },
+    {
+      "file": "lib/arm64-v8a/libswresample.so",
+      "bytes": 204432,
+      "sha256": "637c0020c1d02934d6caf90c743fd8340e474363c2fbbc5c69ffba00dde06209",
+      "controlSymbols": [],
+      "controlStrings": []
+    },
+    {
+      "file": "lib/arm64-v8a/libswscale.so",
+      "bytes": 303736,
+      "sha256": "329c8fb199d7bb6f432442fa551be69d597ef020c69278fc768c60d6ab248f7a",
+      "controlSymbols": [],
+      "controlStrings": []
+    },
+    {
+      "file": "lib/arm64-v8a/libusb1.0.so",
+      "bytes": 75528,
+      "sha256": "5640c2e78b4daf12cfbd47ceac3b2b6e7af538361b56903cf06b417f9e5e450e",
+      "controlSymbols": [],
+      "controlStrings": []
+    },
+    {
+      "file": "lib/arm64-v8a/libutils-lib.so",
+      "bytes": 868400,
+      "sha256": "44b5c258111f23247d22ebfc67fb38160ea5d54b20c57f387f4d0d6c3ae82276",
+      "controlSymbols": [],
+      "controlStrings": []
+    }
+  ]
+}

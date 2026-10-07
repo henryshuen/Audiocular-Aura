@@ -454,3 +454,15 @@ Henry reports FreeDSP nine-band defaults and structure-preserving Reset to Flat 
 - Added FreeDSP-only main-page unavailable-control note/titles, reset visible Tilt/preamp on connect, prevent delayed Auto Preamp enabling and stop simulated mic meters. Other DAC controls retained; no new hardware commands.
 - Recorded Henry's FreeDSP default9/structure-preserving Flat hardware/UX PASS, and original generic reset source/history evidence. No new control hardware validation claimed. Codex performed no hardware operations.
 - Final offline verification: focused51 frontend tests PASS; final verify.ps1 build+235tests/24files PASS; native69 synthetic tests PASS. Existing VM test dependencies updated for new UI functions. Native loopback used FAKE child only, no hardware. Non-FreeDSP protocol changes: NO.
+
+
+## M2U — preamp research completed within documented static scope, 2026-10-08
+- Preserved Henry's nine-band stereo PEQ RAM hardware PASS and native transport PASS. No new preamp hardware result or implementation claimed. Preamp remains highest-priority unresolved feature; Flash remains last.
+- Added pinned offline inspect-preamp.py: both DEX files (11,398/487 classes),23 Android API boundary calls,five direct USB controlTransfer sites,nine Conexant native declarations,all36 arm64 ELF symbol/targeted-string inventories. Stored original instructions/library hashes in fixtures.
+- Followed PCM setGlobalGain companion -> JNI -> pcm_mixer_set_globle_gain -> resolved powf PLT call -> software object+4 store. Recorded Airoha mastergain as a different API family and unassigned Dart USB/BLE pregain strings as an explicitly incomplete call graph.
+- Reviewed cached Freeman constructors187/188/190/220/259/346/442/446/477/90, HID volume-key callbacks and all57 existing helper pairs. No new packet semantics or hardware access introduced.
+- Checked current upstream history/Issue3/available fork deltas; public FreeDSP Studio/devicePEQ/DacVolumeFix/Hub research; USB-IF UAC1/UAC2 standards and Microsoft endpoint-volume semantics. Recorded exact-device descriptor/control evidence gap and static-analysis limits in ROADMAP.
+- Reinforced upstream cleanup/isolated-device/native transport-only rule and real preamp versus PEQ/OS-volume boundary in GENERAL/DECISIONS. Production source unchanged; no diagnostic writes or hardware tests prepared.
+
+### M2U automated verification
+Focused preamp evidence tests:5 PASS. Final verify.ps1: TypeScript/production build PASS;240 tests across25 files PASS, no hardware. git diff --check PASS. No production runtime changes; analysis/test/docs only.
