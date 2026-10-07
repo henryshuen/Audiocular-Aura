@@ -35,7 +35,8 @@ export function modelWebBand(b:Band,sampleIndex:number,restore=false) {
 export type BridgeReply={ok:boolean;log:string;logPath?:string;exitCode?:number};
 export class RamBridge {
   private token=''; private busy=false;
-  constructor(private fetcher:typeof fetch=fetch){}
+  // Native Window.fetch must keep its global receiver when called as this.fetcher().
+  constructor(private fetcher:typeof fetch=globalThis.fetch.bind(globalThis)){}
   async connect():Promise<BridgeReply> {
     if(this.busy)throw new Error('BUSY');this.busy=true;
     try{
