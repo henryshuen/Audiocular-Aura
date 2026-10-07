@@ -195,7 +195,7 @@ M2F取代診斷頁的舊CURRENT/candidate九段測試；正常production sync仍
 Henry以低Windows音量、IEM先離耳測試，維持相同來源/音量；flat不是完整原設定備份。
 硬體ACK、聽感與flat返回均須Henry回報；不得以mock tests提前標記RAM proof完成。
 
-## Current M2G transport diagnosis
+## Historical M2G transport diagnosis
 Henry回報兩次Apply與一次Restore都在188 host send成功後約2.5秒timeout，187/346/190未送；無EQ效果結論。
 本輪只診斷接收，DEV頁停用M2F Apply/Restore/90，唯一命令控制為346 query；不改production或非FreeDSP。
 所有input events須保存timestamp/counter/reportId/byteLength/fullhex，包括短資料、其他ID及unmatched candidate。
@@ -204,3 +204,16 @@ Persistent listener在open/send前註冊，timeout後保留；connection只open�
 命令lower-helper reply政策與caller丟棄結果分開判斷；ignored return不等於fire-and-forget。
 沒有新證據不得把188降級成send-success-only，更不得因transport猜測自動前進190。
 Query346 raw index未知時保留matching response並標Hz UNKNOWN，不猜fallback或宣稱RAM可用。
+
+## Current M2H response transport policy
+Henry提供的M2G結果：raw listener在open/send前ACTIVE，ID1/data61的346 host send resolved，
+等2.5秒後rawTotal=0/newEvents=0，沒有任何ID/長度的inputreport。這是Henry回報，非Codex硬體擷取。
+本次parser沒有收到事件；不得宣稱DSP拒絕346、沒有回應或RAM失敗。不得要求重做descriptor或原樣重試WebHID346。
+一般Windows Chrome網頁沒有WebHID Input GET_REPORT；Feature report不能替代Input report。
+WebUSB受保護HID介面不能用正常網頁claim/control transfer；WinUSB換driver不解除瀏覽器class保護。
+M2H只更新GENERAL/ROADMAP/DECISIONS/DONE四份文件，不新增.md、不新增無用診斷控制，不安裝driver或native helper。
+需官方可驗證回應時，後續方向是保留Windows HID driver的native companion/local bridge，另輪授權及驗證；本輪不實作。
+sendReport resolved僅能稱Host write sent／Device acceptance unverified，不能稱Sync Complete。
+匹配CAF response、verified readback、可聽變化、Flash persistence須分開記錄；AudioContext/MediaDevices rate不是已驗證CAF current rate。
+188/187/190/220是否不讀GET也能生效仍UNKNOWN，不以caller忽略結果推導可省略response。
+本輪Case C：No manual test required this round。禁止RAM/Flash/90/Apply/Restore，停止於M2H。

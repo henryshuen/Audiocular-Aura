@@ -25,6 +25,8 @@ M2D只完成離線格式研究；runtime尚未修改，M2 RAM proof仍NOT PROVEN
 M2E已追到JNI/native數學、Gain/exponent、RAM band/rate及enable/service鏈；比較與離線模型完成，實機原因尚未隔離。
 M2F單段官方格式診斷已實作；Henry手動硬體結果PENDING，正常production runtime未更換。
 M2G：Henry回報三次188 host send成功／無matching RX／2.5秒timeout，187/346/190皆未送；無EQ效果結論。
+M2H：M2G346實測rawTotal=0/newEvents=0已回報；正常Windows Chrome的官方Input GET_REPORT替代路徑不可行。
+本輪僅四份docs，Case C不要求手動test；native transport屬後續另輪，M2 RAM proof仍NOT PROVEN。
 Round 0 結束時 dev server 正在執行，僅監聽 127.0.0.1:5173。
 HTTP 以 curl.exe --noproxy '*' 驗證；一般 Invoke-WebRequest 曾回傳 404，
 直接請求已確認 Vite 頁面正確，未改動系統代理設定。
@@ -87,10 +89,17 @@ Success: Henry can clearly hear the difference while all other variables remain 
 - [ ] Henry connection/apply/listening/restore logs；RAM proof不可提前完成。
 - Henry已回報三次188 timeout；未到190，M2F RAM proof仍NOT PROVEN。M2G取代頁面write controls。
 
-### M2G — ACK / transport diagnosis — query controls READY / hardware PENDING
+### M2G — ACK / transport diagnosis — query trial COMPLETE / response NOT OBSERVED
 - [x] 記錄三次實測、完整同步GET_REPORT來源與每command policy/caller差異。
 - [x] Persistent raw listener、所有輸入保存、short candidate parser、唯一manual query346。
-- [ ] Henry重新連線／raw listener／query346完整log；本輪不前進190。
+- [x] Henry回報：open/send前raw listener ACTIVE，346 host resolved，2.5秒timeout，rawTotal=0/newEvents=0。
+- 無任何ID/長度inputreport；不是parser mismatch，不前進190；不要求原樣重試。
+
+### M2H — response transport feasibility — research COMPLETE
+- [x] 官方USB參數、HID interface3來源、WebHID/WebUSB/Windows限制與hybrid判斷。
+- [x] write-only、sample-rate替代來源、native方向與truthful success states比較。
+- [x] Case C：無新diagnostic或manual test；只四份docs，不進production implementation。
+- [ ] native transport硬體response及RAM/audio proof：尚未實作/測試，非M2H完成條件。
 
 ## M3 - Full 9-band real-time PEQ — PENDING
 - all 9 bands
@@ -418,11 +427,19 @@ Possible fix direction:
   保持external reportId及descriptor gate。若native words非13，依schema修正呼叫者，不能單純縮buffer。
 
 ## Evidence for upstream / Issue #3
+- M2H update (Henry-reported M2G query): raw listener ACTIVE before open/send; command346 reportId1/data61 host send resolved;
+  2.5s timeout, rawTotal=0/newEvents=0, no inputreport of any ID/size. Parser received nothing; no DSP acceptance/rejection conclusion.
+- Official current APK explicitly selects HID class3/subclass0/protocol0/interface3; request setup confirmed again from bytecode:
+  SET 21/09/0201/index3; GET A1/01/0101/index3; both length=array.length (62 for346), per-call timeout1000ms.
+- Normal Windows Chrome web origins cannot request Input GET_REPORT through WebHID. WebUSB blocks protected HID class even with WinUSB;
+  WebHID-write/WebUSB-read cannot borrow the claim. IWA usb-unrestricted is a privileged exception outside normal AuraPEQ deployment.
+- Best supported direction: native Windows HID Input GET_REPORT through existing HID driver, one owner for SET→GET; device behavior remains untested.
+  Host sent is not Sync Complete. No new browser trial requested; next evidence would be native346 completion/raw matched response in a separately authorized round.
 - M2G hardware update (Henry reported): M2F Apply兩次、Restore一次，均在188 host send成功後timeout；descriptor gate通過。
   無matching input event記錄；187/346/190皆未送，不能推論188 accepted/rejected或EQ failure。
 - M2G source update: SET_REPORT output1後同步GET_REPORT input1 (A1/01/0101/interface3/length62)，不是input endpoint listener。
   187的SET/GET request length14；188/190 helper均wait reply，187丟bool、188只存flag；失敗未必阻擋上層。
-  新頁只query346並持續記錄全部input events，硬體查詢結果PENDING；舊July logger/hook仍缺，RX不是已證interrupt ACK。
+  新頁只query346並持續記錄全部input events，M2H已收到raw零事件結果；舊July logger/hook仍缺，RX不是已證interrupt ACK。
 - Hardware: Henry 的 Moondrop FreeDSP / CONEXANT Freeman，VID35D8/PID1496。
 - Descriptor: usagePage12/usage1，input/output reportId1，count61×size8=488bits=61 data bytes；secondaryinputid2=1byte。
 - WebHID reportId外傳，61不可解釋為「ID+60」。
@@ -1124,3 +1141,158 @@ Possible fix direction:
 - Discarded hypotheses: ignored188/187 return就代表不需要RX；count>=0提供有效錯誤檢查。
 - Unresolved fields: Henry346 input result、actualUSB transfer routing/length、July hook；新346 fixture為synthetic，非captured。
 - Next search target: Henry一次query346完整raw log/counter；本輪停止，不改gating前進190。
+
+## M2H — official response transport feasibility
+
+### Research checkpoint — hardware record and source audit
+- Examined: Henry提供的M2G結果、pinned APK、現有12method完整fixture、CnxtUsbDeviceBase介面選擇。
+- Verified facts: 以下硬體結果是Henry回報，非Codex擷取：raw listener在open/send前ACTIVE；346 ID1/data61 host resolved；
+  2.5秒timeout，rawTotal=0/newEvents=0，任何ID/長度的inputreport都未到，parser沒有收到資料。
+- Verified facts: 12methods重新靜態抽取與保存JSON完全一致；APK SHA25604756b49acfea523758d86101c96c1824b7b209ae3a8836c07837088e795d2d5。
+- Hypotheses: firmware只在control GET_REPORT提供回應，最符合來源與本次結果；尚非physical USB capture證明。
+- Discarded hypotheses: ACK已到但被parser／ID filter／short filter吞掉、send後才註冊listener，不能解釋本次raw零事件。
+- Unresolved fields: DSP是否接受346、實際Windows USB transfer、native GET是否得到回應、July hook。
+- Next search target: WebHID Input讀取能力、WebUSB保護及driver條件；不再要求同一WebHID測試。
+
+### Exact official transfer parameters — rechecked bytecode
+| Field | SET_REPORT | GET_REPORT |
+| --- | --- | --- |
+| requestType |0x21 = OUT / class / interface |0xA1 = IN / class / interface |
+| request |9 (0x09) |1 (0x01) |
+| value |513 = 0x0201 |257 = 0x0101 |
+| report type / ID |Output (2) / 1 |Input (1) / 1 |
+| index |3 |3 |
+| length |TX array.length |fresh RX array.length = TX.length |
+| known commands |188/346/190:62; 187:14 |same request capacities |
+| per-call timeout |1000ms |1000ms |
+
+sendCmd instruction byte offsets22/26/28/32/38 prove SET constants/call;
+110/114/116/120/124 prove GET constants/call. getMsgByCmd SET34/38/40/44/52, initialGET70/74/76/80/86,
+repeatedGET152/156/158/162/168. UsbHelper array-length offset0, timeout2, controlTransfer18.
+These are buffer/request lengths, not captured successful USB completion lengths. Short187 padding remains unresolved.
+Flash helper writeGolemCmdToDevice亦再次靜態核對：SET constants18/22/24/28、call34；fresh RX42，
+initial GET46/50/52/56、call60；repeated GET122/126/128/132、call136，沿用相同Output1→Input1/interface3。
+RX allocations52/66 are fresh arrays; helper polls replybit with sleep5ms/outer~1000ms, blocking control calls can extend wall time.
+The existing JSON contains all these methods, not only selected instructions.
+
+New static check, same APK: CnxtUsbDeviceBase.connectUsbDeviceByApplication()Z:
+getInterfaceClass@36 → const3@44/compare46; subclass@50/zero check58; protocol@62/zero check70;
+getId@74/compare3@82 selects interface3; claimInterface(interface,true)@152; stores mHidInterface@178.
+This proves the official application targets a HID-class interface3, not an arbitrary vendor interface.
+No Windows raw configuration was reread; WebUSB metadata visibility of Henry's interface3 is UNKNOWN, but visibility would not permit claiming it.
+
+### Browser and OS capability audit
+| API / layer | Capability | Required official operation |
+| --- | --- | --- |
+|WebHID sendReport |Output write, ID supplied separately; no raw USB setup parameters |Host send possible; exact Windows control route not captured |
+|sendFeatureReport |Feature write |Wrong report type for official Output SET |
+|receiveFeatureReport |Feature read, not selectable Input type |NO replacement for Input1 GET; no exposed Feature1 here |
+|inputreport |Passive delivery of OS input reports |No explicit Input GET_REPORT; M2G observed zero events |
+|WebUSB controlTransferIn |Can syntactically express class/interface request1/value0101/index3/length62 |Normal web origin cannot access protected HID interface |
+|Windows HidD_GetInputReport |Native user-mode Input report request using existing HID driver |API exists; FreeDSP compatibility/response untested |
+
+WebHID IDL has no receiveInputReport/GetInputReport. Feature1 does not become Input1 by reusing its numeric ID.
+Chromium HidConnection::GetFeatureReport checks max_feature_report_size==0 and fails unsupported devices;
+Windows PlatformGetFeatureReport uses IOCTL_HID_GET_FEATURE; input path uses ReadFile, output uses WriteFile.
+These source snapshots explain the API distinction; they are not a capture of Henry's browser build or physical USB transfers.
+Sources: [WebHID §7](https://hid.spec.whatwg.org/#hiddevice-interface),
+[Chromium feature validation](https://chromium.googlesource.com/chromium/src/+/cc44e4fee54dcf1125de9f0f302aa79b84d4220e/services/device/hid/hid_connection.cc),
+[Chromium Windows backend](https://chromium.googlesource.com/chromium/src/+/96d204c5f08ced3357eb964d7b1dffa8ebd652b9/services/device/hid/hid_connection_win.cc).
+
+### WebUSB / hybrid decision — NOT FEASIBLE for normal Windows Chrome
+Chromium exposes navigator.usb subject to secure context/policy; filters can express vendorId0x35D8/productId0x1496.
+getDevices returns already-authorized devices; requestDevice requires user action. Neither selection nor visible configuration proves access.
+WebUSB protects HID0x03 and Audio0x01. claimInterface rejects protected classes; class control setup checks the interface selected by wIndex,
+and recipient=interface also requires that interface claimed. Endpoint0 does not bypass these checks.
+Exact official GET cannot be sent by borrowing WebHID permission/handle, opening a different interface, or skipping claim.
+Duplicate handles and cross-API ownership would be further OS concerns, not solutions to this prior security barrier.
+Changing recipient to device or inventing a vendor request is not reproduction of official A1/01/0101/3 and is unsupported.
+Sources: [WebUSB §§6.1/6.2/6.4/8.1](https://usb.spec.whatwg.org/),
+[Chromium protected class policy](https://chromium.googlesource.com/chromium/src/+/3752c3d7bd3dc15f094cc57f2b2f2f26e8d6ea01/chrome/browser/usb/web_usb_service_impl.cc).
+
+Windows WebUSB separately needs a usable WinUSB driver binding; existing HID/audio class drivers are not generic WebUSB ownership.
+Replacing only HID's driver may preserve separate audio functionality but removes normal HID/WebHID access; replacing audio/parent can break audio.
+Even HID→WinUSB replacement does not change bInterfaceClass3 or remove browser protection, so classification remains NOT FEASIBLE,
+not FEASIBLE WITH UNACCEPTABLE DRIVER CHANGE. No Zadig/driver replacement is recommended or performed.
+A separate vendor-class function, if one existed, would not authorize requests to protected interface3; no alternate FreeDSP protocol is evidenced.
+Source: [Chrome device/Windows driver requirements](https://developer.chrome.com/docs/capabilities/build-for-webusb).
+Privileged usb-unrestricted is an explicit Isolated Web App manifest exception. It is outside ordinary localhost Chrome deployment,
+not a normal Permissions-Policy opt-in; platform/browser privilege plus Windows binding would need separate investigation.
+This conclusion does not claim every privileged browser package or future firmware is universally incapable.
+
+### Response necessity, sample rate and transport choices
+Official helper polls Input GET for188/187/190/Flash220; ignoring its bool is distinct from firmware not needing GET.
+Whether these mutations apply without GET is UNKNOWN. A query346, however, needs returned data: no response means no verified current index.
+The source path reads word1 and failure−1001, not a cached OS rate. Flash also requires separate persistence evidence, not merely host completion.
+| Option | Technically possible | Missing proof / reliability | Truthful Sync Complete? |
+| --- | --- | --- | --- |
+|A strict official SET→Input GET |Not in normal pure browser; native API candidate |Device compatibility, actual completion, matching command result |Only after defined result verification; not from host write |
+|B WebHID write-only mutations |Host write API exists |Mutation application/prerequisites/current bank unknown; no official response |NO; Host write sent / acceptance unverified only |
+|C cached/manual OS rate |Can retain a hint |May be stale, different route/player/exclusive mode; no CAF index proof |NO |
+|D AudioContext/MediaDevices rate |Context/capture settings accessible |Processing/capture rate need not be active FreeDSP output clock |NO; not safe346 replacement |
+|E full WebUSB / hybrid |Setup syntax exists; protected interface blocked |Normal Windows Chrome access fails before transfer |NO; NOT FEASIBLE |
+
+Web Audio's default rate uses selected/default output-device information, but an explicitly different context rate must be resampled.
+That is not an authoritative CAF DSP clock query, including while another application owns playback or OS resamples.
+MediaDevices enumerates devices; capture track settings/capabilities are not current playback hardware rate (capture may also be processed).
+No reviewed browser API exposes the required FreeDSP CAF active sample-rate selector. These sources cannot safely replace346.
+Sources: [Web Audio AudioContext options](https://www.w3.org/TR/webaudio/#AudioContextOptions),
+[Media Capture sources/settings](https://www.w3.org/TR/mediacapture-streams/#the-model-sources-sinks-constraints-and-settings).
+
+Recommended future architecture: existing Windows HID driver + native companion/local bridge using HidD_GetInputReport,
+one owner serializing SET→GET and recording actual completion/raw CAF fields, browser remaining UI. Native response still needs proof.
+Do not split WebHID writer/native reader by assumption: handle sharing/concurrency is untested. Do not install/build helper this round.
+Windows API buffer begins with ID1; allocate capability-defined InputReportByteLength (expected62 for ID1+61), verify actual collection.
+Source: [HidD_GetInputReport](https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/hidsdi/nf-hidsdi-hidd_getinputreport).
+WebSerial has no established CDC/serial endpoint; not a supported alternative. Upstream pure-web support requires a supported response mechanism,
+or explicitly unverified writes; firmware/vendor interface changes are outside original-device evidence.
+
+### Failed approaches / retry policy
+| Attempt | Exact result | Why failed / unsupported | Retry? |
+| --- | --- | --- | --- |
+|M2F WebHID188 ACK gating:2Apply+1Restore |Host sent; ~2.5s timeout, no matching RX;187/346/190 never sent |Official GET response not observed; no complete all-event counter then |Do not retry unchanged |
+|M2G persistent raw346 |Listener beforeopen/send; host resolved;2.5s/rawTotal0/newEvents0 |No input event, so parser has nothing; passive events do not reproduce official control polling |Do not retry unchanged |
+|Feature GET instead of Input GET |Source/API audit only; not sent |Wrong type, no Feature1; missing Input API |NO |
+|WebUSB/full or hybrid |Source/API audit only; not attempted |Protected HID and Windows driver boundary |NO browser test this round |
+|Use browser/OS rate as346 |Source audit only; not implemented |Rate hints do not verify active DSP bank |NO as verified replacement |
+
+### Problem / hypothesis / next action
+Observed problem:
+- WebHID346 host送出成功，rawTotal=0/newEvents=0，2.5秒逾時；沒有parser輸入。
+Verified facts:
+- Henry listener在open/send前active；官方用Input GET_REPORT control transfer；普通WebHID沒有此方法。
+- 官方interface3為HID class；一般WebUSB受保護class及claim檢查阻擋，Feature不是Input。
+Possible causes:
+- 最符合證據：firmware以control GET回應而不主動送event；另有Windows output route/state/firmware因素尚未排除。
+Ruled out / weakened:
+- ACK被parser丟掉、晚註冊、ID filter、short input discarded不能解釋本次raw零；不以timeout判DSP拒絕。
+- WinUSB換driver、hybrid借handle、endpoint0免claim、AudioContext等於DAC clock均不能成立為正常網頁替代方案。
+Next validation:
+- 本輪沒有手動測試。下一個另行授權的native transport round才考慮一次read-only346 SET→Input GET，
+  記錄完成長度/raw bytes及matching CAF current-rate index，不送188/187/190/90/220；尚未實作或要求Henry執行。
+Possible fix direction:
+- Native companion/local bridge重現可驗證回應；production成功語義依D026改成host/response/readback分層，另輪才實作。
+- 保留write-only為明確unverified能力，不用timeout繞過gating，不盲選rate或進Flash。
+
+### Research checkpoint — capability synthesis
+- Examined: current WebHID/WebUSB/Web Audio/Media Capture規格、Chromium source、Windows HID API及Chrome driver文件。
+- Verified facts: ordinary Windows Chrome無Input GET API、protected HID使WebUSB及hybrid不可行；IWA是有條件例外。
+- Hypotheses: native existing-HID-driver path可重現官方reply，尚未測裝置；mutation是否必須GET未知。
+- Discarded hypotheses: Feature1替Input1、換driver即解除browser保護、context rate可當CAF active bank。
+- Unresolved fields: native response/actual Windows transfers、187short adaptation、July hook、RAM/audio/persistence。
+- Next search target: 後續另輪native只讀query proof；Case C，M2H停止，不新增diagnostic/code/docs files。
+
+### Scope / regression check
+- FreeDSP-specific code / analysis / tests changed: NONE。
+- Shared runtime files changed: NONE。
+- Documentation: GENERAL/ROADMAP/DECISIONS/DONE only；New documentation files created: NO。
+- Production runtime changed: NO；Non-FreeDSP protocol code changed: NO；hardware access/writes: NONE。
+
+### Research checkpoint — M2H verified delivery
+- Examined: final four-doc diff、既有全部offline tests、TypeScript/production build、scope。
+- Verified facts: verify.ps1 exit0；12files/114tests全部通過，TypeScript/build/test typecheck通過。
+  12method pinned static replay相同；Flash helper response branch亦重新核對；無新增測試或synthetic成功資料。
+- Hypotheses: native FreeDSP相容性未測，仍不是已完成硬體proof。
+- Discarded hypotheses: 以build/test通過當作HID response或可聽EQ成功。
+- Unresolved fields: actual device Input GET result、native completion、RAM/audio/persistence；不延伸本輪。
+- Next search target: 停止M2H，等待Henry下一輪指示；本輪No manual test required this round。

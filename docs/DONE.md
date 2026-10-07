@@ -193,3 +193,17 @@
 - inspect-response再次抽取12methods，保存JSON完全一致；currentAPK的UsbHelperDump tag absent。
 - 已以hidden dev.ps1啟動localhost:5173，root/M2G頁及兩個診斷TS模組直接HTTP200；僅驗證可提供，無瀏覽器/HID操作。
 - 還原本輪生成dist後，git diff --check通過，production source/舊M2F helper/config/package無差異。
+
+## 2026-10-07 — M2H response transport feasibility
+- 起始working tree乾淨，fix/freedsp-conexant追蹤origin，HEAD ebc34b7；origin/upstream設定正確。
+- 已記錄Henry的M2G結果：open/send前raw listener ACTIVE；346 ID1/data61 host send resolved；2.5秒後rawTotal=0/newEvents=0，無任何inputreport。
+  沒有parser輸入，不能判DSP接受/拒絕，沒有RAM/audio proof；Codex未存取硬體。
+- 本輪重播pinned APK完整12methods，與officialResponseStaticEvidence.json完全一致。
+- 靜態確認CnxtUsbDeviceBase.connectUsbDeviceByApplication選class3/subclass0/protocol0/interface3並claim；SET/GET參數及array.length再次核對。
+- 已查WebHID/WebUSB規格、Chromium HID/USB實作、Chrome Windows WinUSB要求、Windows Input report API、Web Audio/Media Capture規格。
+- 正常Windows Chrome網頁不能顯式Input GET_REPORT，Feature讀取不等價；protected HID class阻擋WebUSB及hybrid官方回應路徑。
+- 四份指定文件保存參數、限制、方案比較、失敗歷史、upstream證據及成功狀態政策；無新增文件或程式修改。
+- 本輪Case C，不新增診斷按鈕、不安裝driver/helper、不要求Henry重做WebHID346/descriptor；No manual test required this round。
+- 最終verify.ps1 exit0：12files/114tests全部通過，TypeScript/Vite build/test typecheck通過；未新增測試或fake success fixture。
+- Flash helper writeGolemCmdToDevice的SET/GET constants/call亦再次靜態核對；未送Flash命令。
+- 還原本輪生成的三個tracked dist files後，只四份指定docs有差異；git diff --check通過。

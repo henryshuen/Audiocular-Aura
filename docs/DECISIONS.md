@@ -144,3 +144,32 @@ DEV頁只提供inspect/open及346 query，持續保存全部輸入；停止M2F w
 Candidate parser支持短logical response並保留unmatched/raw，但matching query須ID1/prefix0/reply1/346/CTRL及word1可用。
 Query的Hz未知與transport無response分開報告；synthetic346 fixture必須明確標記，不能假冒已知captured response。
 187Android短14-byte request已證，但61-byte WebHID padding的hardware等價性仍未知；本輪兩者皆不送。
+
+## D025 — M2H browser transport boundary
+Henry的M2G回報：listener在open/send前ACTIVE，346 ID1/data61 host完成；2.5秒後rawTotal=0/newEvents=0。
+沒有事件進parser，晚註冊／ID filter／short rejection／parser mismatch不能解釋本次raw零輸入。
+零輸入不證firmware拒絕或無回應；官方Input GET_REPORT沒有被WebHID passive events重現。
+正常Windows Chrome網頁：WebHID沒有Input GET_REPORT；Feature GET不是Input GET。
+WebUSB官方recipient=interface/index3指向受保護HID class，claim與control parameter檢查皆阻擋。
+WebHID權限/handle不能借給WebUSB，endpoint0也不能省略interface claim；hybrid NOT FEASIBLE。
+WinUSB binding不能解除HID class保護，不推薦Zadig或driver替換。只換HID功能可能保留audio但破壞WebHID；
+誤換audio/composite parent可破壞音訊。兩者均非一般AuraPEQ使用者方案。
+usb-unrestricted是有manifest權限的Isolated Web App例外，非一般localhost網頁可開啟的header；不把此例外說成平台永遠不可能。
+Case C：不增加WebUSB inspection/query按鈕、不要求Henry再測browser。後續候選為Windows HidD_GetInputReport native helper/local bridge，
+單一native owner序列化SET→GET；其FreeDSP相容性仍未測，本輪只作架構判斷。WebSerial無CDC/serial證據，不列可行替代。
+依據：[WebHID](https://hid.spec.whatwg.org/)、[WebUSB](https://usb.spec.whatwg.org/)、
+[Chrome WinUSB要求](https://developer.chrome.com/docs/capabilities/build-for-webusb)、
+[Windows Input report API](https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/hidsdi/nf-hidsdi-hidd_getinputreport)。
+
+## D026 — Success states and sample rate are evidence claims
+後續production的狀態政策（M2H不修改UI）：
+- HOST_SENT / Host write sent：OS/browser接受write；不是DSP成功。
+- RESPONSE_UNAVAILABLE / Device response unavailable in WebHID：目前API/測試未取得官方回應，不能宣稱拒絕。
+- ACCEPTANCE_UNVERIFIED / Device acceptance unverified：未取得匹配結果，不顯示Sync Complete。
+- MATCHED_CAF_RESPONSE / Verified by matching CAF response：至少比對ID、command、module、reply及logical payload；
+  這只驗證CAF回應，還須依命令結果語義判斷，不自動證EQ係數已套用、聽感或Flash持久化。
+- VERIFIED_READBACK / Verified by readback：讀回指定設定並比對；RAM與重開機後Flash persistence另列。
+346需取得實際response中的current-rate word；AudioContext、capture track、手動OS設定或cache只可標hint，不能假冒CAF查詢。
+188/187/190/220官方helper都有GET polling。GET是否為mutation生效必要條件UNKNOWN；ignored bool不構成write-only可靠性證據。
+write-only可以送出但不能truthfully verify DSP acceptance；未確認current rate亦不能安全推導當前bank。
+不盲寫Flash、不為timeout延長等待後再原樣重試、不以parser改動代替缺失的transport。
