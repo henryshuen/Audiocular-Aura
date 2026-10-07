@@ -1,4 +1,6 @@
-# AuraPEQ FreeDSP Roadmap
+﻿# AuraPEQ FreeDSP Roadmap
+
+> Current gate: M2P stereo investigation. M2O full-nine protocol/audible PASS, stereo correctness FAIL / unresolved; NOT production-complete. Henry reports selector0 LEFT-only effect, RIGHT unchanged; selector1 RIGHT remains UNVERIFIED.
 
 ## M0 - Local reproducible baseline — COMPLETE
 - [x] fork / upstream configured：Round 0.5 已確認 origin 分支可讀取且與本機 HEAD 相同。
@@ -2041,3 +2043,49 @@ Observed problem: Henry reports an old .NET Host locking Release/FreeDspQuery.dl
 Changed: project-specific lifecycle helper finds exact dotnet executable + this repository's absolute DLL path + sole serveDebug argument before build; rechecks PID/CreationDate/identity before scoped tree termination, waits up to5s for exit plus200ms, and aborts with PID/actionable error on failure. Normal foreground Vite/Ctrl+C remains; finally uses only saved owned bridge identity and disposes the process. Hard host termination can bypass finally; subsequent startup handles the leftover bridge. No PID-only/process-name-only kill, no unknown listener reuse, no hardware action.
 Verification: Windows PowerShell focused mock scenarios PASS: stale-owned-stop/wait, unrelated/path/operation rejection, no stale, cleanup savedPID only, PID reuse rejection, failed-stop PID error, prebuild/finally wiring. Focused11Vitest tests PASS; verify.ps1 once exit0, TypeScript/Vite and152project tests PASS. Generateddist restored; git diff --check PASS. These are mocks/static/build evidence, not a live Ctrl+C interruption experiment.
 Scope / regression check: scripts/dev.ps1 + scripts/freedsp/DevBridgeLifecycle.psm1, focused PowerShell test and one existing launcher assertion changed. Shared runtime/protocol files NONE; non-FreeDSP protocol code changed NO. Native API/190/math/mapping/RAM/M2O logic untouched. M2O remains READY awaiting Henry's manual result.
+
+## M2P — 2026-10-08: channel/path research checkpoint
+Henry hardware report reclassifies M2O: full-nine190 Apply wire1..9 PASS, Restore wire1..9 PASS, audible effect/restoration YES; stereo correctness FAIL / unresolved. NOT production-complete. Earlier single-band tests share reversible rightward imaging. Henry then directly checked ears: selector0 Apply changes LEFT only, RIGHT unchanged; unity restores LEFT. This is user listening evidence, not measured transfer/function naming. Path1 RIGHT is not confirmed.
+Examined: pinned APK04756...2d5 nine-slot DEX fixture, RAM/APK fixtures, all57official helper TX/RX pairs, local recovered APK classes.dex, current native payload. Verified: initializer setDefaultAvailable offsets58/62→word0=0,172/176→word0=1; same slot v6 written70/180, sameGain3/B0=4194304 written80/92 and184/188; two190 calls150/216 per slot0..9, firmware>=7.49.0.0 string guard. Runtime setter172/176 only0 and one190; getter446 uses0. Helper dump has NO190 (90×1,220×55,259×1); no official captured paired negative190.
+New pinned static name scan scripts/freedsp/inspect-paths.py: all com/conexant classes in classes.dex excluding generatedR resources; only setDefaultAvailable/setFreeman3EQ have literal190 in Freeman class. Left/Right names occur in ANC/ApplicationData, not mapped to190; notificationchannel/helperchannelcount do not name190 targets. Search does not reconstruct Dart AOT/firmware; cannot prove absence of other indirect routes.
+Strong inference:190word0 selects distinct coefficient targets; selector0 has LEFT-only effect in Henry's current setup. Stereo channel interpretation now MEDIUM/HIGH support, exact path1/right UNKNOWN until experiment. Alternative bank/processing-target interpretation remains; official runtime0-only is counterevidence to claiming it always updates both. Do not infer a proven official pairednegative setter.
+Next: isolated singlewire5 PK400/-12/Q1 current346 A/path0 and B/path1, each explicit unityRestore/listen. Record changedear andimage separately. C/both only after A LEFT-only/B RIGHT-only and both restoredYES; explicit samecoeff writes0then1, stopfirstfailure, no retry/rollback. No production/Web/M2O behavior replacement. No Codex hardware operations.
+
+### Problem / hypothesis / next action
+Observed problem: negative PK Apply changes only LEFT in Henry's direct ear check; RIGHT unchanged. Stereo image shifts right and unity restores normal. M2O protocol and audibility passed, stereo failed/unresolved.
+Verified facts: every currentdebug190 has word0=0. Pinned official initializer emits same-slot/same-unity0then1; runtime190setter and446getter0 only. No190 capture in57pairs. Source names do not tie selector1 toRight.
+Possible causes: word0 is a per-channel target and currentpath0 is LEFT; alternatively another processing path/bank produces the unilateral effect. Headphone/host channel routing is not objectively measured; phaseC can discriminate whether matched path writes restore symmetry.
+Ruled out / weakened: selector0 affects both ears in current setup (contradicted byHenry), protocolPASS proves stereo correctness,220rateIndex carries the same190meaning, officialnegative190dualpathwrites alreadycaptured, selector1 is provenRight.
+Next validation: A/path0 recordLEFT-only; explicitlyRestore0 andlisten. B/path1 recordear/image without assumingRight; explicitlyRestore1 andlisten. Only ALeft/BRight plusbothrecovered unlock C: samecut0then1, recordequalboth/centered, explicitlyunity0then1 andlisten. Onerror/Q stop, retainlog, no automaticrestore.
+Possible fix direction: if A/B/C confirms complementary stereo targets, a later FreeDSP-only sender can explicitly pair190writes per slot with completepreflight/boundedfailure handling; requires separate integration and full-nine stereo gate. No such production change now.
+
+### Command layout comparison
+| Command/path | word0 | word1 | words2..7 | Remaining words | Evidence / limits |
+|---|---|---|---|---|---|
+| Official realtime190 | literal0 | SDKband+5 | Gain,B0,B1,B2,A0,A1 | fivezeros | pinnedDEX setter; one190, not captured negative transfer |
+| Current Web/native190 | literal0 | UIindex+1/rawslot | sameGain/fivecoeff schema | fivezeros | current isolated runtime; Henry LEFT-only effect |
+| Official initialization190 | 0 then1 for each slot | raw0..9 | 3,4194304,0,0,0,0 | fivezeros | pinnedDEX offsets150/216, unity-only; not generalreset permission |
+| Official getter446 | literal0 | SDK+5 or raw1..9list | requestzeros | zero-filledcapacity | getterselects0; no device readback performed here |
+| Official Flash220 coefficients | rateIndex4..8 | band1..9 | Gain,fivecoefficients | fivezeros | 45helperTX plusDEX; word0 is NOT190path semantics |
+| Official Flash220 metadata/commit | 0/255 respectively | metadata band / unusedcommitzeros | command-family-specificmetadata / zeros | zero-filledcapacity | 9metadata+1commit helperTX; no channellabel evidence |
+
+### Hypothesis ranking
+| Hypothesis | Supports | Limits / contradicts | Confidence |
+|---|---|---|---|
+|190word0 selects coefficient processing target | same-slot0/1initialization;0-onlysetter/getter | fieldunnamed; firmware not inspected | HIGH as target inference, not namedABI |
+|0 targetsLEFT in Henry's setup | directLEFT-onlychange/Restore, consistentrightwardimage | listeningreport, no instrumentedL/R measurement | HIGH for reported effect |
+|1 targetsRIGHT | complementary0/1initialization plus0left effect | no path1hardware observation; possiblebank/pathsemantics | MEDIUM hypothesis, UNVERIFIED |
+|0 broadcastsboth | none undercurrentnegativeexperiment | directRIGHTunchanged | REJECTED for currentsetup |
+|190word0 isFlashrateIndex | superficialsimilar220layout | init0/1 vsrate4..8;currentrate queriedseparately346 | REJECTED |
+
+## Evidence for upstream / Issue #3 — M2P stereo finding
+Henryreports full-nineRAM protocolApply/Restore PASS and audibleYES, but stereoFAIL: selector0 negativeApply affectsLEFTonly, RIGHTunchanged; unityrestoresLEFT. Thisalsooccurredsingle-band. Current190=[0,rawSlot,Gain,B0,B1,B2,A0,A1,0x5]. PinnedAPK04756b49acfea523758d86101c96c1824b7b209ae3a8836c07837088e795d2d5 setDefaultAvailable emits identicalunity190perrawslot0..9 withword0=0then1 (getCmd150/216, sendCmd162/228). LiveSDKsetter stillwrites0only;446getter0only. Helperlog57TX contains90/220/259 andNO190;220rate4..8cannotbenamedRAMchannels. ExistingLeft/RightANCfieldsdo nottie190toLR. Path1/rightisUNVERIFIED. Isolatedsinglewire5A/BthenconditionallyC testprepared; no automaticdualchannelproductionintegration. Need explicitpath1earobservation andpairedpathcenteredreversal beforelaterstereointegration.
+
+### Scope / regression check
+- FreeDSP-specific files: newChannelProbe.cs, nativeCLI routing/operationallowlist only, isolatedPowerShellmanualharness/modules. Existing Web/M2O/production sender unchanged.
+- Analysis/test files: pinnedname-searchscript/fixture, channelEvidence.test.ts, channelValidation.tests.ps1, native mock tests.
+- Shared runtime files changed: native diagnosticProgram.cs/SafeRam.cs routing only; no production browser runtime changes.
+- Non-FreeDSP protocol code changed: NO.
+
+### M2P final automated verification
+Focused3files/21Vitest tests PASS (pairedunitysource,0-onlysetter/getter,no190dump,220word0families,boundedAPKscan/existingWebcontract). Native61synthetic/mock tests PASS, including fixedpath0/1packetparity and globalpath1rejection, exactselectedpaths/prerequisites, invalid/unknownrate prevention and failureonfirst/secondpaired190withoutrollback. PowerShell7M2Pmockscenarios＋15existingtoggle regression scenarios PASS; manual launcher/module AST syntax PASS. verify.ps1 once exit0: TypeScript/Vite build and19files/155tests PASS. No physical discovery/SET/GET/connect endpoints invoked byCodex. Generateddist restored; intendedgitdiffcheckPASS. M2P isolated manual validation READY, resultNOTRUN; M2O stereoFAIL/unresolved andproductionintegrationstillblocked.

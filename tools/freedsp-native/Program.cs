@@ -41,6 +41,12 @@ try
     Console.WriteLine("Input1/Output1 confirmed by HidP_InitializeReportForID (preparsed data only)");
     Console.Out.Flush();
     if (args[0] == "debugInspect") { Console.WriteLine("CONNECTED: exact FreeDSP CAF collection verified; metadata only, no SET/GET"); return 0; }
+    if (ChannelProbe.TryOperation(args[0],out _,out _))
+    {
+        var allowed=new List<byte[]> {SafeRam.Enable(),SafeRam.Bypass(),Caf346.CreateQuery()};
+        using var scoped=NativeHid.OpenScoped(target,b=>allowed.Any(p=>p.AsSpan().SequenceEqual(b)));
+        return ChannelProbe.Run(scoped,args[0],Console.Out,allowed);
+    }
     if (debugRequest is not null)
     {
         var allowed = new List<byte[]> { SafeRam.Enable(), SafeRam.Bypass(), Caf346.CreateQuery() };

@@ -1,4 +1,4 @@
-# AuraPEQ FreeDSP Development Rules
+﻿# AuraPEQ FreeDSP Development Rules
 
 ## Hardware
 - Original Moondrop FreeDSP
@@ -346,3 +346,8 @@ Henry verified M2N UI1/wire1, UI5/wire5 and UI9/wire9: protocol Apply/Restore PA
 M2O remains isolated DEV RAM debug only, UI1..9 -> wire1..9. Explicit editor-only preset: PK/Q1 at250/400/630/1000/1600/2500/4000/6300/10000Hz with -3/-4/-5/-6/-7/-8/-9/-10/-12dB. First full-nine Apply with IEM out of ears, APO OFF, FreeDSP output and low volume; listen only after protocol success without abnormalities.
 Prepare all selected coefficients AND packet bytes before first190; send each wire once in order, matching CAF required. Stop first failure, no retry/rollback/automatic restore. Existing explicit188/187/346 prerequisites unchanged and logged;190 is sole EQ write. Each wire has BEGIN/PASS and final protocol complete only after all nine pass.
 Separate user-only audible Apply YES then audible Restore YES; no inferred audibility. Restore writes nine unity filters, keeps editor values, and is neither prior-EQ backup nor readback. No Flash/preamp/positive gain/nonPK/production sender replacement/non-FreeDSP changes. Codex performs no hardware actions. STOP at M2O READY pending Henry.
+
+## M2P stereo correctness gate — 2026-10-08
+Henry reports M2O full-nine protocol Apply/Restore PASS and audible effect/restoration YES, but stereo correctness FAIL / unresolved. Direct listening: current selector0 affects LEFT only; RIGHT unchanged; unity restores LEFT. Prior single-band audibility must not be called stereo-correct. M2O is NOT production-complete.
+Stereo correctness is a required gate before any production integration. Treat path0/path1 as unnamed selectors until evidence confirms channel mapping; path1=Right remains UNVERIFIED. No automatic dual-path production/Web writes. M2P isolated manual entry scripts/test-freedsp-native-channel-path.ps1, no arguments: wire5 only PK400/-12/Q1, current matching346, RAM190. Preserve188/187 prerequisites and scoped exactpacket allowlist; no Flash/preamp/positivegain/readback/newtypes.
+A/path0 and B/path1 each require explicit Apply, changed-ear/image observation, explicit same-path unityRestore and recoveryYES. Only A LEFT-only + B RIGHT-only + both recoveryYES unlock C, explicitly Apply0then1 and Restore0then1; both-ear equal-change/centered and recovery confirmations required. First Apply IEMout, low Windowsvolume, APOOFF/FreeDSP output/same music/no tone. Stop errors/Q/uncertainty; no automatic retry/rollback/restore. Runtime logs outside repository. Codex does not perform hardware testing.

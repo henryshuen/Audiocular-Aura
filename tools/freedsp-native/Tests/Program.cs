@@ -415,6 +415,43 @@ async Task RunBridgeMock()
         Check((int)(await client.GetAsync(url+"/session")).StatusCode==403,"Foreign session blocked");
     }finally{hold.TrySetResult();cancellation.Cancel();await server;}
 }
+Test("M2P fixed path packets differ only inword0; default allowlist rejects path1",()=>{
+    foreach(int hz in SafeRam.Rates)foreach(bool restore in new[]{false,true}){
+        var c=SafeRam.Calculate(hz,restore);var p0=ChannelProbe.Packet(0,c);var p1=ChannelProbe.Packet(1,c);
+        Check(p0.Length==62&&p1.Length==62&&p0[10]==0&&p1[10]==1,"Only path selector changes");
+        p1[10]=0;Check(p0.SequenceEqual(p1),"Identical slot5/math/tails");
+        Check(BinaryPrimitives.ReadInt32LittleEndian(p0.AsSpan(14))==5,"Fixed wire5");
+        Check(!SafeRam.IsAllowedReport(ChannelProbe.Packet(1,c)),"No global path1 authorization");
+    }
+    Throws(()=>ChannelProbe.Packet(2,SafeRam.Calculate(48000,false)));
+    foreach(string op in new[]{"M2PApplyPath2","M2PApplyPath01","M2PFlash","190"})Check(!SafeRam.IsOperation([op]),"Reject arbitrary operation");
+    Check(!SafeRam.IsOperation(["M2PApplyBoth","extra"]),"No extra parameters");
+});
+Test("M2P all fixed operations use matching prerequisites and selected path only",()=>{
+    foreach(string op in new[]{"M2PApplyPath0","M2PRestorePath0","M2PApplyPath1","M2PRestorePath1","M2PApplyBoth","M2PRestoreBoth"}){
+        ChannelProbe.TryOperation(op,out var paths,out bool restore);
+        using var hid=new MockHid(NonMatch(190));foreach(var b in new[]{NonMatch(188),NonMatch(187),Reply()})hid.Responses.Enqueue(b);
+        using var log=new StringWriter();var allowed=new List<byte[]>();
+        Check(ChannelProbe.Run(hid,op,log,allowed,()=>new FakeClock())==0,"Matching protocol");
+        Check(hid.Transmissions.Count==3+paths.Length&&allowed.Count==paths.Length,"One190 per selected path; no retries");
+        for(int i=0;i<paths.Length;i++)Check(hid.Transmissions[3+i].SequenceEqual(ChannelProbe.Packet(paths[i],SafeRam.Calculate(48000,restore))),"Exact fixed packet");
+    }
+});
+Test("M2P invalid operation and unknown rate never reach190",()=>{
+    using var hid=new MockHid(Reply(9));using var log=new StringWriter();
+    Throws(()=>ChannelProbe.Run(hid,"bad",log,[]));Check(hid.Transmissions.Count==0,"Reject before SET");
+    foreach(var b in new[]{NonMatch(188),NonMatch(187),Reply(9)})hid.Responses.Enqueue(b);
+    Check(ChannelProbe.Run(hid,"M2PApplyPath1",log,[],()=>new FakeClock())==7&&hid.Transmissions.Count==3,"No fallback190");
+});
+Test("M2P path0 failure prevents path1 and any automaticrestore",()=>{
+    using var hid=new MockHid(NonMatch(190));foreach(var b in new[]{NonMatch(188),NonMatch(187),Reply()})hid.Responses.Enqueue(b);
+    for(int i=0;i<3;i++)hid.Results.Enqueue(new(true,0));hid.Results.Enqueue(new(false,31));
+    using var log=new StringWriter();Check(ChannelProbe.Run(hid,"M2PApplyBoth",log,[],()=>new FakeClock())==7&&hid.Transmissions.Count==4,"Stop after failedfirst190");
+    Check(!log.ToString().Contains("M2P PROTOCOL COMPLETE"),"No false completion");
+    using var second=new MockHid(NonMatch(190));foreach(var b in new[]{NonMatch(188),NonMatch(187),Reply(),NonMatch(190)})second.Responses.Enqueue(b);
+    for(int i=0;i<4;i++)second.Results.Enqueue(new(true,0));second.Results.Enqueue(new(false,31));
+    using var partial=new StringWriter();Check(ChannelProbe.Run(second,"M2PApplyBoth",partial,[],()=>new FakeClock())==7&&second.Transmissions.Count==5,"Secondpathfailure does not rollbackfirstpath");
+});
 Console.WriteLine($"Native offline tests: {passed} passed; SYNTHETIC / MOCK ONLY; no hardware access.");
 return 0;
 

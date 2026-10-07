@@ -1,0 +1,42 @@
+{
+  "apkSha256": "04756b49acfea523758d86101c96c1824b7b209ae3a8836c07837088e795d2d5",
+  "scope": "com/conexant classes in classes.dex, excluding generated R resources; field/method names and literal strings, not firmware or Dart AOT",
+  "freemanMethodsWithLiteral190": [
+    "setDefaultAvailable",
+    "setFreeman3EQ"
+  ],
+  "matches": [
+    {
+      "class": "Lcom/conexant/cnxtusbcheadset/ANCTuningParam;",
+      "field": "mLeftGain"
+    },
+    {
+      "class": "Lcom/conexant/cnxtusbcheadset/ANCTuningParam;",
+      "field": "mRightGain"
+    },
+    {
+      "class": "Lcom/conexant/conexantusbtypec/common/ApplicationData;",
+      "field": "CustomGainLeft"
+    },
+    {
+      "class": "Lcom/conexant/conexantusbtypec/common/ApplicationData;",
+      "field": "CustomGainRight"
+    },
+    {
+      "class": "Lcom/conexant/genericfeature/ANCTuningParam;",
+      "field": "mLeftGain"
+    },
+    {
+      "class": "Lcom/conexant/genericfeature/ANCTuningParam;",
+      "field": "mRightGain"
+    },
+    {
+      "class": "Lcom/conexant/libcnxtservice/CoreService;",
+      "method": "createNotificationChannel"
+    },
+    {
+      "class": "Lcom/conexant/libcnxtservice/utils/Helper;",
+      "method": "getChannelCount"
+    }
+  ]
+}
