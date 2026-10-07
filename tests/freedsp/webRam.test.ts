@@ -90,6 +90,6 @@ describe('M2N Web/native RAM contract; no physical HID',()=>{
    expect(nativeDebug).not.toMatch(/Encode\((?:90|220)|ReadDevice|FlashTo/);
    expect(main).toContain('./freedsp-ram-debug.html');expect(main).not.toContain("from './freedsp/webRam");
    expect(stateSource).toContain('import.meta.env.DEV && dev.vendorId === 0x35d8 && dev.productId === 0x1496');
-   expect(dev).toContain('-WindowStyle Hidden');expect(dev).toContain('taskkill.exe /PID $bridgeProcess.Id /T /F');
+   expect(dev).toContain('-WindowStyle Hidden');expect(dev).toContain('Stop-AuraOwnedBridge -OwnedProcess $ownedBridge');
  });
 });
