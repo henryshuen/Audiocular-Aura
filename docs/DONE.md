@@ -368,3 +368,13 @@ Prepared isolated scripts/test-freedsp-native-channel-path.ps1 and ChannelProbe 
 
 ### M2P final automated verification
 Focused3files/21Vitest tests PASS (pairedunitysource,0-onlysetter/getter,no190dump,220word0families,boundedAPKscan/existingWebcontract). Native61synthetic/mock tests PASS, including fixedpath0/1packetparity and globalpath1rejection, exactselectedpaths/prerequisites, invalid/unknownrate prevention and failureonfirst/secondpaired190withoutrollback. PowerShell7M2Pmockscenarios＋15existingtoggle regression scenarios PASS; manual launcher/module AST syntax PASS. verify.ps1 once exit0: TypeScript/Vite build and19files/155tests PASS. No physical discovery/SET/GET/connect endpoints invoked byCodex. Generateddist restored; intendedgitdiffcheckPASS. M2P isolated manual validation READY, resultNOTRUN; M2O stereoFAIL/unresolved andproductionintegrationstillblocked.
+
+## M2P 中文 toggle UX / baseline 優先 — 2026-10-08（取代先前觀察判讀與循序問卷關卡）
+Henry 最初感到 Apply 使聲像右偏、左側減少；後來受控 path0 測試不一致，先前 RAM 狀態可能未清乾淨；之後明確 path0 Restore 在 BOTH 耳產生清楚可聽變化。因此不能沿用「selector0 已確認只影響 LEFT」或推定1=RIGHT；selector0/1 立體聲語義仍 UNRESOLVED，優先建立乾淨 baseline 後反覆切換。M2O protocol/可聽效果 PASS，但 stereo correctness FAIL／未解，仍非 production-complete。
+新入口維持 scripts/test-freedsp-native-channel-path.ps1，完整繁體中文說明、主選單 U/0/1/B/Q；進入 path0/path1/both 後 A/R 可反覆切換，Enter/Q 返回持續主選單，O 才自願紀錄聽感。取消或錯誤觀察答案返回模式，不退出、不自動還原；問卷可用 RESTORE/CLEAN 明確選擇立即 Restore／雙pathunity。O 的 R 代表右側，U 代表不確定；不與主選單操作混用。
+U 明確呼叫既有 M2PRestoreBoth：預算兩個 unity 封包，依 path0→path1 各190一次；保留188/187/346 prerequisites，失敗即停止，無重試／rollback。逐path顯示 RESTORE PASS/FAIL，只有整體成功才印 Baseline clean: path0 + path1 wire5 unity restored。僅wire5unity命令完成，不是全裝置還原、舊EQ備份或readback。
+狀態依本次成功命令紀錄 APPLIED/UNITY，啟動與失敗 UNKNOWN；每個選單及結束摘要持續顯示各path狀態，返回／退出不隱藏仍套用或未知狀態。不強制問卷或宣稱聲道映射通過；Both 可由主選單明確選擇，取代先前依未可靠單側觀察設置的A/B→C關卡。首次Apply耳機離耳、APOOFF、FreeDSP輸出、Windows1–2/100；所有硬體動作均需明確A/R/U輸入。
+變更僅PowerShell tester UX、其mock tests及文件；command190語義、native係數／固定wire5／PK400/-12/Q1／RAM流程、Web/M2O/production sender、dev生命週期、非FreeDSP均未修改。Codex未操作硬體。
+
+### M2P 中文 toggle 最終自動驗證
+Windows PowerShell：11個toggle聚焦mock情境PASS（中文help/menu、U雙path成功／失敗、各模式反覆A/R、返回持續選單、無效／取消O不退出、RESTORE/CLEAN明確逃生、狀態警示、無自動寫入）；既有devBridgeLifecycle7個mock檢查PASS。三份PowerShellAST語法解析PASS。verify.ps1本輪一次exit0：TypeScript/Vite與19files/155testsPASS。Native/protocol/coefficients/mapping/Web/M2O/dev-process sources diff為空；未操作硬體。Generateddist已還原；gitdiffcheckPASS。立體聲mapping仍UNRESOLVED，下一步由Henry先U建立wire5雙pathunitybaseline，再自行反覆切換。
