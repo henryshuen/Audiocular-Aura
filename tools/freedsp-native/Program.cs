@@ -4,7 +4,7 @@ using FreeDspNative;
 // Reject arbitrary operations before any Windows HID call.
 if (!SafeRam.IsOperation(args))
 {
-    Console.Error.WriteLine("Fixed operations: query346 or ApplyRemainingBand1..4 / RestoreRemainingBand1..4. Use test-freedsp-native-band-map.ps1; no numeric band arguments.");
+    Console.Error.WriteLine("Fixed operations: query346 or ApplyRemainingBand1..4 / RestoreRemainingBand1..4 or ApplyCandidateWire1..4 / RestoreCandidateWire1..4. Use test-freedsp-native-unresolved-slots.ps1 for M2M; no numeric band arguments.");
     return 2;
 }
 if (!OperatingSystem.IsWindows())
@@ -35,6 +35,8 @@ try
     Console.Out.Flush();
     using var hid = NativeHid.Open(target);
     if (args[0] == "query346") return Query346.Run(hid, Console.Out);
+    if (SafeRam.TryCandidateOperation(args[0], out int wire, out bool candidateRestore))
+        return SafeRam.Run(hid, candidateRestore, Console.Out, candidateWire: wire);
     SafeRam.TryRemainingOperation(args[0], out int sdkBand, out bool restore);
     return SafeRam.Run(hid, restore, Console.Out, sdkBand: sdkBand);
 }
