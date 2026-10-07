@@ -1,0 +1,2 @@
+# Preserve downloaded evidence verbatim, including its two original trailing spaces.
+tests/freedsp/fixtures/officialAppUsbHelperDump.txt -text whitespace=-blank-at-eol

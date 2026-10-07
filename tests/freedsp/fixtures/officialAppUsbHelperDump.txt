@@ -1,0 +1,336 @@
+--------- beginning of main
+07-01 22:43:43.145 D/FreemanCnxtUsbDevice(26179): switchEQMode: set index: 0
+07-01 22:43:43.150 D/UsbHelperDump(26179): TX [1, 0, 13, 0, 90, 0, 0, 35, 45, -77, 90, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.151 D/UsbHelperDump(26179): RX [1, 0, 0, 0, 90, -128, 0, 35, 45, -77, 90, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.156 D/CafCmdHelper(26179): sendCmd: isSuccess: true
+07-01 22:43:43.156 D/FreemanCnxtUsbDevice(26179): switchEQMode: sendcmd reg: 0
+07-01 22:43:43.251 D/CafCmdHelper(26179): finish cmd -----releaseInterfaceListener: 
+07-01 22:43:43.450 D/FreemanCnxtUsbDevice(26179): saveCustomEQ: mHidInterface is null, connect
+07-01 22:43:43.454 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save custom EQ!
+07-01 22:43:43.454 D/UsbHelperDump(26179): TX [1, 0, 13, 0, -36, 0, 0, 35, 45, -77, 0, 0, 0, 0, 1, 0, 0, 0, 60, 0, 0, 0, -77, 0, 0, 0, 0, 0, 0, 0, -7, -1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.455 D/UsbHelperDump(26179): RX [1, 0, 0, 0, -36, -128, 0, 35, 45, -77, 0, 0, 0, 0, 1, 0, 0, 0, 60, 0, 0, 0, -77, 0, 0, 0, 0, 0, 0, 0, -7, -1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.455 D/CafCmdHelper(26179): writeGolemCmdToDevice: isSuccess: true
+07-01 22:43:43.455 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save eq parameter ->  res: true
+07-01 22:43:43.456 D/UsbHelperDump(26179): TX [1, 0, 13, 0, -36, 0, 0, 35, 45, -77, 0, 0, 0, 0, 2, 0, 0, 0, 90, 0, 0, 0, -77, 0, 0, 0, 0, 0, 0, 0, -9, -1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.456 D/UsbHelperDump(26179): RX [1, 0, 0, 0, -36, -128, 0, 35, 45, -77, 0, 0, 0, 0, 2, 0, 0, 0, 90, 0, 0, 0, -77, 0, 0, 0, 0, 0, 0, 0, -9, -1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.456 D/CafCmdHelper(26179): writeGolemCmdToDevice: isSuccess: true
+07-01 22:43:43.456 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save eq parameter ->  res: true
+07-01 22:43:43.457 D/UsbHelperDump(26179): TX [1, 0, 13, 0, -36, 0, 0, 35, 45, -77, 0, 0, 0, 0, 3, 0, 0, 0, -78, 2, 0, 0, -77, 0, 0, 0, 0, 0, 0, 0, -9, -1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.458 D/UsbHelperDump(26179): RX [1, 0, 0, 0, -36, -128, 0, 35, 45, -77, 0, 0, 0, 0, 3, 0, 0, 0, -78, 2, 0, 0, -77, 0, 0, 0, 0, 0, 0, 0, -9, -1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.458 D/CafCmdHelper(26179): writeGolemCmdToDevice: isSuccess: true
+07-01 22:43:43.458 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save eq parameter ->  res: true
+07-01 22:43:43.458 D/UsbHelperDump(26179): TX [1, 0, 13, 0, -36, 0, 0, 35, 45, -77, 0, 0, 0, 0, 4, 0, 0, 0, -24, 3, 0, 0, -77, 0, 0, 0, 0, 0, 0, 0, -7, -1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.459 D/UsbHelperDump(26179): RX [1, 0, 0, 0, -36, -128, 0, 35, 45, -77, 0, 0, 0, 0, 4, 0, 0, 0, -24, 3, 0, 0, -77, 0, 0, 0, 0, 0, 0, 0, -7, -1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.459 D/CafCmdHelper(26179): writeGolemCmdToDevice: isSuccess: true
+07-01 22:43:43.459 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save eq parameter ->  res: true
+07-01 22:43:43.459 D/UsbHelperDump(26179): TX [1, 0, 13, 0, -36, 0, 0, 35, 45, -77, 0, 0, 0, 0, 5, 0, 0, 0, -72, 11, 0, 0, -77, 0, 0, 0, 0, 0, 0, 0, -7, -1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.460 D/UsbHelperDump(26179): RX [1, 0, 0, 0, -36, -128, 0, 35, 45, -77, 0, 0, 0, 0, 5, 0, 0, 0, -72, 11, 0, 0, -77, 0, 0, 0, 0, 0, 0, 0, -7, -1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.460 D/CafCmdHelper(26179): writeGolemCmdToDevice: isSuccess: true
+07-01 22:43:43.460 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save eq parameter ->  res: true
+07-01 22:43:43.460 D/UsbHelperDump(26179): TX [1, 0, 13, 0, -36, 0, 0, 35, 45, -77, 0, 0, 0, 0, 6, 0, 0, 0, -113, 17, 0, 0, -77, 0, 0, 0, 0, 0, 0, 0, -5, -1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.460 D/UsbHelperDump(26179): RX [1, 0, 0, 0, -36, -128, 0, 35, 45, -77, 0, 0, 0, 0, 6, 0, 0, 0, -113, 17, 0, 0, -77, 0, 0, 0, 0, 0, 0, 0, -5, -1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.461 D/CafCmdHelper(26179): writeGolemCmdToDevice: isSuccess: true
+07-01 22:43:43.461 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save eq parameter ->  res: true
+07-01 22:43:43.461 D/UsbHelperDump(26179): TX [1, 0, 13, 0, -36, 0, 0, 35, 45, -77, 0, 0, 0, 0, 7, 0, 0, 0, 12, 23, 0, 0, -77, 0, 0, 0, 0, 0, 0, 0, -7, -1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.462 D/UsbHelperDump(26179): RX [1, 0, 0, 0, -36, -128, 0, 35, 45, -77, 0, 0, 0, 0, 7, 0, 0, 0, 12, 23, 0, 0, -77, 0, 0, 0, 0, 0, 0, 0, -7, -1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.462 D/CafCmdHelper(26179): writeGolemCmdToDevice: isSuccess: true
+07-01 22:43:43.462 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save eq parameter ->  res: true
+07-01 22:43:43.462 D/UsbHelperDump(26179): TX [1, 0, 13, 0, -36, 0, 0, 35, 45, -77, 0, 0, 0, 0, 8, 0, 0, 0, -124, 28, 0, 0, -77, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.463 D/UsbHelperDump(26179): RX [1, 0, 0, 0, -36, -128, 0, 35, 45, -77, 0, 0, 0, 0, 8, 0, 0, 0, -124, 28, 0, 0, -77, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.463 D/CafCmdHelper(26179): writeGolemCmdToDevice: isSuccess: true
+07-01 22:43:43.463 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save eq parameter ->  res: true
+07-01 22:43:43.463 D/UsbHelperDump(26179): TX [1, 0, 13, 0, -36, 0, 0, 35, 45, -77, 0, 0, 0, 0, 9, 0, 0, 0, 64, 31, 0, 0, -77, 0, 0, 0, 0, 0, 0, 0, -6, -1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.464 D/UsbHelperDump(26179): RX [1, 0, 0, 0, -36, -128, 0, 35, 45, -77, 0, 0, 0, 0, 9, 0, 0, 0, 64, 31, 0, 0, -77, 0, 0, 0, 0, 0, 0, 0, -6, -1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.464 D/CafCmdHelper(26179): writeGolemCmdToDevice: isSuccess: true
+07-01 22:43:43.464 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save eq parameter ->  res: true
+07-01 22:43:43.464 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> band index: 1
+07-01 22:43:43.464 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> sampleRateIndex: 4 -> 44100 & bandIndex: 1 & gain:-7.700000000000001
+07-01 22:43:43.464 D/Eq2Coeff(26179): CxAudioConvertEqParams2Coeffs: convertRes= 0
+07-01 22:43:43.464 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> convert eq to coefficient: band:1 & param.gain:-7.700000000000001 & pEQCoeff.Gain:3 & B0:3fa528 & B1:ff813643 & B2:3f25c5 & A0:7ec9bc & A1:ffc13513
+07-01 22:43:43.465 D/UsbHelperDump(26179): TX [1, 0, 13, 0, -36, 0, 0, 35, 45, -77, 4, 0, 0, 0, 1, 0, 0, 0, 3, 0, 0, 0, 40, -91, 63, 0, 67, 54, -127, -1, -59, 37, 63, 0, -68, -55, 126, 0, 19, 53, -63, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.465 D/UsbHelperDump(26179): RX [1, 0, 0, 0, -36, -128, 0, 35, 45, -77, 4, 0, 0, 0, 1, 0, 0, 0, 3, 0, 0, 0, 40, -91, 63, 0, 67, 54, -127, -1, -59, 37, 63, 0, -68, -55, 126, 0, 19, 53, -63, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.465 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: send save coefficient list -> cmd 0~43:res: true
+07-01 22:43:43.465 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> sampleRateIndex: 5 -> 48000 & bandIndex: 1 & gain:-7.700000000000001
+07-01 22:43:43.466 D/Eq2Coeff(26179): CxAudioConvertEqParams2Coeffs: convertRes= 0
+07-01 22:43:43.466 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> convert eq to coefficient: band:1 & param.gain:-7.700000000000001 & pEQCoeff.Gain:3 & B0:3fac79 & B1:ff811d2f & B2:3f3759 & A0:7ee2d0 & A1:ffc11c2e
+07-01 22:43:43.467 D/UsbHelperDump(26179): TX [1, 0, 13, 0, -36, 0, 0, 35, 45, -77, 5, 0, 0, 0, 1, 0, 0, 0, 3, 0, 0, 0, 121, -84, 63, 0, 47, 29, -127, -1, 89, 55, 63, 0, -48, -30, 126, 0, 46, 28, -63, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.467 D/UsbHelperDump(26179): RX [1, 0, 0, 0, -36, -128, 0, 35, 45, -77, 5, 0, 0, 0, 1, 0, 0, 0, 3, 0, 0, 0, 121, -84, 63, 0, 47, 29, -127, -1, 89, 55, 63, 0, -48, -30, 126, 0, 46, 28, -63, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.467 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: send save coefficient list -> cmd 0~43:res: true
+07-01 22:43:43.467 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> sampleRateIndex: 6 -> 96000 & bandIndex: 1 & gain:-7.700000000000001
+07-01 22:43:43.467 D/Eq2Coeff(26179): CxAudioConvertEqParams2Coeffs: convertRes= 0
+07-01 22:43:43.468 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> convert eq to coefficient: band:1 & param.gain:-7.700000000000001 & pEQCoeff.Gain:3 & B0:3fd60d & B1:ff808ef6 & B2:3f9b3d & A0:7f710a & A1:ffc08eb6
+07-01 22:43:43.468 D/UsbHelperDump(26179): TX [1, 0, 13, 0, -36, 0, 0, 35, 45, -77, 6, 0, 0, 0, 1, 0, 0, 0, 3, 0, 0, 0, 13, -42, 63, 0, -10, -114, -128, -1, 61, -101, 63, 0, 10, 113, 127, 0, -74, -114, -64, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.468 D/UsbHelperDump(26179): RX [1, 0, 0, 0, -36, -128, 0, 35, 45, -77, 6, 0, 0, 0, 1, 0, 0, 0, 3, 0, 0, 0, 13, -42, 63, 0, -10, -114, -128, -1, 61, -101, 63, 0, 10, 113, 127, 0, -74, -114, -64, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.468 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: send save coefficient list -> cmd 0~43:res: true
+07-01 22:43:43.468 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> sampleRateIndex: 7 -> 192000 & bandIndex: 1 & gain:-7.700000000000001
+07-01 22:43:43.468 D/Eq2Coeff(26179): CxAudioConvertEqParams2Coeffs: convertRes= 0
+07-01 22:43:43.468 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> convert eq to coefficient: band:1 & param.gain:-7.700000000000001 & pEQCoeff.Gain:3 & B0:3feafc & B1:ff804793 & B2:3fcd82 & A0:7fb86c & A1:ffc04782
+07-01 22:43:43.469 D/UsbHelperDump(26179): TX [1, 0, 13, 0, -36, 0, 0, 35, 45, -77, 7, 0, 0, 0, 1, 0, 0, 0, 3, 0, 0, 0, -4, -22, 63, 0, -109, 71, -128, -1, -126, -51, 63, 0, 108, -72, 127, 0, -126, 71, -64, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.469 D/UsbHelperDump(26179): RX [1, 0, 0, 0, -36, -128, 0, 35, 45, -77, 7, 0, 0, 0, 1, 0, 0, 0, 3, 0, 0, 0, -4, -22, 63, 0, -109, 71, -128, -1, -126, -51, 63, 0, 108, -72, 127, 0, -126, 71, -64, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.469 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: send save coefficient list -> cmd 0~43:res: true
+07-01 22:43:43.469 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> sampleRateIndex: 8 -> 384000 & bandIndex: 1 & gain:-7.700000000000001
+07-01 22:43:43.469 D/Eq2Coeff(26179): CxAudioConvertEqParams2Coeffs: convertRes= 0
+07-01 22:43:43.469 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> convert eq to coefficient: band:1 & param.gain:-7.700000000000001 & pEQCoeff.Gain:3 & B0:3ff57a & B1:ff8023cf & B2:3fe6bb & A0:7fdc30 & A1:ffc023cc
+07-01 22:43:43.470 D/UsbHelperDump(26179): TX [1, 0, 13, 0, -36, 0, 0, 35, 45, -77, 8, 0, 0, 0, 1, 0, 0, 0, 3, 0, 0, 0, 122, -11, 63, 0, -49, 35, -128, -1, -69, -26, 63, 0, 48, -36, 127, 0, -52, 35, -64, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.470 D/UsbHelperDump(26179): RX [1, 0, 0, 0, -36, -128, 0, 35, 45, -77, 8, 0, 0, 0, 1, 0, 0, 0, 3, 0, 0, 0, 122, -11, 63, 0, -49, 35, -128, -1, -69, -26, 63, 0, 48, -36, 127, 0, -52, 35, -64, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.470 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: send save coefficient list -> cmd 0~43:res: true
+07-01 22:43:43.470 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> band index: 2
+07-01 22:43:43.470 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> sampleRateIndex: 4 -> 44100 & bandIndex: 2 & gain:-9.8
+07-01 22:43:43.470 D/Eq2Coeff(26179): CxAudioConvertEqParams2Coeffs: convertRes= 0
+07-01 22:43:43.470 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> convert eq to coefficient: band:2 & param.gain:-9.8 & pEQCoeff.Gain:3 & B0:3f5042 & B1:ff820a5f & B2:3ea806 & A0:7df5a0 & A1:ffc207b9
+07-01 22:43:43.471 D/UsbHelperDump(26179): TX [1, 0, 13, 0, -36, 0, 0, 35, 45, -77, 4, 0, 0, 0, 2, 0, 0, 0, 3, 0, 0, 0, 66, 80, 63, 0, 95, 10, -126, -1, 6, -88, 62, 0, -96, -11, 125, 0, -71, 7, -62, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.471 D/UsbHelperDump(26179): RX [1, 0, 0, 0, -36, -128, 0, 35, 45, -77, 4, 0, 0, 0, 2, 0, 0, 0, 3, 0, 0, 0, 66, 80, 63, 0, 95, 10, -126, -1, 6, -88, 62, 0, -96, -11, 125, 0, -71, 7, -62, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.471 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: send save coefficient list -> cmd 0~43:res: true
+07-01 22:43:43.472 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> sampleRateIndex: 5 -> 48000 & bandIndex: 2 & gain:-9.8
+07-01 22:43:43.472 D/Eq2Coeff(26179): CxAudioConvertEqParams2Coeffs: convertRes= 0
+07-01 22:43:43.472 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> convert eq to coefficient: band:2 & param.gain:-9.8 & pEQCoeff.Gain:3 & B0:3f5e54 & B1:ff81e05a & B2:3ec390 & A0:7e1fa5 & A1:ffc1de1d
+07-01 22:43:43.472 D/UsbHelperDump(26179): TX [1, 0, 13, 0, -36, 0, 0, 35, 45, -77, 5, 0, 0, 0, 2, 0, 0, 0, 3, 0, 0, 0, 84, 94, 63, 0, 90, -32, -127, -1, -112, -61, 62, 0, -91, 31, 126, 0, 29, -34, -63, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.473 D/UsbHelperDump(26179): RX [1, 0, 0, 0, -36, -128, 0, 35, 45, -77, 5, 0, 0, 0, 2, 0, 0, 0, 3, 0, 0, 0, 84, 94, 63, 0, 90, -32, -127, -1, -112, -61, 62, 0, -91, 31, 126, 0, 29, -34, -63, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.473 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: send save coefficient list -> cmd 0~43:res: true
+07-01 22:43:43.473 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> sampleRateIndex: 6 -> 96000 & bandIndex: 2 & gain:-9.8
+07-01 22:43:43.473 D/Eq2Coeff(26179): CxAudioConvertEqParams2Coeffs: convertRes= 0
+07-01 22:43:43.473 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> convert eq to coefficient: band:2 & param.gain:-9.8 & pEQCoeff.Gain:3 & B0:3fae93 & B1:ff80f160 & B2:3f609e & A0:7f0e9f & A1:ffc0f0cf
+07-01 22:43:43.474 D/UsbHelperDump(26179): TX [1, 0, 13, 0, -36, 0, 0, 35, 45, -77, 6, 0, 0, 0, 2, 0, 0, 0, 3, 0, 0, 0, -109, -82, 63, 0, 96, -15, -128, -1, -98, 96, 63, 0, -97, 14, 127, 0, -49, -16, -64, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.474 D/UsbHelperDump(26179): RX [1, 0, 0, 0, -36, -128, 0, 35, 45, -77, 6, 0, 0, 0, 2, 0, 0, 0, 3, 0, 0, 0, -109, -82, 63, 0, 96, -15, -128, -1, -98, 96, 63, 0, -97, 14, 127, 0, -49, -16, -64, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.474 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: send save coefficient list -> cmd 0~43:res: true
+07-01 22:43:43.474 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> sampleRateIndex: 7 -> 192000 & bandIndex: 2 & gain:-9.8
+07-01 22:43:43.474 D/Eq2Coeff(26179): CxAudioConvertEqParams2Coeffs: convertRes= 0
+07-01 22:43:43.474 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> convert eq to coefficient: band:2 & param.gain:-9.8 & pEQCoeff.Gain:3 & B0:3fd723 & B1:ff8078ff & B2:3fb003 & A0:7f8701 & A1:ffc078d9
+07-01 22:43:43.475 D/UsbHelperDump(26179): TX [1, 0, 13, 0, -36, 0, 0, 35, 45, -77, 7, 0, 0, 0, 2, 0, 0, 0, 3, 0, 0, 0, 35, -41, 63, 0, -1, 120, -128, -1, 3, -80, 63, 0, 1, -121, 127, 0, -39, 120, -64, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.475 D/UsbHelperDump(26179): RX [1, 0, 0, 0, -36, -128, 0, 35, 45, -77, 7, 0, 0, 0, 2, 0, 0, 0, 3, 0, 0, 0, 35, -41, 63, 0, -1, 120, -128, -1, 3, -80, 63, 0, 1, -121, 127, 0, -39, 120, -64, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.475 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: send save coefficient list -> cmd 0~43:res: true
+07-01 22:43:43.475 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> sampleRateIndex: 8 -> 384000 & bandIndex: 2 & gain:-9.8
+07-01 22:43:43.475 D/Eq2Coeff(26179): CxAudioConvertEqParams2Coeffs: convertRes= 0
+07-01 22:43:43.475 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> convert eq to coefficient: band:2 & param.gain:-9.8 & pEQCoeff.Gain:3 & B0:3feb88 & B1:ff803c92 & B2:3fd7ef & A0:7fc36e & A1:ffc03c89
+07-01 22:43:43.476 D/UsbHelperDump(26179): TX [1, 0, 13, 0, -36, 0, 0, 35, 45, -77, 8, 0, 0, 0, 2, 0, 0, 0, 3, 0, 0, 0, -120, -21, 63, 0, -110, 60, -128, -1, -17, -41, 63, 0, 110, -61, 127, 0, -119, 60, -64, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.476 D/UsbHelperDump(26179): RX [1, 0, 0, 0, -36, -128, 0, 35, 45, -77, 8, 0, 0, 0, 2, 0, 0, 0, 3, 0, 0, 0, -120, -21, 63, 0, -110, 60, -128, -1, -17, -41, 63, 0, 110, -61, 127, 0, -119, 60, -64, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.476 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: send save coefficient list -> cmd 0~43:res: true
+07-01 22:43:43.476 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> band index: 3
+07-01 22:43:43.476 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> sampleRateIndex: 4 -> 44100 & bandIndex: 3 & gain:-9.3
+07-01 22:43:43.476 D/Eq2Coeff(26179): CxAudioConvertEqParams2Coeffs: convertRes= 0
+07-01 22:43:43.477 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> convert eq to coefficient: band:3 & param.gain:-9.3 & pEQCoeff.Gain:3 & B0:3b7dcf & B1:ff8e4632 & B2:36c940 & A0:71b9cf & A1:ffcdb8f0
+07-01 22:43:43.477 D/UsbHelperDump(26179): TX [1, 0, 13, 0, -36, 0, 0, 35, 45, -77, 4, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0, -49, 125, 59, 0, 50, 70, -114, -1, 64, -55, 54, 0, -49, -71, 113, 0, -16, -72, -51, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.477 D/UsbHelperDump(26179): RX [1, 0, 0, 0, -36, -128, 0, 35, 45, -77, 4, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0, -49, 125, 59, 0, 50, 70, -114, -1, 64, -55, 54, 0, -49, -71, 113, 0, -16, -72, -51, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.477 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: send save coefficient list -> cmd 0~43:res: true
+07-01 22:43:43.477 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> sampleRateIndex: 5 -> 48000 & bandIndex: 3 & gain:-9.3
+07-01 22:43:43.477 D/Eq2Coeff(26179): CxAudioConvertEqParams2Coeffs: convertRes= 0
+07-01 22:43:43.478 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> convert eq to coefficient: band:3 & param.gain:-9.3 & pEQCoeff.Gain:3 & B0:3bd24e & B1:ff8d3010 & B2:3775ee & A0:72cfef & A1:ffccb7c5
+07-01 22:43:43.478 D/UsbHelperDump(26179): TX [1, 0, 13, 0, -36, 0, 0, 35, 45, -77, 5, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0, 78, -46, 59, 0, 16, 48, -115, -1, -18, 117, 55, 0, -17, -49, 114, 0, -59, -73, -52, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.478 D/UsbHelperDump(26179): RX [1, 0, 0, 0, -36, -128, 0, 35, 45, -77, 5, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0, 78, -46, 59, 0, 16, 48, -115, -1, -18, 117, 55, 0, -17, -49, 114, 0, -59, -73, -52, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.478 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: send save coefficient list -> cmd 0~43:res: true
+07-01 22:43:43.478 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> sampleRateIndex: 6 -> 96000 & bandIndex: 3 & gain:-9.3
+07-01 22:43:43.478 D/Eq2Coeff(26179): CxAudioConvertEqParams2Coeffs: convertRes= 0
+07-01 22:43:43.478 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> convert eq to coefficient: band:3 & param.gain:-9.3 & pEQCoeff.Gain:3 & B0:3dcd46 & B1:ff86d068 & B2:3b81fc & A0:792f97 & A1:ffc6b0be
+07-01 22:43:43.479 D/UsbHelperDump(26179): TX [1, 0, 13, 0, -36, 0, 0, 35, 45, -77, 6, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0, 70, -51, 61, 0, 104, -48, -122, -1, -4, -127, 59, 0, -105, 47, 121, 0, -66, -80, -58, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.479 D/UsbHelperDump(26179): RX [1, 0, 0, 0, -36, -128, 0, 35, 45, -77, 6, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0, 70, -51, 61, 0, 104, -48, -122, -1, -4, -127, 59, 0, -105, 47, 121, 0, -66, -80, -58, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.479 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: send save coefficient list -> cmd 0~43:res: true
+07-01 22:43:43.479 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> sampleRateIndex: 7 -> 192000 & bandIndex: 3 & gain:-9.3
+07-01 22:43:43.479 D/Eq2Coeff(26179): CxAudioConvertEqParams2Coeffs: convertRes= 0
+07-01 22:43:43.479 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> convert eq to coefficient: band:3 & param.gain:-9.3 & pEQCoeff.Gain:3 & B0:3edf19 & B1:ff837773 & B2:3db195 & A0:7c888d & A1:ffc36f52
+07-01 22:43:43.480 D/UsbHelperDump(26179): TX [1, 0, 13, 0, -36, 0, 0, 35, 45, -77, 7, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0, 25, -33, 62, 0, 115, 119, -125, -1, -107, -79, 61, 0, -115, -120, 124, 0, 82, 111, -61, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.480 D/UsbHelperDump(26179): RX [1, 0, 0, 0, -36, -128, 0, 35, 45, -77, 7, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0, 25, -33, 62, 0, 115, 119, -125, -1, -107, -79, 61, 0, -115, -120, 124, 0, 82, 111, -61, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.480 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: send save coefficient list -> cmd 0~43:res: true
+07-01 22:43:43.480 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> sampleRateIndex: 8 -> 384000 & bandIndex: 3 & gain:-9.3
+07-01 22:43:43.480 D/Eq2Coeff(26179): CxAudioConvertEqParams2Coeffs: convertRes= 0
+07-01 22:43:43.480 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> convert eq to coefficient: band:3 & param.gain:-9.3 & pEQCoeff.Gain:3 & B0:3f6d96 & B1:ff81bfb3 & B2:3ed4c7 & A0:7e404d & A1:ffc1bda2
+07-01 22:43:43.481 D/UsbHelperDump(26179): TX [1, 0, 13, 0, -36, 0, 0, 35, 45, -77, 8, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0, -106, 109, 63, 0, -77, -65, -127, -1, -57, -44, 62, 0, 77, 64, 126, 0, -94, -67, -63, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.481 D/UsbHelperDump(26179): RX [1, 0, 0, 0, -36, -128, 0, 35, 45, -77, 8, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0, -106, 109, 63, 0, -77, -65, -127, -1, -57, -44, 62, 0, 77, 64, 126, 0, -94, -67, -63, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.481 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: send save coefficient list -> cmd 0~43:res: true
+07-01 22:43:43.481 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> band index: 4
+07-01 22:43:43.481 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> sampleRateIndex: 4 -> 44100 & bandIndex: 4 & gain:-7.300000000000001
+07-01 22:43:43.481 D/Eq2Coeff(26179): CxAudioConvertEqParams2Coeffs: convertRes= 0
+07-01 22:43:43.481 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> convert eq to coefficient: band:4 & param.gain:-7.300000000000001 & pEQCoeff.Gain:3 & B0:3b1d6b & B1:ff92505f & B2:33b1a4 & A0:6dafa1 & A1:ffd130f1
+07-01 22:43:43.482 D/UsbHelperDump(26179): TX [1, 0, 13, 0, -36, 0, 0, 35, 45, -77, 4, 0, 0, 0, 4, 0, 0, 0, 3, 0, 0, 0, 107, 29, 59, 0, 95, 80, -110, -1, -92, -79, 51, 0, -95, -81, 109, 0, -15, 48, -47, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.482 D/UsbHelperDump(26179): RX [1, 0, 0, 0, -36, -128, 0, 35, 45, -77, 4, 0, 0, 0, 4, 0, 0, 0, 3, 0, 0, 0, 107, 29, 59, 0, 95, 80, -110, -1, -92, -79, 51, 0, -95, -81, 109, 0, -15, 48, -47, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.482 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: send save coefficient list -> cmd 0~43:res: true
+07-01 22:43:43.482 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> sampleRateIndex: 5 -> 48000 & bandIndex: 4 & gain:-7.300000000000001
+07-01 22:43:43.482 D/Eq2Coeff(26179): CxAudioConvertEqParams2Coeffs: convertRes= 0
+07-01 22:43:43.482 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> convert eq to coefficient: band:4 & param.gain:-7.300000000000001 & pEQCoeff.Gain:3 & B0:3b766d & B1:ff90ed12 & B2:3491de & A0:6f12ef & A1:ffcff7b4
+07-01 22:43:43.482 D/UsbHelperDump(26179): TX [1, 0, 13, 0, -36, 0, 0, 35, 45, -77, 5, 0, 0, 0, 4, 0, 0, 0, 3, 0, 0, 0, 109, 118, 59, 0, 18, -19, -112, -1, -34, -111, 52, 0, -17, 18, 111, 0, -76, -9, -49, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.483 D/UsbHelperDump(26179): RX [1, 0, 0, 0, -36, -128, 0, 35, 45, -77, 5, 0, 0, 0, 4, 0, 0, 0, 3, 0, 0, 0, 109, 118, 59, 0, 18, -19, -112, -1, -34, -111, 52, 0, -17, 18, 111, 0, -76, -9, -49, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.483 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: send save coefficient list -> cmd 0~43:res: true
+07-01 22:43:43.483 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> sampleRateIndex: 6 -> 96000 & bandIndex: 4 & gain:-7.300000000000001
+07-01 22:43:43.483 D/Eq2Coeff(26179): CxAudioConvertEqParams2Coeffs: convertRes= 0
+07-01 22:43:43.483 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> convert eq to coefficient: band:4 & param.gain:-7.300000000000001 & pEQCoeff.Gain:3 & B0:3d94c1 & B1:ff88c4af & B2:39e80e & A0:773b52 & A1:ffc88330
+07-01 22:43:43.483 D/UsbHelperDump(26179): TX [1, 0, 13, 0, -36, 0, 0, 35, 45, -77, 6, 0, 0, 0, 4, 0, 0, 0, 3, 0, 0, 0, -63, -108, 61, 0, -81, -60, -120, -1, 14, -24, 57, 0, 82, 59, 119, 0, 48, -125, -56, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.484 D/UsbHelperDump(26179): RX [1, 0, 0, 0, -36, -128, 0, 35, 45, -77, 6, 0, 0, 0, 4, 0, 0, 0, 3, 0, 0, 0, -63, -108, 61, 0, -81, -60, -120, -1, 14, -24, 57, 0, 82, 59, 119, 0, 48, -125, -56, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.484 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: send save coefficient list -> cmd 0~43:res: true
+07-01 22:43:43.484 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> sampleRateIndex: 7 -> 192000 & bandIndex: 4 & gain:-7.300000000000001
+07-01 22:43:43.484 D/Eq2Coeff(26179): CxAudioConvertEqParams2Coeffs: convertRes= 0
+07-01 22:43:43.484 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> convert eq to coefficient: band:4 & param.gain:-7.300000000000001 & pEQCoeff.Gain:3 & B0:3ebfc0 & B1:ff8477ee & B2:3cd943 & A0:7b8812 & A1:ffc466fd
+07-01 22:43:43.484 D/UsbHelperDump(26179): TX [1, 0, 13, 0, -36, 0, 0, 35, 45, -77, 7, 0, 0, 0, 4, 0, 0, 0, 3, 0, 0, 0, -64, -65, 62, 0, -18, 119, -124, -1, 67, -39, 60, 0, 18, -120, 123, 0, -3, 102, -60, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.485 D/UsbHelperDump(26179): RX [1, 0, 0, 0, -36, -128, 0, 35, 45, -77, 7, 0, 0, 0, 4, 0, 0, 0, 3, 0, 0, 0, -64, -65, 62, 0, -18, 119, -124, -1, 67, -39, 60, 0, 18, -120, 123, 0, -3, 102, -60, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.485 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: send save coefficient list -> cmd 0~43:res: true
+07-01 22:43:43.485 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> sampleRateIndex: 8 -> 384000 & bandIndex: 4 & gain:-7.300000000000001
+07-01 22:43:43.485 D/Eq2Coeff(26179): CxAudioConvertEqParams2Coeffs: convertRes= 0
+07-01 22:43:43.485 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> convert eq to coefficient: band:4 & param.gain:-7.300000000000001 & pEQCoeff.Gain:3 & B0:3f5d14 & B1:ff8241a8 & B2:3e6594 & A0:7dbe58 & A1:ffc23d57
+07-01 22:43:43.486 D/UsbHelperDump(26179): TX [1, 0, 13, 0, -36, 0, 0, 35, 45, -77, 8, 0, 0, 0, 4, 0, 0, 0, 3, 0, 0, 0, 20, 93, 63, 0, -88, 65, -126, -1, -108, 101, 62, 0, 88, -66, 125, 0, 87, 61, -62, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.486 D/UsbHelperDump(26179): RX [1, 0, 0, 0, -36, -128, 0, 35, 45, -77, 8, 0, 0, 0, 4, 0, 0, 0, 3, 0, 0, 0, 20, 93, 63, 0, -88, 65, -126, -1, -108, 101, 62, 0, 88, -66, 125, 0, 87, 61, -62, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.486 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: send save coefficient list -> cmd 0~43:res: true
+07-01 22:43:43.486 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> band index: 5
+07-01 22:43:43.486 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> sampleRateIndex: 4 -> 44100 & bandIndex: 5 & gain:-7.0
+07-01 22:43:43.486 D/Eq2Coeff(26179): CxAudioConvertEqParams2Coeffs: convertRes= 0
+07-01 22:43:43.486 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> convert eq to coefficient: band:5 & param.gain:-7.0 & pEQCoeff.Gain:3 & B0:34da53 & B1:ffb02ecf & B2:22dade & A0:4fd131 & A1:ffe84acf
+07-01 22:43:43.487 D/UsbHelperDump(26179): TX [1, 0, 13, 0, -36, 0, 0, 35, 45, -77, 4, 0, 0, 0, 5, 0, 0, 0, 3, 0, 0, 0, 83, -38, 52, 0, -49, 46, -80, -1, -34, -38, 34, 0, 49, -47, 79, 0, -49, 74, -24, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.487 D/UsbHelperDump(26179): RX [1, 0, 0, 0, -36, -128, 0, 35, 45, -77, 4, 0, 0, 0, 5, 0, 0, 0, 3, 0, 0, 0, 83, -38, 52, 0, -49, 46, -80, -1, -34, -38, 34, 0, 49, -47, 79, 0, -49, 74, -24, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.487 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: send save coefficient list -> cmd 0~43:res: true
+07-01 22:43:43.487 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> sampleRateIndex: 5 -> 48000 & bandIndex: 5 & gain:-7.0
+07-01 22:43:43.487 D/Eq2Coeff(26179): CxAudioConvertEqParams2Coeffs: convertRes= 0
+07-01 22:43:43.487 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> convert eq to coefficient: band:5 & param.gain:-7.0 & pEQCoeff.Gain:3 & B0:357ebe & B1:ffacd2e4 & B2:2488c1 & A0:532d1d & A1:ffe5f880
+07-01 22:43:43.488 D/UsbHelperDump(26179): TX [1, 0, 13, 0, -36, 0, 0, 35, 45, -77, 5, 0, 0, 0, 5, 0, 0, 0, 3, 0, 0, 0, -66, 126, 53, 0, -28, -46, -84, -1, -63, -120, 36, 0, 29, 45, 83, 0, -128, -8, -27, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.488 D/UsbHelperDump(26179): RX [1, 0, 0, 0, -36, -128, 0, 35, 45, -77, 5, 0, 0, 0, 5, 0, 0, 0, 3, 0, 0, 0, -66, 126, 53, 0, -28, -46, -84, -1, -63, -120, 36, 0, 29, 45, 83, 0, -128, -8, -27, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.488 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: send save coefficient list -> cmd 0~43:res: true
+07-01 22:43:43.488 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> sampleRateIndex: 6 -> 96000 & bandIndex: 5 & gain:-7.0
+07-01 22:43:43.488 D/Eq2Coeff(26179): CxAudioConvertEqParams2Coeffs: convertRes= 0
+07-01 22:43:43.488 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> convert eq to coefficient: band:5 & param.gain:-7.0 & pEQCoeff.Gain:3 & B0:39d8ef & B1:ff98456c & B2:2fe9e2 & A0:67ba94 & A1:ffd63d2e
+07-01 22:43:43.489 D/UsbHelperDump(26179): TX [1, 0, 13, 0, -36, 0, 0, 35, 45, -77, 6, 0, 0, 0, 5, 0, 0, 0, 3, 0, 0, 0, -17, -40, 57, 0, 108, 69, -104, -1, -30, -23, 47, 0, -108, -70, 103, 0, 46, 61, -42, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.489 D/UsbHelperDump(26179): RX [1, 0, 0, 0, -36, -128, 0, 35, 45, -77, 6, 0, 0, 0, 5, 0, 0, 0, 3, 0, 0, 0, -17, -40, 57, 0, 108, 69, -104, -1, -30, -23, 47, 0, -108, -70, 103, 0, 46, 61, -42, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.489 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: send save coefficient list -> cmd 0~43:res: true
+07-01 22:43:43.489 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> sampleRateIndex: 7 -> 192000 & bandIndex: 5 & gain:-7.0
+07-01 22:43:43.489 D/Eq2Coeff(26179): CxAudioConvertEqParams2Coeffs: convertRes= 0
+07-01 22:43:43.489 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> convert eq to coefficient: band:5 & param.gain:-7.0 & pEQCoeff.Gain:3 & B0:3ca217 & B1:ff8cba39 & B2:373279 & A0:7345c7 & A1:ffcc2b70
+07-01 22:43:43.489 D/UsbHelperDump(26179): TX [1, 0, 13, 0, -36, 0, 0, 35, 45, -77, 7, 0, 0, 0, 5, 0, 0, 0, 3, 0, 0, 0, 23, -94, 60, 0, 57, -70, -116, -1, 121, 50, 55, 0, -57, 69, 115, 0, 112, 43, -52, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.490 D/UsbHelperDump(26179): RX [1, 0, 0, 0, -36, -128, 0, 35, 45, -77, 7, 0, 0, 0, 5, 0, 0, 0, 3, 0, 0, 0, 23, -94, 60, 0, 57, -70, -116, -1, 121, 50, 55, 0, -57, 69, 115, 0, 112, 43, -52, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.490 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: send save coefficient list -> cmd 0~43:res: true
+07-01 22:43:43.490 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> sampleRateIndex: 8 -> 384000 & bandIndex: 5 & gain:-7.0
+07-01 22:43:43.490 D/Eq2Coeff(26179): CxAudioConvertEqParams2Coeffs: convertRes= 0
+07-01 22:43:43.490 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> convert eq to coefficient: band:5 & param.gain:-7.0 & pEQCoeff.Gain:3 & B0:3e3b9c & B1:ff8688b2 & B2:3b6132 & A0:79774e & A1:ffc66332
+07-01 22:43:43.490 D/UsbHelperDump(26179): TX [1, 0, 13, 0, -36, 0, 0, 35, 45, -77, 8, 0, 0, 0, 5, 0, 0, 0, 3, 0, 0, 0, -100, 59, 62, 0, -78, -120, -122, -1, 50, 97, 59, 0, 78, 119, 121, 0, 50, 99, -58, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.490 D/UsbHelperDump(26179): RX [1, 0, 0, 0, -36, -128, 0, 35, 45, -77, 8, 0, 0, 0, 5, 0, 0, 0, 3, 0, 0, 0, -100, 59, 62, 0, -78, -120, -122, -1, 50, 97, 59, 0, 78, 119, 121, 0, 50, 99, -58, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.490 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: send save coefficient list -> cmd 0~43:res: true
+07-01 22:43:43.490 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> band index: 6
+07-01 22:43:43.490 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> sampleRateIndex: 4 -> 44100 & bandIndex: 6 & gain:-5.1
+07-01 22:43:43.490 D/Eq2Coeff(26179): CxAudioConvertEqParams2Coeffs: convertRes= 0
+07-01 22:43:43.490 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> convert eq to coefficient: band:6 & param.gain:-5.1 & pEQCoeff.Gain:2 & B0:6a3ca5 & B1:ff81583a & B2:33b818 & A0:7ea7c7 & A1:ffe20b42
+07-01 22:43:43.491 D/UsbHelperDump(26179): TX [1, 0, 13, 0, -36, 0, 0, 35, 45, -77, 4, 0, 0, 0, 6, 0, 0, 0, 2, 0, 0, 0, -91, 60, 106, 0, 58, 88, -127, -1, 24, -72, 51, 0, -57, -89, 126, 0, 66, 11, -30, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.491 D/UsbHelperDump(26179): RX [1, 0, 0, 0, -36, -128, 0, 35, 45, -77, 4, 0, 0, 0, 6, 0, 0, 0, 2, 0, 0, 0, -91, 60, 106, 0, 58, 88, -127, -1, 24, -72, 51, 0, -57, -89, 126, 0, 66, 11, -30, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.491 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: send save coefficient list -> cmd 0~43:res: true
+07-01 22:43:43.491 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> sampleRateIndex: 5 -> 48000 & bandIndex: 6 & gain:-5.1
+07-01 22:43:43.491 D/Eq2Coeff(26179): CxAudioConvertEqParams2Coeffs: convertRes= 0
+07-01 22:43:43.491 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> convert eq to coefficient: band:6 & param.gain:-5.1 & pEQCoeff.Gain:3 & B0:35b171 & B1:ffbc265e & B2:1bdfb6 & A0:43d9a3 & A1:ffee6ed8
+07-01 22:43:43.492 D/UsbHelperDump(26179): TX [1, 0, 13, 0, -36, 0, 0, 35, 45, -77, 5, 0, 0, 0, 6, 0, 0, 0, 3, 0, 0, 0, 113, -79, 53, 0, 94, 38, -68, -1, -74, -33, 27, 0, -93, -39, 67, 0, -40, 110, -18, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.492 D/UsbHelperDump(26179): RX [1, 0, 0, 0, -36, -128, 0, 35, 45, -77, 5, 0, 0, 0, 6, 0, 0, 0, 3, 0, 0, 0, 113, -79, 53, 0, 94, 38, -68, -1, -74, -33, 27, 0, -93, -39, 67, 0, -40, 110, -18, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.492 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: send save coefficient list -> cmd 0~43:res: true
+07-01 22:43:43.492 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> sampleRateIndex: 6 -> 96000 & bandIndex: 6 & gain:-5.1
+07-01 22:43:43.492 D/Eq2Coeff(26179): CxAudioConvertEqParams2Coeffs: convertRes= 0
+07-01 22:43:43.492 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> convert eq to coefficient: band:6 & param.gain:-5.1 & pEQCoeff.Gain:3 & B0:39bcdf & B1:ffa07fc2 & B2:2a0cf1 & A0:5f803d & A1:ffdc3630
+07-01 22:43:43.493 D/UsbHelperDump(26179): TX [1, 0, 13, 0, -36, 0, 0, 35, 45, -77, 6, 0, 0, 0, 6, 0, 0, 0, 3, 0, 0, 0, -33, -68, 57, 0, -62, 127, -96, -1, -15, 12, 42, 0, 61, -128, 95, 0, 48, 54, -36, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.493 D/UsbHelperDump(26179): RX [1, 0, 0, 0, -36, -128, 0, 35, 45, -77, 6, 0, 0, 0, 6, 0, 0, 0, 3, 0, 0, 0, -33, -68, 57, 0, -62, 127, -96, -1, -15, 12, 42, 0, 61, -128, 95, 0, 48, 54, -36, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.493 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: send save coefficient list -> cmd 0~43:res: true
+07-01 22:43:43.493 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> sampleRateIndex: 7 -> 192000 & bandIndex: 6 & gain:-5.1
+07-01 22:43:43.493 D/Eq2Coeff(26179): CxAudioConvertEqParams2Coeffs: convertRes= 0
+07-01 22:43:43.493 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> convert eq to coefficient: band:6 & param.gain:-5.1 & pEQCoeff.Gain:3 & B0:3c7c69 & B1:ff910ad1 & B2:33aee2 & A0:6ef52f & A1:ffcfd4b5
+07-01 22:43:43.493 D/UsbHelperDump(26179): TX [1, 0, 13, 0, -36, 0, 0, 35, 45, -77, 7, 0, 0, 0, 6, 0, 0, 0, 3, 0, 0, 0, 105, 124, 60, 0, -47, 10, -111, -1, -30, -82, 51, 0, 47, -11, 110, 0, -75, -44, -49, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.494 D/UsbHelperDump(26179): RX [1, 0, 0, 0, -36, -128, 0, 35, 45, -77, 7, 0, 0, 0, 6, 0, 0, 0, 3, 0, 0, 0, 105, 124, 60, 0, -47, 10, -111, -1, -30, -82, 51, 0, 47, -11, 110, 0, -75, -44, -49, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.494 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: send save coefficient list -> cmd 0~43:res: true
+07-01 22:43:43.494 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> sampleRateIndex: 8 -> 384000 & bandIndex: 6 & gain:-5.1
+07-01 22:43:43.494 D/Eq2Coeff(26179): CxAudioConvertEqParams2Coeffs: convertRes= 0
+07-01 22:43:43.494 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> convert eq to coefficient: band:6 & param.gain:-5.1 & pEQCoeff.Gain:3 & B0:3e20bb & B1:ff88c1e3 & B2:397023 & A0:773e1d & A1:ffc86f22
+07-01 22:43:43.495 D/UsbHelperDump(26179): TX [1, 0, 13, 0, -36, 0, 0, 35, 45, -77, 8, 0, 0, 0, 6, 0, 0, 0, 3, 0, 0, 0, -69, 32, 62, 0, -29, -63, -120, -1, 35, 112, 57, 0, 29, 62, 119, 0, 34, 111, -56, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.495 D/UsbHelperDump(26179): RX [1, 0, 0, 0, -36, -128, 0, 35, 45, -77, 8, 0, 0, 0, 6, 0, 0, 0, 3, 0, 0, 0, -69, 32, 62, 0, -29, -63, -120, -1, 35, 112, 57, 0, 29, 62, 119, 0, 34, 111, -56, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.495 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: send save coefficient list -> cmd 0~43:res: true
+07-01 22:43:43.495 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> band index: 7
+07-01 22:43:43.495 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> sampleRateIndex: 4 -> 44100 & bandIndex: 7 & gain:-7.199999999999999
+07-01 22:43:43.496 D/Eq2Coeff(26179): CxAudioConvertEqParams2Coeffs: convertRes= 0
+07-01 22:43:43.496 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> convert eq to coefficient: band:7 & param.gain:-7.199999999999999 & pEQCoeff.Gain:2 & B0:5d4af5 & B1:ffa76b2d & B2:2782c2 & A0:5894d3 & A1:fffb3249
+07-01 22:43:43.496 D/UsbHelperDump(26179): TX [1, 0, 13, 0, -36, 0, 0, 35, 45, -77, 4, 0, 0, 0, 7, 0, 0, 0, 2, 0, 0, 0, -11, 74, 93, 0, 45, 107, -89, -1, -62, -126, 39, 0, -45, -108, 88, 0, 73, 50, -5, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.496 D/UsbHelperDump(26179): RX [1, 0, 0, 0, -36, -128, 0, 35, 45, -77, 4, 0, 0, 0, 7, 0, 0, 0, 2, 0, 0, 0, -11, 74, 93, 0, 45, 107, -89, -1, -62, -126, 39, 0, -45, -108, 88, 0, 73, 50, -5, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.496 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: send save coefficient list -> cmd 0~43:res: true
+07-01 22:43:43.496 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> sampleRateIndex: 5 -> 48000 & bandIndex: 7 & gain:-7.199999999999999
+07-01 22:43:43.497 D/Eq2Coeff(26179): CxAudioConvertEqParams2Coeffs: convertRes= 0
+07-01 22:43:43.497 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> convert eq to coefficient: band:7 & param.gain:-7.199999999999999 & pEQCoeff.Gain:2 & B0:5ee059 & B1:ff9cd8a3 & B2:2b8c55 & A0:63275d & A1:fff59353
+07-01 22:43:43.497 D/UsbHelperDump(26179): TX [1, 0, 13, 0, -36, 0, 0, 35, 45, -77, 5, 0, 0, 0, 7, 0, 0, 0, 2, 0, 0, 0, 89, -32, 94, 0, -93, -40, -100, -1, 85, -116, 43, 0, 93, 39, 99, 0, 83, -109, -11, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.497 D/UsbHelperDump(26179): RX [1, 0, 0, 0, -36, -128, 0, 35, 45, -77, 5, 0, 0, 0, 7, 0, 0, 0, 2, 0, 0, 0, 89, -32, 94, 0, -93, -40, -100, -1, 85, -116, 43, 0, 93, 39, 99, 0, 83, -109, -11, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.497 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: send save coefficient list -> cmd 0~43:res: true
+07-01 22:43:43.497 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> sampleRateIndex: 6 -> 96000 & bandIndex: 7 & gain:-7.199999999999999
+07-01 22:43:43.497 D/Eq2Coeff(26179): CxAudioConvertEqParams2Coeffs: convertRes= 0
+07-01 22:43:43.497 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> convert eq to coefficient: band:7 & param.gain:-7.199999999999999 & pEQCoeff.Gain:3 & B0:355809 & B1:ffac7707 & B2:24d4ce & A0:5388fa & A1:ffe5d328
+07-01 22:43:43.497 D/UsbHelperDump(26179): TX [1, 0, 13, 0, -36, 0, 0, 35, 45, -77, 6, 0, 0, 0, 7, 0, 0, 0, 3, 0, 0, 0, 9, 88, 53, 0, 7, 119, -84, -1, -50, -44, 36, 0, -6, -120, 83, 0, 40, -45, -27, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.498 D/UsbHelperDump(26179): RX [1, 0, 0, 0, -36, -128, 0, 35, 45, -77, 6, 0, 0, 0, 7, 0, 0, 0, 3, 0, 0, 0, 9, 88, 53, 0, 7, 119, -84, -1, -50, -44, 36, 0, -6, -120, 83, 0, 40, -45, -27, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.498 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: send save coefficient list -> cmd 0~43:res: true
+07-01 22:43:43.498 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> sampleRateIndex: 7 -> 192000 & bandIndex: 7 & gain:-7.199999999999999
+07-01 22:43:43.498 D/Eq2Coeff(26179): CxAudioConvertEqParams2Coeffs: convertRes= 0
+07-01 22:43:43.498 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> convert eq to coefficient: band:7 & param.gain:-7.199999999999999 & pEQCoeff.Gain:3 & B0:39c335 & B1:ff981b86 & B2:3018d4 & A0:67e47a & A1:ffd623f7
+07-01 22:43:43.498 D/UsbHelperDump(26179): TX [1, 0, 13, 0, -36, 0, 0, 35, 45, -77, 7, 0, 0, 0, 7, 0, 0, 0, 3, 0, 0, 0, 53, -61, 57, 0, -122, 27, -104, -1, -44, 24, 48, 0, 122, -28, 103, 0, -9, 35, -42, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.498 D/UsbHelperDump(26179): RX [1, 0, 0, 0, -36, -128, 0, 35, 45, -77, 7, 0, 0, 0, 7, 0, 0, 0, 3, 0, 0, 0, 53, -61, 57, 0, -122, 27, -104, -1, -44, 24, 48, 0, 122, -28, 103, 0, -9, 35, -42, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.499 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: send save coefficient list -> cmd 0~43:res: true
+07-01 22:43:43.499 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> sampleRateIndex: 8 -> 384000 & bandIndex: 7 & gain:-7.199999999999999
+07-01 22:43:43.499 D/Eq2Coeff(26179): CxAudioConvertEqParams2Coeffs: convertRes= 0
+07-01 22:43:43.499 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> convert eq to coefficient: band:7 & param.gain:-7.199999999999999 & pEQCoeff.Gain:3 & B0:3c968c & B1:ff8ca68a & B2:374d0e & A0:735976 & A1:ffcc1c66
+07-01 22:43:43.499 D/UsbHelperDump(26179): TX [1, 0, 13, 0, -36, 0, 0, 35, 45, -77, 8, 0, 0, 0, 7, 0, 0, 0, 3, 0, 0, 0, -116, -106, 60, 0, -118, -90, -116, -1, 14, 77, 55, 0, 118, 89, 115, 0, 102, 28, -52, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.500 D/UsbHelperDump(26179): RX [1, 0, 0, 0, -36, -128, 0, 35, 45, -77, 8, 0, 0, 0, 7, 0, 0, 0, 3, 0, 0, 0, -116, -106, 60, 0, -118, -90, -116, -1, 14, 77, 55, 0, 118, 89, 115, 0, 102, 28, -52, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.500 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: send save coefficient list -> cmd 0~43:res: true
+07-01 22:43:43.500 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> band index: 8
+07-01 22:43:43.500 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> sampleRateIndex: 4 -> 44100 & bandIndex: 8 & gain:2.900000000000002
+07-01 22:43:43.500 D/Eq2Coeff(26179): CxAudioConvertEqParams2Coeffs: convertRes= 0
+07-01 22:43:43.500 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> convert eq to coefficient: band:8 & param.gain:2.900000000000002 & pEQCoeff.Gain:3 & B0:49fcfb & B1:ffd8bcda & B2:394cf & A0:274326 & A1:fff26e37
+07-01 22:43:43.501 D/UsbHelperDump(26179): TX [1, 0, 13, 0, -36, 0, 0, 35, 45, -77, 4, 0, 0, 0, 8, 0, 0, 0, 3, 0, 0, 0, -5, -4, 73, 0, -38, -68, -40, -1, -49, -108, 3, 0, 38, 67, 39, 0, 55, 110, -14, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.501 D/UsbHelperDump(26179): RX [1, 0, 0, 0, -36, -128, 0, 35, 45, -77, 4, 0, 0, 0, 8, 0, 0, 0, 3, 0, 0, 0, -5, -4, 73, 0, -38, -68, -40, -1, -49, -108, 3, 0, 38, 67, 39, 0, 55, 110, -14, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.501 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: send save coefficient list -> cmd 0~43:res: true
+07-01 22:43:43.501 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> sampleRateIndex: 5 -> 48000 & bandIndex: 8 & gain:2.900000000000002
+07-01 22:43:43.501 D/Eq2Coeff(26179): CxAudioConvertEqParams2Coeffs: convertRes= 0
+07-01 22:43:43.501 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> convert eq to coefficient: band:8 & param.gain:2.900000000000002 & pEQCoeff.Gain:3 & B0:4971c2 & B1:ffd1a57c & B2:6def4 & A0:2e5a84 & A1:ffefaf4a
+07-01 22:43:43.502 D/UsbHelperDump(26179): TX [1, 0, 13, 0, -36, 0, 0, 35, 45, -77, 5, 0, 0, 0, 8, 0, 0, 0, 3, 0, 0, 0, -62, 113, 73, 0, 124, -91, -47, -1, -12, -34, 6, 0, -124, 90, 46, 0, 74, -81, -17, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.502 D/UsbHelperDump(26179): RX [1, 0, 0, 0, -36, -128, 0, 35, 45, -77, 5, 0, 0, 0, 8, 0, 0, 0, 3, 0, 0, 0, -62, 113, 73, 0, 124, -91, -47, -1, -12, -34, 6, 0, -124, 90, 46, 0, 74, -81, -17, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.502 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: send save coefficient list -> cmd 0~43:res: true
+07-01 22:43:43.502 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> sampleRateIndex: 6 -> 96000 & bandIndex: 8 & gain:2.900000000000002
+07-01 22:43:43.502 D/Eq2Coeff(26179): CxAudioConvertEqParams2Coeffs: convertRes= 0
+07-01 22:43:43.502 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> convert eq to coefficient: band:8 & param.gain:2.900000000000002 & pEQCoeff.Gain:3 & B0:45b622 & B1:ffa7f119 & B2:1d738f & A0:580ee6 & A1:ffdcd650
+07-01 22:43:43.502 D/UsbHelperDump(26179): TX [1, 0, 13, 0, -36, 0, 0, 35, 45, -77, 6, 0, 0, 0, 8, 0, 0, 0, 3, 0, 0, 0, 34, -74, 69, 0, 25, -15, -89, -1, -113, 115, 29, 0, -26, 14, 88, 0, 80, -42, -36, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.503 D/UsbHelperDump(26179): RX [1, 0, 0, 0, -36, -128, 0, 35, 45, -77, 6, 0, 0, 0, 8, 0, 0, 0, 3, 0, 0, 0, 34, -74, 69, 0, 25, -15, -89, -1, -113, 115, 29, 0, -26, 14, 88, 0, 80, -42, -36, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.503 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: send save coefficient list -> cmd 0~43:res: true
+07-01 22:43:43.503 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> sampleRateIndex: 7 -> 192000 & bandIndex: 8 & gain:2.900000000000002
+07-01 22:43:43.503 D/Eq2Coeff(26179): CxAudioConvertEqParams2Coeffs: convertRes= 0
+07-01 22:43:43.503 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> convert eq to coefficient: band:8 & param.gain:2.900000000000002 & pEQCoeff.Gain:3 & B0:4334c4 & B1:ff935cf3 & B2:2c9b2e & A0:6ca30d & A1:ffd0300e
+07-01 22:43:43.503 D/UsbHelperDump(26179): TX [1, 0, 13, 0, -36, 0, 0, 35, 45, -77, 7, 0, 0, 0, 8, 0, 0, 0, 3, 0, 0, 0, -60, 52, 67, 0, -13, 92, -109, -1, 46, -101, 44, 0, 13, -93, 108, 0, 14, 48, -48, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.504 D/UsbHelperDump(26179): RX [1, 0, 0, 0, -36, -128, 0, 35, 45, -77, 7, 0, 0, 0, 8, 0, 0, 0, 3, 0, 0, 0, -60, 52, 67, 0, -13, 92, -109, -1, 46, -101, 44, 0, 13, -93, 108, 0, 14, 48, -48, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.504 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: send save coefficient list -> cmd 0~43:res: true
+07-01 22:43:43.504 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> sampleRateIndex: 8 -> 384000 & bandIndex: 8 & gain:2.900000000000002
+07-01 22:43:43.504 D/Eq2Coeff(26179): CxAudioConvertEqParams2Coeffs: convertRes= 0
+07-01 22:43:43.504 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> convert eq to coefficient: band:8 & param.gain:2.900000000000002 & pEQCoeff.Gain:3 & B0:41b5a9 & B1:ff897b7e & B2:35a895 & A0:768482 & A1:ffc8a1c2
+07-01 22:43:43.505 D/UsbHelperDump(26179): TX [1, 0, 13, 0, -36, 0, 0, 35, 45, -77, 8, 0, 0, 0, 8, 0, 0, 0, 3, 0, 0, 0, -87, -75, 65, 0, 126, 123, -119, -1, -107, -88, 53, 0, -126, -124, 118, 0, -62, -95, -56, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.505 D/UsbHelperDump(26179): RX [1, 0, 0, 0, -36, -128, 0, 35, 45, -77, 8, 0, 0, 0, 8, 0, 0, 0, 3, 0, 0, 0, -87, -75, 65, 0, 126, 123, -119, -1, -107, -88, 53, 0, -126, -124, 118, 0, -62, -95, -56, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.505 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: send save coefficient list -> cmd 0~43:res: true
+07-01 22:43:43.505 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> band index: 9
+07-01 22:43:43.505 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> sampleRateIndex: 4 -> 44100 & bandIndex: 9 & gain:-6.4
+07-01 22:43:43.505 D/Eq2Coeff(26179): CxAudioConvertEqParams2Coeffs: convertRes= 0
+07-01 22:43:43.505 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> convert eq to coefficient: band:9 & param.gain:-6.4 & pEQCoeff.Gain:2 & B0:5b3c9d & B1:ffcffa13 & B2:17b6e4 & A0:3005ed & A1:d0c7f
+07-01 22:43:43.505 D/UsbHelperDump(26179): TX [1, 0, 13, 0, -36, 0, 0, 35, 45, -77, 4, 0, 0, 0, 9, 0, 0, 0, 2, 0, 0, 0, -99, 60, 91, 0, 19, -6, -49, -1, -28, -74, 23, 0, -19, 5, 48, 0, 127, 12, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.506 D/UsbHelperDump(26179): RX [1, 0, 0, 0, -36, -128, 0, 35, 45, -77, 4, 0, 0, 0, 9, 0, 0, 0, 2, 0, 0, 0, -99, 60, 91, 0, 19, -6, -49, -1, -28, -74, 23, 0, -19, 5, 48, 0, 127, 12, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.506 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: send save coefficient list -> cmd 0~43:res: true
+07-01 22:43:43.506 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> sampleRateIndex: 5 -> 48000 & bandIndex: 9 & gain:-6.4
+07-01 22:43:43.506 D/Eq2Coeff(26179): CxAudioConvertEqParams2Coeffs: convertRes= 0
+07-01 22:43:43.506 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> convert eq to coefficient: band:9 & param.gain:-6.4 & pEQCoeff.Gain:2 & B0:5cc59f & B1:ffc39453 & B2:1c11bc & A0:3c6bae & A1:728a4
+07-01 22:43:43.506 D/UsbHelperDump(26179): TX [1, 0, 13, 0, -36, 0, 0, 35, 45, -77, 5, 0, 0, 0, 9, 0, 0, 0, 2, 0, 0, 0, -97, -59, 92, 0, 83, -108, -61, -1, -68, 17, 28, 0, -82, 107, 60, 0, -92, 40, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.506 D/UsbHelperDump(26179): RX [1, 0, 0, 0, -36, -128, 0, 35, 45, -77, 5, 0, 0, 0, 9, 0, 0, 0, 2, 0, 0, 0, -97, -59, 92, 0, 83, -108, -61, -1, -68, 17, 28, 0, -82, 107, 60, 0, -92, 40, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.506 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: send save coefficient list -> cmd 0~43:res: true
+07-01 22:43:43.506 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> sampleRateIndex: 6 -> 96000 & bandIndex: 9 & gain:-6.4
+07-01 22:43:43.506 D/Eq2Coeff(26179): CxAudioConvertEqParams2Coeffs: convertRes= 0
+07-01 22:43:43.506 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> convert eq to coefficient: band:9 & param.gain:-6.4 & pEQCoeff.Gain:3 & B0:343b9c & B1:ffb83f3d & B2:1e9ecf & A0:47c0c4 & A1:ffed2594
+07-01 22:43:43.507 D/UsbHelperDump(26179): TX [1, 0, 13, 0, -36, 0, 0, 35, 45, -77, 6, 0, 0, 0, 9, 0, 0, 0, 3, 0, 0, 0, -100, 59, 52, 0, 61, 63, -72, -1, -49, -98, 30, 0, -60, -64, 71, 0, -108, 37, -19, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.507 D/UsbHelperDump(26179): RX [1, 0, 0, 0, -36, -128, 0, 35, 45, -77, 6, 0, 0, 0, 9, 0, 0, 0, 3, 0, 0, 0, -100, 59, 52, 0, 61, 63, -72, -1, -49, -98, 30, 0, -60, -64, 71, 0, -108, 37, -19, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.507 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: send save coefficient list -> cmd 0~43:res: true
+07-01 22:43:43.507 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> sampleRateIndex: 7 -> 192000 & bandIndex: 9 & gain:-6.4
+07-01 22:43:43.507 D/Eq2Coeff(26179): CxAudioConvertEqParams2Coeffs: convertRes= 0
+07-01 22:43:43.507 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> convert eq to coefficient: band:9 & param.gain:-6.4 & pEQCoeff.Gain:3 & B0:38e2d8 & B1:ff9eb9a8 & B2:2bd1f6 & A0:614657 & A1:ffdb4b32
+07-01 22:43:43.507 D/UsbHelperDump(26179): TX [1, 0, 13, 0, -36, 0, 0, 35, 45, -77, 7, 0, 0, 0, 9, 0, 0, 0, 3, 0, 0, 0, -40, -30, 56, 0, -88, -71, -98, -1, -10, -47, 43, 0, 87, 70, 97, 0, 50, 75, -37, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.508 D/UsbHelperDump(26179): RX [1, 0, 0, 0, -36, -128, 0, 35, 45, -77, 7, 0, 0, 0, 9, 0, 0, 0, 3, 0, 0, 0, -40, -30, 56, 0, -88, -71, -98, -1, -10, -47, 43, 0, 87, 70, 97, 0, 50, 75, -37, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.508 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: send save coefficient list -> cmd 0~43:res: true
+07-01 22:43:43.508 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> sampleRateIndex: 8 -> 384000 & bandIndex: 9 & gain:-6.4
+07-01 22:43:43.508 D/Eq2Coeff(26179): CxAudioConvertEqParams2Coeffs: convertRes= 0
+07-01 22:43:43.508 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: save coefficient -> convert eq to coefficient: band:9 & param.gain:-6.4 & pEQCoeff.Gain:3 & B0:3c05e0 & B1:ff903925 & B2:34b7e6 & A0:6fc6da & A1:ffcf423b
+07-01 22:43:43.508 D/UsbHelperDump(26179): TX [1, 0, 13, 0, -36, 0, 0, 35, 45, -77, 8, 0, 0, 0, 9, 0, 0, 0, 3, 0, 0, 0, -32, 5, 60, 0, 37, 57, -112, -1, -26, -73, 52, 0, -38, -58, 111, 0, 59, 66, -49, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.509 D/UsbHelperDump(26179): RX [1, 0, 0, 0, -36, -128, 0, 35, 45, -77, 8, 0, 0, 0, 9, 0, 0, 0, 3, 0, 0, 0, -32, 5, 60, 0, 37, 57, -112, -1, -26, -73, 52, 0, -38, -58, 111, 0, 59, 66, -49, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.509 D/CafCmdHelper(26179): writeGolemCmdToDevice: isSuccess: true
+07-01 22:43:43.509 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: send save coefficient list -> last eq result is: true
+07-01 22:43:43.509 D/UsbHelperDump(26179): TX [1, 0, 13, 0, -36, 0, 0, 35, 45, -77, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.509 D/UsbHelperDump(26179): RX [1, 0, 0, 0, -36, -128, 0, 35, 45, -77, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:43.509 D/CafCmdHelper(26179): writeGolemCmdToDevice: isSuccess: true
+07-01 22:43:43.509 D/FreemanCnxtUsbDevice(26179): saveEQParamsToFlash: do save option result: true
+07-01 22:43:43.509 D/FreemanCnxtUsbDevice(26179): saveCustomEQ: disConnectUsbDeviceByApplication
+07-01 22:43:44.310 D/FreemanCnxtUsbDevice(26179): release
+07-01 22:43:46.428 D/UsbHelperDump(26179): TX [1, 0, 13, 0, 3, 1, 0, 35, 45, -77, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:46.429 D/UsbHelperDump(26179): RX [1, 0, 4, 0, 3, -127, 0, 35, 45, -77, 9, 0, 0, 0, 7, 0, 0, 0, 14, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:46.429 D/FreemanCnxtUsbDevice(26179): getFwVersion: resStr: [1, 0, 4, 0, 3, -127, 0, 35, 45, -77, 9, 0, 0, 0, 7, 0, 0, 0, 14, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+07-01 22:43:46.429 D/FreemanCnxtUsbDevice(26179): getFwVersion: mCurFwVersion = 9.7.14.1
+07-01 22:43:46.529 D/CafCmdHelper(26179): finish cmd -----releaseInterfaceListener: 

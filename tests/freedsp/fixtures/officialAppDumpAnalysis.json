@@ -1,0 +1,7525 @@
+{
+  "category": "Official-app helper buffers; not independently captured USB transfers",
+  "packetCount": 114,
+  "pairCount": 57,
+  "commands": [
+    {
+      "command": 90,
+      "pairCount": 1,
+      "tx": {
+        "lengths": [
+          62
+        ],
+        "prefixU8": [
+          1
+        ],
+        "prefixU16": [
+          1
+        ],
+        "prefixU32": [
+          851969
+        ],
+        "counts": [
+          13
+        ],
+        "commandRaw": [
+          90
+        ],
+        "modules": [
+          3006079744
+        ],
+        "lastNonzeroOffsets": [
+          10
+        ],
+        "offsetStats": [
+          {
+            "offset": 0,
+            "unique": [
+              1
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 1,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 2,
+            "unique": [
+              13
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 3,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 4,
+            "unique": [
+              90
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 5,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 6,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 7,
+            "unique": [
+              35
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 8,
+            "unique": [
+              45
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 9,
+            "unique": [
+              179
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 10,
+            "unique": [
+              90
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 11,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 12,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 13,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 14,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 15,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 16,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 17,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 18,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 19,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 20,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 21,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 22,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 23,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 24,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 25,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 26,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 27,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 28,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 29,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 30,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 31,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 32,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 33,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 34,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 35,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 36,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 37,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 38,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 39,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 40,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 41,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 42,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 43,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 44,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 45,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 46,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 47,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 48,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 49,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 50,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 51,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 52,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 53,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 54,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 55,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 56,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 57,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 58,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 59,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 60,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 61,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          }
+        ]
+      },
+      "rx": {
+        "lengths": [
+          62
+        ],
+        "prefixU8": [
+          1
+        ],
+        "prefixU16": [
+          1
+        ],
+        "prefixU32": [
+          1
+        ],
+        "counts": [
+          0
+        ],
+        "commandRaw": [
+          32858
+        ],
+        "modules": [
+          3006079744
+        ],
+        "lastNonzeroOffsets": [
+          10
+        ],
+        "offsetStats": [
+          {
+            "offset": 0,
+            "unique": [
+              1
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 1,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 2,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 3,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 4,
+            "unique": [
+              90
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 5,
+            "unique": [
+              128
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 6,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 7,
+            "unique": [
+              35
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 8,
+            "unique": [
+              45
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 9,
+            "unique": [
+              179
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 10,
+            "unique": [
+              90
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 11,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 12,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 13,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 14,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 15,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 16,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 17,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 18,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 19,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 20,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 21,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 22,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 23,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 24,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 25,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 26,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 27,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 28,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 29,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 30,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 31,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 32,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 33,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 34,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 35,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 36,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 37,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 38,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 39,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 40,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 41,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 42,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 43,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 44,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 45,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 46,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 47,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 48,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 49,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 50,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 51,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 52,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 53,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 54,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 55,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 56,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 57,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 58,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 59,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 60,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 61,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          }
+        ]
+      }
+    },
+    {
+      "command": 220,
+      "pairCount": 55,
+      "tx": {
+        "lengths": [
+          62
+        ],
+        "prefixU8": [
+          1
+        ],
+        "prefixU16": [
+          1
+        ],
+        "prefixU32": [
+          851969
+        ],
+        "counts": [
+          13
+        ],
+        "commandRaw": [
+          220
+        ],
+        "modules": [
+          3006079744
+        ],
+        "lastNonzeroOffsets": [
+          10,
+          30,
+          33,
+          40,
+          41
+        ],
+        "offsetStats": [
+          {
+            "offset": 0,
+            "unique": [
+              1
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 1,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 2,
+            "unique": [
+              13
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 3,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 4,
+            "unique": [
+              220
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 5,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 6,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 7,
+            "unique": [
+              35
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 8,
+            "unique": [
+              45
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 9,
+            "unique": [
+              179
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 10,
+            "unique": [
+              0,
+              4,
+              5,
+              6,
+              7,
+              8,
+              255
+            ],
+            "entropyBits": 2.66907
+          },
+          {
+            "offset": 11,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 12,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 13,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 14,
+            "unique": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9
+            ],
+            "entropyBits": 3.243397
+          },
+          {
+            "offset": 15,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 16,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 17,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 18,
+            "unique": [
+              0,
+              2,
+              3,
+              12,
+              60,
+              64,
+              90,
+              132,
+              143,
+              178,
+              184,
+              232
+            ],
+            "entropyBits": 1.699782
+          },
+          {
+            "offset": 19,
+            "unique": [
+              0,
+              2,
+              3,
+              11,
+              17,
+              23,
+              28,
+              31
+            ],
+            "entropyBits": 0.907211
+          },
+          {
+            "offset": 20,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 21,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 22,
+            "unique": [
+              0,
+              9,
+              13,
+              20,
+              23,
+              25,
+              34,
+              35,
+              40,
+              53,
+              66,
+              70,
+              78,
+              83,
+              84,
+              89,
+              105,
+              107,
+              109,
+              113,
+              121,
+              122,
+              136,
+              140,
+              147,
+              150,
+              156,
+              157,
+              159,
+              165,
+              169,
+              179,
+              187,
+              190,
+              192,
+              193,
+              194,
+              196,
+              207,
+              216,
+              223,
+              224,
+              239,
+              245,
+              251,
+              252
+            ],
+            "entropyBits": 5.226281
+          },
+          {
+            "offset": 23,
+            "unique": [
+              0,
+              5,
+              29,
+              32,
+              52,
+              59,
+              60,
+              74,
+              80,
+              88,
+              93,
+              94,
+              109,
+              113,
+              118,
+              124,
+              125,
+              126,
+              148,
+              150,
+              162,
+              165,
+              172,
+              174,
+              177,
+              181,
+              182,
+              188,
+              191,
+              195,
+              197,
+              205,
+              210,
+              214,
+              215,
+              216,
+              218,
+              223,
+              224,
+              226,
+              234,
+              235,
+              245,
+              252
+            ],
+            "entropyBits": 5.104646
+          },
+          {
+            "offset": 24,
+            "unique": [
+              0,
+              52,
+              53,
+              56,
+              57,
+              59,
+              60,
+              61,
+              62,
+              63,
+              65,
+              67,
+              69,
+              73,
+              91,
+              92,
+              93,
+              94,
+              106
+            ],
+            "entropyBits": 3.67684
+          },
+          {
+            "offset": 25,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 26,
+            "unique": [
+              0,
+              7,
+              16,
+              18,
+              19,
+              25,
+              37,
+              45,
+              47,
+              50,
+              57,
+              58,
+              61,
+              67,
+              83,
+              90,
+              94,
+              95,
+              96,
+              104,
+              108,
+              115,
+              124,
+              126,
+              134,
+              138,
+              146,
+              147,
+              163,
+              168,
+              175,
+              178,
+              179,
+              194,
+              207,
+              209,
+              218,
+              227,
+              228,
+              238,
+              243,
+              246,
+              255
+            ],
+            "entropyBits": 5.068282
+          },
+          {
+            "offset": 27,
+            "unique": [
+              0,
+              10,
+              27,
+              29,
+              35,
+              38,
+              46,
+              48,
+              54,
+              57,
+              60,
+              63,
+              65,
+              69,
+              70,
+              71,
+              80,
+              88,
+              92,
+              107,
+              119,
+              120,
+              123,
+              127,
+              136,
+              142,
+              148,
+              165,
+              166,
+              185,
+              186,
+              188,
+              191,
+              193,
+              196,
+              208,
+              210,
+              216,
+              224,
+              237,
+              241,
+              250
+            ],
+            "entropyBits": 5.018193
+          },
+          {
+            "offset": 28,
+            "unique": [
+              0,
+              128,
+              129,
+              130,
+              131,
+              132,
+              134,
+              136,
+              137,
+              140,
+              141,
+              142,
+              144,
+              145,
+              146,
+              147,
+              152,
+              156,
+              158,
+              160,
+              167,
+              172,
+              176,
+              184,
+              188,
+              195,
+              207,
+              209,
+              216
+            ],
+            "entropyBits": 4.393383
+          },
+          {
+            "offset": 29,
+            "unique": [
+              0,
+              255
+            ],
+            "entropyBits": 0.684038
+          },
+          {
+            "offset": 30,
+            "unique": [
+              0,
+              2,
+              3,
+              6,
+              14,
+              24,
+              35,
+              46,
+              50,
+              61,
+              64,
+              67,
+              85,
+              89,
+              121,
+              130,
+              143,
+              144,
+              148,
+              149,
+              158,
+              164,
+              182,
+              187,
+              188,
+              193,
+              194,
+              197,
+              199,
+              206,
+              207,
+              212,
+              222,
+              226,
+              228,
+              230,
+              238,
+              239,
+              241,
+              244,
+              246,
+              247,
+              249,
+              250,
+              251,
+              252
+            ],
+            "entropyBits": 5.417723
+          },
+          {
+            "offset": 31,
+            "unique": [
+              0,
+              12,
+              17,
+              24,
+              37,
+              50,
+              55,
+              77,
+              96,
+              97,
+              101,
+              112,
+              115,
+              117,
+              129,
+              130,
+              136,
+              140,
+              145,
+              148,
+              155,
+              158,
+              168,
+              174,
+              176,
+              177,
+              182,
+              183,
+              184,
+              195,
+              201,
+              205,
+              209,
+              212,
+              215,
+              217,
+              218,
+              222,
+              223,
+              230,
+              232,
+              233,
+              255
+            ],
+            "entropyBits": 5.163178
+          },
+          {
+            "offset": 32,
+            "unique": [
+              0,
+              3,
+              6,
+              23,
+              27,
+              28,
+              29,
+              30,
+              34,
+              36,
+              39,
+              42,
+              43,
+              44,
+              47,
+              48,
+              51,
+              52,
+              53,
+              54,
+              55,
+              57,
+              59,
+              60,
+              61,
+              62,
+              63,
+              255
+            ],
+            "entropyBits": 4.372091
+          },
+          {
+            "offset": 33,
+            "unique": [
+              0,
+              255
+            ],
+            "entropyBits": 0.598347
+          },
+          {
+            "offset": 34,
+            "unique": [
+              0,
+              1,
+              10,
+              13,
+              18,
+              29,
+              38,
+              47,
+              48,
+              49,
+              61,
+              77,
+              78,
+              82,
+              87,
+              88,
+              93,
+              108,
+              110,
+              118,
+              122,
+              130,
+              132,
+              141,
+              148,
+              151,
+              159,
+              160,
+              161,
+              163,
+              165,
+              174,
+              188,
+              196,
+              199,
+              207,
+              208,
+              211,
+              218,
+              230,
+              237,
+              239,
+              250
+            ],
+            "entropyBits": 5.068282
+          },
+          {
+            "offset": 35,
+            "unique": [
+              0,
+              5,
+              14,
+              18,
+              31,
+              39,
+              45,
+              47,
+              59,
+              62,
+              64,
+              67,
+              69,
+              70,
+              89,
+              90,
+              107,
+              113,
+              119,
+              128,
+              132,
+              135,
+              136,
+              148,
+              163,
+              167,
+              175,
+              184,
+              185,
+              186,
+              190,
+              192,
+              195,
+              198,
+              201,
+              207,
+              209,
+              217,
+              220,
+              226,
+              228,
+              245
+            ],
+            "entropyBits": 5.018193
+          },
+          {
+            "offset": 36,
+            "unique": [
+              0,
+              39,
+              46,
+              48,
+              60,
+              67,
+              71,
+              79,
+              83,
+              88,
+              95,
+              97,
+              99,
+              103,
+              108,
+              109,
+              110,
+              111,
+              113,
+              114,
+              115,
+              118,
+              119,
+              121,
+              123,
+              124,
+              125,
+              126,
+              127
+            ],
+            "entropyBits": 4.393383
+          },
+          {
+            "offset": 37,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 38,
+            "unique": [
+              0,
+              14,
+              19,
+              29,
+              34,
+              40,
+              46,
+              48,
+              50,
+              55,
+              59,
+              66,
+              73,
+              74,
+              80,
+              82,
+              83,
+              87,
+              102,
+              112,
+              127,
+              128,
+              130,
+              137,
+              148,
+              162,
+              164,
+              180,
+              181,
+              182,
+              185,
+              190,
+              194,
+              197,
+              204,
+              207,
+              216,
+              217,
+              240,
+              241,
+              247,
+              253
+            ],
+            "entropyBits": 5.031918
+          },
+          {
+            "offset": 39,
+            "unique": [
+              0,
+              7,
+              11,
+              12,
+              28,
+              35,
+              37,
+              40,
+              43,
+              48,
+              50,
+              53,
+              54,
+              60,
+              61,
+              66,
+              71,
+              74,
+              75,
+              99,
+              102,
+              110,
+              111,
+              120,
+              131,
+              142,
+              147,
+              161,
+              175,
+              176,
+              183,
+              184,
+              189,
+              211,
+              212,
+              214,
+              222,
+              240,
+              247,
+              248
+            ],
+            "entropyBits": 4.959191
+          },
+          {
+            "offset": 40,
+            "unique": [
+              0,
+              7,
+              13,
+              192,
+              193,
+              194,
+              195,
+              196,
+              198,
+              200,
+              204,
+              205,
+              207,
+              208,
+              209,
+              214,
+              219,
+              220,
+              226,
+              229,
+              232,
+              237,
+              238,
+              239,
+              242,
+              245,
+              251
+            ],
+            "entropyBits": 4.308747
+          },
+          {
+            "offset": 41,
+            "unique": [
+              0,
+              255
+            ],
+            "entropyBits": 0.756834
+          },
+          {
+            "offset": 42,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 43,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 44,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 45,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 46,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 47,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 48,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 49,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 50,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 51,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 52,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 53,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 54,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 55,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 56,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 57,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 58,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 59,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 60,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 61,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          }
+        ]
+      },
+      "rx": {
+        "lengths": [
+          62
+        ],
+        "prefixU8": [
+          1
+        ],
+        "prefixU16": [
+          1
+        ],
+        "prefixU32": [
+          1
+        ],
+        "counts": [
+          0
+        ],
+        "commandRaw": [
+          32988
+        ],
+        "modules": [
+          3006079744
+        ],
+        "lastNonzeroOffsets": [
+          10,
+          30,
+          33,
+          40,
+          41
+        ],
+        "offsetStats": [
+          {
+            "offset": 0,
+            "unique": [
+              1
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 1,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 2,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 3,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 4,
+            "unique": [
+              220
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 5,
+            "unique": [
+              128
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 6,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 7,
+            "unique": [
+              35
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 8,
+            "unique": [
+              45
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 9,
+            "unique": [
+              179
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 10,
+            "unique": [
+              0,
+              4,
+              5,
+              6,
+              7,
+              8,
+              255
+            ],
+            "entropyBits": 2.66907
+          },
+          {
+            "offset": 11,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 12,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 13,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 14,
+            "unique": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9
+            ],
+            "entropyBits": 3.243397
+          },
+          {
+            "offset": 15,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 16,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 17,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 18,
+            "unique": [
+              0,
+              2,
+              3,
+              12,
+              60,
+              64,
+              90,
+              132,
+              143,
+              178,
+              184,
+              232
+            ],
+            "entropyBits": 1.699782
+          },
+          {
+            "offset": 19,
+            "unique": [
+              0,
+              2,
+              3,
+              11,
+              17,
+              23,
+              28,
+              31
+            ],
+            "entropyBits": 0.907211
+          },
+          {
+            "offset": 20,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 21,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 22,
+            "unique": [
+              0,
+              9,
+              13,
+              20,
+              23,
+              25,
+              34,
+              35,
+              40,
+              53,
+              66,
+              70,
+              78,
+              83,
+              84,
+              89,
+              105,
+              107,
+              109,
+              113,
+              121,
+              122,
+              136,
+              140,
+              147,
+              150,
+              156,
+              157,
+              159,
+              165,
+              169,
+              179,
+              187,
+              190,
+              192,
+              193,
+              194,
+              196,
+              207,
+              216,
+              223,
+              224,
+              239,
+              245,
+              251,
+              252
+            ],
+            "entropyBits": 5.226281
+          },
+          {
+            "offset": 23,
+            "unique": [
+              0,
+              5,
+              29,
+              32,
+              52,
+              59,
+              60,
+              74,
+              80,
+              88,
+              93,
+              94,
+              109,
+              113,
+              118,
+              124,
+              125,
+              126,
+              148,
+              150,
+              162,
+              165,
+              172,
+              174,
+              177,
+              181,
+              182,
+              188,
+              191,
+              195,
+              197,
+              205,
+              210,
+              214,
+              215,
+              216,
+              218,
+              223,
+              224,
+              226,
+              234,
+              235,
+              245,
+              252
+            ],
+            "entropyBits": 5.104646
+          },
+          {
+            "offset": 24,
+            "unique": [
+              0,
+              52,
+              53,
+              56,
+              57,
+              59,
+              60,
+              61,
+              62,
+              63,
+              65,
+              67,
+              69,
+              73,
+              91,
+              92,
+              93,
+              94,
+              106
+            ],
+            "entropyBits": 3.67684
+          },
+          {
+            "offset": 25,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 26,
+            "unique": [
+              0,
+              7,
+              16,
+              18,
+              19,
+              25,
+              37,
+              45,
+              47,
+              50,
+              57,
+              58,
+              61,
+              67,
+              83,
+              90,
+              94,
+              95,
+              96,
+              104,
+              108,
+              115,
+              124,
+              126,
+              134,
+              138,
+              146,
+              147,
+              163,
+              168,
+              175,
+              178,
+              179,
+              194,
+              207,
+              209,
+              218,
+              227,
+              228,
+              238,
+              243,
+              246,
+              255
+            ],
+            "entropyBits": 5.068282
+          },
+          {
+            "offset": 27,
+            "unique": [
+              0,
+              10,
+              27,
+              29,
+              35,
+              38,
+              46,
+              48,
+              54,
+              57,
+              60,
+              63,
+              65,
+              69,
+              70,
+              71,
+              80,
+              88,
+              92,
+              107,
+              119,
+              120,
+              123,
+              127,
+              136,
+              142,
+              148,
+              165,
+              166,
+              185,
+              186,
+              188,
+              191,
+              193,
+              196,
+              208,
+              210,
+              216,
+              224,
+              237,
+              241,
+              250
+            ],
+            "entropyBits": 5.018193
+          },
+          {
+            "offset": 28,
+            "unique": [
+              0,
+              128,
+              129,
+              130,
+              131,
+              132,
+              134,
+              136,
+              137,
+              140,
+              141,
+              142,
+              144,
+              145,
+              146,
+              147,
+              152,
+              156,
+              158,
+              160,
+              167,
+              172,
+              176,
+              184,
+              188,
+              195,
+              207,
+              209,
+              216
+            ],
+            "entropyBits": 4.393383
+          },
+          {
+            "offset": 29,
+            "unique": [
+              0,
+              255
+            ],
+            "entropyBits": 0.684038
+          },
+          {
+            "offset": 30,
+            "unique": [
+              0,
+              2,
+              3,
+              6,
+              14,
+              24,
+              35,
+              46,
+              50,
+              61,
+              64,
+              67,
+              85,
+              89,
+              121,
+              130,
+              143,
+              144,
+              148,
+              149,
+              158,
+              164,
+              182,
+              187,
+              188,
+              193,
+              194,
+              197,
+              199,
+              206,
+              207,
+              212,
+              222,
+              226,
+              228,
+              230,
+              238,
+              239,
+              241,
+              244,
+              246,
+              247,
+              249,
+              250,
+              251,
+              252
+            ],
+            "entropyBits": 5.417723
+          },
+          {
+            "offset": 31,
+            "unique": [
+              0,
+              12,
+              17,
+              24,
+              37,
+              50,
+              55,
+              77,
+              96,
+              97,
+              101,
+              112,
+              115,
+              117,
+              129,
+              130,
+              136,
+              140,
+              145,
+              148,
+              155,
+              158,
+              168,
+              174,
+              176,
+              177,
+              182,
+              183,
+              184,
+              195,
+              201,
+              205,
+              209,
+              212,
+              215,
+              217,
+              218,
+              222,
+              223,
+              230,
+              232,
+              233,
+              255
+            ],
+            "entropyBits": 5.163178
+          },
+          {
+            "offset": 32,
+            "unique": [
+              0,
+              3,
+              6,
+              23,
+              27,
+              28,
+              29,
+              30,
+              34,
+              36,
+              39,
+              42,
+              43,
+              44,
+              47,
+              48,
+              51,
+              52,
+              53,
+              54,
+              55,
+              57,
+              59,
+              60,
+              61,
+              62,
+              63,
+              255
+            ],
+            "entropyBits": 4.372091
+          },
+          {
+            "offset": 33,
+            "unique": [
+              0,
+              255
+            ],
+            "entropyBits": 0.598347
+          },
+          {
+            "offset": 34,
+            "unique": [
+              0,
+              1,
+              10,
+              13,
+              18,
+              29,
+              38,
+              47,
+              48,
+              49,
+              61,
+              77,
+              78,
+              82,
+              87,
+              88,
+              93,
+              108,
+              110,
+              118,
+              122,
+              130,
+              132,
+              141,
+              148,
+              151,
+              159,
+              160,
+              161,
+              163,
+              165,
+              174,
+              188,
+              196,
+              199,
+              207,
+              208,
+              211,
+              218,
+              230,
+              237,
+              239,
+              250
+            ],
+            "entropyBits": 5.068282
+          },
+          {
+            "offset": 35,
+            "unique": [
+              0,
+              5,
+              14,
+              18,
+              31,
+              39,
+              45,
+              47,
+              59,
+              62,
+              64,
+              67,
+              69,
+              70,
+              89,
+              90,
+              107,
+              113,
+              119,
+              128,
+              132,
+              135,
+              136,
+              148,
+              163,
+              167,
+              175,
+              184,
+              185,
+              186,
+              190,
+              192,
+              195,
+              198,
+              201,
+              207,
+              209,
+              217,
+              220,
+              226,
+              228,
+              245
+            ],
+            "entropyBits": 5.018193
+          },
+          {
+            "offset": 36,
+            "unique": [
+              0,
+              39,
+              46,
+              48,
+              60,
+              67,
+              71,
+              79,
+              83,
+              88,
+              95,
+              97,
+              99,
+              103,
+              108,
+              109,
+              110,
+              111,
+              113,
+              114,
+              115,
+              118,
+              119,
+              121,
+              123,
+              124,
+              125,
+              126,
+              127
+            ],
+            "entropyBits": 4.393383
+          },
+          {
+            "offset": 37,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 38,
+            "unique": [
+              0,
+              14,
+              19,
+              29,
+              34,
+              40,
+              46,
+              48,
+              50,
+              55,
+              59,
+              66,
+              73,
+              74,
+              80,
+              82,
+              83,
+              87,
+              102,
+              112,
+              127,
+              128,
+              130,
+              137,
+              148,
+              162,
+              164,
+              180,
+              181,
+              182,
+              185,
+              190,
+              194,
+              197,
+              204,
+              207,
+              216,
+              217,
+              240,
+              241,
+              247,
+              253
+            ],
+            "entropyBits": 5.031918
+          },
+          {
+            "offset": 39,
+            "unique": [
+              0,
+              7,
+              11,
+              12,
+              28,
+              35,
+              37,
+              40,
+              43,
+              48,
+              50,
+              53,
+              54,
+              60,
+              61,
+              66,
+              71,
+              74,
+              75,
+              99,
+              102,
+              110,
+              111,
+              120,
+              131,
+              142,
+              147,
+              161,
+              175,
+              176,
+              183,
+              184,
+              189,
+              211,
+              212,
+              214,
+              222,
+              240,
+              247,
+              248
+            ],
+            "entropyBits": 4.959191
+          },
+          {
+            "offset": 40,
+            "unique": [
+              0,
+              7,
+              13,
+              192,
+              193,
+              194,
+              195,
+              196,
+              198,
+              200,
+              204,
+              205,
+              207,
+              208,
+              209,
+              214,
+              219,
+              220,
+              226,
+              229,
+              232,
+              237,
+              238,
+              239,
+              242,
+              245,
+              251
+            ],
+            "entropyBits": 4.308747
+          },
+          {
+            "offset": 41,
+            "unique": [
+              0,
+              255
+            ],
+            "entropyBits": 0.756834
+          },
+          {
+            "offset": 42,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 43,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 44,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 45,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 46,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 47,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 48,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 49,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 50,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 51,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 52,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 53,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 54,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 55,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 56,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 57,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 58,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 59,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 60,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 61,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          }
+        ]
+      }
+    },
+    {
+      "command": 259,
+      "pairCount": 1,
+      "tx": {
+        "lengths": [
+          62
+        ],
+        "prefixU8": [
+          1
+        ],
+        "prefixU16": [
+          1
+        ],
+        "prefixU32": [
+          851969
+        ],
+        "counts": [
+          13
+        ],
+        "commandRaw": [
+          259
+        ],
+        "modules": [
+          3006079744
+        ],
+        "lastNonzeroOffsets": [
+          9
+        ],
+        "offsetStats": [
+          {
+            "offset": 0,
+            "unique": [
+              1
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 1,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 2,
+            "unique": [
+              13
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 3,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 4,
+            "unique": [
+              3
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 5,
+            "unique": [
+              1
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 6,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 7,
+            "unique": [
+              35
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 8,
+            "unique": [
+              45
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 9,
+            "unique": [
+              179
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 10,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 11,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 12,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 13,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 14,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 15,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 16,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 17,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 18,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 19,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 20,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 21,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 22,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 23,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 24,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 25,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 26,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 27,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 28,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 29,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 30,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 31,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 32,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 33,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 34,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 35,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 36,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 37,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 38,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 39,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 40,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 41,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 42,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 43,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 44,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 45,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 46,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 47,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 48,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 49,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 50,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 51,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 52,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 53,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 54,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 55,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 56,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 57,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 58,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 59,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 60,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 61,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          }
+        ]
+      },
+      "rx": {
+        "lengths": [
+          62
+        ],
+        "prefixU8": [
+          1
+        ],
+        "prefixU16": [
+          1
+        ],
+        "prefixU32": [
+          262145
+        ],
+        "counts": [
+          4
+        ],
+        "commandRaw": [
+          33027
+        ],
+        "modules": [
+          3006079744
+        ],
+        "lastNonzeroOffsets": [
+          22
+        ],
+        "offsetStats": [
+          {
+            "offset": 0,
+            "unique": [
+              1
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 1,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 2,
+            "unique": [
+              4
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 3,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 4,
+            "unique": [
+              3
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 5,
+            "unique": [
+              129
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 6,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 7,
+            "unique": [
+              35
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 8,
+            "unique": [
+              45
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 9,
+            "unique": [
+              179
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 10,
+            "unique": [
+              9
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 11,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 12,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 13,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 14,
+            "unique": [
+              7
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 15,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 16,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 17,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 18,
+            "unique": [
+              14
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 19,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 20,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 21,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 22,
+            "unique": [
+              1
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 23,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 24,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 25,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 26,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 27,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 28,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 29,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 30,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 31,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 32,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 33,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 34,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 35,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 36,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 37,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 38,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 39,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 40,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 41,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 42,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 43,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 44,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 45,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 46,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 47,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 48,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 49,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 50,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 51,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 52,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 53,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 54,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 55,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 56,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 57,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 58,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 59,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 60,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          },
+          {
+            "offset": 61,
+            "unique": [
+              0
+            ],
+            "entropyBits": 0
+          }
+        ]
+      }
+    }
+  ],
+  "families": [
+    {
+      "family": "mode",
+      "count": 1,
+      "txWordValues": [
+        [
+          90
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ]
+      ]
+    },
+    {
+      "family": "flash-metadata",
+      "count": 9,
+      "txWordValues": [
+        [
+          0
+        ],
+        [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        [
+          60,
+          90,
+          690,
+          1000,
+          3000,
+          4495,
+          5900,
+          7300,
+          8000
+        ],
+        [
+          179
+        ],
+        [
+          0
+        ],
+        [
+          -9,
+          -7,
+          -6,
+          -5,
+          2
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ]
+      ]
+    },
+    {
+      "family": "flash-coefficients",
+      "count": 45,
+      "txWordValues": [
+        [
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          3423132,
+          3463763,
+          3495945,
+          3505854,
+          3518833,
+          3728088,
+          3783903,
+          3785525,
+          3791087,
+          3874155,
+          3896941,
+          3898831,
+          3920462,
+          3933664,
+          3964009,
+          3970700,
+          3973655,
+          4035777,
+          4050246,
+          4071611,
+          4078492,
+          4112320,
+          4120345,
+          4149314,
+          4152596,
+          4152916,
+          4156822,
+          4171048,
+          4172921,
+          4173459,
+          4183565,
+          4183843,
+          4188924,
+          4189064,
+          4191610,
+          4306345,
+          4404420,
+          4568610,
+          4813250,
+          4848891,
+          5979293,
+          6079903,
+          6114037,
+          6217817,
+          6962341
+        ],
+        [
+          -8379441,
+          -8373102,
+          -8370285,
+          -8357633,
+          -8352010,
+          -8326816,
+          -8315601,
+          -8309181,
+          -8300486,
+          -8273997,
+          -8265638,
+          -8254881,
+          -8240728,
+          -8161421,
+          -8095762,
+          -7960398,
+          -7942040,
+          -7814685,
+          -7813969,
+          -7767170,
+          -7559542,
+          -7554503,
+          -7524336,
+          -7453134,
+          -7325403,
+          -7279342,
+          -7271727,
+          -7188385,
+          -7119629,
+          -6808698,
+          -6797972,
+          -6498141,
+          -6375000,
+          -6258750,
+          -5805267,
+          -5770983,
+          -5474553,
+          -5451036,
+          -5230897,
+          -4702403,
+          -4446626,
+          -3959725,
+          -3147245,
+          -3037828,
+          -2573094
+        ],
+        [
+          234703,
+          450292,
+          1554148,
+          1826742,
+          1839548,
+          1930127,
+          2006735,
+          2284254,
+          2394305,
+          2413774,
+          2589378,
+          2755825,
+          2853973,
+          2871798,
+          2923310,
+          3140066,
+          3152084,
+          3387106,
+          3387812,
+          3389464,
+          3445214,
+          3454950,
+          3516565,
+          3590464,
+          3617401,
+          3624206,
+          3634670,
+          3764259,
+          3794958,
+          3891506,
+          3899900,
+          3987779,
+          4043157,
+          4089236,
+          4106246,
+          4113296,
+          4117703,
+          4138437,
+          4142937,
+          4153502,
+          4168509,
+          4173827,
+          4181378,
+          4184047,
+          4187835
+        ],
+        [
+          2573094,
+          3037828,
+          3147245,
+          3959726,
+          4446627,
+          4702404,
+          5230897,
+          5451037,
+          5474554,
+          5770982,
+          5805267,
+          6258749,
+          6374999,
+          6498141,
+          6797972,
+          6808698,
+          7119629,
+          7188385,
+          7271727,
+          7279343,
+          7325402,
+          7453135,
+          7524335,
+          7554503,
+          7559542,
+          7767170,
+          7813970,
+          7814685,
+          7942039,
+          7960398,
+          8095762,
+          8161421,
+          8240728,
+          8254880,
+          8265637,
+          8273997,
+          8300487,
+          8309180,
+          8315600,
+          8326815,
+          8352010,
+          8357633,
+          8370284,
+          8373102,
+          8379440
+        ],
+        [
+          -4185140,
+          -4178807,
+          -4175998,
+          -4163367,
+          -4157770,
+          -4132657,
+          -4121554,
+          -4115181,
+          -4080222,
+          -4071907,
+          -4061255,
+          -4047529,
+          -3969198,
+          -3905795,
+          -3775694,
+          -3755842,
+          -3641566,
+          -3636432,
+          -3628606,
+          -3400602,
+          -3396752,
+          -3360827,
+          -3294992,
+          -3194309,
+          -3156811,
+          -3147852,
+          -3133426,
+          -3067663,
+          -2743305,
+          -2736850,
+          -2405582,
+          -2345424,
+          -2304432,
+          -1963198,
+          -1715416,
+          -1705856,
+          -1553713,
+          -1235564,
+          -1151272,
+          -1069238,
+          -889289,
+          -683181,
+          -314807,
+          469156,
+          855167
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ]
+      ]
+    },
+    {
+      "family": "flash-commit",
+      "count": 1,
+      "txWordValues": [
+        [
+          255
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ]
+      ]
+    },
+    {
+      "family": "firmware-query",
+      "count": 1,
+      "txWordValues": [
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ],
+        [
+          0
+        ]
+      ]
+    }
+  ],
+  "structuralChecks": {
+    "constantFirstByte1": true,
+    "constantSecondByte0": true,
+    "constantCountHighByte0": true,
+    "constantModuleB32D2300": true,
+    "responseCommandEqualsTxOr8000": true,
+    "allTxCount13": true,
+    "allTxTailWords8to12Zero": true,
+    "allCoefficientLogsMatch": true,
+    "coefficientLogCount": 45,
+    "txNegativeWords": 96
+  },
+  "pairs": [
+    {
+      "pair": 1,
+      "txLine": 3,
+      "rxLine": 4,
+      "command": 90,
+      "family": "mode",
+      "txCount": 13,
+      "rxCount": 0,
+      "differingOffsets": [
+        2,
+        5
+      ],
+      "txWords": [
+        90,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rxWords": [
+        90,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "coefficientLogMatches": null,
+      "coefficientLog": null
+    },
+    {
+      "pair": 2,
+      "txLine": 10,
+      "rxLine": 11,
+      "command": 220,
+      "family": "flash-metadata",
+      "txCount": 13,
+      "rxCount": 0,
+      "differingOffsets": [
+        2,
+        5
+      ],
+      "txWords": [
+        0,
+        1,
+        60,
+        179,
+        0,
+        -7,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rxWords": [
+        0,
+        1,
+        60,
+        179,
+        0,
+        -7,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "coefficientLogMatches": null,
+      "coefficientLog": null
+    },
+    {
+      "pair": 3,
+      "txLine": 14,
+      "rxLine": 15,
+      "command": 220,
+      "family": "flash-metadata",
+      "txCount": 13,
+      "rxCount": 0,
+      "differingOffsets": [
+        2,
+        5
+      ],
+      "txWords": [
+        0,
+        2,
+        90,
+        179,
+        0,
+        -9,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rxWords": [
+        0,
+        2,
+        90,
+        179,
+        0,
+        -9,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "coefficientLogMatches": null,
+      "coefficientLog": null
+    },
+    {
+      "pair": 4,
+      "txLine": 18,
+      "rxLine": 19,
+      "command": 220,
+      "family": "flash-metadata",
+      "txCount": 13,
+      "rxCount": 0,
+      "differingOffsets": [
+        2,
+        5
+      ],
+      "txWords": [
+        0,
+        3,
+        690,
+        179,
+        0,
+        -9,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rxWords": [
+        0,
+        3,
+        690,
+        179,
+        0,
+        -9,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "coefficientLogMatches": null,
+      "coefficientLog": null
+    },
+    {
+      "pair": 5,
+      "txLine": 22,
+      "rxLine": 23,
+      "command": 220,
+      "family": "flash-metadata",
+      "txCount": 13,
+      "rxCount": 0,
+      "differingOffsets": [
+        2,
+        5
+      ],
+      "txWords": [
+        0,
+        4,
+        1000,
+        179,
+        0,
+        -7,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rxWords": [
+        0,
+        4,
+        1000,
+        179,
+        0,
+        -7,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "coefficientLogMatches": null,
+      "coefficientLog": null
+    },
+    {
+      "pair": 6,
+      "txLine": 26,
+      "rxLine": 27,
+      "command": 220,
+      "family": "flash-metadata",
+      "txCount": 13,
+      "rxCount": 0,
+      "differingOffsets": [
+        2,
+        5
+      ],
+      "txWords": [
+        0,
+        5,
+        3000,
+        179,
+        0,
+        -7,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rxWords": [
+        0,
+        5,
+        3000,
+        179,
+        0,
+        -7,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "coefficientLogMatches": null,
+      "coefficientLog": null
+    },
+    {
+      "pair": 7,
+      "txLine": 30,
+      "rxLine": 31,
+      "command": 220,
+      "family": "flash-metadata",
+      "txCount": 13,
+      "rxCount": 0,
+      "differingOffsets": [
+        2,
+        5
+      ],
+      "txWords": [
+        0,
+        6,
+        4495,
+        179,
+        0,
+        -5,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rxWords": [
+        0,
+        6,
+        4495,
+        179,
+        0,
+        -5,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "coefficientLogMatches": null,
+      "coefficientLog": null
+    },
+    {
+      "pair": 8,
+      "txLine": 34,
+      "rxLine": 35,
+      "command": 220,
+      "family": "flash-metadata",
+      "txCount": 13,
+      "rxCount": 0,
+      "differingOffsets": [
+        2,
+        5
+      ],
+      "txWords": [
+        0,
+        7,
+        5900,
+        179,
+        0,
+        -7,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rxWords": [
+        0,
+        7,
+        5900,
+        179,
+        0,
+        -7,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "coefficientLogMatches": null,
+      "coefficientLog": null
+    },
+    {
+      "pair": 9,
+      "txLine": 38,
+      "rxLine": 39,
+      "command": 220,
+      "family": "flash-metadata",
+      "txCount": 13,
+      "rxCount": 0,
+      "differingOffsets": [
+        2,
+        5
+      ],
+      "txWords": [
+        0,
+        8,
+        7300,
+        179,
+        0,
+        2,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rxWords": [
+        0,
+        8,
+        7300,
+        179,
+        0,
+        2,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "coefficientLogMatches": null,
+      "coefficientLog": null
+    },
+    {
+      "pair": 10,
+      "txLine": 42,
+      "rxLine": 43,
+      "command": 220,
+      "family": "flash-metadata",
+      "txCount": 13,
+      "rxCount": 0,
+      "differingOffsets": [
+        2,
+        5
+      ],
+      "txWords": [
+        0,
+        9,
+        8000,
+        179,
+        0,
+        -6,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rxWords": [
+        0,
+        9,
+        8000,
+        179,
+        0,
+        -6,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "coefficientLogMatches": null,
+      "coefficientLog": null
+    },
+    {
+      "pair": 11,
+      "txLine": 50,
+      "rxLine": 51,
+      "command": 220,
+      "family": "flash-coefficients",
+      "txCount": 13,
+      "rxCount": 0,
+      "differingOffsets": [
+        2,
+        5
+      ],
+      "txWords": [
+        4,
+        1,
+        3,
+        4171048,
+        -8309181,
+        4138437,
+        8309180,
+        -4115181,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rxWords": [
+        4,
+        1,
+        3,
+        4171048,
+        -8309181,
+        4138437,
+        8309180,
+        -4115181,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "coefficientLogMatches": true,
+      "coefficientLog": {
+        "band": 1,
+        "gainDb": -7.700000000000001,
+        "gainMarker": 3,
+        "words": [
+          4171048,
+          -8309181,
+          4138437,
+          8309180,
+          -4115181
+        ]
+      }
+    },
+    {
+      "pair": 12,
+      "txLine": 56,
+      "rxLine": 57,
+      "command": 220,
+      "family": "flash-coefficients",
+      "txCount": 13,
+      "rxCount": 0,
+      "differingOffsets": [
+        2,
+        5
+      ],
+      "txWords": [
+        5,
+        1,
+        3,
+        4172921,
+        -8315601,
+        4142937,
+        8315600,
+        -4121554,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rxWords": [
+        5,
+        1,
+        3,
+        4172921,
+        -8315601,
+        4142937,
+        8315600,
+        -4121554,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "coefficientLogMatches": true,
+      "coefficientLog": {
+        "band": 1,
+        "gainDb": -7.700000000000001,
+        "gainMarker": 3,
+        "words": [
+          4172921,
+          -8315601,
+          4142937,
+          8315600,
+          -4121554
+        ]
+      }
+    },
+    {
+      "pair": 13,
+      "txLine": 62,
+      "rxLine": 63,
+      "command": 220,
+      "family": "flash-coefficients",
+      "txCount": 13,
+      "rxCount": 0,
+      "differingOffsets": [
+        2,
+        5
+      ],
+      "txWords": [
+        6,
+        1,
+        3,
+        4183565,
+        -8352010,
+        4168509,
+        8352010,
+        -4157770,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rxWords": [
+        6,
+        1,
+        3,
+        4183565,
+        -8352010,
+        4168509,
+        8352010,
+        -4157770,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "coefficientLogMatches": true,
+      "coefficientLog": {
+        "band": 1,
+        "gainDb": -7.700000000000001,
+        "gainMarker": 3,
+        "words": [
+          4183565,
+          -8352010,
+          4168509,
+          8352010,
+          -4157770
+        ]
+      }
+    },
+    {
+      "pair": 14,
+      "txLine": 68,
+      "rxLine": 69,
+      "command": 220,
+      "family": "flash-coefficients",
+      "txCount": 13,
+      "rxCount": 0,
+      "differingOffsets": [
+        2,
+        5
+      ],
+      "txWords": [
+        7,
+        1,
+        3,
+        4188924,
+        -8370285,
+        4181378,
+        8370284,
+        -4175998,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rxWords": [
+        7,
+        1,
+        3,
+        4188924,
+        -8370285,
+        4181378,
+        8370284,
+        -4175998,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "coefficientLogMatches": true,
+      "coefficientLog": {
+        "band": 1,
+        "gainDb": -7.700000000000001,
+        "gainMarker": 3,
+        "words": [
+          4188924,
+          -8370285,
+          4181378,
+          8370284,
+          -4175998
+        ]
+      }
+    },
+    {
+      "pair": 15,
+      "txLine": 74,
+      "rxLine": 75,
+      "command": 220,
+      "family": "flash-coefficients",
+      "txCount": 13,
+      "rxCount": 0,
+      "differingOffsets": [
+        2,
+        5
+      ],
+      "txWords": [
+        8,
+        1,
+        3,
+        4191610,
+        -8379441,
+        4187835,
+        8379440,
+        -4185140,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rxWords": [
+        8,
+        1,
+        3,
+        4191610,
+        -8379441,
+        4187835,
+        8379440,
+        -4185140,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "coefficientLogMatches": true,
+      "coefficientLog": {
+        "band": 1,
+        "gainDb": -7.700000000000001,
+        "gainMarker": 3,
+        "words": [
+          4191610,
+          -8379441,
+          4187835,
+          8379440,
+          -4185140
+        ]
+      }
+    },
+    {
+      "pair": 16,
+      "txLine": 81,
+      "rxLine": 82,
+      "command": 220,
+      "family": "flash-coefficients",
+      "txCount": 13,
+      "rxCount": 0,
+      "differingOffsets": [
+        2,
+        5
+      ],
+      "txWords": [
+        4,
+        2,
+        3,
+        4149314,
+        -8254881,
+        4106246,
+        8254880,
+        -4061255,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rxWords": [
+        4,
+        2,
+        3,
+        4149314,
+        -8254881,
+        4106246,
+        8254880,
+        -4061255,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "coefficientLogMatches": true,
+      "coefficientLog": {
+        "band": 2,
+        "gainDb": -9.8,
+        "gainMarker": 3,
+        "words": [
+          4149314,
+          -8254881,
+          4106246,
+          8254880,
+          -4061255
+        ]
+      }
+    },
+    {
+      "pair": 17,
+      "txLine": 87,
+      "rxLine": 88,
+      "command": 220,
+      "family": "flash-coefficients",
+      "txCount": 13,
+      "rxCount": 0,
+      "differingOffsets": [
+        2,
+        5
+      ],
+      "txWords": [
+        5,
+        2,
+        3,
+        4152916,
+        -8265638,
+        4113296,
+        8265637,
+        -4071907,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rxWords": [
+        5,
+        2,
+        3,
+        4152916,
+        -8265638,
+        4113296,
+        8265637,
+        -4071907,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "coefficientLogMatches": true,
+      "coefficientLog": {
+        "band": 2,
+        "gainDb": -9.8,
+        "gainMarker": 3,
+        "words": [
+          4152916,
+          -8265638,
+          4113296,
+          8265637,
+          -4071907
+        ]
+      }
+    },
+    {
+      "pair": 18,
+      "txLine": 93,
+      "rxLine": 94,
+      "command": 220,
+      "family": "flash-coefficients",
+      "txCount": 13,
+      "rxCount": 0,
+      "differingOffsets": [
+        2,
+        5
+      ],
+      "txWords": [
+        6,
+        2,
+        3,
+        4173459,
+        -8326816,
+        4153502,
+        8326815,
+        -4132657,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rxWords": [
+        6,
+        2,
+        3,
+        4173459,
+        -8326816,
+        4153502,
+        8326815,
+        -4132657,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "coefficientLogMatches": true,
+      "coefficientLog": {
+        "band": 2,
+        "gainDb": -9.8,
+        "gainMarker": 3,
+        "words": [
+          4173459,
+          -8326816,
+          4153502,
+          8326815,
+          -4132657
+        ]
+      }
+    },
+    {
+      "pair": 19,
+      "txLine": 99,
+      "rxLine": 100,
+      "command": 220,
+      "family": "flash-coefficients",
+      "txCount": 13,
+      "rxCount": 0,
+      "differingOffsets": [
+        2,
+        5
+      ],
+      "txWords": [
+        7,
+        2,
+        3,
+        4183843,
+        -8357633,
+        4173827,
+        8357633,
+        -4163367,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rxWords": [
+        7,
+        2,
+        3,
+        4183843,
+        -8357633,
+        4173827,
+        8357633,
+        -4163367,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "coefficientLogMatches": true,
+      "coefficientLog": {
+        "band": 2,
+        "gainDb": -9.8,
+        "gainMarker": 3,
+        "words": [
+          4183843,
+          -8357633,
+          4173827,
+          8357633,
+          -4163367
+        ]
+      }
+    },
+    {
+      "pair": 20,
+      "txLine": 105,
+      "rxLine": 106,
+      "command": 220,
+      "family": "flash-coefficients",
+      "txCount": 13,
+      "rxCount": 0,
+      "differingOffsets": [
+        2,
+        5
+      ],
+      "txWords": [
+        8,
+        2,
+        3,
+        4189064,
+        -8373102,
+        4184047,
+        8373102,
+        -4178807,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rxWords": [
+        8,
+        2,
+        3,
+        4189064,
+        -8373102,
+        4184047,
+        8373102,
+        -4178807,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "coefficientLogMatches": true,
+      "coefficientLog": {
+        "band": 2,
+        "gainDb": -9.8,
+        "gainMarker": 3,
+        "words": [
+          4189064,
+          -8373102,
+          4184047,
+          8373102,
+          -4178807
+        ]
+      }
+    },
+    {
+      "pair": 21,
+      "txLine": 112,
+      "rxLine": 113,
+      "command": 220,
+      "family": "flash-coefficients",
+      "txCount": 13,
+      "rxCount": 0,
+      "differingOffsets": [
+        2,
+        5
+      ],
+      "txWords": [
+        4,
+        3,
+        3,
+        3898831,
+        -7453134,
+        3590464,
+        7453135,
+        -3294992,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rxWords": [
+        4,
+        3,
+        3,
+        3898831,
+        -7453134,
+        3590464,
+        7453135,
+        -3294992,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "coefficientLogMatches": true,
+      "coefficientLog": {
+        "band": 3,
+        "gainDb": -9.3,
+        "gainMarker": 3,
+        "words": [
+          3898831,
+          -7453134,
+          3590464,
+          7453135,
+          -3294992
+        ]
+      }
+    },
+    {
+      "pair": 22,
+      "txLine": 118,
+      "rxLine": 119,
+      "command": 220,
+      "family": "flash-coefficients",
+      "txCount": 13,
+      "rxCount": 0,
+      "differingOffsets": [
+        2,
+        5
+      ],
+      "txWords": [
+        5,
+        3,
+        3,
+        3920462,
+        -7524336,
+        3634670,
+        7524335,
+        -3360827,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rxWords": [
+        5,
+        3,
+        3,
+        3920462,
+        -7524336,
+        3634670,
+        7524335,
+        -3360827,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "coefficientLogMatches": true,
+      "coefficientLog": {
+        "band": 3,
+        "gainDb": -9.3,
+        "gainMarker": 3,
+        "words": [
+          3920462,
+          -7524336,
+          3634670,
+          7524335,
+          -3360827
+        ]
+      }
+    },
+    {
+      "pair": 23,
+      "txLine": 124,
+      "rxLine": 125,
+      "command": 220,
+      "family": "flash-coefficients",
+      "txCount": 13,
+      "rxCount": 0,
+      "differingOffsets": [
+        2,
+        5
+      ],
+      "txWords": [
+        6,
+        3,
+        3,
+        4050246,
+        -7942040,
+        3899900,
+        7942039,
+        -3755842,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rxWords": [
+        6,
+        3,
+        3,
+        4050246,
+        -7942040,
+        3899900,
+        7942039,
+        -3755842,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "coefficientLogMatches": true,
+      "coefficientLog": {
+        "band": 3,
+        "gainDb": -9.3,
+        "gainMarker": 3,
+        "words": [
+          4050246,
+          -7942040,
+          3899900,
+          7942039,
+          -3755842
+        ]
+      }
+    },
+    {
+      "pair": 24,
+      "txLine": 130,
+      "rxLine": 131,
+      "command": 220,
+      "family": "flash-coefficients",
+      "txCount": 13,
+      "rxCount": 0,
+      "differingOffsets": [
+        2,
+        5
+      ],
+      "txWords": [
+        7,
+        3,
+        3,
+        4120345,
+        -8161421,
+        4043157,
+        8161421,
+        -3969198,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rxWords": [
+        7,
+        3,
+        3,
+        4120345,
+        -8161421,
+        4043157,
+        8161421,
+        -3969198,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "coefficientLogMatches": true,
+      "coefficientLog": {
+        "band": 3,
+        "gainDb": -9.3,
+        "gainMarker": 3,
+        "words": [
+          4120345,
+          -8161421,
+          4043157,
+          8161421,
+          -3969198
+        ]
+      }
+    },
+    {
+      "pair": 25,
+      "txLine": 136,
+      "rxLine": 137,
+      "command": 220,
+      "family": "flash-coefficients",
+      "txCount": 13,
+      "rxCount": 0,
+      "differingOffsets": [
+        2,
+        5
+      ],
+      "txWords": [
+        8,
+        3,
+        3,
+        4156822,
+        -8273997,
+        4117703,
+        8273997,
+        -4080222,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rxWords": [
+        8,
+        3,
+        3,
+        4156822,
+        -8273997,
+        4117703,
+        8273997,
+        -4080222,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "coefficientLogMatches": true,
+      "coefficientLog": {
+        "band": 3,
+        "gainDb": -9.3,
+        "gainMarker": 3,
+        "words": [
+          4156822,
+          -8273997,
+          4117703,
+          8273997,
+          -4080222
+        ]
+      }
+    },
+    {
+      "pair": 26,
+      "txLine": 143,
+      "rxLine": 144,
+      "command": 220,
+      "family": "flash-coefficients",
+      "txCount": 13,
+      "rxCount": 0,
+      "differingOffsets": [
+        2,
+        5
+      ],
+      "txWords": [
+        4,
+        4,
+        3,
+        3874155,
+        -7188385,
+        3387812,
+        7188385,
+        -3067663,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rxWords": [
+        4,
+        4,
+        3,
+        3874155,
+        -7188385,
+        3387812,
+        7188385,
+        -3067663,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "coefficientLogMatches": true,
+      "coefficientLog": {
+        "band": 4,
+        "gainDb": -7.300000000000001,
+        "gainMarker": 3,
+        "words": [
+          3874155,
+          -7188385,
+          3387812,
+          7188385,
+          -3067663
+        ]
+      }
+    },
+    {
+      "pair": 27,
+      "txLine": 149,
+      "rxLine": 150,
+      "command": 220,
+      "family": "flash-coefficients",
+      "txCount": 13,
+      "rxCount": 0,
+      "differingOffsets": [
+        2,
+        5
+      ],
+      "txWords": [
+        5,
+        4,
+        3,
+        3896941,
+        -7279342,
+        3445214,
+        7279343,
+        -3147852,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rxWords": [
+        5,
+        4,
+        3,
+        3896941,
+        -7279342,
+        3445214,
+        7279343,
+        -3147852,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "coefficientLogMatches": true,
+      "coefficientLog": {
+        "band": 4,
+        "gainDb": -7.300000000000001,
+        "gainMarker": 3,
+        "words": [
+          3896941,
+          -7279342,
+          3445214,
+          7279343,
+          -3147852
+        ]
+      }
+    },
+    {
+      "pair": 28,
+      "txLine": 155,
+      "rxLine": 156,
+      "command": 220,
+      "family": "flash-coefficients",
+      "txCount": 13,
+      "rxCount": 0,
+      "differingOffsets": [
+        2,
+        5
+      ],
+      "txWords": [
+        6,
+        4,
+        3,
+        4035777,
+        -7813969,
+        3794958,
+        7813970,
+        -3636432,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rxWords": [
+        6,
+        4,
+        3,
+        4035777,
+        -7813969,
+        3794958,
+        7813970,
+        -3636432,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "coefficientLogMatches": true,
+      "coefficientLog": {
+        "band": 4,
+        "gainDb": -7.300000000000001,
+        "gainMarker": 3,
+        "words": [
+          4035777,
+          -7813969,
+          3794958,
+          7813970,
+          -3636432
+        ]
+      }
+    },
+    {
+      "pair": 29,
+      "txLine": 161,
+      "rxLine": 162,
+      "command": 220,
+      "family": "flash-coefficients",
+      "txCount": 13,
+      "rxCount": 0,
+      "differingOffsets": [
+        2,
+        5
+      ],
+      "txWords": [
+        7,
+        4,
+        3,
+        4112320,
+        -8095762,
+        3987779,
+        8095762,
+        -3905795,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rxWords": [
+        7,
+        4,
+        3,
+        4112320,
+        -8095762,
+        3987779,
+        8095762,
+        -3905795,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "coefficientLogMatches": true,
+      "coefficientLog": {
+        "band": 4,
+        "gainDb": -7.300000000000001,
+        "gainMarker": 3,
+        "words": [
+          4112320,
+          -8095762,
+          3987779,
+          8095762,
+          -3905795
+        ]
+      }
+    },
+    {
+      "pair": 30,
+      "txLine": 167,
+      "rxLine": 168,
+      "command": 220,
+      "family": "flash-coefficients",
+      "txCount": 13,
+      "rxCount": 0,
+      "differingOffsets": [
+        2,
+        5
+      ],
+      "txWords": [
+        8,
+        4,
+        3,
+        4152596,
+        -8240728,
+        4089236,
+        8240728,
+        -4047529,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rxWords": [
+        8,
+        4,
+        3,
+        4152596,
+        -8240728,
+        4089236,
+        8240728,
+        -4047529,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "coefficientLogMatches": true,
+      "coefficientLog": {
+        "band": 4,
+        "gainDb": -7.300000000000001,
+        "gainMarker": 3,
+        "words": [
+          4152596,
+          -8240728,
+          4089236,
+          8240728,
+          -4047529
+        ]
+      }
+    },
+    {
+      "pair": 31,
+      "txLine": 174,
+      "rxLine": 175,
+      "command": 220,
+      "family": "flash-coefficients",
+      "txCount": 13,
+      "rxCount": 0,
+      "differingOffsets": [
+        2,
+        5
+      ],
+      "txWords": [
+        4,
+        5,
+        3,
+        3463763,
+        -5230897,
+        2284254,
+        5230897,
+        -1553713,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rxWords": [
+        4,
+        5,
+        3,
+        3463763,
+        -5230897,
+        2284254,
+        5230897,
+        -1553713,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "coefficientLogMatches": true,
+      "coefficientLog": {
+        "band": 5,
+        "gainDb": -7,
+        "gainMarker": 3,
+        "words": [
+          3463763,
+          -5230897,
+          2284254,
+          5230897,
+          -1553713
+        ]
+      }
+    },
+    {
+      "pair": 32,
+      "txLine": 180,
+      "rxLine": 181,
+      "command": 220,
+      "family": "flash-coefficients",
+      "txCount": 13,
+      "rxCount": 0,
+      "differingOffsets": [
+        2,
+        5
+      ],
+      "txWords": [
+        5,
+        5,
+        3,
+        3505854,
+        -5451036,
+        2394305,
+        5451037,
+        -1705856,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rxWords": [
+        5,
+        5,
+        3,
+        3505854,
+        -5451036,
+        2394305,
+        5451037,
+        -1705856,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "coefficientLogMatches": true,
+      "coefficientLog": {
+        "band": 5,
+        "gainDb": -7,
+        "gainMarker": 3,
+        "words": [
+          3505854,
+          -5451036,
+          2394305,
+          5451037,
+          -1705856
+        ]
+      }
+    },
+    {
+      "pair": 33,
+      "txLine": 186,
+      "rxLine": 187,
+      "command": 220,
+      "family": "flash-coefficients",
+      "txCount": 13,
+      "rxCount": 0,
+      "differingOffsets": [
+        2,
+        5
+      ],
+      "txWords": [
+        6,
+        5,
+        3,
+        3791087,
+        -6797972,
+        3140066,
+        6797972,
+        -2736850,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rxWords": [
+        6,
+        5,
+        3,
+        3791087,
+        -6797972,
+        3140066,
+        6797972,
+        -2736850,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "coefficientLogMatches": true,
+      "coefficientLog": {
+        "band": 5,
+        "gainDb": -7,
+        "gainMarker": 3,
+        "words": [
+          3791087,
+          -6797972,
+          3140066,
+          6797972,
+          -2736850
+        ]
+      }
+    },
+    {
+      "pair": 34,
+      "txLine": 192,
+      "rxLine": 193,
+      "command": 220,
+      "family": "flash-coefficients",
+      "txCount": 13,
+      "rxCount": 0,
+      "differingOffsets": [
+        2,
+        5
+      ],
+      "txWords": [
+        7,
+        5,
+        3,
+        3973655,
+        -7554503,
+        3617401,
+        7554503,
+        -3396752,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rxWords": [
+        7,
+        5,
+        3,
+        3973655,
+        -7554503,
+        3617401,
+        7554503,
+        -3396752,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "coefficientLogMatches": true,
+      "coefficientLog": {
+        "band": 5,
+        "gainDb": -7,
+        "gainMarker": 3,
+        "words": [
+          3973655,
+          -7554503,
+          3617401,
+          7554503,
+          -3396752
+        ]
+      }
+    },
+    {
+      "pair": 35,
+      "txLine": 198,
+      "rxLine": 199,
+      "command": 220,
+      "family": "flash-coefficients",
+      "txCount": 13,
+      "rxCount": 0,
+      "differingOffsets": [
+        2,
+        5
+      ],
+      "txWords": [
+        8,
+        5,
+        3,
+        4078492,
+        -7960398,
+        3891506,
+        7960398,
+        -3775694,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rxWords": [
+        8,
+        5,
+        3,
+        4078492,
+        -7960398,
+        3891506,
+        7960398,
+        -3775694,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "coefficientLogMatches": true,
+      "coefficientLog": {
+        "band": 5,
+        "gainDb": -7,
+        "gainMarker": 3,
+        "words": [
+          4078492,
+          -7960398,
+          3891506,
+          7960398,
+          -3775694
+        ]
+      }
+    },
+    {
+      "pair": 36,
+      "txLine": 205,
+      "rxLine": 206,
+      "command": 220,
+      "family": "flash-coefficients",
+      "txCount": 13,
+      "rxCount": 0,
+      "differingOffsets": [
+        2,
+        5
+      ],
+      "txWords": [
+        4,
+        6,
+        2,
+        6962341,
+        -8300486,
+        3389464,
+        8300487,
+        -1963198,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rxWords": [
+        4,
+        6,
+        2,
+        6962341,
+        -8300486,
+        3389464,
+        8300487,
+        -1963198,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "coefficientLogMatches": true,
+      "coefficientLog": {
+        "band": 6,
+        "gainDb": -5.1,
+        "gainMarker": 2,
+        "words": [
+          6962341,
+          -8300486,
+          3389464,
+          8300487,
+          -1963198
+        ]
+      }
+    },
+    {
+      "pair": 37,
+      "txLine": 211,
+      "rxLine": 212,
+      "command": 220,
+      "family": "flash-coefficients",
+      "txCount": 13,
+      "rxCount": 0,
+      "differingOffsets": [
+        2,
+        5
+      ],
+      "txWords": [
+        5,
+        6,
+        3,
+        3518833,
+        -4446626,
+        1826742,
+        4446627,
+        -1151272,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rxWords": [
+        5,
+        6,
+        3,
+        3518833,
+        -4446626,
+        1826742,
+        4446627,
+        -1151272,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "coefficientLogMatches": true,
+      "coefficientLog": {
+        "band": 6,
+        "gainDb": -5.1,
+        "gainMarker": 3,
+        "words": [
+          3518833,
+          -4446626,
+          1826742,
+          4446627,
+          -1151272
+        ]
+      }
+    },
+    {
+      "pair": 38,
+      "txLine": 217,
+      "rxLine": 218,
+      "command": 220,
+      "family": "flash-coefficients",
+      "txCount": 13,
+      "rxCount": 0,
+      "differingOffsets": [
+        2,
+        5
+      ],
+      "txWords": [
+        6,
+        6,
+        3,
+        3783903,
+        -6258750,
+        2755825,
+        6258749,
+        -2345424,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rxWords": [
+        6,
+        6,
+        3,
+        3783903,
+        -6258750,
+        2755825,
+        6258749,
+        -2345424,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "coefficientLogMatches": true,
+      "coefficientLog": {
+        "band": 6,
+        "gainDb": -5.1,
+        "gainMarker": 3,
+        "words": [
+          3783903,
+          -6258750,
+          2755825,
+          6258749,
+          -2345424
+        ]
+      }
+    },
+    {
+      "pair": 39,
+      "txLine": 223,
+      "rxLine": 224,
+      "command": 220,
+      "family": "flash-coefficients",
+      "txCount": 13,
+      "rxCount": 0,
+      "differingOffsets": [
+        2,
+        5
+      ],
+      "txWords": [
+        7,
+        6,
+        3,
+        3964009,
+        -7271727,
+        3387106,
+        7271727,
+        -3156811,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rxWords": [
+        7,
+        6,
+        3,
+        3964009,
+        -7271727,
+        3387106,
+        7271727,
+        -3156811,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "coefficientLogMatches": true,
+      "coefficientLog": {
+        "band": 6,
+        "gainDb": -5.1,
+        "gainMarker": 3,
+        "words": [
+          3964009,
+          -7271727,
+          3387106,
+          7271727,
+          -3156811
+        ]
+      }
+    },
+    {
+      "pair": 40,
+      "txLine": 229,
+      "rxLine": 230,
+      "command": 220,
+      "family": "flash-coefficients",
+      "txCount": 13,
+      "rxCount": 0,
+      "differingOffsets": [
+        2,
+        5
+      ],
+      "txWords": [
+        8,
+        6,
+        3,
+        4071611,
+        -7814685,
+        3764259,
+        7814685,
+        -3641566,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rxWords": [
+        8,
+        6,
+        3,
+        4071611,
+        -7814685,
+        3764259,
+        7814685,
+        -3641566,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "coefficientLogMatches": true,
+      "coefficientLog": {
+        "band": 6,
+        "gainDb": -5.1,
+        "gainMarker": 3,
+        "words": [
+          4071611,
+          -7814685,
+          3764259,
+          7814685,
+          -3641566
+        ]
+      }
+    },
+    {
+      "pair": 41,
+      "txLine": 236,
+      "rxLine": 237,
+      "command": 220,
+      "family": "flash-coefficients",
+      "txCount": 13,
+      "rxCount": 0,
+      "differingOffsets": [
+        2,
+        5
+      ],
+      "txWords": [
+        4,
+        7,
+        2,
+        6114037,
+        -5805267,
+        2589378,
+        5805267,
+        -314807,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rxWords": [
+        4,
+        7,
+        2,
+        6114037,
+        -5805267,
+        2589378,
+        5805267,
+        -314807,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "coefficientLogMatches": true,
+      "coefficientLog": {
+        "band": 7,
+        "gainDb": -7.199999999999999,
+        "gainMarker": 2,
+        "words": [
+          6114037,
+          -5805267,
+          2589378,
+          5805267,
+          -314807
+        ]
+      }
+    },
+    {
+      "pair": 42,
+      "txLine": 242,
+      "rxLine": 243,
+      "command": 220,
+      "family": "flash-coefficients",
+      "txCount": 13,
+      "rxCount": 0,
+      "differingOffsets": [
+        2,
+        5
+      ],
+      "txWords": [
+        5,
+        7,
+        2,
+        6217817,
+        -6498141,
+        2853973,
+        6498141,
+        -683181,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rxWords": [
+        5,
+        7,
+        2,
+        6217817,
+        -6498141,
+        2853973,
+        6498141,
+        -683181,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "coefficientLogMatches": true,
+      "coefficientLog": {
+        "band": 7,
+        "gainDb": -7.199999999999999,
+        "gainMarker": 2,
+        "words": [
+          6217817,
+          -6498141,
+          2853973,
+          6498141,
+          -683181
+        ]
+      }
+    },
+    {
+      "pair": 43,
+      "txLine": 248,
+      "rxLine": 249,
+      "command": 220,
+      "family": "flash-coefficients",
+      "txCount": 13,
+      "rxCount": 0,
+      "differingOffsets": [
+        2,
+        5
+      ],
+      "txWords": [
+        6,
+        7,
+        3,
+        3495945,
+        -5474553,
+        2413774,
+        5474554,
+        -1715416,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rxWords": [
+        6,
+        7,
+        3,
+        3495945,
+        -5474553,
+        2413774,
+        5474554,
+        -1715416,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "coefficientLogMatches": true,
+      "coefficientLog": {
+        "band": 7,
+        "gainDb": -7.199999999999999,
+        "gainMarker": 3,
+        "words": [
+          3495945,
+          -5474553,
+          2413774,
+          5474554,
+          -1715416
+        ]
+      }
+    },
+    {
+      "pair": 44,
+      "txLine": 254,
+      "rxLine": 255,
+      "command": 220,
+      "family": "flash-coefficients",
+      "txCount": 13,
+      "rxCount": 0,
+      "differingOffsets": [
+        2,
+        5
+      ],
+      "txWords": [
+        7,
+        7,
+        3,
+        3785525,
+        -6808698,
+        3152084,
+        6808698,
+        -2743305,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rxWords": [
+        7,
+        7,
+        3,
+        3785525,
+        -6808698,
+        3152084,
+        6808698,
+        -2743305,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "coefficientLogMatches": true,
+      "coefficientLog": {
+        "band": 7,
+        "gainDb": -7.199999999999999,
+        "gainMarker": 3,
+        "words": [
+          3785525,
+          -6808698,
+          3152084,
+          6808698,
+          -2743305
+        ]
+      }
+    },
+    {
+      "pair": 45,
+      "txLine": 260,
+      "rxLine": 261,
+      "command": 220,
+      "family": "flash-coefficients",
+      "txCount": 13,
+      "rxCount": 0,
+      "differingOffsets": [
+        2,
+        5
+      ],
+      "txWords": [
+        8,
+        7,
+        3,
+        3970700,
+        -7559542,
+        3624206,
+        7559542,
+        -3400602,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rxWords": [
+        8,
+        7,
+        3,
+        3970700,
+        -7559542,
+        3624206,
+        7559542,
+        -3400602,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "coefficientLogMatches": true,
+      "coefficientLog": {
+        "band": 7,
+        "gainDb": -7.199999999999999,
+        "gainMarker": 3,
+        "words": [
+          3970700,
+          -7559542,
+          3624206,
+          7559542,
+          -3400602
+        ]
+      }
+    },
+    {
+      "pair": 46,
+      "txLine": 267,
+      "rxLine": 268,
+      "command": 220,
+      "family": "flash-coefficients",
+      "txCount": 13,
+      "rxCount": 0,
+      "differingOffsets": [
+        2,
+        5
+      ],
+      "txWords": [
+        4,
+        8,
+        3,
+        4848891,
+        -2573094,
+        234703,
+        2573094,
+        -889289,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rxWords": [
+        4,
+        8,
+        3,
+        4848891,
+        -2573094,
+        234703,
+        2573094,
+        -889289,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "coefficientLogMatches": true,
+      "coefficientLog": {
+        "band": 8,
+        "gainDb": 2.900000000000002,
+        "gainMarker": 3,
+        "words": [
+          4848891,
+          -2573094,
+          234703,
+          2573094,
+          -889289
+        ]
+      }
+    },
+    {
+      "pair": 47,
+      "txLine": 273,
+      "rxLine": 274,
+      "command": 220,
+      "family": "flash-coefficients",
+      "txCount": 13,
+      "rxCount": 0,
+      "differingOffsets": [
+        2,
+        5
+      ],
+      "txWords": [
+        5,
+        8,
+        3,
+        4813250,
+        -3037828,
+        450292,
+        3037828,
+        -1069238,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rxWords": [
+        5,
+        8,
+        3,
+        4813250,
+        -3037828,
+        450292,
+        3037828,
+        -1069238,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "coefficientLogMatches": true,
+      "coefficientLog": {
+        "band": 8,
+        "gainDb": 2.900000000000002,
+        "gainMarker": 3,
+        "words": [
+          4813250,
+          -3037828,
+          450292,
+          3037828,
+          -1069238
+        ]
+      }
+    },
+    {
+      "pair": 48,
+      "txLine": 279,
+      "rxLine": 280,
+      "command": 220,
+      "family": "flash-coefficients",
+      "txCount": 13,
+      "rxCount": 0,
+      "differingOffsets": [
+        2,
+        5
+      ],
+      "txWords": [
+        6,
+        8,
+        3,
+        4568610,
+        -5770983,
+        1930127,
+        5770982,
+        -2304432,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rxWords": [
+        6,
+        8,
+        3,
+        4568610,
+        -5770983,
+        1930127,
+        5770982,
+        -2304432,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "coefficientLogMatches": true,
+      "coefficientLog": {
+        "band": 8,
+        "gainDb": 2.900000000000002,
+        "gainMarker": 3,
+        "words": [
+          4568610,
+          -5770983,
+          1930127,
+          5770982,
+          -2304432
+        ]
+      }
+    },
+    {
+      "pair": 49,
+      "txLine": 285,
+      "rxLine": 286,
+      "command": 220,
+      "family": "flash-coefficients",
+      "txCount": 13,
+      "rxCount": 0,
+      "differingOffsets": [
+        2,
+        5
+      ],
+      "txWords": [
+        7,
+        8,
+        3,
+        4404420,
+        -7119629,
+        2923310,
+        7119629,
+        -3133426,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rxWords": [
+        7,
+        8,
+        3,
+        4404420,
+        -7119629,
+        2923310,
+        7119629,
+        -3133426,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "coefficientLogMatches": true,
+      "coefficientLog": {
+        "band": 8,
+        "gainDb": 2.900000000000002,
+        "gainMarker": 3,
+        "words": [
+          4404420,
+          -7119629,
+          2923310,
+          7119629,
+          -3133426
+        ]
+      }
+    },
+    {
+      "pair": 50,
+      "txLine": 291,
+      "rxLine": 292,
+      "command": 220,
+      "family": "flash-coefficients",
+      "txCount": 13,
+      "rxCount": 0,
+      "differingOffsets": [
+        2,
+        5
+      ],
+      "txWords": [
+        8,
+        8,
+        3,
+        4306345,
+        -7767170,
+        3516565,
+        7767170,
+        -3628606,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rxWords": [
+        8,
+        8,
+        3,
+        4306345,
+        -7767170,
+        3516565,
+        7767170,
+        -3628606,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "coefficientLogMatches": true,
+      "coefficientLog": {
+        "band": 8,
+        "gainDb": 2.900000000000002,
+        "gainMarker": 3,
+        "words": [
+          4306345,
+          -7767170,
+          3516565,
+          7767170,
+          -3628606
+        ]
+      }
+    },
+    {
+      "pair": 51,
+      "txLine": 298,
+      "rxLine": 299,
+      "command": 220,
+      "family": "flash-coefficients",
+      "txCount": 13,
+      "rxCount": 0,
+      "differingOffsets": [
+        2,
+        5
+      ],
+      "txWords": [
+        4,
+        9,
+        2,
+        5979293,
+        -3147245,
+        1554148,
+        3147245,
+        855167,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rxWords": [
+        4,
+        9,
+        2,
+        5979293,
+        -3147245,
+        1554148,
+        3147245,
+        855167,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "coefficientLogMatches": true,
+      "coefficientLog": {
+        "band": 9,
+        "gainDb": -6.4,
+        "gainMarker": 2,
+        "words": [
+          5979293,
+          -3147245,
+          1554148,
+          3147245,
+          855167
+        ]
+      }
+    },
+    {
+      "pair": 52,
+      "txLine": 304,
+      "rxLine": 305,
+      "command": 220,
+      "family": "flash-coefficients",
+      "txCount": 13,
+      "rxCount": 0,
+      "differingOffsets": [
+        2,
+        5
+      ],
+      "txWords": [
+        5,
+        9,
+        2,
+        6079903,
+        -3959725,
+        1839548,
+        3959726,
+        469156,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rxWords": [
+        5,
+        9,
+        2,
+        6079903,
+        -3959725,
+        1839548,
+        3959726,
+        469156,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "coefficientLogMatches": true,
+      "coefficientLog": {
+        "band": 9,
+        "gainDb": -6.4,
+        "gainMarker": 2,
+        "words": [
+          6079903,
+          -3959725,
+          1839548,
+          3959726,
+          469156
+        ]
+      }
+    },
+    {
+      "pair": 53,
+      "txLine": 310,
+      "rxLine": 311,
+      "command": 220,
+      "family": "flash-coefficients",
+      "txCount": 13,
+      "rxCount": 0,
+      "differingOffsets": [
+        2,
+        5
+      ],
+      "txWords": [
+        6,
+        9,
+        3,
+        3423132,
+        -4702403,
+        2006735,
+        4702404,
+        -1235564,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rxWords": [
+        6,
+        9,
+        3,
+        3423132,
+        -4702403,
+        2006735,
+        4702404,
+        -1235564,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "coefficientLogMatches": true,
+      "coefficientLog": {
+        "band": 9,
+        "gainDb": -6.4,
+        "gainMarker": 3,
+        "words": [
+          3423132,
+          -4702403,
+          2006735,
+          4702404,
+          -1235564
+        ]
+      }
+    },
+    {
+      "pair": 54,
+      "txLine": 316,
+      "rxLine": 317,
+      "command": 220,
+      "family": "flash-coefficients",
+      "txCount": 13,
+      "rxCount": 0,
+      "differingOffsets": [
+        2,
+        5
+      ],
+      "txWords": [
+        7,
+        9,
+        3,
+        3728088,
+        -6375000,
+        2871798,
+        6374999,
+        -2405582,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rxWords": [
+        7,
+        9,
+        3,
+        3728088,
+        -6375000,
+        2871798,
+        6374999,
+        -2405582,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "coefficientLogMatches": true,
+      "coefficientLog": {
+        "band": 9,
+        "gainDb": -6.4,
+        "gainMarker": 3,
+        "words": [
+          3728088,
+          -6375000,
+          2871798,
+          6374999,
+          -2405582
+        ]
+      }
+    },
+    {
+      "pair": 55,
+      "txLine": 322,
+      "rxLine": 323,
+      "command": 220,
+      "family": "flash-coefficients",
+      "txCount": 13,
+      "rxCount": 0,
+      "differingOffsets": [
+        2,
+        5
+      ],
+      "txWords": [
+        8,
+        9,
+        3,
+        3933664,
+        -7325403,
+        3454950,
+        7325402,
+        -3194309,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rxWords": [
+        8,
+        9,
+        3,
+        3933664,
+        -7325403,
+        3454950,
+        7325402,
+        -3194309,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "coefficientLogMatches": true,
+      "coefficientLog": {
+        "band": 9,
+        "gainDb": -6.4,
+        "gainMarker": 3,
+        "words": [
+          3933664,
+          -7325403,
+          3454950,
+          7325402,
+          -3194309
+        ]
+      }
+    },
+    {
+      "pair": 56,
+      "txLine": 326,
+      "rxLine": 327,
+      "command": 220,
+      "family": "flash-commit",
+      "txCount": 13,
+      "rxCount": 0,
+      "differingOffsets": [
+        2,
+        5
+      ],
+      "txWords": [
+        255,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rxWords": [
+        255,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "coefficientLogMatches": null,
+      "coefficientLog": null
+    },
+    {
+      "pair": 57,
+      "txLine": 332,
+      "rxLine": 333,
+      "command": 259,
+      "family": "firmware-query",
+      "txCount": 13,
+      "rxCount": 4,
+      "differingOffsets": [
+        2,
+        5,
+        10,
+        14,
+        18,
+        22
+      ],
+      "txWords": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rxWords": [
+        9,
+        7,
+        14,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "coefficientLogMatches": null,
+      "coefficientLog": null
+    }
+  ]
+}
