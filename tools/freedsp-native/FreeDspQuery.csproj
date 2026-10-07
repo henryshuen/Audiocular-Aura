@@ -7,5 +7,5 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <NuGetAudit>false</NuGetAudit>
   </PropertyGroup>
-  <ItemGroup><Compile Remove="Tests/**/*.cs" /></ItemGroup>
+  <ItemGroup><Compile Remove="Tests/**/*.cs" /><FrameworkReference Include="Microsoft.AspNetCore.App" /></ItemGroup>
 </Project>

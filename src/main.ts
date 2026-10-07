@@ -59,8 +59,8 @@ export type EQ = Band[];
 // FreeDSP-only development entry; the isolated page does not auto-connect.
 if (import.meta.env.DEV) {
 	const link = document.createElement("a");
-	link.href = "./freedsp-debug.html";
-	link.textContent = "FreeDSP M2A 診斷（手動選取／RAM）";
+	link.href = "./freedsp-ram-debug.html";
+	link.textContent = "FreeDSP M2N RAM debug（九段／手動）";
 	document.querySelector(".logo-area")?.appendChild(link);
 }
 

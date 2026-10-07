@@ -8,11 +8,15 @@ namespace FreeDspNative;
 public sealed class NativeHid : IQueryHid
 {
     private readonly SafeFileHandle handle;
-    private NativeHid(SafeFileHandle handle) => this.handle = handle;
+    private readonly Func<byte[], bool> allowReport;
+    private NativeHid(SafeFileHandle handle, Func<byte[], bool> allowReport) { this.handle = handle; this.allowReport = allowReport; }
     public const uint QueryAccess = 0x80000000 | 0x40000000; // GENERIC_READ | GENERIC_WRITE
     public const uint ShareAccess = 1 | 2; // FILE_SHARE_READ | FILE_SHARE_WRITE
 
-    public static NativeHid Open(HidCollection target)
+    public static NativeHid Open(HidCollection target) => OpenScoped(target, SafeRam.IsAllowedReport);
+
+    // Internal debug request authorizes only exact packets computed for that request.
+    internal static NativeHid OpenScoped(HidCollection target, Func<byte[], bool> allowReport)
     {
         if (!target.IsCaf) throw new InvalidOperationException("Collection does not pass CAF identity/caps/interface gate");
         var handle = NativeMethods.CreateFile(target.Path, QueryAccess, ShareAccess, IntPtr.Zero, 3, 0, IntPtr.Zero);
@@ -25,7 +29,7 @@ public sealed class NativeHid : IQueryHid
         {
             var confirmed = Inspect(target.Path, handle);
             if (!confirmed.IsCaf) throw new InvalidOperationException("Opened collection identity/caps changed; no query sent");
-            return new NativeHid(handle);
+            return new NativeHid(handle, allowReport);
         }
         catch { handle.Dispose(); throw; }
     }
@@ -110,7 +114,7 @@ public sealed class NativeHid : IQueryHid
 
     public HidCallResult SetOutputReport(byte[] buffer)
     {
-        if (!SafeRam.IsAllowedReport(buffer))
+        if (!allowReport(buffer))
             throw new InvalidOperationException("Only fixed Query346 / safe RAM test reports are permitted");
         bool ok = NativeMethods.HidD_SetOutputReport(handle, buffer, (uint)buffer.Length);
         return new(ok, ok ? 0 : Marshal.GetLastWin32Error());

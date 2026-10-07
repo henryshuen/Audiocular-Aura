@@ -303,6 +303,104 @@ Test("M2M candidate prerequisite and rate failures stop before190", () => {
     using var failed=new MockHid(Reply()) {SetResult=new(false,5)};
     Check(SafeRam.Run(failed,false,log,()=>new FakeClock(),candidateWire:1)==7&&failed.Transmissions.Count==1,"No laterSET");
 });
+DebugBand[] Nine() => Enumerable.Range(0,9).Select(i=>new DebugBand(i,400,-12,1,"PK",true)).ToArray();
+Test("M2N final UI index0..8 maps raw1..9; no SDK inference",()=>{
+    for(int i=0;i<9;i++) Check(RamDebug.Wire(i)==i+1,"Direct stable assignment");
+    foreach(int i in new[]{-1,9,13})Throws(()=>RamDebug.Wire(i));
+});
+Test("M2N model equals hardware-proven fixed profile at every known rate",()=>{
+    foreach(int hz in SafeRam.Rates) foreach(bool flat in new[]{false,true}) {
+        var c=RamDebug.Calculate(hz,Nine()[0],flat);var fixedC=SafeRam.Calculate(hz,flat);
+        Check(c.Floats.SequenceEqual(fixedC.Floats)&&c.Words.SequenceEqual(fixedC.Words)&&c.Gain==fixedC.Gain,"Same proven math");
+        for(int i=0;i<9;i++) {
+            var b=RamDebug.Packet(i,c);Check(b.Length==62&&b[0]==1,"No truncation");
+            Check(BinaryPrimitives.ReadInt32LittleEndian(b.AsSpan(10))==0&&BinaryPrimitives.ReadInt32LittleEndian(b.AsSpan(14))==i+1,"Selector0 andrawslot");
+            Check(BinaryPrimitives.ReadUInt32LittleEndian(b.AsSpan(2))==0x00be000d&&b.Skip(42).All(x=>x==0),"Only190,count13,zeros");
+        }
+    }
+});
+Test("M2N disabled unity and varied negative PK parameters/rates",()=>{
+    var b=Nine()[0] with {Enabled=false};Check(RamDebug.Calculate(48000,b,false).Words.SequenceEqual(new[]{4194304,0,0,0,0}),"Unity");
+    Check(RamDebug.Calculate(48000,b with {Enabled=true,Gain=0},false).Words.SequenceEqual(new[]{4194304,0,0,0,0}),"Zero PK unity");
+    foreach(double f in new[]{20.0,400,1000,20000}) foreach(double q in new[]{.1,1,10}) {
+        var r=new RamDebugRequest("applyBand",0,Nine());r.Bands[0]=r.Bands[0] with {Freq=f,Q=q};r.Validate();
+        Check(RamDebug.Calculate(48000,r.Bands[0],false).Words.Length==5,"Supported finite coefficients");
+    }
+    Throws(()=>RamDebug.Calculate(8000,Nine()[0],false));
+});
+Test("M2N invalid full-state/action data rejected before HID",()=>{
+    foreach(string action in new[]{"220","90","readback","flash","preamp"})Throws(()=>new RamDebugRequest(action,0,Nine()).Validate());
+    foreach(int index in new[]{-1,9})Throws(()=>new RamDebugRequest("applyBand",index,Nine()).Validate());
+    Throws(()=>new RamDebugRequest("syncNine",0,Nine().Take(8).ToArray()).Validate());
+    foreach(var b in new[]{Nine()[0] with {Index=1},Nine()[0] with {Freq=double.NaN},Nine()[0] with {Gain=1},Nine()[0] with {Q=0},Nine()[0] with {Type="LSQ"}}) {
+        var r=new RamDebugRequest("applyBand",0,Nine());r.Bands[0]=b;Throws(r.Validate);
+        using var hid=new MockHid(Reply());using var log=new StringWriter();Throws(()=>RamDebug.Run(hid,r,log,[]));Check(hid.Calls.Count==0,"No SET");
+    }
+    Throws(()=>RamDebugRequest.Parse("{}"));
+    string json=System.Text.Json.JsonSerializer.Serialize(new RamDebugRequest("applyBand",0,Nine()));
+    Check(RamDebugRequest.Parse(json).Bands.Length==9,"Exact schema");
+    string camel=System.Text.Json.JsonSerializer.Serialize(new RamDebugRequest("applyBand",0,Nine()),new System.Text.Json.JsonSerializerOptions {PropertyNamingPolicy=System.Text.Json.JsonNamingPolicy.CamelCase}); Check(RamDebugRequest.Parse(camel).Bands[0].Enabled,"Browser camelCase required fields");var missing=System.Text.Json.Nodes.JsonNode.Parse(json)!; missing["Bands"]![0]!.AsObject().Remove("Enabled"); Throws(()=>RamDebugRequest.Parse(missing.ToJsonString()));
+});
+Test("M2N single-band48k uses matched346 and one190; no90/220",()=>{
+    foreach(int index in new[]{0,4,8}) foreach(string action in new[]{"applyBand","restoreBand"}) {
+        var r=new RamDebugRequest(action,index,Nine());using var hid=new MockHid(NonMatch(190));
+        foreach(var b in new[]{NonMatch(188),NonMatch(187),Reply(5)})hid.Responses.Enqueue(b);
+        using var log=new StringWriter();var allowed=new List<byte[]>();
+        Check(RamDebug.Run(hid,r,log,allowed,()=>new FakeClock())==0,"Complete");
+        Check(hid.Transmissions.Count==4&&hid.Transmissions.Last().SequenceEqual(RamDebug.Packet(index,RamDebug.Calculate(48000,r.Bands[index],action=="restoreBand"))),"Exact48k selected packet");
+        Check(allowed.Count==1,"Exact request authorization only");
+    }
+});
+Test("M2N fullnine iterates exactly once; disabled slot unity; restoreNine allunity",()=>{
+    foreach(string action in new[]{"syncNine","restoreNine"}) {
+        var r=new RamDebugRequest(action,0,Nine());r.Bands[2]=r.Bands[2] with {Enabled=false};
+        using var hid=new MockHid(NonMatch(190));foreach(var b in new[]{NonMatch(188),NonMatch(187),Reply()})hid.Responses.Enqueue(b);
+        using var log=new StringWriter();Check(RamDebug.Run(hid,r,log,[],()=>new FakeClock())==0,"Full state");
+        Check(hid.Transmissions.Count==12,"Three prerequisites+nine190 only");
+        Check(hid.Transmissions.Skip(3).Select(b=>BinaryPrimitives.ReadInt32LittleEndian(b.AsSpan(14))).SequenceEqual(Enumerable.Range(1,9)),"All slots unique");
+        Check(BinaryPrimitives.ReadInt32LittleEndian(hid.Transmissions[5].AsSpan(22))==4194304,"Disabled B0 unity");
+        if(action=="restoreNine")Check(hid.Transmissions.Skip(3).All(b=>BinaryPrimitives.ReadInt32LittleEndian(b.AsSpan(22))==4194304),"Allunity");
+    }
+});
+Test("M2N failed/unknown rate or partial190 aborts without retries/rollback",()=>{
+    using var unknown=new MockHid(Reply(9));unknown.Responses.Enqueue(NonMatch(188));unknown.Responses.Enqueue(NonMatch(187));using var log=new StringWriter();
+    Check(RamDebug.Run(unknown,new("syncNine",0,Nine()),log,[],()=>new FakeClock())==7&&unknown.Transmissions.Count==3,"No190");
+    using var failed=new MockHid(NonMatch(190));foreach(var b in new[]{NonMatch(188),NonMatch(187),Reply(),NonMatch(190)})failed.Responses.Enqueue(b);
+    for(int j=0;j<4;j++)failed.Results.Enqueue(new(true,0));failed.Results.Enqueue(new(false,31));
+    Check(RamDebug.Run(failed,new("syncNine",0,Nine()),log,[],()=>new FakeClock())==7&&failed.Transmissions.Count==5,"First190 done, second fails, no later slot");
+});
+Test("M2N bridge origin/host constraints reject external, null,127UI and other ports",()=>{
+    Check(DebugBridge.AllowedOrigin("http://localhost:5173","127.0.0.1:5174"),"Exact origins");
+    foreach(string origin in new[]{"null","https://evil.example","http://127.0.0.1:5173","http://localhost:5175"})Check(!DebugBridge.AllowedOrigin(origin,"127.0.0.1:5174"),"No external writes");
+    Check(!DebugBridge.AllowedOrigin(DebugBridge.Origin,"evil.example:5174"),"Host gate");
+});
+Test("M2N HTTP loopback integration with FAKE child only; handshake/token/schema/busy",()=>{
+    RunBridgeMock().GetAwaiter().GetResult();
+});
+async Task RunBridgeMock()
+{
+    using var cancellation=new CancellationTokenSource();var ready=new TaskCompletionSource<string>(TaskCreationOptions.RunContinuationsAsynchronously);
+    var calls=new System.Collections.Concurrent.ConcurrentQueue<string>();var hold=new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+    bool wait=false;
+    var server=DebugBridge.RunAsync(async (operation,json)=>{calls.Enqueue(operation);if(wait)await hold.Task;return new {ok=true,log="FAKE CHILD ONLY",logPath="synthetic-not-written.log"};},cancellation.Token,0,url=>ready.SetResult(url));
+    try {
+        string url=await ready.Task.WaitAsync(TimeSpan.FromSeconds(10));using var client=new HttpClient();client.DefaultRequestHeaders.Add("Origin",DebugBridge.Origin);
+        var handshake=await client.GetAsync(url+"/session");Check(handshake.IsSuccessStatusCode&&calls.Count==0,"No hardware/child on session");
+        using var doc=System.Text.Json.JsonDocument.Parse(await handshake.Content.ReadAsStringAsync());string token=doc.RootElement.GetProperty("token").GetString()!;
+        Check(token.Length==64,"Fresh secret");
+        var bad=await client.PostAsync(url+"/connect",null);Check((int)bad.StatusCode==403&&calls.Count==0,"Missing token no child");
+        client.DefaultRequestHeaders.Add("X-AuraPEQ-Session",token);
+        var invalid=await client.PostAsync(url+"/ram",new StringContent("{}",System.Text.Encoding.UTF8,"application/json"));Check((int)invalid.StatusCode==400&&calls.Count==0,"Invalid schema no child");
+        var connect=await client.PostAsync(url+"/connect",null);Check(connect.IsSuccessStatusCode&&calls.Single()=="debugInspect","Metadata only action");
+        string body=System.Text.Json.JsonSerializer.Serialize(new RamDebugRequest("applyBand",0,Nine()));
+        wait=true;var pending=client.PostAsync(url+"/ram",new StringContent(body,System.Text.Encoding.UTF8,"application/json"));
+        for(int j=0;j<100&&calls.Count<2;j++)await Task.Delay(5);
+        var busy=await client.PostAsync(url+"/ram",new StringContent(body,System.Text.Encoding.UTF8,"application/json"));Check((int)busy.StatusCode==409&&calls.Count==2,"No queued duplicate write");
+        hold.SetResult();Check((await pending).IsSuccessStatusCode&&calls.Last()=="debugRam","Bounded fixed child request");
+        client.DefaultRequestHeaders.Remove("Origin");client.DefaultRequestHeaders.Add("Origin","https://evil.example");
+        Check((int)(await client.GetAsync(url+"/session")).StatusCode==403,"Foreign session blocked");
+    }finally{hold.TrySetResult();cancellation.Cancel();await server;}
+}
 Console.WriteLine($"Native offline tests: {passed} passed; SYNTHETIC / MOCK ONLY; no hardware access.");
 return 0;
 

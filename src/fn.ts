@@ -1068,6 +1068,9 @@ export async function autoConnectDevice() {
 
 		if (!dev) return;
 
+		// FreeDSP DEV validation uses the isolated native bridge; no legacy auto-connect/preamp side effects.
+		if (import.meta.env.DEV && dev.vendorId === 0x35d8 && dev.productId === 0x1496) return;
+
 		device = dev;
 		(window as any).device = dev;
 		await dev.open();

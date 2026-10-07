@@ -36,7 +36,8 @@ describe('M2J native diagnostic deployment boundary; no hardware', () => {
     expect(imports).toContain('HidD_SetOutputReport');
     expect(imports).toContain('HidD_GetInputReport');
     expect(imports.some(x => /WriteFile|SetFeature|GetFeature|Install|Remove|Restart|WinUsb/.test(x))).toBe(false);
-    expect(native).toContain('SafeRam.IsAllowedReport(buffer)');
+    expect(native).toContain('OpenScoped(target, SafeRam.IsAllowedReport)');
+    expect(native).toContain('if (!allowReport(buffer))');
   });
   it('validates fixed safe CLI before discovery; native helper has no browser production import', () => {
     expect(main.indexOf('IsOperation(args)')).toBeLessThan(main.indexOf('NativeHid.Discover()'));
