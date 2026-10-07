@@ -314,3 +314,22 @@ M2L官方五段live mapping已完成，不再排程重測wire5–9；不外推Au
 - C# diagnostic build0warnings/0errors;47 Native synthetic/mock tests;15 PowerShell mock tests; pinned APK six-method static replay identical.
 - Focused Vitest3files/15tests; final verify.ps1 once exit0, TypeScript/Vite build＋16files/134tests passed.
 - Generated dist restored; no retained production source/dist change. Git diff whitespace/scope review completed before save. No physical device APIs executed by Codex.
+
+## 2026-10-08 — M2M hardware COMPLETE / M2N start
+Henry reports rawwire1..4 PK400Hz/-12dB/Q1 each protocolApply PASS、audibleApply YES、protocolRestore PASS、audibleRestore YES。Combined with priorwire5..9, allrawslots1..9 have individual reversible audible evidence. M2M hardware validation COMPLETE; no slot retest scheduled. SDK field semantics forwire1..4 remain UNKNOWN. M2N assigns editable UIposition0..8 to rawslot1..9, explicit position/index validation; debug Web RAM integration only, no production replacement/preamp/Flash.
+
+## M2N implemented offline / Web validation ready
+- Recorded Henryallnine individually reversiblehardware evidence; M2MhardwareCOMPLETE. Added finalnine-row UIassignmenttable with SDKfront-fourUNKNOWN.
+- Added isolatedDEVnine-row negativePK RAM editor/client, exactindex/range/type validation, disabledunity, safe400/-12/Q1 fill, perbandApply/Restore/manualconfirmation and guardednine-band actions. OptionalmanualstoredUIstate import; no runtimesender imports.
+- Added native dynamicnegativePK calculation/serialization/currentrate/selectedslot runner, exactscopedNativeHid packets, metadata-onlyConnect, requiredJSONschema, loopbackKestrel session/origin/host/busy guards and30s childwatchdog. Logs outside repo, no arbitrarycommand API.
+- dev.ps1 builds/owns bridge andVite; minimalmainDEVlink/exactFreeDSPauto-connectgate added. No productionSync/dsp.ts/non-FreeDSP changes.
+- Focused18Vitest tests passed;56native mock/synthetic tests including FAKE-child HTTP server passed; previous15PowerShell mock tests passed; TypeScript testscheck passed.
+- Actualdevstartup/staticHTML/transformedTS/session smoke passed with directno-proxy.NET client; no connect/ram endpoints or HID APIs invoked by Codex. Own smokeprocesses stopped.
+- UpdatedGENERAL/ROADMAP/DECISIONS/DONE only; no newMarkdown/runtime logs. No physicalwrites/listening/preamp/Flash/EQreadback performed.
+
+### M2N final automated verification
+- verify.ps1 executed once at end, exit0: production TypeScript/Vite build, test TypeScript and17files/144Vitest tests passed.
+- Native56synthetic/mock tests passed, including browser camelCase required-schema contract and FAKE-child loopback HTTP;15PowerShell mock regression tests passed.
+- Real dev launcher smoke/staticHTML/transformedmodule/session passed; no physical device connect/ram endpoint called by Codex. Initial PowerShellHTTP client timeout did not recur with no-proxy.NET client.
+- Generateddist changes restored; git diff --check passed after generated files removed from scope. Runtime protocols untouched outside exactFreeDSPDEVconnectiongate/link. No newMarkdown/runtime log commits.
+- Git handoff next: intended files only, required M2Nfeatcommit andpush; STOP for manualWebUI1/5/9 validation. Productioncompletion,fullninecombinedhardware,positivegain/nonPK/nativeexactLSB remain unverified.

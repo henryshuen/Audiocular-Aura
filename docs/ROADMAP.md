@@ -1895,3 +1895,105 @@ Possible fix direction:
 - Focused Vitest3files/15tests passed; test TypeScript check passed. Initial sandbox Vitest cache rename EPERM occurred before test loading; normal-permission retry passed, no product defect inferred.
 - Final verify.ps1 run once: exit0; production TypeScript/Vite build and16files/134tests passed. Generated dist files restored, no runtime source/dist scope changes retained.
 - Next action: scoped Git commit/push, then STOP for Henry. M2M manual validation READY; rawwire1..4 still physically UNVERIFIED. Mock test VERIFIED labels are not actual device evidence.
+
+## 2026-10-08 — M2M hardware COMPLETE / M2N start
+Henry reports rawwire1..4 PK400Hz/-12dB/Q1 each protocolApply PASS、audibleApply YES、protocolRestore PASS、audibleRestore YES。Combined with priorwire5..9, allrawslots1..9 have individual reversible audible evidence. M2M hardware validation COMPLETE; no slot retest scheduled. SDK field semantics forwire1..4 remain UNKNOWN. M2N assigns editable UIposition0..8 to rawslot1..9, explicit position/index validation; debug Web RAM integration only, no production replacement/preamp/Flash.
+
+### Research checkpoint — M2N transport design
+- Evidence examined: current clean dc08a8d, prior WebHID missing-input/GET limitation, proven Windows native matching flow, current debug page and dev launcher.
+- Verified facts: allnine raw slots individually reversible by Henry; UI uses editable position/index0..8; official446 enumerates1..9. UI->slot is an explicit stable app assignment, not SDK inference or fixed frequency labels.
+- Surviving hypotheses: browser->loopback bridge->bounded native operation will preserve native behavior; Web end-to-end must still be manually validated.
+- Rejected hypotheses: repeat slot harness, blindly use old rate-index RAM builder, browser send completion equals DSP success.
+- Unresolved: Web UI plumbing, fullnine simultaneous behavior, native optimum1LSB.
+- Next action: isolated negative-PK native-derived model, authenticated localhost bridge and DEV page; connect metadata only, writes on explicit buttons, serialized operations, no automatic retry/Flash/90.
+
+### Research checkpoint — M2N implementation / focused validation
+- Examined: isolated page/client, C# dynamic negative-PK model/scoped packets, Kestrel bridge/30s child watchdog, old startup behavior and failure pathways.
+- Verified:18focused Vitest tests across3files;56native synthetic/mock tests, including a real loopback HTTP server with FAKE child only (no HID). Schema/token/origin/Host gates, BUSY409, exact request snapshots, allnine once, disabledunity, unknown-rate/partialfailure stop.
+- Sandbox localhost socket10013 blocked the first HTTP mock test; normal-permission run passed. This was environment permission, not a device observation.
+- Found and corrected: JSON missing-field defaults rejected; RestoreBand retains editor values for repeat toggles; edit invalidates prior confirmation; after fullnine sync, RestoreNine stays available even if editor confirmations are invalidated.
+- Found startup issue: old main DEV auto-connect could execute auto-preamp behavior before user enters debug page. Exact VID/PID DEV guard skips FreeDSP auto-connect only; non-FreeDSP and production behavior preserved. Main link redirects to new isolated page.
+- Unresolved: actual browser/native device end-to-end audibility, fullnine combined behavior, native optimum1LSB. Positive gains and non-PK types remain blocked.
+- Next action: metadata-free startup/HTTP page smoke, final verification once, scoped commit/push, then Henry Web Band1/5/9 validation; no CLI slot retest.
+
+## M2N — final UI mapping / Web RAM debug implementation
+
+M2M hardware validation COMPLETE. Henry reports wire1..4 each protocolApply/Restore PASS and audibleApply/Restore YES for PK400Hz/-12dB/Q1; wire5..9 previously verified. All raw1..9 are individually reversible; do not schedule CLI slot retests.
+
+### Final mapping for this application
+|AuraPEQ UI band|Internal position/index|Raw FreeDSP wire slot|SDK field|Evidence / confidence|
+|---|---:|---:|---|---|
+|1|0|1|UNKNOWN / not inferred|HIGH application assignment + Henry raw1 reversal|
+|2|1|2|UNKNOWN / not inferred|HIGH application assignment + Henry raw2 reversal|
+|3|2|3|UNKNOWN / not inferred|HIGH application assignment + Henry raw3 reversal|
+|4|3|4|UNKNOWN / not inferred|HIGH application assignment + Henry raw4 reversal|
+|5|4|5|SDK0 target-slot equivalence|HIGH assignment + SDK+5 + Henry raw5 reversal|
+|6|5|6|SDK1 target-slot equivalence|HIGH assignment + SDK+5 + Henry raw6 reversal|
+|7|6|7|SDK2 target-slot equivalence|HIGH assignment + SDK+5 + Henry raw7 reversal|
+|8|7|8|SDK3 target-slot equivalence|HIGH assignment + SDK+5 + Henry raw8 reversal|
+|9|8|9|SDK4 target-slot equivalence|HIGH assignment + SDK+5 + Henry raw9 reversal|
+This is a deterministic AuraPEQ assignment for nine editable positions, not a claim that the official five-band SDK edits nine bands or that slots have fixed frequency roles. Current UI row order/index0..8 and upstream index+1 align with official446 raw1..9 enumeration and190 initialization. Each raw slot is now physically usable. No evidence requires a permutation; we preserve current row order and validate position===index. Simultaneous independence/cascade topology/fullnine interaction is not yet proven by individual tests.
+
+### Data flow / implementation
+- `freedsp-ram-debug.html` and `src/freedsp/ramDebugPage.ts`: separate DEV-only nine-row Band editor using existing Band shape; starts flat editor values, NOT device readback. Main DEV link points here. Optional explicit load from aura_active_eq_state copies a validated nine-row snapshot only; unsupported types/positive gains/stale indices reject. No main sync/realtime sender is imported or called.
+- `src/freedsp/webRam.ts`: explicit uiIndex+1, complete nine-state validation, strict negativePK bounds20..20000Hz/-12..0dB/Q0.1..10, independent offline native coefficient parity model, bridge client with in-memory session and no write retry. Disabled/restore yields unity on the same slot. All type-only imports disappear at runtime.
+- `tools/freedsp-native/RamDebug.cs`: authoritative native execution. Fixed action names applyBand/restoreBand/syncNine/restoreNine, required JSON fields, unknown fields reject, exactlynine indices validated before discovery. Match188→187→346/knownrate before coefficients; current rate queried once per explicit operation, held for that operation (no atomicity or mid-stream rate-change immunity claimed).
+- Java/JNI narrowing semantics preserved: frequencyU16 via truncation, Q*256U16, gain*256S16, precision24; float32 coefficient storage and product, feedback signs, dynamicGain/scale, signed24/stability guards. Hardware-proven400/-12/Q1 model matches across allfive known rates. Exact native32-candidate optimum remains1LSB uncertain; no bit-exact claim. Other valid negativePK parameters are source-derived/offline tested, not all individually hardware verified.
+- Packet190: Windows62 includes reportID1, prefix0, count13/command190, CTRL, [0,rawslot,Gain,B0,B1,B2,A0,A1,0,0,0,0,0]. Only selected slot for Apply/Restore. Fullnine computes every selected packet BEFORE first190, iterates1..9 once, no skip/truncation. Stop at first failure, no resend/rollback; some slots may remain applied.
+- NativeHid default fixed test allowlist preserved. Internal per-request scoped open authorizes exact prerequisite/query packets and ONLY the packets computed for that request, not arbitrary commands/payloads. No Feature/stream/driver fallback. Existing exact VID/PID/MI03/usage0C:1/caps62/ID1 gate retained.
+- `DebugBridge.cs`: Windows/.NET10 with bundled ASP.NET shared framework; Kestrel binds127.0.0.1:5174 only. Session GET has no device access; exact Origin http://localhost:5173 and Host required; write endpoints additionally require random32-byte process session header. JSON size16KiB, single operation semaphore returns409 on concurrent requests, fixed child operations only.
+- Connect launches bounded metadata-only debugInspect; no SET/GET. RAM action launches debugRam child via stdin validated twice.30s watchdog kills own child tree; logs full stdout/stderr/Win32 errors/matching fields; browser35s deadline longer. Runtime logs unique TEMP/AuraPEQ .log, not repo. Timeout/failure => STOP/unknown or partial completion, no listening-success claim.
+- scripts/dev.ps1 builds and starts hidden owned bridge, runs Vite127.0.0.1:5173 strictPort; finally terminates own bridge process tree. No hardware at startup. Main DEV auto-connect skips ONLY35D8:1496 to prevent old auto-preamp/legacy sender effects before entering diagnostic page; other targets and production behavior unchanged.
+
+### Debug validation gate / one Henry Web test
+1. Close other FreeDSP control tabs/tools; APO OFF, outputFreeDSP, Windows1–2/100. Open http://localhost:5173/ via .\scripts\dev.ps1.
+2. Click **FreeDSP M2N RAM debug（九段／手動）**; do not use normal main Connect/Sync/Flash. New page click **連線 FreeDSP（僅metadata）**.
+3. Select **UI Band1** → **填入安全測試值400Hz／−12dB／Q1（不送出）** → **Apply選定band RAM**. FirstApply IEM out; only after matching success/no abnormal output listen at low unchanged song/volume.
+4. **Restore選定band unity** → verify recovery → **確認本band可聽變化＋恢復**. Editor retains400/-12/Q1 for repeat toggles; Restore command ignores edited gain and sends unity. Do not confuse editor values with last device write.
+5. Repeat the same Web flow for **UI Band5**, then **UI Band9**, restoring each before next. This validates new UI/bridge routing, not a rerun of the CLI slot harness.
+6. Stop/paste result for these three. Fullnine buttons unlock only after their confirmations; optional later explicit Sync nine followed by Restore nine, not required for this first three-band handoff. Restore nine remains enabled after fullnine has run even if subsequent edits invalidate confirmations.
+7. Any noise/distortion/imbalance/disconnect/error: stop, no retry. Copy entire page log, action/band and audible result plus Full log path; if startup failure, relevant TEMP bridge stderr. No automatic rollback; closing page/server does not restoreRAM.
+No positive boost, LSQ/HSQ/NOTCH, mode90,Flash220, preamp or EQ readback. Connect/reconnect says metadata only, never saved/persistent/flat. Other slots' prior EQ is not backed up; unity replaces selected slot.
+
+### Research checkpoint — startup / offline evidence
+- Examined: production diagnostic build, HTTP handshake/routing with mock child, native dynamic coefficient models, PowerShell controller regressions, real dev launcher/HTML/module/session smoke.
+- Verified:56native mock/synthetic tests,18focused Vitest tests in3files,15PowerShell mock tests. Real startup smoke: HTML200, transformed TS200, loopback session200; no /connect or /ram invoked and no HID discovery/write by Codex.
+- Initial PowerShell Invoke-WebRequest smoke timed out although Vite ready; direct no-proxy .NET HttpClient passed. No system proxy settings changed; no claim of exact client timeout root cause.
+- Hypotheses remaining: new browser/native end-to-end path should reproduce known effects; combinednine-slot interaction remains untested physically.
+- Rejected: old WebHID send completion is sufficient; automatic main DEV FreeDSP connection is harmless; missingJSON properties may default; all9band hardware individual evidence means production ready.
+- Unresolved: manualWeb1/5/9 reversal, fullnine simultaneous/error-free state, finalnativeLSB.
+- Next action: full verify.ps1 once + diffcheck/scope review + commit/push; STOP at M2N Web validation ready.
+
+## Evidence for upstream / Issue #3
+- NEW Henry hardware report: rawwire1..4 each Apply/Restore protocol PASS＋audibleYES at400/-12/Q1; combined priorwire5..9 gives individual reversible RAM evidence for all1..9. M2M COMPLETE; no SDK meaning inferred for1..4.
+- Official pinned APK446 raw1..9 list and190 initialization now agree with live usable slot domain. Final AuraPEQ mapping position/index0..8→wire1..9 is an explicit stable editable-slot assignment, preserving row order; not fixed frequency bands and not SDK0..8+5.
+- M2N DEV Web RAM implementation ready offline: isolated nine-row editor→localhost bridge→exact FreeDSP native matching188/187/346/190. Current-rate/selector0/dynamicGain/feedback signs replace old builder only in debug path. No production sender replacement or non-FreeDSP protocol change.
+- Wire descriptor ID1/61 data, native caps62 and responses remain supported; rawUSB completion and exactnative quantizer optimum not newly claimed. No Flash/preamp/readback/90.
+- Remaining evidence needed: new Web UI1/5/9 audible reversals, later fullnine combined behavior and production gate. No GitHub issue comment posted.
+
+### Problem / hypothesis / next action
+Observed problem:
+- Allrawslots now work individually, but old WebHID route cannot reproduce official synchronous GET behavior and production uses rate-index/fixedGain/automatic90 assumptions.
+Verified facts:
+- Henry individually reversed1..9; official446 enumeration; stable nine editable UI positions; proven native sequence, negative400PK coefficient model and62-byte Windows report. New isolated Web/native contract passes offline tests.
+Possible causes:
+- Any remaining new Web failure may involve bridge startup/session, index/state validation, changed rate, parameter-dependent quantization, native transport error or UI gate. No actual new Web failure attributed yet.
+Ruled out / weakened:
+- raw1..4 universally inaudible; nine SDK fields required; slot retest necessary; native send completion equals audible success; SDK+5 for allUI rows; preamp/Flash required for this gate.
+Next validation:
+- One localhost Web run: UI1→5→9, each negative400/-12/Q1 Apply and same-slot unityRestore, manual audible confirmation; error STOP/full log. Not CLI slot validation.
+Possible fix direction:
+- After successful Web routing, evaluate fullnine state/independence/accumulation and reconnect boundary before production FreeDSP RAM integration. Keep PK-only/current-rate/scoped packet guards; no other protocols or preamp/Flash.
+
+### Scope / regression check
+- FreeDSP-specific files: src/freedsp/webRam.ts,ramDebugPage.ts; freedsp-ram-debug.html; nativeRamDebug/DebugBridge and scoped NativeHid/Program/SafeRam/csproj support.
+- Analysis/tests: webRam.test.ts, nativeTests/Program.cs, nativeQueryScope default-guard assertion; previous15PowerShell tests rerun unchanged.
+- Shared runtime: src/main.ts DEV link only; src/fn.ts exactFreeDSP DEV auto-connect gate only. Shared script scripts/dev.ps1 owns debug bridge startup/shutdown. No src/dsp.ts or any other protocol code edited.
+- Non-FreeDSP protocol code changed: NO. Production FreeDSP sender unchanged. No newMarkdown/runtime logs committed. Docs only GENERAL/ROADMAP/DECISIONS/DONE.
+
+### M2N final automated verification
+- verify.ps1 executed once at end, exit0: production TypeScript/Vite build, test TypeScript and17files/144Vitest tests passed.
+- Native56synthetic/mock tests passed, including browser camelCase required-schema contract and FAKE-child loopback HTTP;15PowerShell mock regression tests passed.
+- Real dev launcher smoke/staticHTML/transformedmodule/session passed; no physical device connect/ram endpoint called by Codex. Initial PowerShellHTTP client timeout did not recur with no-proxy.NET client.
+- Generateddist changes restored; git diff --check passed after generated files removed from scope. Runtime protocols untouched outside exactFreeDSPDEVconnectiongate/link. No newMarkdown/runtime log commits.
+- Git handoff next: intended files only, required M2Nfeatcommit andpush; STOP for manualWebUI1/5/9 validation. Productioncompletion,fullninecombinedhardware,positivegain/nonPK/nativeexactLSB remain unverified.

@@ -12,6 +12,13 @@ if (!OperatingSystem.IsWindows())
     Console.Error.WriteLine("Windows required; no query sent");
     return 2;
 }
+if (args[0] == "serveDebug") return await DebugBridge.RunAsync();
+RamDebugRequest? debugRequest = null;
+if (args[0] == "debugRam")
+{
+    try { debugRequest = RamDebugRequest.Parse(Console.In.ReadToEnd()); }
+    catch (Exception error) { Console.Error.WriteLine("INVALID DEBUG REQUEST before discovery: " + error.Message); return 2; }
+}
 Console.WriteLine($"FreeDSP Native CAF diagnostic — {args[0]}");
 Console.WriteLine("VID/PID: 0x35D8 / 0x1496; no Flash or driver changes");
 if (args[0] == "query346") Console.WriteLine($"TX preview ({Caf346.ReportBytes} bytes): {Caf346.Hex(Caf346.CreateQuery())}");
@@ -33,6 +40,13 @@ try
     Console.WriteLine($"Input report bytes: {target.InputBytes}\nOutput report bytes: {target.OutputBytes}\nFeature report bytes: {target.FeatureBytes}");
     Console.WriteLine("Input1/Output1 confirmed by HidP_InitializeReportForID (preparsed data only)");
     Console.Out.Flush();
+    if (args[0] == "debugInspect") { Console.WriteLine("CONNECTED: exact FreeDSP CAF collection verified; metadata only, no SET/GET"); return 0; }
+    if (debugRequest is not null)
+    {
+        var allowed = new List<byte[]> { SafeRam.Enable(), SafeRam.Bypass(), Caf346.CreateQuery() };
+        using var scoped = NativeHid.OpenScoped(target, b => allowed.Any(p => p.AsSpan().SequenceEqual(b)));
+        return RamDebug.Run(scoped, debugRequest, Console.Out, allowed);
+    }
     using var hid = NativeHid.Open(target);
     if (args[0] == "query346") return Query346.Run(hid, Console.Out);
     if (SafeRam.TryCandidateOperation(args[0], out int wire, out bool candidateRestore))

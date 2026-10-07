@@ -328,3 +328,15 @@ M2L官方五段live mapping已完成，不再排程重測wire5–9；不外推Au
 - Offline nine-band model is explicitly proposed/non-transmitting, not a verified adapter. No production Web path or automatic sync until remaining physical evidence; future FreeDSP-only debug path before production.
 - Finish PEQ first. No Global Preamp/Master Gain investigation/implementation and no Flash persistence work. Do not extrapolate unknownSDK5..8, raw0 or10..13.
 - Docs remain these four existing files; runtime logs stay outside repo in unique TEMP/AuraPEQ files. Codex never tests physical hardware. Local web URL always http://localhost:5173/; start .\scripts\dev.ps1 when Web validation is actually ready.
+
+## 2026-10-08 — M2M hardware COMPLETE / M2N start
+Henry reports rawwire1..4 PK400Hz/-12dB/Q1 each protocolApply PASS、audibleApply YES、protocolRestore PASS、audibleRestore YES。Combined with priorwire5..9, allrawslots1..9 have individual reversible audible evidence. M2M hardware validation COMPLETE; no slot retest scheduled. SDK field semantics forwire1..4 remain UNKNOWN. M2N assigns editable UIposition0..8 to rawslot1..9, explicit position/index validation; debug Web RAM integration only, no production replacement/preamp/Flash.
+
+## M2N current policy — Web RAM debug only
+- M2M COMPLETE; rawslots1..9 individually hardware reversible. No CLI slot retest. UIposition/index0..8 maps raw1..9; SDK field meanings for raw1..4 not inferred.
+- Debug page requires DEV localhost5173 and explicit metadata Connect plus writes; main DEV auto-connect skips exact35D8:1496 only. Normal Sync/production sender is not replaced.
+- Startup .\scripts\dev.ps1 owns hidden127.0.0.1:5174 native bridge and Vite; no HID at startup/session. Main link opens isolated nine-row editor, optionally imports validated stored UI snapshot, never imports main runtime senders/tilt/preamp.
+- PK negative-only20..20000Hz/-12..0dB/Q0.1..10; strictnine indices, currentmatching346 knownrate, selector0, native-derivedfloat/dynamicGain/signed24/stability guards. Disabled/Restore sends same-slot unity; no old-EQ backup/readback/persistence claim.
+- Initial Web validation UI1/5/9 one at a time, matching protocol plus audibleApply/Restore manual confirmation. Restore retains editor values for repeat toggles; display is edited state, not device readback. Fullnine after three confirmations only; failure/timeouts STOP/partialunknown, no auto retry/rollback/restore.
+- Only188/187/346/190, exact packet authorization per request, exactFreeDSP collection gate. Origin/Host/session/body/busy guards; bounded30s native child. Logs unique TEMP/AuraPEQ, no runtime logs committed.
+- STOP at M2N Web validation READY. Positivegain, unsupportedtypes, preamp,Flash,EQreadback and productionintegration remain outside this round. Local URL always http://localhost:5173/.
