@@ -380,3 +380,13 @@ M2Q firstmanualWebgate: fillBand5=400/-12/Q1, explicitpairedApply/listen(bothear
 
 ### M2R observation / Restore rule
 Positive hardware outcome must be Henry-reported, never inferred from protocol PASS. Observation choices reset toU for each action; P1/P2/negative centered Apply/recovery records gate the experimental graphical session. Invalid editor/observations do not block explicit unity Restore; protocol faults STOP Apply but permit a separately requested emergency full-nine unity operation. No automatic retry/rollback.
+
+## UPSTREAM-FIRST / NATIVE-ARCHITECTURE RULE
+1. Prefer upstream architecture, abstractions, transport, interaction patterns and normal user workflow.
+2. Device-specific protocol differences plug into generic abstractions; do not build parallel workflows merely for convenience.
+3. Browser-supported production hardware should use existing WebHID unless evidence proves the required protocol cannot be implemented through it. Before any new transport/service/process/UI/maintenance surface ask: Can upstream architecture implement this? If yes, use it.
+4. Native/.NET tools are developer diagnostics only: reverse engineering, capture, hardware validation, protocol comparison, regression and unknown-command research. Production dependency requires unavoidable need and explicit evidence.
+5. Optimize upstream merge: minimal device surface, no duplicate UX/platform dependency, preserve existing DACs, isolate FreeDSP protocol.
+6. Temporary debug/native surfaces remain separate from normal UX. Applies to PEQ/preamp/tone/utilities/persistence/future functions.
+7. Generic UI is not FreeDSP support evidence. Classify each control SUPPORTED BY FREEDSP EVIDENCE / UNSUPPORTED / UNKNOWN; UNKNOWN remains disabled. No generic command or Flash220 without dedicated evidence/validation.
+8. M2S supersedes M2R main bridge gate: normal CONNECT DAC uses CAF WebHID adapter. Native debug remains optional developer mode. M2G zero-input and missing WebHID Input GET_REPORT limitations remain documented; offline mocks never establish hardware event availability.

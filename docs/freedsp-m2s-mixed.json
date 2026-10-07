@@ -1,0 +1,77 @@
+{
+  "globalGain": 0,
+  "bands": [
+    {
+      "index": 0,
+      "freq": 100,
+      "gain": -3,
+      "q": 1,
+      "type": "PK",
+      "enabled": true
+    },
+    {
+      "index": 1,
+      "freq": 250,
+      "gain": 1,
+      "q": 1,
+      "type": "PK",
+      "enabled": true
+    },
+    {
+      "index": 2,
+      "freq": 1000,
+      "gain": 0,
+      "q": 1,
+      "type": "PK",
+      "enabled": true
+    },
+    {
+      "index": 3,
+      "freq": 1000,
+      "gain": 0,
+      "q": 1,
+      "type": "PK",
+      "enabled": true
+    },
+    {
+      "index": 4,
+      "freq": 1000,
+      "gain": 1,
+      "q": 1,
+      "type": "PK",
+      "enabled": true
+    },
+    {
+      "index": 5,
+      "freq": 1000,
+      "gain": 0,
+      "q": 1,
+      "type": "PK",
+      "enabled": true
+    },
+    {
+      "index": 6,
+      "freq": 1000,
+      "gain": 0,
+      "q": 1,
+      "type": "PK",
+      "enabled": true
+    },
+    {
+      "index": 7,
+      "freq": 4000,
+      "gain": 1,
+      "q": 1,
+      "type": "PK",
+      "enabled": true
+    },
+    {
+      "index": 8,
+      "freq": 1000,
+      "gain": 0,
+      "q": 1,
+      "type": "PK",
+      "enabled": true
+    }
+  ]
+}

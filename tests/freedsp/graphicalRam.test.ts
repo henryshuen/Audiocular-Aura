@@ -46,7 +46,7 @@ describe('FreeDSP M2R graphical session; mocks only',()=>{
    const node=source.statements.find(n=>ts.isFunctionDeclaration(n)&&n.name?.text==='calculateBiquad')!;
    const js=ts.transpileModule(node.getText(source),{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
    const b={...unityPreset()[4],freq:1000,gain:6,q:1};let active=false;
-   const calculate=runInNewContext(js+'\ncalculateBiquad',{Math,Number,nativePeakFloat,isExperimentalFreeDspActive:()=>active}) as (band:typeof b)=>Record<string,number>;
+   const calculate=runInNewContext(js+'\ncalculateBiquad',{Math,Number,nativePeakFloat,isFreeDsp:()=>false,window:{},isExperimentalFreeDspActive:()=>active}) as (band:typeof b)=>Record<string,number>;
    const generic=calculate(b);active=true;const actual=calculate(b),c=nativePeakFloat({frequency:1000,gainDb:6,q:1,sampleHz:48000}).coefficients;
    expect(actual).toEqual({b0:c[0],b1:c[1],b2:c[2],a1:-c[3],a2:-c[4]});expect(actual.b0).not.toBe(generic.b0);
    active=false;expect(calculate(b)).toEqual(generic);
@@ -81,7 +81,7 @@ describe('FreeDSP M2R graphical session; mocks only',()=>{
  });
  it('FreeDSP-only legacy gate and explicit Sync hook leave other VID/PIDs outside native mode',()=>{
    expect(isFreeDsp({vendorId:0x35d8,productId:0x1496})).toBe(true);expect(isFreeDsp({vendorId:0x35d8,productId:1})).toBe(false);
-   expect(hasM2RGate({getItem:()=>'{bad'})).toBe(false);expect(mainSource).toContain('if(freeGraph?.active()){await freeGraph.sync();return;}');
-   expect(fnSource.indexOf('if(isFreeDsp(dev))')).toBeLessThan(fnSource.indexOf('await dev.open()'));
+   expect(hasM2RGate({getItem:()=>'{bad'})).toBe(false);expect(mainSource).not.toContain('mountGraphicalRam');expect(mainSource).toContain('await syncToDevice(true)');
+   expect(fnSource.indexOf('attachFreeDsp(dev,log)')).toBeLessThan(fnSource.indexOf('await dev.open()'));
  });
 });

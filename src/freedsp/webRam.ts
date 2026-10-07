@@ -1,3 +1,4 @@
+import {encodeCaf} from './cafCodec.ts';
 import type { Band } from '../main.ts';
 import { nativePeakFloat, nativeScaling, officialRateHz } from '../../scripts/freedsp/ram-semantics.mjs';
 export type RamAction = 'applyBand' | 'restoreBand' | 'syncNine' | 'restoreNine';
@@ -36,9 +37,7 @@ export function modelWebBand(b:Band,sampleIndex:number,restore=false,path=0) {
   const a1=-words[3]/scale.scale,a2=-words[4]/scale.scale;
   if(!(Math.abs(a2)<1 && 1+a1+a2>0 && 1-a1+a2>0))throw new Error('quantized instability');
   const payload=[path,wire,scale.gain,...words,0,0,0,0,0];
-  const bytes=new Uint8Array(62),view=new DataView(bytes.buffer);bytes[0]=1;
-  view.setUint32(2,0x00be000d,true);view.setUint32(6,0xb32d2300,true);
-  payload.forEach((word,i)=>view.setInt32(10+i*4,word,true));
+  const bytes=encodeCaf(190,payload).helper;
   return {hz,payload,bytes,nativeBitExact:false};
 }
 export type BridgeReply={ok:boolean;log:string;logPath?:string;exitCode?:number};

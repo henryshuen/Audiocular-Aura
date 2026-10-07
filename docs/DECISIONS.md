@@ -366,3 +366,6 @@ M2Q decision: promote0=LEFT/1=RIGHT tohardwarevalidatedmapping for thisFreeDSPta
 
 ### M2R manual evidence gate
 LocalStorage gate is user-reported evidence, not device readback or authentication. Exact P1/P2/negative Apply and Restore records plus centered/recovery confirmation are required; latest contradiction and new hardware operations revoke old approval. Full-nine explicit Restore remains available after STOP, is a distinct unity request, and never an automatic failed-packet retry.
+
+## M2S — use upstream WebHID, keep native diagnostic
+Normal FreeDSP connection uses existing chooser/open/device registry and dsp Sync abstraction; exact CAF collection chosen before open. No permanent native metadata/experimental Connect panel. Native62 versus WebHID61 is framing only; shared TS CAF codec and native-generated fixture test payload equivalence without claiming hardware event delivery. Native debug is optional -NativeDebug, never production dependency. M2G/H Input GET_REPORT limitation retained. Match report1/header/reply/command/CTRL; command346 requires known rate, count0 ACK accepted without invented echo. Sequential operations and STOP reduce stale risks but indistinguishable same-command ACK cannot be proven fresh; no unsupported transaction field introduced. No Flash/preamp/utility/implicit drag writes.

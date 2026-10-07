@@ -1,3 +1,4 @@
+import {isFreeDsp,attachFreeDsp} from './freedsp/webHid.ts';
 import { buildConexantPacket, quantizeConexantCoefficients } from "./freedsp/conexantPacket.ts";
 import { sendConexantReport as sendFreeDSPReport } from "./freedsp/conexantTransport.ts";
 import {
@@ -25,6 +26,7 @@ import {
 	getAutoPreampEnabled,
 	getManualPreampState,
 	getLastAppliedEqName,
+ getBassTiltState, getTrebleTiltState,
 	updateBaselineFromActive,
 } from "./fn.ts";
 import { delay, log, refreshStripUI, logTx, logRx, showSyncing, hideSyncing } from "./helpers.ts";
@@ -91,6 +93,7 @@ const REV_TYPE_MAP_JA11: Record<number, string> = { 0: "PK", 1: "LSQ", 2: "HSQ" 
  * DETECT PROTOCOL BASED ON VENDOR ID AND DATABASE
  */
 export function getProtocol(device: HIDDevice) {
+ if(isFreeDsp(device))return "CONEXANT"; // Exact identity takes priority over custom overrides.
 	// 1. Check merged active database
 	const match = activeDacs.find(
 		(d) =>
@@ -203,6 +206,7 @@ async function setMasterGainJa11(device: HIDDevice, gain: number) {
  * Updates state and transmits over the wire
  */
 export async function setDeviceGlobalGain(gain: number, skipBandSync = false) {
+ if(isFreeDsp(getDevice())){log("FreeDSP preamp未實作；沒有送出。");return;}
 	setGlobalGain(gain);
 	const device = getDevice();
 	if (!device) return;
@@ -381,6 +385,7 @@ async function readMoondropParams(device: HIDDevice): Promise<{ preamp: number; 
  * @param device The WebHID device
  */
 export async function readDeviceParams(device: HIDDevice) {
+ if(isFreeDsp(device)){log("FreeDSP無PEQ readback；保留本地editor。");return;}
 	if (!device) return;
 	showSyncing();
 	try {
@@ -555,6 +560,7 @@ function updateBalanceState(channel: number, attenuation: number) {
  * @param device The WebHID device
  */
 export function setupListener(device: HIDDevice) {
+ if(isFreeDsp(device)){attachFreeDsp(device,log);return;}
 	const eqState = getEqState();
 	device.addEventListener("inputreport", (event) => {
 		const versionEl = document.getElementById("fwVersion");
@@ -755,10 +761,16 @@ export function setupListener(device: HIDDevice) {
 /**
  * Sync all bands and preamp gain to device RAM
  */
-export async function syncToDevice() {
+export async function syncToDevice(explicit=false) {
 	const device = getDevice();
 	const eqState = getEqState();
 	if (!device || !eqState) return;
+
+ if(isFreeDsp(device)){
+   if(!explicit)return; // profile/import/undo/edit are local only for FreeDSP.
+   if(getGlobalGainState()!==0 || getAutoPreampEnabled() || getBassTiltState()!==0 || getTrebleTiltState()!==0)throw new Error('FreeDSP preamp/tilt未實作；請將本地值設0，勿當作已套用。');
+   showSyncing();try{await attachFreeDsp(device,log).sync(eqState);localStorage.setItem(`last_eq_state_${device.vendorId}_${device.productId}`,JSON.stringify(eqState));}finally{hideSyncing();}return;
+ }
 
 	showSyncing();
 	try {
@@ -845,6 +857,7 @@ export async function syncToDevice() {
 export async function flashToFlash() {
 	const device = getDevice();
 	if (!device) return;
+ if(isFreeDsp(device)){log("FreeDSP Flash未驗證；沒有送220。");return;}
 	if (!confirm("Save to permanent memory? The settings will load automatically when you power on the DAC.")) return;
 
 	showSyncing();
@@ -927,6 +940,7 @@ export async function writeBand(
 	band: Band,
 	protocol: string,
 ) {
+ if(isFreeDsp(device))return; // No single-band generic/realtime path.
 	let val = (band.enabled ? band.gain : 0) + getTiltGainAtFreq(band.freq);
 	const effectiveGain = Math.max(-12, Math.min(12, val));
 
@@ -1484,6 +1498,7 @@ function encodeToByteArray(coeffs: number[]) {
  * Advanced settings commands (Savitech CB5100 DSP)
  */
 export async function setDacFilter(device: HIDDevice, filterType: string) {
+ if(isFreeDsp(device)){log("FreeDSP 此utility UNKNOWN／停用；沒有送出。");return;}
 	let r = 1;
 	switch (filterType) {
 		case "FAST-LL": r = 1; break;
@@ -1499,6 +1514,7 @@ export async function setDacFilter(device: HIDDevice, filterType: string) {
 }
 
 export async function setDacWorkMode(device: HIDDevice, isClassAB: boolean) {
+ if(isFreeDsp(device)){log("FreeDSP 此utility UNKNOWN／停用；沒有送出。");return;}
 	const r = isClassAB ? 1 : 0;
 	log(`Setting Amp Mode: ${isClassAB ? "Class AB" : "Class H"}`);
 	await sendPacketSavitech(device, [1, 29, 1, r]);
@@ -1506,6 +1522,7 @@ export async function setDacWorkMode(device: HIDDevice, isClassAB: boolean) {
 }
 
 export async function setDacOutputGain(device: HIDDevice, isHighGain: boolean) {
+ if(isFreeDsp(device)){log("FreeDSP 此utility UNKNOWN／停用；沒有送出。");return;}
 	const r = isHighGain ? 1 : 0;
 	log(`Setting DAC Output Gain Mode: ${isHighGain ? "HIGH" : "LOW"}`);
 	await sendPacketSavitech(device, [1, 25, 1, r]);
@@ -1513,6 +1530,7 @@ export async function setDacOutputGain(device: HIDDevice, isHighGain: boolean) {
 }
 
 export async function setDacBalance(device: HIDDevice, balance: number) {
+ if(isFreeDsp(device)){log("FreeDSP 此utility UNKNOWN／停用；沒有送出。");return;}
 	log(`Setting DAC Balance: ${balance}`);
 	const he = balance <= 0 ? Math.abs(balance) : 0;
 	const ne = balance > 0 ? balance : 0;
@@ -1536,6 +1554,7 @@ export async function setDacBalance(device: HIDDevice, balance: number) {
 }
 
 export async function setMicVolume(device: HIDDevice, volume: number) {
+ if(isFreeDsp(device)){log("FreeDSP 此utility UNKNOWN／停用；沒有送出。");return;}
 	log(`Setting Microphone Gain: ${volume} dB`);
 	await sendPacketSavitech(device, [1, 2, 2, 128, volume]);
 	await delay(50);
@@ -1545,6 +1564,7 @@ export async function setMicVolume(device: HIDDevice, volume: number) {
 let refreshTimeoutId: any = null;
 
 export async function refreshToFlash(device: HIDDevice) {
+ if(isFreeDsp(device)){log("FreeDSP 此utility UNKNOWN／停用；沒有送出。");return;}
 	if (refreshTimeoutId) {
 		clearTimeout(refreshTimeoutId);
 	}
@@ -1565,6 +1585,7 @@ let pendingBands = new Map<number, Band>();
 let writeTimeoutId: any = null;
 
 export function queueRealtimeBandWrite(device: HIDDevice, band: Band) {
+ if(isFreeDsp(device))return; // Explicit RAM Sync only; no debounce writes.
 	// Store the latest state of this band
 	pendingBands.set(band.index, { ...band });
 
@@ -1618,6 +1639,7 @@ export function queueRealtimeBandWrite(device: HIDDevice, band: Band) {
 }
 
 export async function executeFactoryReset(device: HIDDevice) {
+ if(isFreeDsp(device)){log("FreeDSP 此utility UNKNOWN／停用；沒有送出。");return;}
 	log("Executing Factory Reset...");
 	showSyncing();
 	try {
@@ -1627,4 +1649,9 @@ export async function executeFactoryReset(device: HIDDevice) {
 	} finally {
 		hideSyncing();
 	}
+}
+
+export async function restoreFreeDspUnity(){
+ const d=getDevice();if(!d || !isFreeDsp(d))return;
+ showSyncing();try{await attachFreeDsp(d,log).sync([],true);}finally{hideSyncing();}
 }

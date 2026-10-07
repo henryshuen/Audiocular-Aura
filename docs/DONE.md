@@ -1,3 +1,12 @@
+# M2S completed offline work — hardware browser transport pending
+- Henry reportsM2RpositiveP1/P2andnegative-nine/stereo/RestorehardwarePASS; quietrepeatableclicksnonblocking,causeunconfirmed. Codexdidnotaccesshardwareornewrawlog.
+- Addedupstream-first permanentrule, native diagnosticclassification, originalCONNECT CAFselection/listener-before-open, dspadapterexplicitRAMSync, paired18writes,invalideditorunityRestore, Flash/unsupportedutilityguards.
+- Normalmainno nativeHTTP/connectpanel; defaultdev.ps1doesnotrequire.NET orstartbridge; optional-NativeDebug retainsnative diagnostic/lifecycle.
+- SharedCAFcodecusedbybrowser/runtime andoldTSDiagnostics. NativeC#export21vectorsverifiedmatchingWebHIDbody withreportID separated; nativefixture drift testadded.
+- 56focusedfrontendtestsPASS;65nativeoffline/mocktestsPASS; PowerShellownedlifecyclemockstestsPASS. No physicalHIDcalled. No PR created.
+- Finalverify.ps1 PASS（最後Ctrl+S限定FreeDSP修正後重跑）：TypeScript/Vite build、21files/181tests；generateddist還原、隔離testoutputs移除、git diff --check PASS。Normalproductionbundle沒有localhostnativeAPI引用。
+- Browserinputresponseavailability andM2SphysicalhardwarePASS haveNOTbeenestablished; M2Gzeroeventsretained. No productioncompletionclaim.
+
 ﻿# AuraPEQ FreeDSP Verified Work
 
 ## 2026-10-08 — M2Q 全九段雙聲道硬體 PASS / Restore UX

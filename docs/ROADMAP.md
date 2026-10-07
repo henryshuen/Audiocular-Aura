@@ -1,3 +1,59 @@
+# M2S — upstream WebHID architecture checkpoint
+Current: offline implementation READY; browser transport hardware PENDING. Henry reports M2R P1/P2 positive and negative-nine stereo PASS; quiet repeatable clicks non-blocking, exact cause UNKNOWN. No new raw hardware log supplied this round.
+
+### Research checkpoint
+- Examined: original fn CONNECT chooser/open/identification, dsp protocol dispatch/sendReport/input listener/realtime queue, main Sync/safety/Flash; M2G/H transport evidence; native Safety/codec/ACK rules; WebHID specification https://wicg.github.io/webhid/.
+- Verified: WebHID report ID separate from61body; native buffer62includesID1. Original chooser prefers vendor-defined interfaces, but CAF is consumer usage12/1 with61input/output; exact FreeDSP selection must override generic collection preference only for this VID/PID. Generic dsp input listener ignoresCONEXANT; small adapter pending matcher belongs there. Existing profile/undo/drag call sync/queue, so FreeDSP must explicitly exclude implicit writes while preserving other DACs.
+- Verified: M2G346 send success with zero input events; API has no Input GET_REPORT. Native success does NOT prove browser responses. A bounded event implementation can be prepared but cannot be declared transport-verified offline.
+- Hypotheses: CAF event replies may remain unavailable on Henry's Windows Chrome. Native GET-only response is strongest existing evidence; no fallback or fabricated rate introduced.
+- Discarded: blindly send62nativebytes; feature fallback; host send completion=protocol success; legacy90/Flash/tilt writes; forcing echo fields absent in native ACK0.
+- Unresolved: event availability; stale same-command count0 ACK has no verified transaction/echo discriminator. Serialization, finite wait and pending ordering cannot prove causal freshness for indistinguishable ACKs; no new transaction bytes invented.
+- Next target: deterministic WebHID mocks, native-export equivalence vectors, original UI wiring tests; one future user WebHID session stops at first missingresponse.
+
+### Research checkpoint — implementation/test convergence
+- Examined: normal CONNECT VM, actual Sync/edit VM, new WebHID adapter, sharedCAFcodec, C# exported21vectors and nativefixture drift check, optional dev native switch.
+- Verified offline:56focused tests PASS; native65tests PASS including fixture parity. Original CONNECT registersCAFlistener beforeopen and sendsnothing. ExplicitSync writes188→187→346→18paired190; disabledunity; snapshot plans immutable afterfirstSET; unrelated/nonreply ignored; firstwritefailure/timeout STOP withno retry/rollback; invalideditorRestore canonicalunity. ThreePKprofiles/wire1,5,9/path0,1 +188/187/346 native vectors exactlyequal browserbody withID removed.
+- Verified scope: FreeDSPdrag,typing,enable,undo/profile/import/reset staylocal; otherDAC update callback stillqueues. Flash andgenericutilities explicitlyguarded forFreeDSP, normalconnect andRestore use noHTTP/nativeprocess. dev.ps1 defaultVite only; -NativeDebug retains existingowned lifecycle.
+- Hypotheses: event-return availability remains the transport risk, not resolved bythese mocks.
+- Discarded: nativebridge needed tostartnormaldev; duplicate permanentFreeDSPconnect panel.
+- Unresolved: physicalWebHIDacceptance/RX/delivery/listening; same-commandACK0freshness cannotbeestablished fromunverifiedtransactionfields.
+- Next validation: oneHenrysessionbelow; onmissingreplySTOPandretainlog, no repeatedunchangedbrowserprobe.
+
+## Evidence for upstream / Issue #3 — M2S
+Hardware verified (Henry-reported): native190RAM,9wires,path0LEFT/path1RIGHT,equalstereoApply/Restore; M2R P1+6/P2controlledpositive/negative-nine PASS; quietrepeatableclicksnonblocking,causeUNKNOWN. Newrawlognotprovided.
+Transport verified: nativeHidDSET/GET andreport62representation. BrowserdescriptorID1/body61 andM2Ghostsendverified; inputeventresponse NOTverified (priorqueryrawTotal0).
+Offline verified: genericchooser/CAFselection/open/listener, explicitSync/free-onlylocaledit, sharedCAFbody and21nativefixturevectors, boundedmatcher/preflight/STOP/invalidRestore. ThisdoesNOTprovebrowserbus/RX/audio.
+Inferred: sameCAFbodyshouldconveyidenticalcommands acrossAPIs; hostsend method andRXchannel differ, so hardwareoutcome cannotbeassumed.
+Unknown: eventdelivery; staleindistinguishableACK0; officialpathnames; popcause; preamp/tilt/utilities/Flash.
+Future validation: oneoriginalCONNECT→Restore→importmixed→Sync→edit→Sync→Restore session; timeoutSTOP with log, no nativefallback. Productionarchitecture-compatible status ONLY after realWebHIDPASS.
+
+## M2S one manual WebHID session
+Stop olddev Ctrl+C; `cd D:\Henry\Documents\ChatGPT\AuraPEQ`; `.\scripts\dev.ps1`; open **http://localhost:5173/**.
+Original CONNECT DAC→chooseFreeDSP→normalconnectedmetadata. Click FreeDSP RAM Restore 全九段雙聲道unity. If timeout/error STOP, preserve mainlog; do NOT proceed/listen/retry or infer190waswritten.
+If Restore protocol completes: existing Import Profile→docs/freedsp-m2s-mixed.json (globalGain0,100Hz−3 plus250/1000/4000Hz+1 each,Q1); inspectgraph. Import islocalonly. Explicit SYNC/SEND TO DEVICE→listen both ears/center/spectral effect, recordquiet/abnormalclicks. Drag/edit PK→verify noTXlogwhileediting→explicitSyncagain→listen→hardwareRestore→confirmbaseline. LocalRESET TO FLAT onlychangeseditor; hardwareRestore leaveseditorunchanged.
+APOOFF,Windows1–2/100 initially,firstpositiveApplyIEMout,music/no testtones; abnormalnoise/loudnessstop. Exactlyonesession,nointermediatecodinground.
+
+### Scope / regression check — M2S
+- FreeDSP-specific: src/freedsp/cafCodec.ts,webHid.ts,officialRamProof.ts,webRam.ts; docs/freedsp-m2s-mixed.json; fourdocs.
+- Analysis/tests: tests/freedsp/webHid.test.ts,nativeM2sVectors.json,graphicalRam.test.ts; nativeTests/Program.cs.
+- Shared runtime: main/fn/dsp/peq/importExport,index.html onlyFreeDSPadapter/lifecycle/explicitSync/capabilityguards; scripts/dev.ps1 optionalnative diagnostic.
+- Non-FreeDSP protocol code changed: NO. Existingprotocolsenderbranches unchanged; otherDACedit callback queue regression PASS.
+
+### M2S automated verification / next milestones
+Final verify.ps1 PASS (repeated after final FreeDSP-only Ctrl+S scope correction): TypeScript/Vite build,21files/181tests. Focused4files/56tests; native65tests including actual21vector fixture contract; PowerShell lifecycle mocks PASS. No physical hardware access or service termination. Build contained no127.0.0.1:5174 native API reference; generateddist restored and isolatedtestoutputs removed. git diff --check PASS on intended changes.
+After actual WebHID session PASS only: classify RAM production architecture compatible, retire unused graphical native experiment; M2T real FreeDSP preamp/global-gain research → tone tilt → each utility classification → dedicated Flash220/persistence validation. Native diagnostics retained separately. No features in these later phases implemented now.
+
+### Architecture decision
+Original CONNECT DAC → exact CAF selection/listener-before-open → existing device identification/controls → dsp FreeDSP adapter → explicit Sync18paired190 at matching346rate. Native math reused via existing tested TS model; shared CAFcodec provides body/nativewrap. Original local profiles retained; normal main page has no bridge call/native connect workflow. Optional dev.ps1 -NativeDebug enables diagnostic bridge only; default dev requires Node/Vite only.
+
+### Problem / hypothesis / next action
+Observed problem: production-native dependency and duplicate connect UX conflict with upstream architecture; browser query previously had noevents.
+Verified facts: native RAM/positive/stereo verified by Henry; WebHID framing proven, event response NOT verified.
+Possible causes: control GET-only firmware replies versus interrupt-event mismatch.
+Ruled out / weakened: fixing framing alone guarantees browser RX; nativepass impliesWebHIDpass.
+Next validation: offline protocol/matcher/UI equivalence, then ONE user session; if timeout stop, no repeated unchanged tests.
+Possible fix direction: normal architecture adapter with strict failure reporting; if existing transport limitation persists, document blocked production capability rather than falsely claiming WebHID support.
+
 ﻿# AuraPEQ FreeDSP Roadmap
 
 > Current gate: M2R long milestone READY for Henry manual validation #1/#2. M2Q negative nine-band stereo Apply/Restore hardware PASS. Prepare positive PK, timing/observation panel and gated graphical explicit Sync in ONE build; exactly two future manual sessions. Positive gain and graphical integration hardware results remain PENDING. No preamp/Flash.

@@ -1,3 +1,4 @@
+import {isFreeDsp} from './freedsp/webHid.ts';
 import {
 	getDevice,
 	getEqState,
@@ -234,7 +235,7 @@ export async function importProfile(e: Event) {
 			}
 
 			const device = getDevice();
-			if (device) {
+			if (device && !isFreeDsp(device)) {
 				log(`Syncing imported profile to DAC...`);
 				await syncToDevice();
 				log(`Synced: ${name}`);
@@ -308,7 +309,7 @@ export async function loadProfileFromText(content: string, presetName?: string) 
 		}
 
 		const device = getDevice();
-		if (device) {
+		if (device && !isFreeDsp(device)) {
 			log(`Syncing preset "${name}" to DAC...`);
 			await syncToDevice();
 			log(`Synced: ${name}`);

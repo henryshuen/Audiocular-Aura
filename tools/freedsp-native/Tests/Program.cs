@@ -499,6 +499,20 @@ Test("M2P path0 failure prevents path1 and any automaticrestore",()=>{
     for(int i=0;i<4;i++)second.Results.Enqueue(new(true,0));second.Results.Enqueue(new(false,31));
     using var partial=new StringWriter();Check(ChannelProbe.Run(second,"M2PApplyBoth",partial,[],()=>new FakeClock())==7&&second.Transmissions.Count==5,"Secondpathfailure does not rollbackfirstpath");
 });
+List<object> M2sVectors(){
+ var vectors=new List<object>();
+ foreach(int index in new[]{0,4,8})foreach(int path in new[]{0,1})foreach(double gain in new[]{0.0,-6.0,6.0}){
+  var b=new DebugBand(index,1000,gain,1,"PK",true);var c=RamDebug.Calculate(48000,b,false);
+  vectors.Add(new{command=190,index,path,gain,hz=48000,helper=RamDebug.Packet(index,c,path)});
+ }
+ vectors.Add(new{command=188,helper=SafeRam.Enable()});vectors.Add(new{command=187,helper=SafeRam.Bypass()});vectors.Add(new{command=346,helper=Caf346.CreateQuery()});return vectors;
+}
+Test("M2S native-generated21 vectors stay equal to browser equivalence fixture",()=>{
+ var expected=System.Text.Json.Nodes.JsonNode.Parse(File.ReadAllText("tests/freedsp/fixtures/nativeM2sVectors.json"));
+ var actual=System.Text.Json.Nodes.JsonNode.Parse(System.Text.Json.JsonSerializer.Serialize(M2sVectors()));
+ Check(System.Text.Json.Nodes.JsonNode.DeepEquals(expected,actual),"Native/WebHID codec parity fixture drift");
+});
+if(args.Length==2 && args[0]=="--export-m2s")File.WriteAllText(args[1],System.Text.Json.JsonSerializer.Serialize(M2sVectors(),new System.Text.Json.JsonSerializerOptions{WriteIndented=true}));
 Console.WriteLine($"Native offline tests: {passed} passed; SYNTHETIC / MOCK ONLY; no hardware access.");
 return 0;
 
