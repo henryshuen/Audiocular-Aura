@@ -151,7 +151,8 @@ function Invoke-FreeDspNativeCommand {
         [ValidateSet('ApplyRemainingBand1','RestoreRemainingBand1','ApplyRemainingBand2','RestoreRemainingBand2',
             'ApplyRemainingBand3','RestoreRemainingBand3','ApplyRemainingBand4','RestoreRemainingBand4',
             'ApplyCandidateWire1','RestoreCandidateWire1','ApplyCandidateWire2','RestoreCandidateWire2',
-            'ApplyCandidateWire3','RestoreCandidateWire3','ApplyCandidateWire4','RestoreCandidateWire4')][string]$Operation,
+            'ApplyCandidateWire3','RestoreCandidateWire3','ApplyCandidateWire4','RestoreCandidateWire4',
+            'M2PApplyPath0','M2PRestorePath0','M2PApplyPath1','M2PRestorePath1','M2PApplyBoth','M2PRestoreBoth')][string]$Operation,
         [scriptblock]$Emit)
     $start = [System.Diagnostics.ProcessStartInfo]::new()
     $start.FileName = $Dotnet; $start.Arguments = '"' + $Dll + '" ' + $Operation
