@@ -1,0 +1,5 @@
+{
+	"extends": "./tsconfig.json",
+	"compilerOptions": { "types": ["w3c-web-hid"] },
+	"include": ["src/freedsp/**/*.ts", "tests/freedsp/**/*.ts", "vitest.config.ts"]
+}
