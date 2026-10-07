@@ -300,13 +300,15 @@
             <h2 class="card-title" data-i18n="hardware_controls_title">Hardware Memory Controls</h2>
             <p class="card-subtitle" data-i18n="hardware_controls_subtitle">Apply settings in real-time or flash them permanently.</p>
           </div>
-          <div class="sync-actions">
+          <div id="hardwareMemoryActions" class="sync-actions">
             <button id="btnSync" class="btn btn-accent action" disabled aria-label="Sync current EQ settings to DAC RAM" data-i18n="btn_sync_ram">SYNC TO RAM (APPLY)</button>
             <button id="btnSendToDevice" class="btn btn-primary action" disabled aria-label="Send current EQ settings to device" data-i18n="btn_send_device">SEND TO DEVICE</button>
-            <button id="btnFreeDspRestore" hidden style="display:none" class="btn btn-secondary">FreeDSP RAM Restore 全九段雙聲道 unity</button>
-            <p id="freeDspStorageNote" hidden>FreeDSP：Sync = RAM；本地儲存 = 瀏覽器preset；Flash尚未啟用，不宣稱斷電保存。拖曳／編輯不送出；僅PK，每段±12dB，合成峰值另行硬檢查。小click/pop原因UNKNOWN。Restore不修改editor。</p>
+            <button id="btnFreeDspRestore" hidden style="display:none" class="btn btn-secondary">RESTORE FREEDSP RAM TO UNITY</button>
+
             <button id="btnFlash" class="btn btn-highlight action" disabled aria-label="Write current EQ settings permanently to DAC Flash" data-i18n="btn_save_flash">SAVE TO FLASH (PERMANENT)</button>
           </div>
+          <p id="freeDspStorageNote" hidden>LOCAL EDITOR：拖曳、輸入、RESET TO FLAT、Slot A/B/OFF 只改本地快照；不是硬體slots。FREEDSP RAM：僅明確SYNC TO RAM或RESTORE。9 wires × LEFT/RIGHT，共18次190。Restore不修改editor；沒有PEQ讀回／Flash／持久保存。</p>
+          <p id="freeDspRamStatus" hidden role="status" aria-live="polite">FREEDSP RAM：狀態未讀回；尚未執行本次Sync／Restore。</p>
         </section>
       </div>
 

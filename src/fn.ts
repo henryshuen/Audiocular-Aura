@@ -1,3 +1,4 @@
+import {unityPreset} from './freedsp/webRam.ts';
 import {attachFreeDsp,detachFreeDsp,selectCafDevice,isFreeDsp} from './freedsp/webHid.ts';
 import {
 	DEFAULT_FREQS,
@@ -412,7 +413,7 @@ export async function setABCompareState(state: "Off" | "A" | "B") {
 				eqName: lastAppliedEqName
 			};
 			slotB = {
-				eqState: defaultEqState(),
+				eqState: isFreeDsp(device)?unityPreset():defaultEqState(),
 				globalGainState: 0,
 				eqName: t("flat_profile_default") || "Flat Profile (Default)"
 			};
@@ -438,7 +439,7 @@ export async function setABCompareState(state: "Off" | "A" | "B") {
 				eqName: lastAppliedEqName
 			};
 			slotB = {
-				eqState: defaultEqState(),
+				eqState: isFreeDsp(device)?unityPreset():defaultEqState(),
 				globalGainState: 0,
 				eqName: t("flat_profile_default") || "Flat Profile (Default)"
 			};
@@ -1721,14 +1722,18 @@ export function resetTiltState() {
 
 export function configureFreeDspUI(active:boolean){
  if(!active){
-   for(const id of ['freeDspStorageNote','btnFreeDspRestore']){const e=document.getElementById(id);if(e){e.hidden=true;if(id==='btnFreeDspRestore')e.style.display='none';}}
+   for(const id of ['freeDspStorageNote','freeDspRamStatus','btnFreeDspRestore']){const e=document.getElementById(id);if(e){e.hidden=true;if(id==='btnFreeDspRestore')e.style.display='none';}}
+   const actions=document.getElementById('hardwareMemoryActions');if(actions)actions.style.flexWrap='';
+   const send=document.getElementById('btnSendToDevice') as HTMLButtonElement|null;if(send){send.disabled=true;send.removeAttribute('title');}
    const flash=document.getElementById('btnFlash');if(flash){flash.setAttribute('data-i18n','btn_save_flash');flash.textContent=t('btn_save_flash');}return;
  }
  setAutoPreampEnabled(false);setGlobalGainState(0);setBassTiltState(0);setTrebleTiltState(0);
  for(const id of ['globalGainSlider','checkAutoPreamp','slideBassTilt','slideTrebleTilt','btnFlash']){const e=document.getElementById(id) as HTMLInputElement|null;if(e)e.disabled=true;}
  document.querySelectorAll<HTMLInputElement|HTMLButtonElement|HTMLSelectElement>('.utility-card-full input, .utility-card-full select, .utility-card-full button').forEach(e=>e.disabled=true);
- const send=document.getElementById('btnSendToDevice');if(send)send.title='FreeDSP RAM only；本地Save不是硬體持久保存。';
+ const send=document.getElementById('btnSendToDevice') as HTMLButtonElement|null;if(send){send.disabled=true;send.title='FreeDSP 此通用操作尚未驗證；請用SYNC TO RAM。';}
  const flash=document.getElementById('btnFlash');if(flash){flash.textContent='FreeDSP Flash 尚未驗證／停用';flash.removeAttribute('data-i18n');}
+ const actions=document.getElementById('hardwareMemoryActions');if(actions)actions.style.flexWrap='wrap';
  const note=document.getElementById('freeDspStorageNote');if(note)note.hidden=false;
- const restore=document.getElementById('btnFreeDspRestore') as HTMLButtonElement|null;if(restore){restore.hidden=false;restore.style.display='';restore.disabled=false;}
+ const ramStatus=document.getElementById('freeDspRamStatus');if(ramStatus){ramStatus.hidden=false;ramStatus.textContent='FREEDSP RAM：已連線，狀態未讀回；LOCAL EDITOR尚未由本次Sync送出。';}
+ const restore=document.getElementById('btnFreeDspRestore') as HTMLButtonElement|null;if(restore){restore.hidden=false;restore.style.display='flex';restore.disabled=false;}
 }
