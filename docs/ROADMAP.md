@@ -19,19 +19,20 @@ Round 0.5：Henry 已建立 fork；git ls-remote origin refs/heads/fix/freedsp-c
 此提交包含 Round 0 四份文件及三支 PowerShell 腳本。
 本機追蹤 origin/fix/freedsp-conexant，ahead/behind 為 0/0；Round 0.5 開始時工作目錄乾淨。
 npm ci 回報 5 vulnerabilities（1 moderate、4 high）；未執行 audit fix 或升級依賴。
-M0 已完成；M1 尚未開始，等待 Henry 核准。
+M0 已完成；M1 軟體測試框架已完成，M2 尚未開始，等待 Henry 核准。
 Round 0 結束時 dev server 正在執行，僅監聽 127.0.0.1:5173。
 HTTP 以 curl.exe --noproxy '*' 驗證；一般 Invoke-WebRequest 曾回傳 404，
 直接請求已確認 Vite 頁面正確，未改動系統代理設定。
 HTTP 驗證只證明文件可提供，不證明瀏覽器 UI 或 WebHID 行為。
 
-## M1 - Packet-level test harness — PENDING
+## M1 - Packet-level test harness — COMPLETE (software characterization)
 - 遵守 GENERAL 的永久 FreeDSP-only scope 與 DECISIONS D008；新增實作優先放在 src/freedsp/。
-- isolate Conexant packet construction
-- add deterministic packet serialization tests
-- mock HID transport where practical
-- establish known packet fixtures from logs
-- NO hardware behavior assumptions
+- [x] isolate Conexant packet construction：src/freedsp/，保留原封包函式本體。
+- [x] deterministic packet serialization tests：13 個 packet/Q22 測試。
+- [x] mock HID transport：3 個成功、fallback、雙重失敗測試。
+- [x] 固定 RAM 190、Flash 220、mode 90 來源碼 fixture。
+- 實際日誌 fixture 尚無來源可建立；目前 fixture 不是硬體擷取或正確協定證據。
+- [x] NO hardware behavior assumptions；沒有裝置存取，也未開始 M2。
 
 ## M2 - Single-band RAM proof — PENDING
 Goal: Make ONE intentionally obvious attenuation PEQ change work in FreeDSP RAM.
@@ -130,3 +131,55 @@ Round 0 不建立封包測試或 mock HID harness，這些屬於待核准的 M1�
 verify.ps1 已通過（exit 0）；沒有 test script，單元測試為 SKIP。
 本輪 HTTP 檢查確認 localhost 無法連線，伺服器目前未執行。
 Round 0.5 四份文件修改尚未提交或推送；Round 0 原有提交已確認在 origin。
+
+## M1 findings — 2026-10-07
+基準 HEAD：4329bc6（Round 0.5）；開始時工作目錄乾淨、分支 fix/freedsp-conexant。
+來源修改前 verify.ps1 通過 build；當時沒有 test script，測試為 SKIP。
+M1 最終 npm ci 成功，verify.ps1 通過應用程式 build、測試型別檢查與 16 個測試。
+原有應用程式鎖定套件 entries 不變；Vitest 4.1.11 的新版 Vite/PostCSS 等只在測試依賴樹使用。
+npm ci 仍回報原有 5 vulnerabilities（1 moderate、4 high），未做 audit fix。
+
+### VERIFIED — current source and fixtures
+零起算 byte offset：
+
+| Offset | Current contents |
+| --- | --- |
+| 0 | 01，原註解稱為 Report ID |
+| 1..2 | 固定 transaction ID 1：01 00 |
+| 3 | data.length & 0xff，13 words 為 0d |
+| 4 | 00 |
+| 5..6 | commandId & 0xfff，小端序；190=be 00、220=dc 00、90=5a 00 |
+| 7..10 | CTRL 常數 0xB32D2300，小端序 00 23 2d b3 |
+| 11 onward | signed 32-bit words，小端序 |
+
+所有封包固定 61 bytes。RAM fixture 首 11 bytes：01 01 00 0d 00 be 00 00 23 2d b3。
+13 words 在目前佈局需要 11+13*4=63 bytes；最後 word 的 offset 61、62 超出容量。
+截斷測試以末 word 0x12345678 證明只留下 offset 59、60 的 78 56，丟失 34 12。
+真實呼叫目前尾端為零；測試用非零 sentinel 是用來顯示容量限制，不是新的硬體命令。
+Q22 保留乘 4194304、Math.round、b0/b1/b2/-a1/-a2 次序及正負符號。
+
+Fake transport 實際記錄 sendReport(1, packet)：61 bytes、同一 Uint8Array 物件，
+沒有移除首位 1。output failure 後 sendFeatureReport(1, packet) 使用相同物件；
+兩者失敗時傳遞 feature-report error。未實際呼叫 HIDDevice。
+
+### VERIFIED — descriptor assumption provenance
+基準 src/dsp.ts:35-36 與 50-58 註解聲稱 navigator.hid 曾確認
+outputReports[0].reportId=1、reportCount=61 bytes；歷史提交 c7c95fa 也以此為改成 61 的理由。
+這是儲存庫既有描述，不是本輪讀取 descriptor 的證據。
+沒有原始 descriptor、reportSize、report items 或對應 raw log，不能由此獨立重建實際 report 佈局。
+
+### HYPOTHESIS — framing, not fixed
+WebHID sendReport 與 sendFeatureReport 分開接受 reportId/data，data 不應再包含 Report ID。
+來源：https://wicg.github.io/webhid/#dom-hiddevice-sendreport 。
+目前 offset 0 的 1 若真是 Report ID，就可能重複 ID 並使 vendor payload 位移；
+它是否其實是廠商自訂欄位尚未證明，故沒有 slice、縮放長度或調整 command payload。
+沒有資料支持直接改成 60、62 或 63 bytes；目前 61 的描述與 63 的程式容量需求不能互相取代。
+
+### Scope / regression check
+- FreeDSP-specific files changed: src/freedsp/conexantPacket.ts、conexantTransport.ts、tests/freedsp/。
+- Shared files changed: src/dsp.ts（僅 FreeDSP 連接）、package.json、package-lock.json、
+  scripts/verify.ps1、vitest.config.ts、tsconfig.tests.json、四份 docs。
+- Non-FreeDSP protocol code changed: NO。
+來源比對確認抽取區域外程式不變；packet builder 本體與基準相同。
+未驗證：硬體行為、真實 RAM EQ、Flash persistence、readback、preamp 或取樣率實際套用。
+伺服器本輪未啟動；HTTP 檢查 localhost 無法連線。

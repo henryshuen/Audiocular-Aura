@@ -42,3 +42,29 @@
 - 本輪 localhost HTTP 檢查無法連線；伺服器目前未執行，也未自動啟動。
   固定網址 http://localhost:5173/；啟動命令 .\scripts\dev.ps1。
 - Round 0.5 文件修改保留為未提交工作目錄變更；本輪未 commit、push 或建立 PR。
+
+## 2026-10-07 — M1 packet-level test harness
+- 開始時分支 fix/freedsp-conexant、HEAD 4329bc6、工作目錄乾淨；remotes 未變更。
+- 修改來源前執行 verify.ps1，build 通過，當時尚無 test script，測試為 SKIP。
+- 新增 src/freedsp/conexantPacket.ts（封包及 Q22）與 conexantTransport.ts（注入 logger 的最小 transport）。
+  封包函式本體與基準相同；原始 Conexant 邏輯抽取區域以外的共享來源比對通過。
+- 新增 tests/freedsp/conexantPacket.test.ts 與 conexantTransport.test.ts，合計 16 個有限範圍測試。
+- 固定來源碼 fixtures 覆蓋 RAM 190、Flash 220、mode 90；驗證長度、header、transaction ID、
+  CTRL 常數、command 位置、整數、負值、Q22 及末 word 截斷。
+- Fake transport 證明 reportId=1、61-byte 原物件、不移除首位 1、feature fallback 及失敗傳遞。
+  測試只操作記憶體 fake，沒有載入瀏覽器、requestDevice 或實際 USB 傳輸。
+- 只新增直接測試依賴 Vitest 4.1.11；保留既有 package-lock packages entries 與原有依賴版本，
+  測試工具所需版本隔離於 Vitest 依賴樹。最終 npm ci 成功。
+- 新增 vitest.config.ts、tsconfig.tests.json，test script 先檢查測試型別再 vitest run。
+  verify.ps1 將 test 設為必要關卡，不再默默略過；失敗時非零退出。
+- 最終 verify.ps1 通過（exit 0）：TypeScript + Vite 4.5.14 build、測試 TypeScript、
+  2 test files / 16 tests。沙箱執行曾因 Vitest 暫存 rename EPERM 失敗並正確退出 1，
+  使用正常檔案權限後同一軟體驗證通過。
+- descriptor/reportCount=61 僅確認為既有儲存庫註解，未宣稱本輪取得真實 descriptor；
+  沒有硬體日誌 fixtures，相關限制與 framing hypothesis 記入 ROADMAP。
+- Scope / regression check：Non-FreeDSP protocol code changed: NO。
+  沒有改 RAM/Flash/mode/preamp/readback 語意；沒有硬體寫入或聽感測試。
+- 四份 docs 均已更新；M1 軟體框架完成，M2 未開始。
+- localhost HTTP 檢查無法連線，未啟動伺服器；固定網址 http://localhost:5173/，
+  啟動命令 .\scripts\dev.ps1。
+- 本輪未 commit、push 或建立 PR；變更保留在工作目錄。

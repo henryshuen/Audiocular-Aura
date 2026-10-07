@@ -6,13 +6,12 @@ try {
     if ($LASTEXITCODE -ne 0) { throw "Build failed (exit $LASTEXITCODE)." }
     Write-Host '[PASS] TypeScript and production build.'
     $package = Get-Content -LiteralPath 'package.json' -Raw | ConvertFrom-Json
-    if ($package.scripts.PSObject.Properties.Name -contains 'test') {
-        & $npmCommand.Source run test
-        if ($LASTEXITCODE -ne 0) { throw "Tests failed (exit $LASTEXITCODE)." }
-        Write-Host '[PASS] Automated tests.'
-    } else {
-        Write-Host '[SKIP] No test script exists yet (M1 pending).'
+    if ($package.scripts.PSObject.Properties.Name -notcontains 'test') {
+        throw 'Required FreeDSP test script is missing.'
     }
+    & $npmCommand.Source run test
+    if ($LASTEXITCODE -ne 0) { throw "Tests failed (exit $LASTEXITCODE)." }
+    Write-Host '[PASS] FreeDSP automated tests (no hardware).'
     Write-Host '[PASS] Safe automated verification complete.'
     exit 0
 } catch {

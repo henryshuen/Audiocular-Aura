@@ -1,3 +1,5 @@
+import { buildConexantPacket, quantizeConexantCoefficients } from "./freedsp/conexantPacket.ts";
+import { sendConexantReport as sendFreeDSPReport } from "./freedsp/conexantTransport.ts";
 import {
 	CMD_FIIO,
 	CMD_MOON,
@@ -1083,51 +1085,7 @@ const CONEXANT_SAMPLE_RATES: ReadonlyArray<[number, number]> = [
  */
 function encodeBiquadConexantForRate(type: string, freq: number, gain: number, q: number, sampleRate: number): number[] {
 	const coeffs = computeBiquadCoeffs(type, freq, gain, q, sampleRate);
-	const scale = 4194304; // Q22 = 2^22
-
-	return [
-		coeffs.b0,
-		coeffs.b1,
-		coeffs.b2,
-		-coeffs.a1, // Conexant expects -a1
-		-coeffs.a2, // Conexant expects -a2
-	].map((c) => Math.round(c * scale));
-}
-
-/**
- * Packs a Conexant transaction into a little-endian 32-bit packet array.
- */
-function buildConexantPacket(commandId: number, data: number[]): Uint8Array {
-	const packet = new Uint8Array(61);
-	packet[0] = 1; // Report ID = 1
-	packet[1] = 1 & 0xff; // transaction ID low
-	packet[2] = (1 >> 8) & 0xff; // transaction ID high
-
-	const numWords = data.length;
-	const p1_combined = (numWords & 0xff) | ((commandId & 0xfff) << 16);
-	packet[3] = p1_combined & 0xff;
-	packet[4] = (p1_combined >> 8) & 0xff;
-	packet[5] = (p1_combined >> 16) & 0xff;
-	packet[6] = (p1_combined >> 24) & 0xff;
-
-	// Module ID = CafId("CTRL") = 0xB32D2300
-	const moduleId = 0xB32D2300;
-	packet[7] = moduleId & 0xff;
-	packet[8] = (moduleId >> 8) & 0xff;
-	packet[9] = (moduleId >> 16) & 0xff;
-	packet[10] = (moduleId >> 24) & 0xff;
-
-	// Write 32-bit data words
-	for (let i = 0; i < numWords; i++) {
-		const val = data[i];
-		const offset = 11 + i * 4;
-		packet[offset] = val & 0xff;
-		packet[offset + 1] = (val >> 8) & 0xff;
-		packet[offset + 2] = (val >> 16) & 0xff;
-		packet[offset + 3] = (val >> 24) & 0xff;
-	}
-
-	return packet;
+	return quantizeConexantCoefficients(coeffs);
 }
 
 /**
@@ -1135,20 +1093,7 @@ function buildConexantPacket(commandId: number, data: number[]): Uint8Array {
  * Attempts sendReport first, and falls back to sendFeatureReport if it fails.
  */
 async function sendConexantReport(device: HIDDevice, packet: Uint8Array) {
-	const reportId = 1;
-	logTx(reportId, packet);
-	try {
-		await device.sendReport(reportId, packet);
-	} catch (err) {
-		const errMsg = (err as Error).message || "";
-		console.warn(`[Conexant TX] sendReport(id=${reportId}) failed: ${errMsg}. Retrying via sendFeatureReport...`);
-		try {
-			await device.sendFeatureReport(reportId, packet);
-		} catch (featErr) {
-			console.error(`[Conexant TX] sendFeatureReport(id=${reportId}) also failed:`, featErr);
-			throw featErr;
-		}
-	}
+	return sendFreeDSPReport(device, packet, logTx);
 }
 
 /**

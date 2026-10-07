@@ -76,7 +76,9 @@ Give Henry clear manual steps instead.
 ```
 
 setup 有 package-lock.json 時使用 npm ci；鎖定檔失效就停止，不默默改用 npm install。
-verify 執行 npm run build，日後若存在 test script 也執行 npm run test。
+verify 執行 npm run build，接著必須執行 npm run test；缺少 test script 即失敗。
+M1 的 test script 先以 tsconfig.tests.json 檢查測試型別，再執行 vitest run。
+測試僅涵蓋 tests/freedsp/，Node 環境、單一 worker、無 watch 或瀏覽器。
 未來 test script 必須是有限時間、非 watch、無硬體存取的自動測試。
 dev 綁定 127.0.0.1:5173，strictPort，不自動開啟瀏覽器。
 網址：http://localhost:5173/ 。原始碼可能對曾授權的 HID 自動連線；
@@ -114,3 +116,10 @@ If YES, STOP and explain why before continuing.
 Never finish a round without this report.
 Round 0 僅 bootstrap；不改 Conexant 協定、不操作硬體、不寫 Flash、不建立 PR。
 結束後等待 Henry 核准，再開始 M1。
+
+## Packet characterization rules
+固定 bytes 的測試描述目前實作，不表示硬體協定正確；已知的截斷或 framing 疑慮也要保留測試。
+fixture 必須標示來自原始碼或實際日誌，不可將自行組成的 fixture 稱為硬體擷取結果。
+Pure packet tests 不載入 src/dsp.ts、UI、navigator.hid 或真實裝置。
+傳輸測試只注入記憶體 fake，檢查 reportId、原始 data 與 fallback／錯誤傳遞。
+測試環境基準為 Node 24；Vitest 4.1.11 的最低支援版本由其 engines 限制。
