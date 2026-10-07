@@ -52,3 +52,9 @@ $source = Get-Content (Join-Path $PSScriptRoot '../../scripts/dev.ps1') -Raw
 Assert ($source.IndexOf('Clear-AuraStaleBridge') -lt $source.IndexOf('& $dotnet build')) 'Cleanup must precede build'
 Assert ($source -match '(?s)finally\s*\{.*Stop-AuraOwnedBridge -OwnedProcess \$ownedBridge') 'Owned cleanup must run in finally'
 Write-Host 'PASS startup order and finally wiring; all mocks, no real process termination/hardware'
+
+$nativeOwned = Candidate 21999 $dll 'serveTransport'
+$m = Mocks @($nativeOwned,$other)
+Clear-AuraStaleBridge $dll $dotnetPath $m.Query $m.Terminate $m.Wait
+Assert ($m.State.Stopped.Count -eq 1 -and $m.State.Stopped[0] -eq 21999 -and $m.State.Processes[0].ProcessId -eq 12345) 'Normal transport helper ownership is exact; unrelated process survives'
+Write-Host 'PASS serveTransport ownership, stale cleanup and unrelated process safety'

@@ -1,5 +1,6 @@
 import {unityPreset} from './freedsp/webRam.ts';
-import {attachFreeDsp,detachFreeDsp,selectCafDevice,isFreeDsp} from './freedsp/webHid.ts';
+import {selectCafDevice,isFreeDsp} from './freedsp/webHid.ts';
+import {connectFreeDsp,disconnectFreeDsp} from './freedsp/session.ts';
 import {
 	DEFAULT_FREQS,
 	DEFAULT_LABELS,
@@ -765,11 +766,11 @@ export async function connectToDevice() {
 
 		console.debug(`[DEBUG] connectToDevice: selected device collections:`, dev.collections?.map(c => `UsagePage: 0x${c.usagePage?.toString(16)}, Usage: 0x${c.usage?.toString(16)}`));
 
-		if(isFreeDsp(dev))attachFreeDsp(dev,log); // Register CAF listener before open; no automatic TX.
+		if(isFreeDsp(dev))await connectFreeDsp(dev,log); // Same chooser, native capability adapter; metadata only.
 		if(isExperimentalFreeDspActive())return; // Recheck after the asynchronous browser chooser.
 		device = dev;
 		(window as any).device = dev;
-		await dev.open();
+		if(!isFreeDsp(dev))await dev.open();
 
 		// Log connection VID/PID immediately
 		const vidStr = dev.vendorId.toString(16).toLowerCase();
@@ -841,7 +842,7 @@ export async function connectToDevice() {
 		if (protocol === "SAVITECH" || protocol === "FIIO_JA11" || protocol === "MOONDROP") {
 			await readDeviceParams(device);
 		} else {
-			log(isFreeDsp(dev)?"FreeDSP WebHID已open；沒有PEQ讀回，editor為本地值，RAM須明確Sync。":"Note: Parameter reading is only supported for Savitech, FiiO JA11, and Moondrop devices. Starting with a flat profile.");
+			log(isFreeDsp(dev)?"FreeDSP native HID adapter已連線；沒有PEQ讀回，editor為本地值，RAM須明確Sync。":"Note: Parameter reading is only supported for Savitech, FiiO JA11, and Moondrop devices. Starting with a flat profile.");
 			renderUI(eqState);
 		}
 
@@ -856,7 +857,7 @@ export async function connectToDevice() {
 			await recalculateAutoPreamp(true);
 		}
 	} catch (err) {
-		if(device && isFreeDsp(device) && !device.opened){detachFreeDsp(device);device=null;(window as any).device=null;}
+		if(device && isFreeDsp(device) && !device.opened){disconnectFreeDsp(device);device=null;(window as any).device=null;}
         log(`Connection Error: ${(err as Error).message}`);
 	}
 }
@@ -868,9 +869,9 @@ export async function disconnectDevice() {
 	if (!device) return;
 	const protocol = getProtocol(device);
 	try {
-		if(isFreeDsp(device)){detachFreeDsp(device);configureFreeDspUI(false);}
+		if(isFreeDsp(device)){disconnectFreeDsp(device);configureFreeDspUI(false);}
 		log(`Disconnecting from: ${device.productName || "DAC"}`);
-		await device.close();
+		if(!isFreeDsp(device) || device.opened)await device.close();
 	} catch (err) {
 		log(`Disconnection Error: ${(err as Error).message}`);
 	} finally {

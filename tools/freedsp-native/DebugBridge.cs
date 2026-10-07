@@ -14,7 +14,7 @@ public static class DebugBridge
 {
     public const string Origin = "http://localhost:5173";
     public static bool AllowedOrigin(string? origin, string? host, int port = 5174) => origin == Origin && host == $"127.0.0.1:{port}";
-    public static async Task<int> RunAsync(Func<string,string,Task<object>>? runner = null, CancellationToken cancellation = default, int port = 5174, Action<string>? started = null)
+    public static async Task<int> RunAsync(Func<string,string,Task<object>>? runner = null, CancellationToken cancellation = default, int port = 5174, Action<string>? started = null, bool diagnostics = true)
     {
         runner ??= Child;
         var builder = WebApplication.CreateSlimBuilder(Array.Empty<string>());
@@ -31,31 +31,31 @@ public static class DebugBridge
             response.Headers.AccessControlAllowMethods = "GET,POST,OPTIONS";
             response.Headers.AccessControlAllowHeaders = "Content-Type,X-AuraPEQ-Session";
             if (request.Method == "OPTIONS") { response.StatusCode=204; return; }
-            if (request.Method == "GET" && request.Path == "/session") { await response.WriteAsJsonAsync(new {token,mode="M2N RAM ONLY"}); return; }
+            if (request.Method == "GET" && request.Path == "/session") { await response.WriteAsJsonAsync(new {token,mode=diagnostics?"M2N RAM ONLY":"M2S CAF TRANSPORT"}); return; }
             if (request.Method != "POST" || request.Headers["X-AuraPEQ-Session"].ToString() != token) { response.StatusCode=403; return; }
-            if (request.Path != "/connect" && request.Path != "/ram") { response.StatusCode=404; return; }
+            if (request.Path != "/connect" && request.Path != "/transport" && !(diagnostics && request.Path == "/ram")) { response.StatusCode=404; return; }
             if (!await gate.WaitAsync(0)) { response.StatusCode=409; await response.WriteAsJsonAsync(new {ok=false,log="BUSY; no queued write"}); return; }
             try {
                 string json = "";
-                if (request.Path == "/ram") {
+                if (request.Path == "/ram" || request.Path == "/transport") {
                     if (request.ContentType?.StartsWith("application/json",StringComparison.OrdinalIgnoreCase) != true) throw new InvalidOperationException("JSON required");
                     using var reader = new StreamReader(request.Body,Encoding.UTF8);
                     json = await reader.ReadToEndAsync();
                     if (Encoding.UTF8.GetByteCount(json)>16384) throw new InvalidOperationException("Oversized request");
-                    _ = RamDebugRequest.Parse(json); // validate before spawning/discovery
+                    if(request.Path=="/transport")_ = TransportRequest.Parse(json);else _ = RamDebugRequest.Parse(json); // validate before spawning/discovery
                 }
-                var result = await runner(request.Path == "/connect" ? "debugInspect" : "debugRam",json);
+                var result = await runner(request.Path == "/connect" ? "debugInspect" : request.Path=="/transport"?"transportExchange":"debugRam",json);
                 await response.WriteAsJsonAsync(result);
             } catch(Exception error) { response.StatusCode=400; await response.WriteAsJsonAsync(new {ok=false,log=error.Message}); }
             finally { gate.Release(); }
         });
-        Console.WriteLine("M2N loopback bridge127.0.0.1:5174; no hardware until explicit browser Connect/Apply/Restore. Ctrl+C to stop.");
+        Console.WriteLine(diagnostics?"Diagnostic bridge: metadata/RAM debug; explicit clicks only.":"FreeDSP minimal CAF transport helper127.0.0.1:5174; metadata/exchange only; no PEQ business logic.");
         try { await app.StartAsync(cancellation); started?.Invoke(app.Urls.Single()); await app.WaitForShutdownAsync(cancellation); return 0; }
         finally { await app.DisposeAsync(); }
     }
     public static async Task<object> Child(string operation, string json)
     {
-        if (operation is not ("debugInspect" or "debugRam")) throw new InvalidOperationException("Fixed child operation only");
+        if (operation is not ("debugInspect" or "debugRam" or "transportExchange")) throw new InvalidOperationException("Fixed child operation only");
         var start = new ProcessStartInfo(Path.GetFileNameWithoutExtension(Environment.ProcessPath) == "dotnet" ? Environment.ProcessPath! : "dotnet") {
             UseShellExecute=false,CreateNoWindow=true,RedirectStandardInput=true,RedirectStandardOutput=true,RedirectStandardError=true
         };
@@ -79,6 +79,7 @@ public static class DebugBridge
         string logPath = Path.Combine(directory,"freedsp-web-"+DateTime.UtcNow.ToString("yyyyMMdd-HHmmss")+"-"+Guid.NewGuid().ToString("N")+".log");
         using(var file = new FileStream(logPath,FileMode.CreateNew,FileAccess.Write,FileShare.Read))
         using(var writer = new StreamWriter(file,new UTF8Encoding(false))) await writer.WriteAsync(log);
-        return new {ok=!timeout && child.ExitCode==0,exitCode=timeout?6:child.ExitCode,log,logPath};
+        string? reply=log.Split('\n').FirstOrDefault(line=>line.StartsWith("CAF_NATIVE_REPLY=",StringComparison.Ordinal))?.Trim()["CAF_NATIVE_REPLY=".Length..];
+        return new {ok=!timeout && child.ExitCode==0,exitCode=timeout?6:child.ExitCode,log,logPath,reply};
     }
 }

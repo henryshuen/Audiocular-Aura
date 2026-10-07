@@ -4,7 +4,7 @@ function Test-AuraBridgeIdentity {
         $Process.ExecutablePath -ine $DotnetPath -or -not $Process.CreationDate) { return $false }
     $dll = [regex]::Escape($BridgeDll)
     # Require the entire invocation, not a substring or another repo's same-named DLL.
-    return $Process.CommandLine -imatch ('^\s*(?:"[^"]+"|\S+)\s+(?:"' + $dll + '"|' + $dll + ')\s+serveDebug\s*$')
+    return $Process.CommandLine -imatch ('^\s*(?:"[^"]+"|\S+)\s+(?:"' + $dll + '"|' + $dll + ')\s+(?:serveDebug|serveTransport)\s*$')
 }
 
 function Stop-AuraOwnedBridge {

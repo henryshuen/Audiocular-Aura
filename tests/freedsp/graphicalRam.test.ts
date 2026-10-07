@@ -82,6 +82,6 @@ describe('FreeDSP M2R graphical session; mocks only',()=>{
  it('FreeDSP-only legacy gate and explicit Sync hook leave other VID/PIDs outside native mode',()=>{
    expect(isFreeDsp({vendorId:0x35d8,productId:0x1496})).toBe(true);expect(isFreeDsp({vendorId:0x35d8,productId:1})).toBe(false);
    expect(hasM2RGate({getItem:()=>'{bad'})).toBe(false);expect(mainSource).not.toContain('mountGraphicalRam');expect(mainSource).toContain('await syncToDevice(true)');
-   expect(fnSource.indexOf('attachFreeDsp(dev,log)')).toBeLessThan(fnSource.indexOf('await dev.open()'));
+   expect(fnSource.indexOf('await connectFreeDsp(dev,log)')).toBeLessThan(fnSource.indexOf('await dev.open()'));
  });
 });

@@ -14,7 +14,7 @@ public static class SafeRam
 {
     public static IReadOnlyList<int> Rates { get; } = Array.AsReadOnly(new[] {44100, 48000, 96000, 192000, 384000});
     public static bool IsOperation(string[] args) => args.Length == 1 &&
-        (args[0] is "query346" or "debugInspect" or "debugRam" or "serveDebug" || TryRemainingOperation(args[0], out _, out _) || TryCandidateOperation(args[0], out _, out _) || ChannelProbe.TryOperation(args[0], out _, out _));
+        (args[0] is "query346" or "debugInspect" or "debugRam" or "serveDebug" or "serveTransport" or "transportExchange" || TryRemainingOperation(args[0], out _, out _) || TryCandidateOperation(args[0], out _, out _) || ChannelProbe.TryOperation(args[0], out _, out _));
     public static bool TryRemainingOperation(string operation, out int sdkBand, out bool restore)
     {
         (sdkBand, restore) = operation switch {
@@ -133,11 +133,11 @@ public static class SafeRam
         log.Flush(); return 7;
     }
 
-    public static CafResponse? Exchange(IQueryHid hid, int expected, byte[] tx, TextWriter log, IPollClock clock, bool queryTiming, byte[]? scopedRam = null)
+    public static CafResponse? Exchange(IQueryHid hid, int expected, byte[] tx, TextWriter log, IPollClock clock, bool queryTiming, byte[]? scopedRam = null, Action<byte[]>? onMatch = null)
     {
         // Only fixed diagnostic reports; this is not a public arbitrary-command transport.
         int txCommand = (int)((BinaryPrimitives.ReadUInt32LittleEndian(tx.AsSpan(2)) >> 16) & 0x7fff);
-        if (expected != txCommand || !(IsAllowedReport(tx) || (expected == 190 && scopedRam is not null && tx.AsSpan().SequenceEqual(scopedRam)))) throw new InvalidOperationException("Report outside fixed diagnostic allowlist");
+        if (expected != txCommand || !((expected == 190 && scopedRam is not null && tx.AsSpan().SequenceEqual(scopedRam)) || IsAllowedReport(tx))) throw new InvalidOperationException("Report outside fixed diagnostic allowlist");
         log.WriteLine($"Command{expected} TX requestedLength={tx.Length} logicalLength={(expected == 187 ? 14 : 62)}:\n{Caf346.Hex(tx)}");
         log.WriteLine("SET API=HidD_SetOutputReport once; invoking"); log.Flush();
         var sent = hid.SetOutputReport(tx);
@@ -158,7 +158,7 @@ public static class SafeRam
             log.WriteLine(matching ? "MATCHING CAF RESPONSE" : r.Valid ? "VALID CAF NON-MATCH" : $"INVALID CAF: {r.Reason}"); log.Flush();
             if (queryTiming && attempt == 1) clock.Start();
             if (!queryTiming || attempt > 1) clock.Sleep(5);
-            if (matching) return r; // A matching reply is transport evidence, not a decoded undocumented result code.
+            if (matching) { onMatch?.Invoke(rx); return r; } // A matching reply is transport evidence, not a decoded undocumented result code.
             if (clock.ElapsedMilliseconds >= 1000) { log.WriteLine("RESPONSE UNEXPECTED: bounded polling expired; no SET resend"); log.Flush(); return null; }
         }
     }
