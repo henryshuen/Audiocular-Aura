@@ -1,3 +1,12 @@
+M2S UX final verification: focused16tests PASS; verify.ps1 once PASS (TypeScript/Vite build,21files/184tests); generateddist restored; git diff --check PASS. No hardware access.
+
+## M2S main-page UX completed offline
+- Henry reports normalCONNECT FreeDSP35D8:1496 identifiedCONEXANT/ONLINE; nohardwareRAMresponse claim added.
+- Hardware Memory Controls exposes RESTORE FREEDSP RAM TO UNITY with explicitFreeDSP display/wrap; description outsidebuttonrow and LOCAL EDITOR/FREEDSP RAM status. SEND TO DEVICE andFlash disabled forFreeDSP.
+- ExistingRestore path unchanged:18paired190,canonicalunity,invalideditor independent,noeditor modification,firstfailureSTOP/no retry/rollback. Actualmainhandler mock verifies these facts.
+- SlotA/B/OFF code uses localEQ snapshots andskips FreeDSPsync. FreeDSPSlotB default now9unity; otherDAC10/defaultsync regression retained. ResetFlat not repurposed.
+- FocusedWebHID/UX16testsPASS; nohardware/native/transport/protocolmath edits.
+
 # M2S completed offline work — hardware browser transport pending
 - Henry reportsM2RpositiveP1/P2andnegative-nine/stereo/RestorehardwarePASS; quietrepeatableclicksnonblocking,causeunconfirmed. Codexdidnotaccesshardwareornewrawlog.
 - Addedupstream-first permanentrule, native diagnosticclassification, originalCONNECT CAFselection/listener-before-open, dspadapterexplicitRAMSync, paired18writes,invalideditorunityRestore, Flash/unsupportedutilityguards.

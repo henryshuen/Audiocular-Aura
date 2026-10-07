@@ -390,3 +390,6 @@ Positive hardware outcome must be Henry-reported, never inferred from protocol P
 6. Temporary debug/native surfaces remain separate from normal UX. Applies to PEQ/preamp/tone/utilities/persistence/future functions.
 7. Generic UI is not FreeDSP support evidence. Classify each control SUPPORTED BY FREEDSP EVIDENCE / UNSUPPORTED / UNKNOWN; UNKNOWN remains disabled. No generic command or Flash220 without dedicated evidence/validation.
 8. M2S supersedes M2R main bridge gate: normal CONNECT DAC uses CAF WebHID adapter. Native debug remains optional developer mode. M2G zero-input and missing WebHID Input GET_REPORT limitations remain documented; offline mocks never establish hardware event availability.
+
+### M2S main-page UX semantics
+For connected FreeDSP, Hardware Memory Controls exposes RESTORE FREEDSP RAM TO UNITY independently of editor validity. SYNC TO RAM is the WebHID candidate; SEND TO DEVICE disabled, Flash disabled. RESET TO FLAT and Slot A/B/OFF are local editor snapshots, never verified hardware banks. FreeDSP local default snapshot has9bands. Hardware Restore leaves editor unchanged; status must distinguish LOCAL EDITOR from FREEDSP RAM and protocol completion from readback.

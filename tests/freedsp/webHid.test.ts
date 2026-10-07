@@ -6,6 +6,7 @@ import {modelWebBand,unityPreset,mixedPreset} from '../../src/freedsp/webRam.ts'
 import vectors from './fixtures/nativeM2sVectors.json';
 import {henryM2ADescriptor} from './fixtures/henryM2ADescriptor.ts';
 import fnSource from '../../src/fn.ts?raw';import dspSource from '../../src/dsp.ts?raw';import mainSource from '../../src/main.ts?raw';import devSource from '../../scripts/dev.ps1?raw';
+import html from '../../index.html?raw';import helpersSource from '../../src/helpers.ts?raw';
 import ts from 'typescript';
 // @ts-expect-error Node VM only, no Node types in browser project.
 import {runInNewContext} from 'node:vm';
@@ -72,6 +73,27 @@ describe('M2S upstream WebHID mock only',()=>{
  it('actual generic Sync only calls adapter on explicit FreeDSP request, blocks unsupported local controls',async()=>{
   const f=mock(),sync=vi.fn(async()=>{}),ctx={getDevice:()=>f.d,getEqState:unityPreset,isFreeDsp,showSyncing:vi.fn(),hideSyncing:vi.fn(),getGlobalGainState:()=>0,getAutoPreampEnabled:()=>false,getBassTiltState:()=>0,getTrebleTiltState:()=>0,attachFreeDsp:()=>({sync}),localStorage:{setItem:vi.fn()},log:vi.fn()};
   const run=runInNewContext(extracted('syncToDevice',dspSource)+'\n syncToDevice',ctx);await run();expect(sync).not.toHaveBeenCalled();await run(true);expect(sync).toHaveBeenCalledTimes(1);ctx.getBassTiltState=()=>1;await expect(run(true)).rejects.toThrow('preamp/tilt');expect(sync).toHaveBeenCalledTimes(1);f.c.dispose();
+ });
+ it('connected FreeDSP exposes Restore in Hardware Memory Controls, disables aliases/Flash; disconnect restores generic controls',()=>{
+  class Node{hidden=true;disabled=false;textContent='';style={display:'none',flexWrap:''};title='';attrs=new Map<string,string>();setAttribute(k:string,v:string){this.attrs.set(k,v);}removeAttribute(k:string){this.attrs.delete(k);}}
+  const nodes=Object.fromEntries([...html.matchAll(/id="([^"]+)"/g)].map(m=>[m[1],new Node()]));
+  const ctx={document:{getElementById:(id:string)=>nodes[id]||null,querySelectorAll:(q:string)=>q.startsWith('.utility')?[]:[nodes.btnSync,nodes.btnSendToDevice,nodes.btnFlash]},setAutoPreampEnabled:vi.fn(),setGlobalGainState:vi.fn(),setBassTiltState:vi.fn(),setTrebleTiltState:vi.fn(),t:()=> 'SAVE TO FLASH'};
+  const configure=runInNewContext(extracted('configureFreeDspUI',fnSource)+'\nconfigureFreeDspUI',ctx);configure(true);
+  expect(nodes.btnFreeDspRestore.hidden).toBe(false);expect(nodes.btnFreeDspRestore.disabled).toBe(false);expect(nodes.btnFreeDspRestore.style.display).toBe('flex');expect(nodes.btnSendToDevice.disabled).toBe(true);expect(nodes.btnFlash.disabled).toBe(true);expect(nodes.freeDspStorageNote.hidden).toBe(false);expect(nodes.freeDspRamStatus.textContent).toContain('LOCAL EDITOR');expect(nodes.hardwareMemoryActions.style.flexWrap).toBe('wrap');
+  expect(html).toContain('RESTORE FREEDSP RAM TO UNITY');expect(html).toMatch(/Hardware Memory Controls[\s\S]*?btnFreeDspRestore[\s\S]*?<\/div>\s*<p id="freeDspStorageNote"/);
+  configure(false);const enable=runInNewContext(extracted('enableControls',helpersSource)+'\nenableControls',ctx);enable(true);expect(nodes.btnFreeDspRestore.hidden).toBe(true);expect(nodes.btnSendToDevice.disabled).toBe(false);expect(nodes.btnFlash.disabled).toBe(false);expect(nodes.hardwareMemoryActions.style.flexWrap).toBe('');
+ });
+ it('actual main Restore handler calls existing WebHID unity path with invalid editor untouched; errors STOP without retries',async()=>{
+  const f=mock(),editor=mixedPreset();editor[0].q=NaN;const snapshot=editor.map(b=>({...b}));const listeners=new Map<string,()=>Promise<void>>(),button={disabled:false,addEventListener:(name:string,fn:()=>Promise<void>)=>listeners.set(name,fn)},status={textContent:''};
+  const ctx={getDevice:()=>f.d,isFreeDsp,attachFreeDsp:()=>f.c,showSyncing:vi.fn(),hideSyncing:vi.fn(),log:(s:string)=>f.logs.push(s),document:{getElementById:(id:string)=>id==='btnFreeDspRestore'?button:status}};
+  const restore=runInNewContext(extracted('restoreFreeDspUnity',dspSource)+'\nrestoreFreeDspUnity',ctx);runInNewContext(ts.transpileModule(mainSource.slice(mainSource.indexOf('function setFreeDspRamStatus')),{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText,{...ctx,restoreFreeDspUnity:restore});
+  await listeners.get('click')!();expect(editor).toEqual(snapshot);const writes=f.sent.slice(3).map(b=>parseCaf(1,new DataView(b.buffer)));expect(writes).toHaveLength(18);expect(writes.map(x=>x.words.slice(0,2))).toEqual(Array.from({length:9},(_,i)=>[[0,i+1],[1,i+1]]).flat());expect(writes.every(x=>x.command===190&&x.words.slice(3,8).join()=== '4194304,0,0,0,0')).toBe(true);expect(status.textContent).toContain('LOCAL EDITOR未修改');expect(button.disabled).toBe(false);
+  const failed=vi.fn(()=>Promise.reject(new Error('MOCK FAIL')));f.d.sendReport=failed;await listeners.get('click')!();expect(failed).toHaveBeenCalledTimes(1);expect(status.textContent).toContain('STOP');expect(button.disabled).toBe(false);expect(editor).toEqual(snapshot);f.c.dispose();
+ });
+ it('actual Slot A/B/OFF changes local snapshots only for FreeDSP and keeps its default at9; other DAC still syncs',async()=>{
+  const f=mock(),sync=vi.fn(),ctx={device:f.d,getProtocol:()=> 'CONEXANT',eqState:mixedPreset(),globalGainState:0,lastAppliedEqName:'Mixed',slotA:null,slotB:null,activeSlot:'A',isFreeDsp,unityPreset,defaultEqState:()=>Array.from({length:10},(_,index)=>({...unityPreset()[0],index})),renderUI:vi.fn(),setGlobalGain:vi.fn(),syncToDevice:sync,updateSlotLabel:vi.fn(),t:()=> 'Flat',localStorage:{setItem:vi.fn()},log:vi.fn()};
+  const set=runInNewContext(extracted('setABCompareState',fnSource)+'\nsetABCompareState',ctx);const before=ctx.eqState.map(b=>({...b}));await set('B');expect(ctx.eqState).toHaveLength(9);expect(ctx.eqState.every(b=>b.gain===0)).toBe(true);await set('A');expect(ctx.eqState).toEqual(before);await set('Off');expect(sync).not.toHaveBeenCalled();expect(f.sent).toHaveLength(0);
+  ctx.device={...f.d,productId:1} as HIDDevice;await set('B');expect(sync).toHaveBeenCalledTimes(1);expect(ctx.eqState).toHaveLength(10);f.c.dispose();
  });
  it('normal UI has no bridge workflow, explicit Sync dispatch; flash/realtime guarded; dev native optional',()=>{
   expect(mainSource).not.toContain('mountGraphicalRam');expect(mainSource).toContain('await syncToDevice(true)');expect(dspSource).toContain('if(!explicit)return');expect(dspSource).toContain('if(isFreeDsp(device))return; // Explicit RAM Sync only');expect(devSource).toContain('param([switch]$NativeDebug)');expect(devSource).toContain('if ($NativeDebug)');

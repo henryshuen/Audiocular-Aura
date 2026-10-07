@@ -1,3 +1,34 @@
+M2S UX final verification: focused16tests PASS; verify.ps1 once PASS (TypeScript/Vite build,21files/184tests); generateddist restored; git diff --check PASS. No hardware access.
+
+## M2S main-page UX follow-up — ready
+Henry reports original CONNECT DAC succeeded, identified exact FreeDSP/CONEXANT, ONLINE. This verifies chooser/open/identification; no new matching response or RAM-write evidence in this report.
+
+### Research checkpoint
+- Examined: Hardware Memory Controls markup, configureFreeDspUI visibility, main Restore handler, existing restoreFreeDspUnity, setABCompareState and resetToFlat.
+- Verified source: existing Restore was hidden/displaynone by default and enabled onFreeDSP configure; long paragraph sat in nowrap flex action row. Exact cause of Henry's missing button cannot be proven by static inspection alone. Now explicit displayflex, wrapped FreeDSP row, description/status below actions. Actual DOM-model connect UI configuration test verifies visible/enabled Restore, disabled Send/Flash, and generic reconnect restoration.
+- Verified source/mock: SlotA/B/OFF are local EQ/globalGain snapshots; FreeDSP skip sync. SlotB general default had10bands, nowFreeDSP-only9unity; otherDAC default10/sync unchanged. RESET TO FLAT localFreeDSP unchanged. Existing hardwareRestore ignoresinvalideditor, sends18paired190, leaveseditor untouched and firstfailureSTOP/no retry; handler updates explicit RAM status.
+- Hypotheses: previous layout or stale page may explain missing control; neither confirmed.
+- Discarded: ResetFlat=hardwareRestore; Slots=hardwarebanks; SendToDevice=provenFreeDSP action.
+- Unresolved: browserCAF matching replies and WebHID RAM/listening outcome remainPENDING.
+- Next target: Henry presses RESTORE FREEDSP RAM TO UNITY in existing Hardware Memory Controls. Timeout/error STOP and retainlog; no manual intermediate tests or Codex hardware actions.
+
+### Problem / hypothesis / next action
+Observed problem: ONLINE FreeDSP but no clear accessible RAM unity action; duplicate generic controls ambiguous.
+Verified facts: existing WebHID Restore implementation, localSlot snapshots, FreeDSP9wire plan, no Flash/native inRestore.
+Possible causes: hidden/display/layout or stale content; exact visual failure unconfirmed.
+Ruled out / weakened: generic ResetFlat/Slot action as substitute forhardwareRestore.
+Next validation: focused actual UI/handler/localSlot mocks then verify; Henry's next action is explicitRestore.
+Possible fix direction: clear visiblebutton plus LOCAL EDITOR/FREEDSP RAM status; do not alter protocol.
+
+## Evidence for upstream / Issue #3 — M2S UX increment
+Henry confirms original chooser/open/identity/ONLINE. It does not establish CAF input events, matchingACKs orRAMwrites. Normal Hardware Memory Controls now exposes existingWebHID unityRestore; SEND TO DEVICE/Flash disabled forFreeDSP; localReset/A/B/OFF labelled local only. No serializer/transport/math changes. Offline UX/handler proof is distinct from pendingphysicalWebHIDRAM.
+
+### Scope / regression check — M2S UX
+- FreeDSP-specific: main-page visibility/status/capability branches; fourdocs.
+- Analysis/tests: tests/freedsp/webHid.test.ts actualconfig/handler/Slot regression.
+- Shared runtime: index.html,src/fn.ts,src/main.ts; exactFreeDSP-only behavior. NoDSP/transport/native edits.
+- Non-FreeDSP protocol code changed: NO.
+
 # M2S — upstream WebHID architecture checkpoint
 Current: offline implementation READY; browser transport hardware PENDING. Henry reports M2R P1/P2 positive and negative-nine stereo PASS; quiet repeatable clicks non-blocking, exact cause UNKNOWN. No new raw hardware log supplied this round.
 

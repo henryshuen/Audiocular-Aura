@@ -134,7 +134,7 @@ btnResetFlat?.addEventListener("click", async () => {
 let safetyActionPending: "sync" | "flash" | null = null;
 
 async function safeSyncToDevice() {
-	if(isFreeDsp(getDevice())){try{await syncToDevice(true);}catch(e){log(String(e));}return;}
+	if(isFreeDsp(getDevice())){try{setFreeDspRamStatus('FREEDSP RAM：等待明確Sync回應…');await syncToDevice(true);setFreeDspRamStatus('FREEDSP RAM：Sync協定完成；非讀回，本次LOCAL EDITOR快照已送出。');}catch(e){setFreeDspRamStatus('FREEDSP RAM：Sync未完成／狀態未確認；請查看log。');log(String(e));}return;}
 	if ((window as any).isConfigurationUnsafe?.()) {
 		showSafetyModal("sync");
 	} else {
@@ -209,6 +209,7 @@ btnSync?.addEventListener("click", async () => safeSyncToDevice());
 
 const btnSendToDevice = document.getElementById("btnSendToDevice");
 btnSendToDevice?.addEventListener("click", async () => {
+ if(isFreeDsp(getDevice())){log("FreeDSP SEND TO DEVICE停用；請用SYNC TO RAM。");return;}
 	log("[System] Force-sending entire EQ profile to device...");
 	await safeSyncToDevice();
 });
@@ -1331,4 +1332,11 @@ window.addEventListener("keydown", (e: KeyboardEvent) => {
 
 
 
-document.getElementById('btnFreeDspRestore')?.addEventListener('click',async()=>{try{await restoreFreeDspUnity();}catch(e){log(String(e));}});
+function setFreeDspRamStatus(message:string){const e=document.getElementById('freeDspRamStatus');if(e)e.textContent=message;}
+document.getElementById('btnFreeDspRestore')?.addEventListener('click',async()=>{
+ if(!isFreeDsp(getDevice()))return;
+ const button=document.getElementById('btnFreeDspRestore') as HTMLButtonElement|null;if(button)button.disabled=true;
+ try{setFreeDspRamStatus('FREEDSP RAM：等待全九段雙聲道unity Restore…');await restoreFreeDspUnity();setFreeDspRamStatus('FREEDSP RAM：unity Restore協定完成（18次190）；LOCAL EDITOR未修改。');}
+ catch(e){setFreeDspRamStatus('FREEDSP RAM：Restore未完成／狀態未確認；STOP，無自動retry或rollback。');log(String(e));}
+ finally{if(button)button.disabled=!isFreeDsp(getDevice());}
+});
