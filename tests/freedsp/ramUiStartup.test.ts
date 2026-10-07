@@ -64,7 +64,7 @@ describe('M2N frontend startup only; no bridge/HID',()=>{
    const actions:string[]=[];class MockBridge extends RamBridge{async connect(){return {ok:true,log:'MOCK'};}async run(a:Parameters<RamBridge['run']>[0]){actions.push(a);return {ok:true,log:'MOCK'};}}
    const d=startup(false,MockBridge);await d.nodes.connect.listeners.get('click')!();await d.nodes.flat.listeners.get('click')!();d.nodes.safe.listeners.get('click')!();await d.nodes.apply.listeners.get('click')!();
    d.nodes.selection.value='0';await d.nodes.apply.listeners.get('click')!();expect(actions).toEqual(['restoreNine','applyBand']);
-   await d.nodes.flat.listeners.get('click')!();const input=d.nodes.bands.children[0].children[2].children[0];input.value='12';input.listeners.get('input')!();await d.nodes.sync.listeners.get('click')!();expect(actions).toEqual(['restoreNine','applyBand','restoreNine']);expect(d.nodes.flat.disabled).toBe(false);
+   await d.nodes.flat.listeners.get('click')!();const input=d.nodes.bands.children[0].children[2].children[0];input.value='13';input.listeners.get('input')!();await d.nodes.sync.listeners.get('click')!();expect(actions).toEqual(['restoreNine','applyBand','restoreNine']);expect(d.nodes.flat.disabled).toBe(false);
  });
  it('renders all nine rows and enables Connect with zero startup fetch/session calls',()=>{
    const d=startup();expect(d.nodes.bands.children).toHaveLength(9);expect(d.nodes.selection.children).toHaveLength(9);

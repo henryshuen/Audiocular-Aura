@@ -51,7 +51,7 @@ if(import.meta.env.DEV && location.hostname==='localhost' && location.port==='51
      try{validateBands(bands);if(!baseline)throw new Error('先全九段unityRestore建立baseline');
        if(action==='applyBand' && [...active].some(n=>n!==i))throw new Error('先Restore已Apply的其他band，避免累積');
        const target=action==='applyBand'?bands.map(b=>b.index===i?b:{...b,gain:0}):bands;
-       const s=analyzeSafety(target);log(`SAFETY peak=${s.peakDb.toFixed(3)}dB positiveSum=${s.positiveSumDb.toFixed(3)}dB`);if(!s.allowed)throw new Error('合成預算超限；硬阻擋，無Proceed Anyway');
+       const s=analyzeSafety(target);log(`SAFETY peak=${s.peakDb.toFixed(3)}dB positiveSum=${s.positiveSumDb.toFixed(3)}dB`);
        stage=presetStage(action,i);
      }catch(e){log('EDITOR VALIDATION: '+String(e)+'；未送出，Restore仍可用。');update();return;}
    }else stage=last?.restore?null:last?.stage??null;

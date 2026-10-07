@@ -2,6 +2,7 @@ import type {Band} from '../../src/main.ts';
 import {describe,it,expect,vi} from 'vitest';
 import {FreeDspWebHid,isFreeDsp,isCafDevice,selectCafDevice,detachFreeDsp} from '../../src/freedsp/webHid.ts';
 import {encodeCaf,parseCaf} from '../../src/freedsp/cafCodec.ts';
+import {freeDspDefaultBands} from '../../src/freedsp/editor.ts';
 import {modelWebBand,unityPreset,mixedPreset} from '../../src/freedsp/webRam.ts';
 import vectors from './fixtures/nativeM2sVectors.json';
 import {henryM2ADescriptor} from './fixtures/henryM2ADescriptor.ts';
@@ -51,7 +52,7 @@ describe('M2S upstream WebHID mock only',()=>{
   vi.useFakeTimers();try{const f=mock();f.d.sendReport=vi.fn(()=>Promise.resolve());const p=f.c.sync(unityPreset());const reject=expect(p).rejects.toThrow('TIMEOUT');await vi.advanceTimersByTimeAsync(30);await reject;expect(f.d.sendReport).toHaveBeenCalledTimes(1);await expect(f.c.sync(unityPreset())).rejects.toThrow('STOP');expect(f.logs.join()).not.toContain('protocol complete');f.c.dispose();}finally{vi.useRealTimers();}
  });
  it('unsafe/invalid final band blocks all SET; invalid editor never blocks explicit unity Restore',async()=>{
-  const f=mock(),b=unityPreset();b[8].gain=12;await expect(f.c.sync(b)).rejects.toThrow('硬性');expect(f.sent).toHaveLength(0);b[8].freq=NaN;await expect(f.c.sync(b)).rejects.toThrow();await f.c.sync(b,true);expect(f.sent).toHaveLength(21);expect(f.sent.slice(3).every(x=>parseCaf(1,new DataView(x.buffer)).words[3]===4194304)).toBe(true);f.c.dispose();
+  const f=mock(),b=unityPreset();b[8].gain=13;await expect(f.c.sync(b)).rejects.toThrow('無效');expect(f.sent).toHaveLength(0);b[8].freq=NaN;await expect(f.c.sync(b)).rejects.toThrow();await f.c.sync(b,true);expect(f.sent).toHaveLength(21);expect(f.sent.slice(3).every(x=>parseCaf(1,new DataView(x.buffer)).words[3]===4194304)).toBe(true);f.c.dispose();
  });
  it('send failure stops, explicit unity recovery allowed, disconnect cancels pending and detaches listener',async()=>{
   const f=mock(),send=f.d.sendReport;f.d.sendReport=vi.fn(()=>Promise.reject(new Error('SENDFAIL')));await expect(f.c.sync(unityPreset())).rejects.toThrow('SENDFAIL');expect(f.d.sendReport).toHaveBeenCalledTimes(1);f.d.sendReport=send;await f.c.sync([],true);f.c.dispose();expect(f.listeners.size).toBe(0);await expect(f.c.sync([])).rejects.toThrow();
@@ -93,8 +94,8 @@ describe('M2S upstream WebHID mock only',()=>{
   const failed=vi.fn(()=>Promise.reject(new Error('MOCK FAIL')));f.d.sendReport=failed;await listeners.get('click')!();expect(failed).toHaveBeenCalledTimes(1);expect(status.textContent).toContain('STOP');expect(button.disabled).toBe(false);expect(editor).toEqual(snapshot);f.c.dispose();
  });
  it('actual Slot A/B/OFF changes local snapshots only for FreeDSP and keeps its default at9; other DAC still syncs',async()=>{
-  const f=mock(),sync=vi.fn(),ctx={device:f.d,getProtocol:()=> 'CONEXANT',eqState:mixedPreset(),globalGainState:0,lastAppliedEqName:'Mixed',slotA:null,slotB:null,activeSlot:'A',isFreeDsp,unityPreset,defaultEqState:()=>Array.from({length:10},(_,index)=>({...unityPreset()[0],index})),renderUI:vi.fn(),setGlobalGain:vi.fn(),syncToDevice:sync,updateSlotLabel:vi.fn(),t:()=> 'Flat',localStorage:{setItem:vi.fn()},log:vi.fn()};
-  const set=runInNewContext(extracted('setABCompareState',fnSource)+'\nsetABCompareState',ctx);const before=ctx.eqState.map(b=>({...b}));await set('B');expect(ctx.eqState).toHaveLength(9);expect(ctx.eqState.every(b=>b.gain===0)).toBe(true);await set('A');expect(ctx.eqState).toEqual(before);await set('Off');expect(sync).not.toHaveBeenCalled();expect(f.sent).toHaveLength(0);
+  const f=mock(),sync=vi.fn(),ctx={device:f.d,getProtocol:()=> 'CONEXANT',eqState:mixedPreset(),globalGainState:0,lastAppliedEqName:'Mixed',slotA:null,slotB:null,activeSlot:'A',isFreeDsp,unityPreset,freeDspDefaultBands,defaultEqState:()=>Array.from({length:10},(_,index)=>({...unityPreset()[0],index})),renderUI:vi.fn(),setGlobalGain:vi.fn(),syncToDevice:sync,updateSlotLabel:vi.fn(),t:()=> 'Flat',localStorage:{setItem:vi.fn()},log:vi.fn()};
+  Object.assign(ctx,{setEqState:(b:typeof ctx.eqState)=>{ctx.eqState=b;}});const set=runInNewContext(extracted('setABCompareState',fnSource)+'\nsetABCompareState',ctx);const before=ctx.eqState.map(b=>({...b}));await set('B');expect(ctx.eqState).toHaveLength(9);expect(ctx.eqState.every(b=>b.gain===0)).toBe(true);await set('A');expect(ctx.eqState).toEqual(before);await set('Off');expect(sync).not.toHaveBeenCalled();expect(f.sent).toHaveLength(0);
   ctx.device={...f.d,productId:1} as HIDDevice;await set('B');expect(sync).toHaveBeenCalledTimes(1);expect(ctx.eqState).toHaveLength(10);f.c.dispose();
  });
  it('normal UI has one CONNECT workflow, explicit Sync dispatch; helper managed by dev',()=>{

@@ -341,7 +341,7 @@ Test("M2N invalid full-state/action data rejected before HID",()=>{
     Check(RamDebugRequest.Parse(json).Bands.Length==9,"Exact schema");
     string camel=System.Text.Json.JsonSerializer.Serialize(new RamDebugRequest("applyBand",0,Nine()),new System.Text.Json.JsonSerializerOptions {PropertyNamingPolicy=System.Text.Json.JsonNamingPolicy.CamelCase}); Check(RamDebugRequest.Parse(camel).Bands[0].Enabled,"Browser camelCase required fields");var missing=System.Text.Json.Nodes.JsonNode.Parse(json)!; missing["Bands"]![0]!.AsObject().Remove("Enabled"); Throws(()=>RamDebugRequest.Parse(missing.ToJsonString()));
 });
-Test("M2R positive PK preflight and conservative composite cap; Restore always unity",()=>{
+Test("M2R positive PK preflight without temporary composite cap; Restore always unity",()=>{
     foreach(int hz in SafeRam.Rates) foreach(double gain in new[]{1.0,3.0,6.0,12.0}) foreach(double freq in new[]{400.0,1000.0,6000.0}) foreach(double q in new[]{.3,1,4}) {
         var b=Nine()[0] with {Freq=freq,Gain=gain,Q=q};var c=RamDebug.Calculate(hz,b,false);
         Check(c.Words.Length==5 && c.Floats.All(float.IsFinite) && c.Words.All(v=>v>=-8388608 && v<=8388607),"Finite signed24 positive coefficients");
@@ -355,9 +355,9 @@ Test("M2R positive PK preflight and conservative composite cap; Restore always u
         Check(log.ToString().Contains("SET start_ms=")&&log.ToString().Contains("GET start_ms=")&&log.ToString().Contains("exchange_end_ms="),"Per API call and matching timing");
     }
     var unsafeR=new RamDebugRequest("syncNine",0,Nine().Select(b=>b with {Freq=1000,Gain=3}).ToArray());
-    using(var hid=new MockHid(NonMatch(190)))using(var log=new StringWriter()) {Throws(()=>RamDebug.Run(hid,unsafeR,log,[],()=>new FakeClock()));Check(hid.Calls.Count==0,"Over budget before any SET");}
+    using(var hid=new MockHid(NonMatch(190)))using(var log=new StringWriter()) {foreach(var b in new[]{NonMatch(188),NonMatch(187),Reply()})hid.Responses.Enqueue(b);Check(RamDebug.Run(hid,unsafeR,log,[],()=>new FakeClock())==0&&hid.Transmissions.Count==21,"Composite +6 development cap removed");}
     var highSingle=new RamDebugRequest("applyBand",0,Nine());highSingle.Bands[0]=highSingle.Bands[0] with {Gain=12};
-    using(var hid=new MockHid(NonMatch(190)))using(var log=new StringWriter()) {Throws(()=>RamDebug.Run(hid,highSingle,log,[],()=>new FakeClock()));Check(hid.Calls.Count==0,"Individual+12 coefficient range is not authorization to Apply");}
+    using(var hid=new MockHid(NonMatch(190)))using(var log=new StringWriter()) {foreach(var b in new[]{NonMatch(188),NonMatch(187),Reply()})hid.Responses.Enqueue(b);Check(RamDebug.Run(hid,highSingle,log,[],()=>new FakeClock())==0&&hid.Transmissions.Count==5,"Individual+12 valid coefficients accepted");}
     var restoreR=unsafeR with {Action="restoreNine"};
     using(var hid=new MockHid(NonMatch(190)))using(var log=new StringWriter()) {
         foreach(var b in new[]{NonMatch(188),NonMatch(187),Reply()})hid.Responses.Enqueue(b);

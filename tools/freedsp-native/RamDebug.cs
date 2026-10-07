@@ -102,8 +102,7 @@ public static class RamDebug
         if(!restore) {
             var selected=Selected(r).Select(i=>r.Bands[i]).ToArray();
             var safety=Safety(selected);
-            log.WriteLine($"SAFETY predicted_quantized_grid_peak_db={safety.PeakDb:F3} positive_budget_db={safety.PositiveSumDb:F3}; nominal cap6dB grid allowance0.1dB; estimate only");
-            if(safety.PositiveSumDb>6 || safety.PeakDb>6.1)throw new InvalidOperationException("Composite positive budget/response safety cap exceeded; no SET");
+            log.WriteLine($"SAFETY predicted_quantized_grid_peak_db={safety.PeakDb:F3} positive_budget_db={safety.PositiveSumDb:F3}; metrics only, temporary development cap removed");
         }
         var timer=System.Diagnostics.Stopwatch.StartNew();
         // Preflight every known-rate plan before ANY SET; matching346 chooses the current plan.

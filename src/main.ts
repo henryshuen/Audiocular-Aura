@@ -133,8 +133,11 @@ btnResetFlat?.addEventListener("click", async () => {
  */
 let safetyActionPending: "sync" | "flash" | null = null;
 
+async function syncFreeDspRam(){try{setFreeDspRamStatus('FREEDSP RAM：等待明確Sync回應…');await syncToDevice(true);setFreeDspRamStatus('FREEDSP RAM：Sync協定完成；非讀回，本次LOCAL EDITOR快照已送出。');}catch(e){setFreeDspRamStatus('FREEDSP RAM：Sync未完成／狀態未確認；請查看log。');log(String(e));}}
+
 async function safeSyncToDevice() {
-	if(isFreeDsp(getDevice())){try{setFreeDspRamStatus('FREEDSP RAM：等待明確Sync回應…');await syncToDevice(true);setFreeDspRamStatus('FREEDSP RAM：Sync協定完成；非讀回，本次LOCAL EDITOR快照已送出。');}catch(e){setFreeDspRamStatus('FREEDSP RAM：Sync未完成／狀態未確認；請查看log。');log(String(e));}return;}
+	if(isFreeDsp(getDevice()) && (window as any).isConfigurationUnsafe?.()){showSafetyModal("sync");return;}
+	if(isFreeDsp(getDevice())){await syncFreeDspRam();return;}
 	if ((window as any).isConfigurationUnsafe?.()) {
 		showSafetyModal("sync");
 	} else {
@@ -233,7 +236,7 @@ btnSafetyProceed?.addEventListener("click", async () => {
 	const action = safetyActionPending;
 	closeSafetyModal();
 	if (action === "sync") {
-		if(isFreeDsp(getDevice())){try{await syncToDevice(true);}catch(e){log(String(e));}}else await syncToDevice();
+		if(isFreeDsp(getDevice()))await syncFreeDspRam();else await syncToDevice();
 	} else if (action === "flash") {
 		await flashToFlash();
 	}

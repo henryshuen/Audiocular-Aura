@@ -2354,3 +2354,44 @@ Physical CAF remains ID1/61 data bytes (native62 including ID), exact35D8:1496/c
 - Analysis/test files changed: FreeDSP frontend/native fixtures tests and lifecycle mocks.
 - Shared files changed: src/fn.ts, src/dsp.ts, index.html (FreeDSP-only dispatch/status), scripts/dev.ps1/lifecycle (managed helper), four docs.
 - Non-FreeDSP protocol code changed: NO. Other-DAC CONNECT open regression mock PASS. No CAF190/math/mapping changes; no hardware actions.
+
+## 2026-10-08 — M2S main graphical PEQ hardware PASS / PEQ UX cleanup
+Henry reports original CONNECT/native HID adapter, graphical local editing, nine-band stereo RAM Sync, unityRestore, positive/negative PK, centered stereo and local-editor/RAM separation all hardware PASS. This supersedes the previous native main-UI PENDING classification; pure WebHID remains BLOCKED. This is Henry-reported listening/protocol evidence, not instrumented readback or persistence proof.
+
+### Research checkpoint
+Examined: existing upstream/main fn.ts reset/default/A/B semantics; slider/numeric/graph callbacks; file/text/AutoEq/custom profile entry; saved state, undo/redo and Slot restores; normal safety modal, retired debug cap, Vite hostname.
+Verified: HTML min/max alone did not clamp numeric gains; setEQ lacked gain guard; imports and snapshots bypassed that input. Generic Defaults rebuild10/Q.75 (JA11 own5); generic Flat rebuilds existing count at1000Hz/Q1/PK/enabled then Sync. Slots are host snapshots: A=current baseline, B=default flat, switching saves current side; OFF restoresA then clears comparison. They are not FreeDSP hardware banks.
+Decision: exactFreeDSP only, one visible editor policy = finite gain clamp±12 with page-log notice. Nonfinite direct gain rejected; invalid old snapshot gain becomes0 with notice. All render/import/history/Slot paths normalize9 indices; Sync still rejects raw invalid values without hidden gain substitution. Free defaults31/62/125/250/500/1000/2000/4000/8000Hz, gain0/Q.7/PK/enabled. Free Flat preserves frequency/Q/type/enabled and zeros enabled gains only. Both are local-only, reset comparison state, no hardware TX.
+Implementation: remove temporary+6 positiveSum/+6.1 sampledPeak caps from shared normal session and historical diagnostics. Keep finite/PK/range/frequency/Q/Nyquist/quantized stability/signed24 preflight. Main positive-response warnings use original modal thresholds (>10 single, >12 composite estimate, >15 positiveSum); Proceed explicitly Sync, Cancel noTX. AUTO REDUCE adapts FreeDSP local band gains only, no unsupported preamp/no autoTX. Limits are listening warnings, not hardware headroom limits.
+Remaining: smoothing/atomic coefficient update UNKNOWN; no command/payload/ACK/math change. Next milestone Preamp research, not started this round.
+
+### Problem / hypothesis / next action
+Observed problem: temporary development cap blocked valid larger positive profiles; range handling/reset semantics differed between editor entry paths; clickable127.0.0.1 URL conflicted with helper exact localhost Origin.
+Verified facts: normal native graphical PEQ hardware PASS. Approximately18 quiet repeatable pops per full Apply/Restore, roughly one per LEFT/RIGHT path write (9x2); not abnormally loud/non-blocking. Earlier about9-pop observation is superseded in precision.
+Possible causes: hot coefficient/state update timing correlates with each190; causation and firmware smoothing remain UNKNOWN.
+Ruled out / weakened: +6dB as proven hardware limit; generic10-band default for FreeDSP; Slot hardware-bank interpretation; send success as DSP/readback proof.
+Next validation: offline editor/transport/native/parity mocks and canonical Vite HTTP; Henry may inspect updated UI normally. No Codex hardware access.
+Possible fix direction: common FreeDSP editor normalization and local9 defaults, original warnings, localhost bind/display. No pop suppression/extra hardware commands without evidence.
+
+## Evidence for upstream / Issue #3 — main PEQ PASS and UX cleanup
+Native adapter under original CONNECT/graph/edit/explicitSync/Restore now Henry hardware PASS: wires1..9 paired path0LEFT/path1RIGHT, positive/negativePK, centered stereo, recovery, local/RAM separation. Verified per-band range remains−12..+12; development sum6/peak6.1 limits are removed, not hardware restrictions. All Free editor inputs clamp visibly to±12 and Sync never substitutes unseen gain; nine default layout and structure-preserving Flat are local-only. About18 quiet repeatable pops correlate with18 individual190 path updates; non-blocking, cause/smoothing/atomic update UNKNOWN. Pure browser WebHID reply flow still blocked; Windows native Input GET remains required. Flash/preamp/tilt/utilities unsupported or UNKNOWN pending their own evidence.
+
+### Current roadmap (supersedes prior PEQ validation queues)
+1. Preamp / global gain.
+2. Channel Balance.
+3. Global Tone Tilt Bass/Treble.
+4. Microphone and remaining Device Utility Controls.
+5. Flash / persistence LAST.
+For each: SUPPORTED BY FREEDSP EVIDENCE / UNSUPPORTED / UNKNOWN. Do not reuse generic Aura commands by assumption. Tone Tilt remains disabled until researched. No future milestone implemented in this round.
+
+### Research checkpoint — PEQ UX offline completion
+- Focused frontend90 tests/6files PASS: endpoints±12, ±12.1/+14/−15 through slider/numeric/graph common callback, actual text preset loader/render, snapshots/undo/redo/Slot, default/flat, warning+Proceed, invalid-input rejection/localAutoReduce, existing other-DAC gain/reset behavior and native packet preservation above old+6 cap.
+- Native69 synthetic/offline tests PASS; actual21-vector parity unchanged. PowerShell lifecycle mocks/parser PASS. Isolated Vite random-port localhost URL and HTML HTTP200 PASS; configured canonical localhost5173. No real helper or device started by Codex.
+- Final verify.ps1 PASS: TypeScript/Vite build and227tests/23files. git diff --check PASS after generated build artifacts excluded. No hardware actions, no packet/ACK/transport/mapping/coefficient algorithm change.
+- Remaining: Preamp is next milestone; channel balance/tilt/microphone/utilities/Flash require their own evidence. Quiet18-pop mechanism remains UNKNOWN.
+
+### Scope / regression check
+- FreeDSP-specific files changed: editor helper; shared FreeDSP RAM model/session; historical debug UI/native development-gate removal.
+- Analysis/test files changed: FreeDSP editor/transport/diagnostic/frontend/native offline tests.
+- Shared files changed: src/fn.ts and src/main.ts (FreeDSP guarded editor/reset/warning only), scripts/dev.ps1 and vite.config.ts (canonical localhost), existing four docs.
+- Non-FreeDSP protocol code changed: NO. Original other-DAC gain/default/flat and generic Sync behavior tested unchanged.
