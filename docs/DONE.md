@@ -68,3 +68,28 @@
 - localhost HTTP 檢查無法連線，未啟動伺服器；固定網址 http://localhost:5173/，
   啟動命令 .\scripts\dev.ps1。
 - 本輪未 commit、push 或建立 PR；變更保留在工作目錄。
+
+## 2026-10-07 — M2A prepared, hardware evidence pending
+- 開始時分支 fix/freedsp-conexant、HEAD 6665470、工作目錄乾淨。
+- 在來源修改前 verify.ps1 通過 build 與 M1 16 tests（一般檔案權限）；
+  沙箱暫存 rename EPERM 屬環境限制，沒有將未執行測試列為成功。
+- 完成 current/candidate 的 header 與每個 payload word boundary map，記入 ROADMAP。
+- 保留原 builder 不變；唯一候選去除 presumed embedded ID，13 words 的資料長度為 62 bytes。
+- 新增開發模式獨立診斷頁與 FreeDSP-only 選取工具；測試確認 descriptor 檢查不 open／send／receive。
+- Metadata 顯示完整 browser collections 與各 report/item size/count，計算可確定的 bit/byte 長度；
+  不完整、非 byte alignment、同 ID 多筆不明或長度不符時停止，不猜 reportCount 的單位。
+- 新增只供探測的 framing switch（預設 CURRENT）及手動 Flat / -12 dB RAM 按鈕。
+  只使用選定取樣率，共九段係數與既有 mode 0；Flat / attenuation 只差第 1 段。
+- 加入 descriptor 長度 gate：candidate 若與 output 62 bytes 不符，在 open/send 前即阻擋；
+  feature fallback 也要求相同長度 descriptor。自動測試只使用 fake device。
+- 日誌包含 profile/framing/reportId/length/完整 hex/command/band/rateIndex，
+  sendReport 成功或失敗、fallback 使用與 feature 結果；失敗立即停止，不自動重試。
+- 最終 verify.ps1 exit 0：TypeScript + Vite build、測試型別檢查、5 files / 38 tests 通過。
+- 保留原 M1 16 tests，新增 22 tests；其中固定 PK Q22 fixture 由基準計算得到。
+- 純 HTTP GET 確認 localhost root、freedsp-debug.html、Vite 轉譯 debugPage.ts 均回傳 200。
+  未操作瀏覽器或 GUI，未自動選取／連接 FreeDSP，也未執行實體 RAM 或 Flash 寫入。
+- 原 src/dsp.ts、conexantPacket.ts、conexantTransport.ts、package/lockfile、verify.ps1 均未變更。
+  共享 src/main.ts 僅新增 DEV 診斷連結，Non-FreeDSP protocol code changed: NO。
+- 四份 docs 已更新；尚無實機 descriptor／聽感結果，M2 不列為完成，也未開始 M3。
+- 交付時 dev server 正在執行，http://localhost:5173/；啟動命令 .\scripts\dev.ps1。
+- 本輪變更未 commit、push 或建立 PR；停止等待 Henry 的 descriptor 與手動測試結果。

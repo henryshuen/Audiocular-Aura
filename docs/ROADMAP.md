@@ -19,7 +19,7 @@ Round 0.5：Henry 已建立 fork；git ls-remote origin refs/heads/fix/freedsp-c
 此提交包含 Round 0 四份文件及三支 PowerShell 腳本。
 本機追蹤 origin/fix/freedsp-conexant，ahead/behind 為 0/0；Round 0.5 開始時工作目錄乾淨。
 npm ci 回報 5 vulnerabilities（1 moderate、4 high）；未執行 audit fix 或升級依賴。
-M0 已完成；M1 軟體測試框架已完成，M2 尚未開始，等待 Henry 核准。
+M0 與 M1 已完成；M2A 軟體探測已準備，等待 Henry 手動 descriptor / RAM 驗證。
 Round 0 結束時 dev server 正在執行，僅監聽 127.0.0.1:5173。
 HTTP 以 curl.exe --noproxy '*' 驗證；一般 Invoke-WebRequest 曾回傳 404，
 直接請求已確認 Vite 頁面正確，未改動系統代理設定。
@@ -34,11 +34,20 @@ HTTP 驗證只證明文件可提供，不證明瀏覽器 UI 或 WebHID 行為。
 - 實際日誌 fixture 尚無來源可建立；目前 fixture 不是硬體擷取或正確協定證據。
 - [x] NO hardware behavior assumptions；沒有裝置存取，也未開始 M2。
 
-## M2 - Single-band RAM proof — PENDING
+## M2 - Single-band RAM proof — NOT PROVEN
 Goal: Make ONE intentionally obvious attenuation PEQ change work in FreeDSP RAM.
 Use attenuation, not dangerous boost, for initial real-hardware testing.
 Example: PK / 1000 Hz / -12 dB / Q around 0.7-1.0.
 Success: Henry can clearly hear the difference while all other variables remain fixed.
+
+### M2A — framing validation / RAM-only probe — PREPARED, manual evidence pending
+- [x] 精確 current / candidate byte map 與長度推導。
+- [x] 開發模式的獨立 descriptor inspection 頁，無自動連線或檢查階段寫入。
+- [x] 唯一候選 CANDIDATE_NO_EMBEDDED_REPORT_ID，正常同步仍使用原始 builder。
+- [x] 手動 framing switch，預設 CURRENT；RAM-only Flat / attenuation 控制。
+- [x] Descriptor gate：容量必須恰好匹配，不能容納 62 bytes 時停用候選寫入。
+- [x] 完整 TX/status/fallback logs 與 fake HID tests。
+- [ ] Henry 的實際 metadata、聽感與 TX 日誌；M2 成功尚未成立。
 
 ## M3 - Full 9-band real-time PEQ — PENDING
 - all 9 bands
@@ -183,3 +192,88 @@ WebHID sendReport 與 sendFeatureReport 分開接受 reportId/data，data 不應
 來源比對確認抽取區域外程式不變；packet builder 本體與基準相同。
 未驗證：硬體行為、真實 RAM EQ、Flash persistence、readback、preamp 或取樣率實際套用。
 伺服器本輪未啟動；HTTP 檢查 localhost 無法連線。
+
+## M2A evidence and byte maps — 2026-10-07
+基準 6665470，分支 fix/freedsp-conexant，來源修改前工作目錄乾淨。
+基準 build 與 16 個測試通過；沙箱暫存 rename EPERM 需一般檔案權限，非測試邏輯故障。
+
+### VERIFIED source bytes vs HYPOTHESIS meanings
+下表 offsets 與 bytes 均是 VERIFIED software behavior。
+packet[0] 真正的硬體意義、CTRL 常數是否正確及 command/word 在裝置端的解讀仍屬 HYPOTHESIS。
+範例 RAM 使用 rateIndex=5、band=1、第三 word=3；coefficients 用基準 Q22，尾 words 為零。
+
+| Current offset | Candidate offset | Field | Size / current retained | Example | Evidence |
+| --- | --- | --- | --- | --- | --- |
+| 0 | absent | presumed embedded report ID | 1 / 1 | 01 | bytes VERIFIED; meaning HYPOTHESIS |
+| 1..2 | 0..1 | transaction ID | 2 / 2 | 01 00 | VERIFIED source |
+| 3..4 | 2..3 | count low byte + zero | 2 / 2 | 0d 00 | VERIFIED source |
+| 5..6 | 4..5 | commandId & 0xfff | 2 / 2 | be 00 (190) | VERIFIED source |
+| 7..10 | 6..9 | CTRL constant | 4 / 4 | 00 23 2d b3 | VERIFIED source |
+| 11..14 | 10..13 | word 0: sample-rate index | 4 / 4 | 05 00 00 00 | VERIFIED source |
+| 15..18 | 14..17 | word 1: band index | 4 / 4 | 01 00 00 00 | VERIFIED source |
+| 19..22 | 18..21 | word 2: current constant | 4 / 4 | 03 00 00 00 | VERIFIED source |
+| 23..26 | 22..25 | word 3: b0 Q22 | 4 / 4 | signed LE32 | VERIFIED source |
+| 27..30 | 26..29 | word 4: b1 Q22 | 4 / 4 | signed LE32 | VERIFIED source |
+| 31..34 | 30..33 | word 5: b2 Q22 | 4 / 4 | signed LE32 | VERIFIED source |
+| 35..38 | 34..37 | word 6: -a1 Q22 | 4 / 4 | signed LE32 | VERIFIED source |
+| 39..42 | 38..41 | word 7: -a2 Q22 | 4 / 4 | signed LE32 | VERIFIED source |
+| 43..46 | 42..45 | word 8 | 4 / 4 | 00 00 00 00 | VERIFIED source |
+| 47..50 | 46..49 | word 9 | 4 / 4 | 00 00 00 00 | VERIFIED source |
+| 51..54 | 50..53 | word 10 | 4 / 4 | 00 00 00 00 | VERIFIED source |
+| 55..58 | 54..57 | word 11 | 4 / 4 | 00 00 00 00 | VERIFIED source |
+| 59..62 | 58..61 | word 12 | 4 / only 2 current | sentinel 78 56 34 12 | VERIFIED fixture |
+| 61..62 | n/a | out-of-range current writes | 2 / 0 | sentinel 34 12 lost | VERIFIED test |
+
+Current 需要 1+2+4+4+13*4=63，但配置 61；packet[61]、[62] 不會保存。
+Candidate 只移除 presumed ID，長度由 2+4+4+13*4=62 推得，完整保留末 word。
+這不是把舊 Uint8Array slice(1) 得到的 60 bytes；那樣無法復原既有截斷。
+兩者第一 byte 都可能是 01，但候選的 01 是 transaction ID low；不能只看首 byte 判斷是否重複 ID。
+
+Current 首 10 bytes：01 01 00 0d 00 be 00 00 23 2d；完整 module 最後 b3 在 offset 10。
+Candidate 首 10 bytes：01 00 0d 00 be 00 00 23 2d b3。
+WebHID 兩者皆另外傳 reportId=1；data 分別 61/62 bytes。
+規範：https://hid.spec.whatwg.org/#dom-hiddevice-sendreport 。
+
+### Descriptor / framing limitations
+診斷顯示 WebHID parsed collections、input/output/feature reports、每個 item 的 size/count。
+bytes = sum(reportSize * reportCount) / 8，含常數 padding；缺少欄位或非 byte alignment 不猜 byte 數。
+只能檢查 browser 暴露的資料，沒有 raw descriptor bytes，也不是 DSP state readback。
+同 reportId 的多筆項目若不明確，先停止，不自行合併推論。
+inspect 階段不 open、不 sendReport/sendFeatureReport/receiveFeatureReport。
+
+### Manual gate and exact sequence
+1. PowerShell cd D:\Henry\Documents\ChatGPT\AuraPEQ，執行 .\scripts\dev.ps1（若伺服器已在執行，不要重複啟動）。
+2. FreeDSP 拔除時開 http://localhost:5173/，點「FreeDSP M2A 診斷（手動選取／RAM）」；
+   同頁導航到 freedsp-debug.html。先關閉其他 AuraPEQ 頁籤，避免其自動連線。
+3. 停用 Equalizer APO、Windows 音量極低，第一次套用時不要佩戴 IEM。
+4. 插入 FreeDSP，點「1. 手動選取 FreeDSP（僅檢查）」並手動授權。
+5. 複製 descriptor 輸出，先看 output reportId=1 的 bytes。
+6. 只有唯一且完整的 output report=62 bytes 才選 CANDIDATE_NO_EMBEDDED_REPORT_ID；
+   若為 61、unknown、重複不明或其他長度，候選被阻擋，本輪先回報 metadata，不做候選 RAM 測試。
+7. 取樣率選單與 Windows 播放格式一致；勾選測試條件。
+8. 保持同一 framing / 取樣率，先點「套用 Flat（僅 RAM）」，完成且無錯誤後，
+   點「套用單段 −12 dB（僅 RAM）」；先檢查日誌，不把 SUCCESS 當作聽感證明。
+9. 音量仍極低，確認沒有異常後由 Henry 比較同一播放來源的 Flat / attenuation，
+   最多再手動回 Flat 作確認；不寫 Flash、不試正增益、不掃描其他 sample rates。
+10. 回報 audible difference YES/NO、metadata、完整 TX 日誌與 browser/device error；任何錯誤立即停止。
+
+實際 report 若為 61 bytes，CURRENT 可保留作原始行為對照，但本輪不要求為了對照另做硬體寫入。
+仍未證明：候選格式正確、RAM 聽感、取樣率映射、mode 0 生效、Flash、preamp 或 readback。
+
+### M2A automated verification / delivery state
+verify.ps1 最終 exit 0：TypeScript、Vite 4.5.14 build、測試型別檢查、5 files / 38 tests 通過。
+其中原始 M1 16 tests 未修改，新增 22 tests 覆蓋候選、metadata、RAM gate 與 fake transport。
+PK / 1000 Hz / -12 dB / Q 0.7 / 48 kHz 的 Q22 固定 fixture：
+[3701688, -7012371, 3371192, 7012371, -2878576]，由基準 dsp.ts PK 計算取得。
+本輪以純 HTTP GET 確認 root、診斷 HTML 與 debugPage.ts 轉譯回傳 200。
+沒有執行 browser GUI、瀏覽器 JavaScript 或任何實體硬體操作；UI 實際點擊／顯示尚待 Henry 驗證。
+開發伺服器交付時正在 127.0.0.1:5173 執行，網址 http://localhost:5173/。
+此狀態是本輪快照，不表示之後仍在執行。
+未 commit、push 或建立 PR；M2A 為 PREPARED，不是硬體成功。
+
+### M2A Scope / regression check
+- FreeDSP-specific files changed: src/freedsp/conexantCandidate.ts、descriptor.ts、ramProbe.ts、debugPage.ts；
+  tests/freedsp/conexantCandidate.test.ts、descriptor.test.ts、ramProbe.test.ts；freedsp-debug.html。
+- Shared files changed: src/main.ts（僅 DEV 診斷連結）、四份 docs。
+- Non-FreeDSP protocol code changed: NO。
+src/dsp.ts、M1 builder/transport、package/lockfile 與 scripts/verify.ps1 均與基準相同。

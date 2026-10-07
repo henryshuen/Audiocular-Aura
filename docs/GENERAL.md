@@ -123,3 +123,23 @@ fixture 必須標示來自原始碼或實際日誌，不可將自行組成的 fi
 Pure packet tests 不載入 src/dsp.ts、UI、navigator.hid 或真實裝置。
 傳輸測試只注入記憶體 fake，檢查 reportId、原始 data 與 fallback／錯誤傳遞。
 測試環境基準為 Node 24；Vitest 4.1.11 的最低支援版本由其 engines 限制。
+
+## Manual FreeDSP diagnostics / RAM probe
+M2A 診斷只在 Vite 開發模式的 freedsp-debug.html 啟用，與主程式自動連線／回讀路徑隔離。
+先拔除 FreeDSP，在 localhost 點「FreeDSP M2A 診斷（手動選取／RAM）」進入同一頁籤，
+關閉其他 AuraPEQ 頁籤後才連接硬體。裝置只能透過手動 requestDevice 精確選取 VID/PID。
+選取與 descriptor 檢查只讀取 browser metadata，不 open、不 send、不 receive。
+WebHID reportSize 單位是 bits；data bytes 以所有 items 的 reportSize*reportCount 相加後除以 8。
+不把單一 reportCount 當成 byte count；資訊缺少或報告分散／重複不明時停止，不猜數值。
+
+Framing 預設 CURRENT，僅診斷探測可手動選 CANDIDATE_NO_EMBEDDED_REPORT_ID，
+不保存選擇、不影響正常 sync、Flash 或其他協定。一次只測一個 framing 假設。
+13 words 的候選需要 62 bytes；實際 output reportId=1 必須有唯一且相同長度的 descriptor。
+若暴露容量為 61 bytes，候選按鈕停用，回報 descriptor 即停止；不截斷、補零或另改 words。
+output failure 的 feature fallback 也須有唯一且同長度的 feature descriptor，否則停止。
+
+RAM 測試固定第 1 段 PK / 1000 Hz / -12 dB / Q 0.7，其餘八段 0 dB。
+Flat 與 attenuation 只對選定的一個取樣率送九組係數與既有 mode 0，共十個封包；
+這是固定其餘變數，不是九段功能或多取樣率驗證。不能宣稱傳輸成功就是 RAM EQ 成功。
+Henry 手動維持相同來源、Windows 極低音量、framing 與播放取樣率；停用 Equalizer APO，
+第一次套用時不佩戴 IEM。不得寫 Flash、使用正增益或依賴 preamp；發生錯誤立即停止。
