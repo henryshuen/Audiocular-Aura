@@ -93,3 +93,27 @@
 - 四份 docs 已更新；尚無實機 descriptor／聽感結果，M2 不列為完成，也未開始 M3。
 - 交付時 dev server 正在執行，http://localhost:5173/；啟動命令 .\scripts\dev.ps1。
 - 本輪變更未 commit、push 或建立 PR；停止等待 Henry 的 descriptor 與手動測試結果。
+
+## 2026-10-07 — M2B offline reconstruction investigation
+- 起始HEAD=652099eed2ba87e1d43c60713985e001e349878a，M2A已提交；分支fix/freedsp-conexant，
+  起始工作目錄乾淨，origin tracking ahead/behind=0/0（本機refs），remotes未改動。
+- 基準verify.ps1通過build、測試型別檢查及5files/38tests。
+- 轉錄Henry實機descriptor摘要作fixture：VID35D8/PID1496、primaryusage12/1、input/outputid1、
+  61×8bits=488bits=61data bytes；secondary inputid2=1byte只保存摘要，不補造item定義。
+- 記錄Henry回報：未送62-byte候選，未做RAM測試。這不是Codex本輪操作硬體的結果。
+- 核對Conexant提交歷史、相關blame/diff、README、Issue #3與原始Androidlogcat；
+  發現首次builder配置62卻需要63，c7c95fa只改allocation到61。
+  作者的「61包含ID」解釋與WebHID定義不符；未取得native struct或known-good USB packet。
+- ASR指定post未取得，沒有當成格式證據；完整來源與A–K問題限制記於ROADMAP。
+- 新增離線COUNT_U8與TRANSACTION_U8假說，各header9+13×4=61，所有word完整保留。
+  拒絕超出欄位寬度或非13words；reportId是獨立envelope欄位；沒有連接任何HID sender。
+- GENERAL新增永久Problem / hypothesis / next action規則；ROADMAP完成六欄、候選表與Issue #3證據摘要；
+  DECISIONS新增D014/D015，只記錄證據分層及離線邊界，沒有指定正確硬體格式。
+- 最終verify.ps1 exit0：TypeScript、Vite4.5.14 build、測試型別檢查、6files/47tests，新增9tests。
+- Scope / regression check：FreeDSP-specific為新純函式/測試/fixture；shared僅四份docs；
+  Non-FreeDSP protocol code changed: NO。現有runtime builder、sync、RAM/Flash/mode/preamp/readback均未修改。
+- 不操作GUI/browser或實體HID，不開始聽感/RAM測試，不發GitHub留言，不commit/push。
+- 完成的是M2B離線調查與軟體驗證；RAM EQ、Flash persistence、readback、preamp、最終正確61-byte格式仍未證明。
+- git diff --check通過；還原本輪verify產生的dist，runtime/package/scripts差異為空。
+- 既有Vite程序PID8048監聽127.0.0.1:5173；純HTTP GET回傳200，本輪未啟動新server或開瀏覽器。
+  網址http://localhost:5173/，啟動命令.\scripts\dev.ps1。狀態僅代表交付前快照。

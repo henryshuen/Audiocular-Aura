@@ -19,7 +19,7 @@ Round 0.5：Henry 已建立 fork；git ls-remote origin refs/heads/fix/freedsp-c
 此提交包含 Round 0 四份文件及三支 PowerShell 腳本。
 本機追蹤 origin/fix/freedsp-conexant，ahead/behind 為 0/0；Round 0.5 開始時工作目錄乾淨。
 npm ci 回報 5 vulnerabilities（1 moderate、4 high）；未執行 audit fix 或升級依賴。
-M0 與 M1 已完成；M2A 軟體探測已準備，等待 Henry 手動 descriptor / RAM 驗證。
+M0 與 M1 已完成；M2A descriptor 已由 Henry 檢查，未送 RAM。M2B 完成離線重建調查；正確格式仍未證明。
 Round 0 結束時 dev server 正在執行，僅監聽 127.0.0.1:5173。
 HTTP 以 curl.exe --noproxy '*' 驗證；一般 Invoke-WebRequest 曾回傳 404，
 直接請求已確認 Vite 頁面正確，未改動系統代理設定。
@@ -40,14 +40,21 @@ Use attenuation, not dangerous boost, for initial real-hardware testing.
 Example: PK / 1000 Hz / -12 dB / Q around 0.7-1.0.
 Success: Henry can clearly hear the difference while all other variables remain fixed.
 
-### M2A — framing validation / RAM-only probe — PREPARED, manual evidence pending
+### M2A — descriptor inspection COMPLETE; RAM NOT TESTED
 - [x] 精確 current / candidate byte map 與長度推導。
 - [x] 開發模式的獨立 descriptor inspection 頁，無自動連線或檢查階段寫入。
 - [x] 唯一候選 CANDIDATE_NO_EMBEDDED_REPORT_ID，正常同步仍使用原始 builder。
 - [x] 手動 framing switch，預設 CURRENT；RAM-only Flat / attenuation 控制。
 - [x] Descriptor gate：容量必須恰好匹配，不能容納 62 bytes 時停用候選寫入。
 - [x] 完整 TX/status/fallback logs 與 fake HID tests。
-- [ ] Henry 的實際 metadata、聽感與 TX 日誌；M2 成功尚未成立。
+- [x] Henry 提供實際 descriptor 摘要：output data=61 bytes；62-byte 候選未送。
+- [ ] RAM 聽感與實際 TX 驗證；M2 成功尚未成立。
+
+### M2B — 61-byte protocol reconstruction — offline investigation COMPLETE
+- [x] 原始碼、提交歷史、Issue #3 與原始 Android logcat 證據調查。
+- [x] 61-byte descriptor fixture、63/62-byte 矛盾與兩個 61-byte 離線假說測試。
+- [ ] 最終正確封包格式；尚缺已知正常的完整 USB bytes 或 native serialization 結構。
+- 不送任何候選，不更換 runtime builder，不開始硬體 RAM 測試。
 
 ## M3 - Full 9-band real-time PEQ — PENDING
 - all 9 bands
@@ -277,3 +284,125 @@ PK / 1000 Hz / -12 dB / Q 0.7 / 48 kHz 的 Q22 固定 fixture：
 - Shared files changed: src/main.ts（僅 DEV 診斷連結）、四份 docs。
 - Non-FreeDSP protocol code changed: NO。
 src/dsp.ts、M1 builder/transport、package/lockfile 與 scripts/verify.ps1 均與基準相同。
+
+## M2B investigation — 2026-10-07
+開始時 HEAD=652099eed2ba87e1d43c60713985e001e349878a（M2A 已提交），
+branch=fix/freedsp-conexant，工作目錄乾淨，origin tracking ahead/behind=0/0（本機 refs）。
+origin=https://github.com/henryshuen/Audiocular-Aura.git；upstream=https://github.com/mandy321/Audiocular-Aura.git。
+基準 verify.ps1 exit 0：應用程式 build、測試型別檢查、5 files / 38 tests。
+下列是本輪現況；前面 M2A PREPARED／未取得 descriptor 的記錄保留為歷史。
+
+### M2A real descriptor result
+來源：Henry 本輪提供的實體裝置檢查摘要；不是 Codex 本輪存取裝置，也不是 raw USB capture。
+- vendorId=13784=0x35D8；productId=5270=0x1496；productName=FreeDSP。
+- Primary collection usagePage=12、usage=1。
+- Input reportId=1、reportCount=61、reportSize=8：488 bits=61 data bytes。
+- Output reportId=1、reportCount=61、reportSize=8：488 bits=61 data bytes。
+- Secondary input reportId=2：1 byte；摘要未提供它的各 item dimensions，fixture 不自行補造。
+- WebHID reportId 是 data 以外的參數，61 不是「ID 1 + payload 60」。
+- 62-byte 候選未傳送，沒有執行 RAM 測試。Henry 的 feature reports 未提供，不能推定支援 fallback。
+
+### Current contradiction
+CURRENT：ID-like byte 0；transaction 1..2；count/zero 3..4；command 5..6；CTRL 7..10；
+13 LE32 words 從 11 開始，需要 11+52=63 bytes，配置只有 61。
+末 word 邊界 59..62，實際丟失 61..62；非零 sentinel 0x12345678 只留下 78 56。
+M2A 去除 presumed embedded ID 後，需要 10+52=62，仍超過真實容量 61。
+不改成 63、不送 62、不截斷、不虛構 padding。只移除 Report ID 無法解決全部差距。
+
+### Evidence sources and confidence
+| Source | Verified observation | Confidence / limit |
+| --- | --- | --- |
+| Henry 的 M2A 摘要及 tests/freedsp/fixtures/henryM2ADescriptor.ts | primary size/count、VID/PID、61 data bytes | 高：使用者實機回報；fixture 是摘要轉錄，非 raw descriptor |
+| [WebHID specification](https://hid.spec.whatwg.org/#dom-hiddevice-sendreport) | reportId/data 分開；reportSize 是 bits，reportCount 是項目數 | 高：API 規範；不定義 vendor packet layout |
+| [dc76a3b](https://github.com/mandy321/Audiocular-Aura/commit/dc76a3b642d2685bd0791e0bd1e1a4360fa4ddaa) | 早期 reportId/count61 記錄，當時仍是 Moondrop 路徑 | 高：提交內容；不是 Conexant native 格式 |
+| [e7da5b5](https://github.com/mandy321/Audiocular-Aura/commit/e7da5b51199538e20a6442190e501ec26b29e2a2) | 首次 Conexant builder 就是 11-byte header、13 words，卻配置 62 | 高：原始碼；此版已不足 63，未附 native struct/capture |
+| [c7c95fa](https://github.com/mandy321/Audiocular-Aura/commit/c7c95fa9c356b4e462cf52439fdae52931e18699) | 只將 allocation 62 改成 61，沒有調整欄位 | 高：diff；不能證明正確 layout |
+| [Issue #3 descriptor](https://github.com/mandy321/Audiocular-Aura/issues/3#issuecomment-4856465603) | 另一位回報者提供相同 primary size/count/id | 中高：公開 parsed JSON；不是 Henry 本輪原始資料 |
+| [Issue #3 APK claim](https://github.com/mandy321/Audiocular-Aura/issues/3#issuecomment-4857382348) | 作者聲稱分析 APK/JNI、CTRL、Q22、190/220 | 低：未提供 native serialization 或完整已知正常封包，不能驗證欄位寬度 |
+| [Issue #3 length explanation](https://github.com/mandy321/Audiocular-Aura/issues/3#issuecomment-4867348708) | 作者把 61 解釋為 ID 1 + data 60 | 其 WebHID 解釋與 descriptor/規範不符；所述 OS 原因未獨立證實 |
+| [Original Android logcat](https://github.com/user-attachments/files/29552424/log.txt), linked in [Issue #3](https://github.com/mandy321/Audiocular-Aura/issues/3#issuecomment-4855191555) | FreemanCnxtUsbDevice 列印 rate/band/coefficients 與 save result | 中：應用程式日誌；不是原始 USB 封包，未提供 header bytes/struct；CafCmdHelper 僅出現在 logcat 篩選命令 |
+| [Author's ASR reference](https://www.audiosciencereview.com/forum/index.php?threads/any-software-or-electrical-engineers-on-the-forum-familiar-with-the-usb-spec.51608/#post-2038285) | 本輪工具取得論壇首頁，未取得指定 post | 無可用 layout 證據；未把論壇推測當成事實 |
+
+本機 git log --all、-S Conexant、-S 61、相關 blame/diff、README 與 tracked file 清單已檢查。
+未找到 native/JNI source、CAF struct 或已知正常 USB packet fixture；README 的即時 RAM/Flash 宣稱不等於硬體證據。
+Issue 的 Aura TX hex 是這份 builder 產生的資料，不能當成官方程式的正常封包。
+
+### A–K reconstruction questions
+| Question | Verified source behavior | Hardware conclusion / evidence needed |
+| --- | --- | --- |
+| A: packet[0] 是否 vendor data？ | byte=1，註解稱 Report ID；WebHID ID 是外部參數 | 未定；native serialization 或完整 capture 才能辨識是否 vendor prefix |
+| B: transaction 是否 2 bytes？ | source 固定 01 00 | 未定；未觀察可變 transaction 或 native type |
+| C: count 是否 2 bytes？ | source mask 0xff，只賦值低 8 bits，下一 byte=0 | 可能是 U8+reserved，也可能 U16/bitfield；不能直接刪零 |
+| D: command 是否 2 bytes？ | source mask 0xfff、左移 16，佔兩 bytes | 12-bit 值是 source 行為，非硬體型別；190/220/90 都小於 256，不能證明 U8 |
+| E: CTRL 是否 4 bytes且此位置？ | source 0xB32D2300、LE32 在 7..10 | native CafId 實作與 field offset 未取得 |
+| F: 是否 13 payload words？ | runtime 配 13，RAM 8 個非 padding 欄位加 5 個零尾 words | 13 是 app 陣列長度，未證明 native 定長/count 語意 |
+| G: 是否全為 32-bit？ | builder 每個 item 寫 4 bytes | native metadata packing 未取得，Q22 也不證明 metadata 全為 int32 |
+| H: 是否 implicit/header-packed？ | app 明確序列化每個 item | 未定；無資料支持省略特定 word |
+| I: first word 是否 duplicated？ | RAM first=rate index；mode first=90，與 command90 相同 | mode 的數值重複不能推廣到 RAM190；需 native command schema |
+| J: native190 是否 12 words？ | 只有 JS 的 13 words 可核對 | 未取得 native 定義；改為 12 也只是 10+48=58 或 11+48=59，不會自行變成61 |
+| K: JNI 是否 append fields？ | 作者聲稱 JNI 架構；沒有 native source | 未定；需 Java/native 邊界及底層 serialize code，不能把推測列為完成 |
+
+### 61-byte reconstruction candidates — OFFLINE, UNVERIFIED
+若保留 13 個 LE32 words=52 bytes，header 必須為 9 bytes。以下只建立可檢驗的兩種假說，
+不聲稱為完整候選空間；vendor prefix、packed metadata 或不同 native word count 仍可能成立。
+
+| Candidate | Header offsets (zero-based) | Header / payload / fields / total | Changes vs CURRENT | Evidence / confidence / uncertainty |
+| --- | --- | --- | --- | --- |
+| COUNT_U8 | txn U16 0..1; count U8 2; command U16 3..4; CTRL U32 5..8; words 9..60 | 9 / 52 / 13 / 61 | 移除 presumed ID、count 區 2→1 | source count mask 0xff，原高 byte 固定0；調查優先1，硬體信心低，該 byte 可能必須保留為 reserved |
+| TRANSACTION_U8 | txn U8 0; count/command U32 1..4; CTRL U32 5..8; words 9..60 | 9 / 52 / 13 / 61 | 移除 presumed ID、transaction 2→1 | source txn 固定1，沒有高 byte 動態證據；調查優先2，硬體信心更低，native type 未知 |
+
+兩者保留 source command 的12-bit上限、完整 module 常數與13個signed words，reportId=1另存於 envelope。
+不加任意 padding；超過欄位寬度、非整數或 words 不等於13即拒絕，不能 silent truncation。
+src/freedsp/conexantReconstruction.ts 只由測試匯入；正常 app、診斷頁與 RAM probe 均未連接它。
+尺寸匹配只證明算術與序列化，不證明 descriptor 允許的內容可被 DSP 正確解讀。
+
+### Problem / hypothesis / next action
+Observed problem:
+- CURRENT 63-byte semantic layout 被61-byte buffer截斷；去除 presumed ID 仍為62；實機容量61。
+Verified facts:
+- Henry descriptor output reportId1/count61/size8=488bits=61 data bytes；62-byte候選未送，沒有RAM測試。
+- 原始 Conexant 提交就存在容量不足；後續只改buffer長度，沒有native格式證據。
+- 原始 Android logcat 無完整 on-wire header；兩個離線假說可以完整保留13words而恰為61。
+Possible causes (ranked HYPOTHESES):
+1. Header 重建有誤：presumed embedded ID加上count/reserved區的寬度解讀錯誤。
+2. Transaction 欄位寬度／是否為wire欄位有誤；固定01 00不足以判定。
+3. Native payload長度、metadata packing/implicit欄位，或JNI邊界加入額外欄位造成JS重建過長。
+Ruled out / weakened:
+- 改buffer63或送62都超過descriptor；Report ID alone無法消除全部差距。
+- 12 words alone不能解出61；刪零或invent padding沒有證據。
+- Sync Complete、README、作者implementation宣稱與應用層success不能證明DSP套用或native layout。
+Next validation:
+- 優先取得官方 app 的 CafCmdHelper/native serializer：transaction type、count/command bitfields、
+  CafId/CTRL、command190 native參數陣列及HID reportId prefix加入位置；索取作者當時使用的精確APK版本／函式片段。
+- 若原始碼不足，另輪經Henry指示才從官方app已知正常操作取得完整USB擷取，包含descriptor、
+  endpoint/control setup、reportId與實際data長度，及對應rate/band/五係數；至少比較兩個band/rate辨認欄位。
+- 本輪不開始擷取、不要求現在RAM操作、不送候選；先比對native結構或既有capture。
+Possible fix direction:
+- 僅在 native/USB 證據確認後修改 src/freedsp/ 的明確欄位寬度或packing，加入已知正常bytes fixture；
+  保持external reportId及descriptor gate。若native words非13，依schema修正呼叫者，不能單純縮buffer。
+
+## Evidence for upstream / Issue #3
+- Hardware: Henry 的 Moondrop FreeDSP / CONEXANT Freeman，VID35D8/PID1496。
+- Descriptor: usagePage12/usage1，input/output reportId1，count61×size8=488bits=61 data bytes；secondaryinputid2=1byte。
+- WebHID reportId外傳，61不可解釋為「ID+60」。
+- Current: 11+13×4=63塞進61，末word丟失bytes61..62；移除embeddedID仍62。
+- Tested: 純軟體descriptor fixture、截斷sentinel、兩種9+52=61離線假說及原有軟體回歸。
+- NOT tested: 62-byte候選未送，沒有RAM/Flash/聽感/preamp/readback或新candidate硬體操作。
+- Hypotheses: header widths/reserved、implicit/packed字段或JNI/native邊界重建錯誤；均未證實。
+- Needed: 作者的native serialize code／精確APK與完整known-good USB bytes，而非目前Aura生成的TX日誌。
+- 本輪沒有發表GitHub留言。
+
+### M2B Scope / regression check
+- FreeDSP-specific files changed: src/freedsp/conexantReconstruction.ts、tests/freedsp/conexantReconstruction.test.ts、tests/freedsp/fixtures/henryM2ADescriptor.ts。
+- Shared files changed: docs/GENERAL.md、ROADMAP.md、DECISIONS.md、DONE.md；共享runtime無修改。
+- Non-FreeDSP protocol code changed: NO。
+
+### M2B automated verification / delivery
+verify.ps1 exit 0：TypeScript、Vite 4.5.14 production build、測試型別檢查，6 files / 47 tests。
+原有38tests均通過，新增9tests驗證descriptor容量、原始截斷、62-byte gate、兩種61-byte完整序列化、
+external reportId及拒絕超出field width／缺少或過多words；沒有呼叫實體WebHID。
+git diff --check 通過；本輪產生的dist建置差異還原，原runtime/package/scripts均未修改。
+未commit/push、未發Issue留言；停止於M2B，M2 RAM proof仍NOT PROVEN。
+交付前確認既有AuraPEQ Vite程序PID8048監聽127.0.0.1:5173，localhost純HTTP GET=200；
+本輪沒有啟動新server、開瀏覽器或執行browser JavaScript。這是當下狀態快照。
+固定網址 http://localhost:5173/；啟動命令 .\scripts\dev.ps1（已在執行時不要重複啟動）。

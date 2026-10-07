@@ -69,3 +69,15 @@ PK 計算沿用基準 computeBiquadCoeffs 的 PK 分支與 Q22 量化，不修�
 兩個比較 profiles 只在第 1 段係數不同；不寫 Flash，不修改 preamp，不實作 DSP readback。
 每次最多十個封包，每個 output failure 最多一次有 descriptor 支持的 feature fallback；
 任何失敗立即停止，不掃描長度／Report IDs，不做自動重試或硬體實驗。
+
+## D014 — Separate facts, hypotheses, and next evidence
+每個實驗輪次的報告與 ROADMAP 必須更新 Problem / hypothesis / next action 六個欄位，
+依直接證據標記 facts、依可信度排序 hypotheses，不混用。DECISIONS 只收持續有效的結論，
+DONE 只收已驗證的完成工作；格式能容納 61 bytes 不等於硬體格式正確。
+
+## D015 — External report ID and offline reconstruction boundary
+WebHID 的 reportId 與 data 分開，descriptor 的 data bits/count 不包含外部 ID 參數。
+Henry 回報的61-byte output不能容納62-byte M2A候選；不得用截斷、任意padding或更大buffer繞過。
+M2B hypotheses保留在src/freedsp/離線純函式與測試，不匯入正常runtime或診斷傳輸。
+欄位寬度、native words與prefix意義須由native serialization或已知正常USB bytes確認後，
+才在另輪授權範圍內修正；本輪不把任何一種假說定為正確protocol。

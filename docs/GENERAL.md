@@ -114,6 +114,25 @@ If YES, STOP and explain why before continuing.
 不得默默擴大範圍或繼續該修改。
 
 Never finish a round without this report.
+
+## Permanent experimental documentation rule
+EVERY future experimental round must end with this section in its report and update it in ROADMAP.md:
+
+### Problem / hypothesis / next action
+- Observed problem: exact behavior observed this round.
+- Verified facts: direct evidence from code, descriptor, logs, tests, or Henry's hardware result.
+- Possible causes: ranked plausible causes, explicitly marked as hypotheses.
+- Ruled out / weakened: explanations ruled out or weakened by current evidence.
+- Next validation: the exact next experiment, code inspection, or capture required.
+- Possible fix direction: conditional changes if a hypothesis is confirmed.
+
+Never mix verified facts with hypotheses. DECISIONS.md contains only durable conclusions;
+DONE.md contains only actually verified completed work. This is mandatory for every future experimental round.
+M2B 的 61-byte 純函式只是離線假說，不能因為尺寸吻合就接到 HID 或取代 runtime。
+WebHID reportId 是獨立參數；descriptor 的 data 容量不包含它。
+Henry 已確認 output data=61 bytes，因此 M2A 的 62-byte 候選不得傳送。
+後續硬體輪次須另獲 Henry 指示；M2B 不執行 RAM、Flash、preamp、readback 或聽感測試。
+
 Round 0 僅 bootstrap；不改 Conexant 協定、不操作硬體、不寫 Flash、不建立 PR。
 結束後等待 Henry 核准，再開始 M1。
 
