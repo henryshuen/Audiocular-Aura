@@ -40,7 +40,7 @@ if(import.meta.env.DEV && location.hostname==='localhost' && location.port==='51
  for(let i=0;i<9;i++){const option=document.createElement('option');option.value=String(i);option.textContent=`UI Band${i+1} → wire${i+1}`;select.append(option);}
  el('connect').addEventListener('click',async()=>{
    busy=true;update();try{const r=await bridge.connect();log(r.log);if(r.logPath)log('Full log: '+r.logPath);connected=true;status.textContent='FreeDSP metadata已確認；沒有讀回EQ／沒有SET。選一段後手動Apply。';}
-   catch(e){log(String(e));status.textContent='連線失敗；未啟用RAM操作。';}finally{busy=false;update();}
+   catch(e){connected=false;const reason=String(e);log('CONNECT ERROR: '+reason);status.textContent='連線失敗；未啟用RAM操作。 '+reason;}finally{busy=false;update();}
  });
  el('safe').addEventListener('click',()=>{const i=Number(select.value);bands[i]={index:i,freq:400,gain:-12,q:1,type:'PK',enabled:true};confirmed.delete(i);applied.delete(i);restored.delete(i);render();log(`UI Band${i+1} test editor filled; no TX`);});
  el('load').addEventListener('click',()=>{try{bands=validateBands(JSON.parse(localStorage.getItem('aura_active_eq_state') || 'null'));confirmed.clear();applied.clear();restored.clear();render();log('Loaded UI editor values only; no TX, no preamp/tilt');}catch(e){log(String(e));}});

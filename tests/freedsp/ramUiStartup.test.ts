@@ -1,4 +1,5 @@
-import {describe,it,expect} from 'vitest';
+import {describe,it,expect,vi} from 'vitest';
+import {RamBridge} from '../../src/freedsp/webRam.ts';
 import ts from 'typescript';
 // @ts-expect-error Node VM is test-only; this repository deliberately excludes Node type declarations.
 import {runInNewContext} from 'node:vm';
@@ -17,12 +18,12 @@ function dom(){
  const nodes=Object.fromEntries([...html.matchAll(/id="([^"]+)"/g)].map(m=>[m[1],new Element()]));
  return {nodes,document:{getElementById:(id:string)=>nodes[id]||null,createElement:()=>new Element(),querySelectorAll:()=>[]}};
 }
-function startup(failConnect=false){
+function startup(failConnect=false,Bridge?:new()=>RamBridge){
  const d=dom();let calls=0;
  const js=ts.transpileModule(page,{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText
    .replace(/^import .*$/gm,'').replace('import.meta.env.DEV','true');
  runInNewContext(js,{document:d.document,location:{hostname:'localhost',port:'5173',origin:'http://localhost:5173'},
-   RamBridge:class {async connect(){calls++;if(failConnect)throw new Error('MOCK session unavailable');return {ok:true,log:'MOCK metadata'};}},
+   RamBridge:Bridge ?? class {async connect(){calls++;if(failConnect)throw new Error('MOCK session unavailable');return {ok:true,log:'MOCK metadata'};}},
    validateBands:()=>[],console,Set,Date,Number});
  return {...d,calls:()=>calls};
 }
@@ -36,6 +37,25 @@ describe('M2N frontend startup only; no bridge/HID',()=>{
    const d=startup(true);await d.nodes.connect.listeners.get('click')!();
    expect(d.nodes.bands.children).toHaveLength(9);expect(d.nodes.log.value).toContain('MOCK session unavailable');
    expect(d.nodes.status.textContent).toContain('連線失敗');expect(d.nodes.connect.disabled).toBe(false);expect(d.nodes.apply.disabled).toBe(true);
+ });
+ it('real frontend Connect accepts exact debugInspect success with browser fetch receiver and enables RAM controls',async()=>{
+   const calls:string[]=[];
+   // Emulate browsers whose native Window.fetch rejects a foreign receiver.
+   vi.stubGlobal('fetch',function(this:unknown,url:RequestInfo|URL){
+     if(this!==globalThis)throw new TypeError("Failed to execute 'fetch' on 'Window': Illegal invocation");
+     calls.push(String(url));
+     return Promise.resolve(new Response(JSON.stringify(String(url).endsWith('/session')
+       ? {token:'A'.repeat(64),mode:'M2N RAM ONLY'}
+       : {ok:true,exitCode:0,log:'FreeDSP Native CAF diagnostic — debugInspect...'}),{status:200,headers:{'Content-Type':'application/json'}}));
+   });
+   try{
+     const d=startup(false,RamBridge);await d.nodes.connect.listeners.get('click')!();
+     expect(calls.map(url=>url.split('/').pop())).toEqual(['session','connect']);
+     expect(d.nodes.status.textContent).toContain('metadata已確認');
+     expect(d.nodes.apply.disabled).toBe(false);expect(d.nodes.restore.disabled).toBe(false);
+     expect(d.nodes.log.value).toContain('FreeDSP Native CAF diagnostic — debugInspect...');
+     expect(d.nodes.log.value).not.toContain('Illegal invocation');
+   }finally{vi.unstubAllGlobals();}
  });
  it('127 loopback entry redirects to canonical localhost instead of silently skipping page initialization',()=>{
    const d=dom();let redirect='';
