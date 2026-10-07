@@ -36,10 +36,10 @@ describe('M2J native diagnostic deployment boundary; no hardware', () => {
     expect(imports).toContain('HidD_SetOutputReport');
     expect(imports).toContain('HidD_GetInputReport');
     expect(imports.some(x => /WriteFile|SetFeature|GetFeature|Install|Remove|Restart|WinUsb/.test(x))).toBe(false);
-    expect(native).toContain('SequenceEqual(Caf346.CreateQuery())');
+    expect(native).toContain('SafeRam.IsAllowedReport(buffer)');
   });
-  it('validates sole query CLI before discovery; native helper has no browser production import', () => {
-    expect(main.indexOf('IsQueryOperation(args)')).toBeLessThan(main.indexOf('NativeHid.Discover()'));
+  it('validates fixed safe CLI before discovery; native helper has no browser production import', () => {
+    expect(main.indexOf('IsOperation(args)')).toBeLessThan(main.indexOf('NativeHid.Discover()'));
     expect(cli).toContain('args.Length == 1 && args[0] == "query346"');
     expect(production).not.toMatch(/freedsp-native|FreeDspQuery|NativeHid/);
   });

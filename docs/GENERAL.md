@@ -231,7 +231,7 @@ HidD沒有actual bytes-transferred輸出；62是requested/caps buffer length，�
 Codex僅build/mock/offline，不執行Query346或裝置探索；Henry執行一次script並貼完整output，M2I hardware proof保持PENDING。
 文件仍僅GENERAL/ROADMAP/DECISIONS/DONE；本輪結束後停止，不進RAM190/production integration。
 
-## Current M2J synchronized native query policy
+## Historical M2J synchronized native query policy
 Henry實測M2I一次：2個matching HID paths，MI_03 col01、usage0C/1、input/output62、feature0；SET346與GET皆成功/error0。
 RX已知prefix為01 00 01 00 bc 80 00 23 2d b3 01 00 00 00，CAF188/reply1/count1/CTRL/words=[1]，其餘bytes未提供。
 Level1 native HID transport VERIFIED；Level2 CAF346 QUERY NOT YET VERIFIED；Level3 RAM/EQ NOT VERIFIED。不得稱M2I transport失敗。
@@ -242,3 +242,21 @@ M2J保留官方oneSET/cadence/deadline，明確修正為matching346才完成；�
 Windows沒有per-call timeout參數，仍保留30s childwatchdog；freshRX及monotonic clock是診斷適配，不聲稱完全照抄Android。
 Native GetInputReport是state API，不以單一188推論FIFO、Windowscache、priorM2F來源或「GET會消耗queue」。
 硬體唯一TX仍346；Codex只做offline/build，Henry執行script一次；M2J結果PENDING，不進RAM190/Flash/production。
+
+## Current M2K policy — isolated native RAM proof
+Henry M2J硬體回報：MI_03/col01，usagePage000C/usage0001，input/output62、feature0；SET/GET均success/error0。
+Matching346在GET#1取得：reply1/count13/CTRL B32D2300，words=[62,5,0,32,0,0,0,0,0,0,0,0,0]。
+Level1 NATIVE HID TRANSPORT VERIFIED；Level2 CAF346 QUERY VERIFIED；Level3 RAM190/EQ PENDING HENRY TEST。
+48k只代表該次量測；每次Apply/Restore都重新188→187→346取得knownrate→190，每command須matching reply且無API error。
+Native CLI僅query346 / ApplySafeRamTest / RestoreSafeRamTest。Apply固定PK400Hz/-12dB/Q1、SDK0→wire5、selector0；Restore同band unity。
+僅native診斷，不整合production、不改其他DAC、不送90/220/Flash、不更換driver，不允許任意band/gain/rate/command參數。
+187官方count1[0] logical14bytes；Windows state API要求OutputReportByteLength=62，保留14byte prefix、補48zero、count仍1。
+此適配有Microsoft API contract及hidapi實作依據，不代表Android14與Windows62對firmware等價已證實；matching187失敗就停止。
+Native最終quantizer仍1LSB uncertainty；用M2E float32模型、dynamic Gain=e+2、scale=2^(25-Gain)、官方feedback符號、signed24及stability guards。
+僅known CAF346 rate indices4..8；unknown/failure不fallback、不算係數、不送190。所有TX/RX/API/error/分類皆記錄，SET不重送。
+Matching response只是protocol criterion，未解碼未定義status、不證明可聽效果；缺少transactionID不能保證同command回應fresh。
+Restore只把wire5設flat，不還原原本全部EQ；188/187會改enable/bypass state，並非完全無其他狀態變動。
+Henry：APO OFF、outputFreeDSP、Windows1–2/100、首次Apply前IEM離耳、熟悉音樂、無tone；Apply/Restore各一次。
+任何protocol error停止，先貼完整log、不聽不重試。成功且無異常才低音量聽；比較同曲同音量，突大聲/噪聲/失衡/失真/斷線立刻停止。
+Codex本輪僅build/offline/mock，不做HID探索/硬體寫入。M2K hardware保持PENDING；Henry後續回報不自動修改docs，等待下一輪明確授權。
+文件只更新GENERAL/ROADMAP/DECISIONS/DONE，不新增.md。本輪停在M2K，禁止自動production integration。

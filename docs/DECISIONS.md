@@ -226,3 +226,21 @@ Valid非matching（含188）及invalidcandidate保留並在bound內繼續；matc
 Snapshot/retained response比FIFO更符合stateAPI描述，device/Windows持有者仍UNKNOWN。
 Source: [Microsoft state vs read report semantics](https://learn.microsoft.com/en-us/windows-hardware/drivers/hid/obtaining-hid-reports)
 及pinned officialResponseStaticEvidence.json完整bytecode；M2J再抽取12methods與fixture完全一致。
+
+## D030 — M2J hardware levels / M2K fixed RAM diagnostic
+M2J matching346在GET#1成立，word1=5對應48k；不表示多GET在這次硬體必要，也不證queue/snapshot來源。
+採用官方188[1,0x12]/187[0]/346[62,0x12]/190[0,5,Gain,B0,B1,B2,A0,A1,0x5]。
+官方188僅在enabled flag false時呼叫；獨立process沒有此flag，因此每次Apply/Restore明確送188。
+官方sendCmd的188/187/190為SET→startouter1000ms→GET→sleep5ms；346先initialGET才startouter1000ms。
+官方僅replybit判定，不matching；本診斷增加command/ID/prefix/CTRL/countcapacity matching、freshRX、GET error即停。
+188成功bool存flag，187 bool被丟棄，190回bool；本診斷不沿用ignored prerequisite failure，所有matching都是下一SET的gate。
+187 logical14無法由HidD_SetOutputReport以受支援的14byte API request重現；Windows contract要求caps62，hidapi相同API明確補零。
+因此依Henry「unless Windows HID API behavior requires it」例外，採用14byte prefix＋48zero、count1、API62，無短長fallback試送。
+此決定只證Windows適配有依據；firmware兼容及實際 USB 長度仍未驗證。matching187未取到禁止190，不用hostsuccess代替。
+Sources: [Microsoft HidD_SetOutputReport](https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/hidsdi/nf-hidsdi-hidd_setoutputreport),
+[hidapi Windows hid_send_output_report](https://github.com/libusb/hidapi/blob/master/windows/hid.c) (examined 2026-10-07, function at raw lines1265..1305).
+不增加IOCTL/WriteFile/WinUSB或driver替代；不宣稱可以faithfully發Android14byte USB transfer。
+Flat來源：pinned officialRamStaticEvidence.json setDefaultAvailable直接190使用Gain3/B0=4194304/B1=B2=A0=A1=0；本工具只套selector0/wire5。
+套此flat不執行官方setDefaultAvailable的多band/多selector loop；Restore不是previousEQ備份，enable/bypass state亦可能改變。
+400Hz模型固定attenuation，nearest float32 rounding接續M2E，無native32candidate搜尋，所以1LSB uncertainty保留。
+不自動90或Flash；protocol ACK與audible/restoration evidence分開。若成功但無效果，下一輪研究enable/bank/mapping/90，不放大或加band。

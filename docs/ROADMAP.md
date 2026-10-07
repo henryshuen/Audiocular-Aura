@@ -28,7 +28,8 @@ M2G：Henry回報三次188 host send成功／無matching RX／2.5秒timeout，18
 M2H：M2G346實測rawTotal=0/newEvents=0已回報；正常Windows Chrome的官方Input GET_REPORT替代路徑不可行。
 本輪僅四份docs，Case C不要求手動test；native transport屬後續另輪，M2 RAM proof仍NOT PROVEN。
 M2I：Henry實測SET346/GET成功、有效CAF188回應，Level1 native transport VERIFIED；matchingCAF346 NOT YET VERIFIED。
-M2J：官方bounded cadence加明列matching correction實作，硬體結果PENDING；production不改、不進RAM190。
+M2J：Henry實測GET#1取得matching346，Level2 VERIFIED；當時index5=48k，不證明多GET必要或queue來源。
+M2K：固定native PK400Hz/-12dB/Q1 Apply與band5 unity Restore已實作；187 Windows length adapter有API依據，RAM/EQ硬體結果PENDING HENRY TEST。
 Round 0 結束時 dev server 正在執行，僅監聽 127.0.0.1:5173。
 HTTP 以 curl.exe --noproxy '*' 驗證；一般 Invoke-WebRequest 曾回傳 404，
 直接請求已確認 Vite 頁面正確，未改動系統代理設定。
@@ -46,7 +47,7 @@ HTTP 驗證只證明文件可提供，不證明瀏覽器 UI 或 WebHID 行為。
 ## M2 - Single-band RAM proof — NOT PROVEN
 Goal: Make ONE intentionally obvious attenuation PEQ change work in FreeDSP RAM.
 Use attenuation, not dangerous boost, for initial real-hardware testing.
-Example: PK / 1000 Hz / -12 dB / Q around 0.7-1.0.
+Current M2K test: PK / 400 Hz / -12 dB / Q1.0 / SDK band0→wire5.
 Success: Henry can clearly hear the difference while all other variables remain fixed.
 
 ### M2A — descriptor inspection COMPLETE; RAM NOT TESTED
@@ -1549,3 +1550,88 @@ Possible fix direction:
 - Shared runtime files changed: NONE；Production runtime changed: NO；Non-FreeDSP protocol code changed: NO。
 - Documentation: GENERAL/ROADMAP/DECISIONS/DONE only；New documentation files created: NO。
 - CLI硬體TX仍只有346，SET一次；Codex硬體操作/EQ/Flash writes: NONE。
+
+## M2K — first native RAM190 hardware proof (PENDING HENRY TEST)
+### Research checkpoint — M2J record and final source trace
+- Examined: Henry M2J output；pinned response/ram static instruction fixtures；Microsoft API contract；hidapi Windows state-output adapter。
+- Verified facts: native SET/GET success/error0；matching346在GET#1，reply1/count13/CTRL、words=[62,5,0,32,0,0,0,0,0,0,0,0,0]；當時48k。
+- Verified facts: Level1 transport及Level2 query成立；188 count13[1,0x12] logical62，187 count1[0] logical14，346 count13[62,0x12] logical62，190 count13 logical62。
+- Verified facts: 各command都GET；188/187/190 sendCmd僅replybit成功bool，188存flag、187忽略bool、190返回bool；346 getMsgByCmd initialGET後才計outer1000ms。
+- Hypotheses: Windows padded187是否可被firmware接受、RAM190是否進active bank仍未驗證。
+- Discarded hypotheses: 本次M2J證明需要多GET；CAF ACK即audio proof；caps62本身證明14byte padding等價。
+- Unresolved fields: 187 firmware length interpretation；最終quantizer1LSB；Level3 audible EQ。
+- Next search target: fixed nativeApply/Restore mock tests、verify、scope/Git；Henry一次controlled test。
+
+### Official / native sequence comparison
+|Command|Official payload / full logical length|Official response handling|M2K adapter|
+|---|---|---|---|
+|188|count13 [1,0x12],62|SET/GET, bool stored enabled flag; called if flag false|Each new process sends once; matching188 mandatory|
+|187|count1 [0],14|SET/GET requested14, bool ignored|SET62=prefix14+48zero, GET62, matching187 mandatory|
+|346|count13 [62,0x12],62|SET/initialGET/outer1000ms, reply-only; word1 at14|matching346/count>=2, knownindex4..8 only|
+|190|count13 [0,5,Gain,B0,B1,B2,A0,A1,0x5],62|SET/GET, bool returned|matching190 mandatory; no90/220 appended|
+sendCmd startsouterclock beforeinitialGET and sleeps5 aftereachGET；query346 startsclock afterinitialGET, repeatsGET then sleeps5。
+M2K bounded synchronization follows this distinction, with M2J diagnostic matching/freshRX/failfast improvements, oneSET percommand。
+API無percalltimeout；30s processwatchdog completionUNKNOWN。無transactionID，只matchingcommand不能單獨證明responsefreshness。
+No return-word status definition has been proven; no invented status interpretation added.
+
+### Command187 length gate
+已在硬體執行前完成research：[Microsoft](https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/hidsdi/nf-hidsdi-hidd_setoutputreport)
+要求ReportBufferLength=OutputReportByteLength；[hidapi Windows source](https://github.com/libusb/hidapi/blob/master/windows/hid.c)
+hid_send_output_report明確說短於caps會ERROR_INVALID_PARAMETER，且實作memcpy+zero-pad後HidD_SetOutputReport。
+依Henry的API-required exception採用Windows62 adapter，logical14/count1 unchanged，prefix=01 00 01 00 bb 00 00 23 2d b3 00 00 00 00。
+不將14byte request直接試送、不猜driverfallback；此非bit-for-bit Android USB transaction。Firmware compatibility PENDING；187 nonmatch/error禁止190。
+
+### Test / restore coefficients
+Apply: PK400Hz/-12dB/Q1, SDK0→wire5,selector0,currentrate only; gainRaw=-3072,qRaw=256,precision24。
+48k float32 [B0,B1,B2,A0,A1]=[0.9628257155418396,-1.8981064558029175,0.9378855228424072,1.8981064558029175,-0.9007112979888916]。
+e=1,Gain=3,scale=4194304; nearest integers=[4038384,-7961235,3933777,7961236,-3777857]。
+Payload=[0,5,3,4038384,-7961235,3933777,7961236,-3777857,0,0,0,0,0]。不是globalpreamp，預期400Hz低中頻/body/warmth減少，不是overall-12dB。
+Restore: official flat floats=[1,0,0,0,0],e=1,Gain3,scale4194304,words=[4194304,0,0,0,0]。
+Restore payload=[0,5,3,4194304,0,0,0,0,0,0,0,0,0]，只flat testedband，不restoreallpreviousEQ。
+兩者都188→matchingGET→187→matchingGET→346→matchingknownrate→calculate→190→matchingGET；no90/Flash。
+Final native quantizer 的 32 個候選選擇未重建；nearest 模型仍1LSB uncertainty，不宣稱bitexact。signed24/stability guards皆必須通過。
+
+## Evidence for upstream / Issue #3
+M2K update: native collection MI_03/col01 usagePage0C/usage1 input/output62feature0，reportID1；descriptor為61data bytes另加ID。
+Henry M2J native SET346/GET成功error0，GET#1 matching346/reply1/count13/CTRL B32D2300；words=[62,5,0,32,0,0,0,0,0,0,0,0]，index5→48k。
+WebHID raw input缺席不能用來否定DSP產生回應；native stateGET可取得matchingreply，但未證明所有browserfailure的單一firmware原因。
+Pinned APK SHA04756b49acfea523758d86101c96c1824b7b209ae3a8836c07837088e795d2d5：Freeman3 path188→187→346→190，noautomatic90。
+Native Windows適配必須將187logical14補至API62，count維持1；有Microsoft/hidapi依據，firmware接受尚待matching187。
+RAM190 selector0/sdkband+5/dynamicGain/feedback符號已有static evidence；production尚未integrate，native1LSB finalquantizer未知。
+M2K可供Henry單bandcontrolledApply/Restore，Level3 RAM/audible result PENDING；ACK不能證明audioeffect或Flashpersistence。
+
+### Failed approach history — M2K update
+M2F WebHID188 timeout，190未送；M2G WebHID346 hostsuccess/rawTotal0；M2H正常WindowsChrome GET替代不可行。
+M2I native valid188 nonmatch→Level1verified；M2J matching346GET#1→Level2verified/48k；M2K nativeRAM190→PENDING HENRY TEST。
+
+### Problem / hypothesis / next action
+Observed problem:
+- Native CAF346 works；RAM190/audible EQ及Restore尚未驗證，既有Sync Complete不能證明EQ已作用。
+Verified facts:
+- Level1/2 hardware verified；official188/187/346/190 schema已trace；187Windows API length requirement已查證；無Codex硬體寫入。
+Possible causes:
+- Browser receive API、enable/bypass、RAM bank、band/coefficient/activation semantics；只有transport/query部分已縮小問題。
+Ruled out / weakened:
+- 原生CAF完全不可用、346無reply、190ACK必等於EQ效果、每次盲用48k、zeroallcoefficients可當flat。
+Next validation:
+- Henry照ear-safety順序Apply一次；error停貼log不聽不retry；success無異常才低volume聽，再Restore一次，同曲同volume。
+- 回報兩份完整logs與Apply obvious/subtle/nochange/abnormal、Restore returned/partial/nochange/abnormal。
+Possible fix direction:
+- 僅在protocol及audible/restore證據成立後另輪評估production；成功無聽感先查enable/bank/mapping/90，不增加attenuation/bands。
+
+### Research checkpoint — M2K automated handoff
+- Examined: complete native diff、fixed PS launchers、official APK static replay、40 native mock tests、14files/122 project tests、final scope。
+- Verified facts: native build0warnings/0errors、40offline tests、verify.ps1 exit0、TypeScript/Vite/testtypecheck及122tests通過；PS三scripts語法通過。
+- Verified facts: pinned APK12method replay與保存fixture完全一致；非法CLI在探索前拒絕；48k coefficient response離線400Hz為約-11.99998dB。
+- Hypotheses: 187 padded representation firmware接受及Level3 audible effect仍PENDING；本輪沒有任何Codex hardware access。
+- Discarded hypotheses: 用allzero coefficients當flat、ACK等於audioproof、queryfailure可fallback48k、sharedruntime是本輪必要變更。
+- Unresolved fields: hardware187/190 matching及Apply/Restore聽感；nativefinal1LSB optimum、samecommandreplyfreshness。
+- Next search target: intendedfiles commit/push後STOP；Henry一次Apply/Restore，依protocol gate及ear-safety回報。
+
+### Scope / regression check
+- FreeDSP-specific code: tools/freedsp-native/SafeRam.cs、NativeHid.cs、Program.cs。
+- Native diagnostic scripts: apply-freedsp-native-safe-test.ps1、restore-freedsp-native-safe-test.ps1；existingqueryscript未改。
+- Offline tests: native Tests/Program.cs、nativeQueryScope.test.ts、nativeSafeRamScope.test.ts。
+- Shared runtime changed: NONE；Production runtime changed: NO；Non-FreeDSP protocol code changed: NO。
+- Documentation: GENERAL/ROADMAP/DECISIONS/DONE only；New documentation files created: NO。
+- verify產生的tracked dist已還原，只保留本輪intendedfiles；git diff --check通過。M2K hardware PENDING。

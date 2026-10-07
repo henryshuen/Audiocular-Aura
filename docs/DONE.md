@@ -232,3 +232,18 @@
 - M2J HARDWARE RESULT PENDING；Codex沒有硬體操作、mutation、driver或production變更。
 - 最終verify.ps1 exit0：13files/119tests及TypeScript/Vite build/test typecheck通過；native build0warnings/0errors、30項mock tests通過。
 - 還原generated tracked dist後，git diff --check通過；僅四docs、native診斷及offline tests有差異，無新增文件或production變更。
+
+## 2026-10-07 — M2J hardware confirmation / M2K implementation checkpoint
+- Henry提供M2J：MI_03/col01 usage0C/1 input/output62feature0，SET/GET success/error0，GET#1 matching346/reply1/count13/CTRL。
+- 回報words=[62,5,0,32,0,0,0,0,0,0,0,0,0]，該次index5=48000Hz；Level1/2 VERIFIED，Level3 RAM/EQ PENDING HENRY TEST。
+- 已核對保存的官方instruction arrays：188/187/346/190 count/payload、GET及callerbool handling、sendCmd與getMsgByCmd initialGET clock差異。
+- 已查閱Microsoft HidD_SetOutputReport contract及hidapi Windows hid_send_output_report，短report須補至caps長度。
+- 新增固定nativeApply/Restore模型與runner，官方187logical14prefix＋48zero Windows62adapter、count1，mandatorymatching187 gate。
+- native CLI僅query346/ApplySafeRamTest/RestoreSafeRamTest；transport guard只允許固定reports，無任意opcode/band/rate/gain。
+- 新增兩個無參數PS launchers、30s childwatchdog，未執行任何HID探索或deviceAPI。
+- Native build成功0warnings/0errors；40項offline synthetic/mock測試通過，包括400Hzgolden、flat、動態 rate、signed words、187padding、error/mismatch/timeout gates。
+- 只更新四份既有docs，沒有新增.md；src/production/非FreeDSP code未修改。
+- 最終verify.ps1 exit0：14files/122tests及TypeScript/Vite/testtypecheck通過；nativebuild0warnings/0errors、40mocktests通過。
+- 官方pinned APK12method static replay與fixture完全一致；PS三scripts語法解析通過；非法CLI在裝置探索前拒絕。
+- 400Hz quantized transfer function離線計算：48k約-11.99998dB，其他knownrates約-12dB；這是數學驗證，無聽感證據。
+- 已還原本輪build產生的tracked dist；git diff --check通過，production/非FreeDSP差異NONE，M2K hardware仍PENDING。

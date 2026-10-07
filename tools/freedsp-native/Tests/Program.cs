@@ -169,18 +169,81 @@ Test("repeatedGET started within budget may return matching after deadline", () 
     using var log=new StringWriter();
     Check(Query346.Run(hid,log,clock)==0&&hid.Calls.Count(c=>c=="GET")==2,"Reply check precedes next deadline check, as source");
 });
+Test("fixed three-operation CLI rejects extra arguments and opcodes", () => {
+    foreach(var op in new[]{"query346","ApplySafeRamTest","RestoreSafeRamTest"}) Check(SafeRam.IsOperation([op]),"Fixed operation");
+    foreach(var op in new[]{"190","220","90","apply","query187","query190"}) Check(!SafeRam.IsOperation([op]),"No arbitrary CLI");
+    Check(!SafeRam.IsOperation([])&&!SafeRam.IsOperation(["ApplySafeRamTest","48000"]),"No tuning");
+});
+Test("400Hz minus12 Q1 at48k exact M2E float32 model and nearest integers", () => {
+    var c=SafeRam.Calculate(48000,false);
+    Check(c.Floats.SequenceEqual(new float[]{.9628257155418396f,-1.8981064558029175f,.9378855228424072f,1.8981064558029175f,-.9007112979888916f}),"Float golden");
+    Check(c.Exponent==1&&c.Gain==3&&c.Scale==4194304,"Dynamic scaling");
+    Check(c.Words.SequenceEqual(new[]{4038384,-7961235,3933777,7961236,-3777857}),"Nearest approximation, NOT captured/native optimum");
+    Check(c.Payload.SequenceEqual(new[]{0,5,3,4038384,-7961235,3933777,7961236,-3777857,0,0,0,0,0}),"Selector0 wire5 plus13words");
+});
+Test("all known rates recomputed and stable; unknown rate rejected", () => {
+    var words=new List<string>();
+    foreach(int hz in SafeRam.Rates) { var c=SafeRam.Calculate(hz,false); Check(c.Gain==c.Exponent+2&&c.Scale==(1<<(25-c.Gain)),"Scale formula"); Check(c.Words[1]<0&&c.Words[3]>0&&c.Words[4]<0,"Official feedback signs"); words.Add(string.Join(",",c.Words)); }
+    Check(words.Distinct().Count()==5,"No cached48k"); Throws(()=>SafeRam.Calculate(8000,false));
+});
+Test("official short187 prefix preserved; justified Windows padding does not inflate logical count", () => {
+    var b=SafeRam.Bypass(); Check(b.Length==62,"Windows API length");
+    Check(b.Take(14).SequenceEqual(Convert.FromHexString("01000100BB0000232DB300000000")),"Exact official14byte command187");
+    Check(b.Skip(14).All(v=>v==0),"Only48zero padding");
+});
+Test("flat restore is unity not zero/mute and changes only wire5", () => {
+    foreach(int hz in SafeRam.Rates) { var c=SafeRam.Calculate(hz,true); Check(c.Gain==3&&c.Scale==4194304&&c.Payload.SequenceEqual(new[]{0,5,3,4194304,0,0,0,0,0,0,0,0,0}),"Official flat representation"); }
+});
+Test("command190 byte order count13 signedwords and strict report allowlist", () => {
+    var b=SafeRam.Ram(48000,false); Check(b.Length==62&&b[0]==1&&BinaryPrimitives.ReadUInt32LittleEndian(b.AsSpan(2))==0x00be000d,"Envelope");
+    Check(BinaryPrimitives.ReadInt32LittleEndian(b.AsSpan(26))==-7961235,"B1 signedLE atword4");
+    foreach(var tx in new[]{Caf346.CreateQuery(),SafeRam.Enable(),SafeRam.Bypass(),b,SafeRam.Ram(48000,true)}) Check(SafeRam.IsAllowedReport(tx),"Known report");
+    foreach(int command in new[]{90,220,259,191}) { var bad=(byte[])b.Clone(); BinaryPrimitives.WriteUInt32LittleEndian(bad.AsSpan(2),13u|((uint)command<<16)); Check(!SafeRam.IsAllowedReport(bad),"Forbidden command"); }
+    b[14]=6; Check(!SafeRam.IsAllowedReport(b),"No other band"); b=SafeRam.Ram(48000,false); b[10]=5; Check(!SafeRam.IsAllowedReport(b),"No Flash rate selector");
+});
+Test("Apply andRestore require matching188187346190; query precedes dynamic calculation", () => {
+    foreach(bool restore in new[]{false,true}) {
+        using var hid=new MockHid(NonMatch(190)); foreach(var b in new[]{NonMatch(188),NonMatch(187),Reply(6)}) hid.Responses.Enqueue(b);
+        using var log=new StringWriter(); Check(SafeRam.Run(hid,restore,log,()=>new FakeClock())==0,"Matching chain");
+        Check(hid.Transmissions.Select(b=>(int)((BinaryPrimitives.ReadUInt32LittleEndian(b.AsSpan(2))>>16)&0x7fff)).SequenceEqual(new[]{188,187,346,190}),"Only exact sequence once");
+        Check(hid.Transmissions.Last().SequenceEqual(SafeRam.Ram(96000,restore)),"Use returned96k");
+        var output=log.ToString(); Check(output.IndexOf("command=346")<output.IndexOf("Floats ["),"Query before calculate"); Check(output.Contains(restore?"PROTOCOL RESTORE VERIFIED / LISTENING PENDING":"PROTOCOL APPLY VERIFIED / LISTENING PENDING"),"No audible claim");
+    }
+});
+Test("any prerequisite error stops laterSET; failed/unknown346 never sends190", () => {
+    for(int failed=0; failed<3; failed++) {
+        using var hid=new MockHid(Reply()); foreach(var b in new[]{NonMatch(188),NonMatch(187)}) hid.Responses.Enqueue(b);
+        for(int i=0;i<failed;i++) hid.Results.Enqueue(new(true,0)); hid.Results.Enqueue(new(false,31));
+        using var log=new StringWriter(); Check(SafeRam.Run(hid,false,log,()=>new FakeClock())==7,"Stop"); Check(hid.Transmissions.Count==failed+1,"No later SET"); Check(!log.ToString().Contains("Floats ["),"No calculation on failed query");
+    }
+    using var unknown=new MockHid(Reply(9)); unknown.Responses.Enqueue(NonMatch(188)); unknown.Responses.Enqueue(NonMatch(187));
+    using var unknownLog=new StringWriter(); Check(SafeRam.Run(unknown,false,unknownLog,()=>new FakeClock())==7&&unknown.Transmissions.Count==3,"Unknown not48k fallback");
+});
+Test("mismatch synchronization bounded; no reSET; all raw replies retained", () => {
+    using var hid=new MockHid(NonMatch(187)); hid.Responses.Enqueue(NonMatch(259)); using var log=new StringWriter(); var clock=new FakeClock();
+    Check(SafeRam.Exchange(hid,187,SafeRam.Bypass(),log,clock,false)?.Command==187,"Match after wrong259");
+    Check(hid.Transmissions.Count==1&&hid.Calls.Count(c=>c=="GET")==2&&log.ToString().Contains("VALID CAF NON-MATCH"),"OneSET boundedGET");
+    using var stuck=new MockHid(NonMatch(188)); using var stuckLog=new StringWriter(); var bounded=new FakeClock();
+    Check(SafeRam.Exchange(stuck,187,SafeRam.Bypass(),stuckLog,bounded,false) is null&&bounded.TimeMs==1000&&stuck.Transmissions.Count==1,"Deadline no resend");
+});
+Test("190 failedGET never labels protocol verified or retries", () => {
+    using var hid=new MockHid(NonMatch(190)); foreach(var b in new[]{NonMatch(188),NonMatch(187),Reply()}) hid.Responses.Enqueue(b);
+    foreach(var r in new[]{new HidCallResult(true,0),new(true,0),new(true,0),new(false,31)}) hid.Results.Enqueue(r);
+    using var log=new StringWriter(); Check(SafeRam.Run(hid,false,log,()=>new FakeClock())==7&&hid.Transmissions.Count==4&&!log.ToString().Contains("PROTOCOL APPLY VERIFIED"),"Failure gate");
+});
 Console.WriteLine($"Native offline tests: {passed} passed; SYNTHETIC / MOCK ONLY; no hardware access.");
 return 0;
 
 sealed class MockHid(byte[] reply) : IQueryHid
 {
     public readonly List<string> Calls=[];
+    public readonly List<byte[]> Transmissions=[];
     public byte[]? Tx, InitialRx;
     public HidCallResult SetResult=new(true,0), GetResult=new(true,0);
     public readonly Queue<byte[]> Responses=[];
     public readonly Queue<HidCallResult> Results=[];
     public Action? OnGet;
-    public HidCallResult SetOutputReport(byte[] buffer) { Calls.Add("SET"); Tx=(byte[])buffer.Clone(); return SetResult; }
+    public HidCallResult SetOutputReport(byte[] buffer) { Calls.Add("SET"); Tx=(byte[])buffer.Clone(); Transmissions.Add(Tx); return SetResult; }
     public HidCallResult GetInputReport(byte[] buffer)
     {
         Calls.Add("GET"); InitialRx=(byte[])buffer.Clone(); OnGet?.Invoke();
