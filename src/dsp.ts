@@ -1,4 +1,5 @@
-import {isFreeDsp,attachFreeDsp} from './freedsp/webHid.ts';
+import {isFreeDsp} from './freedsp/webHid.ts';
+import {getFreeDspSession as attachFreeDsp} from './freedsp/session.ts';
 import { buildConexantPacket, quantizeConexantCoefficients } from "./freedsp/conexantPacket.ts";
 import { sendConexantReport as sendFreeDSPReport } from "./freedsp/conexantTransport.ts";
 import {
@@ -560,7 +561,7 @@ function updateBalanceState(channel: number, attenuation: number) {
  * @param device The WebHID device
  */
 export function setupListener(device: HIDDevice) {
- if(isFreeDsp(device)){attachFreeDsp(device,log);return;}
+ if(isFreeDsp(device)){attachFreeDsp(device);return;}
 	const eqState = getEqState();
 	device.addEventListener("inputreport", (event) => {
 		const versionEl = document.getElementById("fwVersion");
@@ -769,7 +770,7 @@ export async function syncToDevice(explicit=false) {
  if(isFreeDsp(device)){
    if(!explicit)return; // profile/import/undo/edit are local only for FreeDSP.
    if(getGlobalGainState()!==0 || getAutoPreampEnabled() || getBassTiltState()!==0 || getTrebleTiltState()!==0)throw new Error('FreeDSP preamp/tilt未實作；請將本地值設0，勿當作已套用。');
-   showSyncing();try{await attachFreeDsp(device,log).sync(eqState);localStorage.setItem(`last_eq_state_${device.vendorId}_${device.productId}`,JSON.stringify(eqState));}finally{hideSyncing();}return;
+   showSyncing();try{await attachFreeDsp(device).sync(eqState);localStorage.setItem(`last_eq_state_${device.vendorId}_${device.productId}`,JSON.stringify(eqState));}finally{hideSyncing();}return;
  }
 
 	showSyncing();
@@ -1653,5 +1654,5 @@ export async function executeFactoryReset(device: HIDDevice) {
 
 export async function restoreFreeDspUnity(){
  const d=getDevice();if(!d || !isFreeDsp(d))return;
- showSyncing();try{await attachFreeDsp(d,log).sync([],true);}finally{hideSyncing();}
+ showSyncing();try{await attachFreeDsp(d).sync([],true);}finally{hideSyncing();}
 }

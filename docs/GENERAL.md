@@ -381,15 +381,19 @@ M2Q firstmanualWebgate: fillBand5=400/-12/Q1, explicitpairedApply/listen(bothear
 ### M2R observation / Restore rule
 Positive hardware outcome must be Henry-reported, never inferred from protocol PASS. Observation choices reset toU for each action; P1/P2/negative centered Apply/recovery records gate the experimental graphical session. Invalid editor/observations do not block explicit unity Restore; protocol faults STOP Apply but permit a separately requested emergency full-nine unity operation. No automatic retry/rollback.
 
-## UPSTREAM-FIRST / NATIVE-ARCHITECTURE RULE
-1. Prefer upstream architecture, abstractions, transport, interaction patterns and normal user workflow.
-2. Device-specific protocol differences plug into generic abstractions; do not build parallel workflows merely for convenience.
-3. Browser-supported production hardware should use existing WebHID unless evidence proves the required protocol cannot be implemented through it. Before any new transport/service/process/UI/maintenance surface ask: Can upstream architecture implement this? If yes, use it.
-4. Native/.NET tools are developer diagnostics only: reverse engineering, capture, hardware validation, protocol comparison, regression and unknown-command research. Production dependency requires unavoidable need and explicit evidence.
-5. Optimize upstream merge: minimal device surface, no duplicate UX/platform dependency, preserve existing DACs, isolate FreeDSP protocol.
-6. Temporary debug/native surfaces remain separate from normal UX. Applies to PEQ/preamp/tone/utilities/persistence/future functions.
-7. Generic UI is not FreeDSP support evidence. Classify each control SUPPORTED BY FREEDSP EVIDENCE / UNSUPPORTED / UNKNOWN; UNKNOWN remains disabled. No generic command or Flash220 without dedicated evidence/validation.
-8. M2S supersedes M2R main bridge gate: normal CONNECT DAC uses CAF WebHID adapter. Native debug remains optional developer mode. M2G zero-input and missing WebHID Input GET_REPORT limitations remain documented; offline mocks never establish hardware event availability.
+## UPSTREAM-FIRST / MINIMAL DEVICE-SPECIFIC TRANSPORT
+1. Always prefer upstream UI, abstractions and user workflows.
+2. Prefer upstream WebHID transport when it can faithfully implement the device protocol.
+3. If browser APIs lack a required protocol primitive, a minimal device-specific transport adapter is acceptable when supported by hardware evidence.
+4. Such an adapter must remain below the shared protocol/business/UI layers.
+5. Never degrade verified request/response semantics merely to force a device into a generic transport.
+6. Never treat transport API success as device/DSP success.
+7. Device-specific transport exceptions require evidence and documentation.
+8. Avoid duplicate user-facing connection flows.
+
+M2S real hardware evidence: chooser/open/VID35D8:1496/ONLINE PASS; command188 ID1/body61 sendReport PASS, matching inputreport NONE then bounded TIMEOUT/STOP, no retry and no190. Prior M2G also zero input events. Native HidD_GetInputReport matching responses previously hardware PASS. Pure WebHID is BLOCKED for the verified FreeDSP request/response flow; no fire-and-forget, skip-init or invented protocol workaround.
+Normal CONNECT stays the only main entry. FreeDSP exact CAF selection dispatches to the Windows native transport helper; other DACs retain WebHID. Common TypeScript CAF serializer, coefficient/safety model and RAM sequencing own production candidate behavior. Native helper exposes metadata and bounded single-SET/Input-GET exchange only; legacy native coefficient/business tools are diagnostic references, not a second production PEQ implementation.
+Default scripts/dev.ps1 manages helper plus Vite and validates owned process identity; -WebHidOnly skips helper for other DACs only. Windows/.NET10 SDK and localhost5173 origin are development dependencies; no browser-only FreeDSP or packaged desktop support claim. Sync/Restore remain explicit, RAM-only/current matching rate, paired18writes; local edits do not write, Flash/preamp/readback/persistence unsupported. New native main-page integration remains hardware PENDING.
 
 ### M2S main-page UX semantics
-For connected FreeDSP, Hardware Memory Controls exposes RESTORE FREEDSP RAM TO UNITY independently of editor validity. SYNC TO RAM is the WebHID candidate; SEND TO DEVICE disabled, Flash disabled. RESET TO FLAT and Slot A/B/OFF are local editor snapshots, never verified hardware banks. FreeDSP local default snapshot has9bands. Hardware Restore leaves editor unchanged; status must distinguish LOCAL EDITOR from FREEDSP RAM and protocol completion from readback.
+For connected FreeDSP, Hardware Memory Controls exposes RESTORE FREEDSP RAM TO UNITY independently of editor validity. SYNC TO RAM is the native transport candidate; SEND TO DEVICE disabled, Flash disabled. RESET TO FLAT and Slot A/B/OFF are local editor snapshots, never verified hardware banks. FreeDSP local default snapshot has9bands. Hardware Restore leaves editor unchanged; status must distinguish LOCAL EDITOR from FREEDSP RAM and protocol completion from readback.

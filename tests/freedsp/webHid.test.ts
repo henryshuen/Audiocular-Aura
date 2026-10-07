@@ -1,6 +1,6 @@
 import type {Band} from '../../src/main.ts';
 import {describe,it,expect,vi} from 'vitest';
-import {FreeDspWebHid,isFreeDsp,isCafDevice,selectCafDevice,attachFreeDsp,detachFreeDsp} from '../../src/freedsp/webHid.ts';
+import {FreeDspWebHid,isFreeDsp,isCafDevice,selectCafDevice,detachFreeDsp} from '../../src/freedsp/webHid.ts';
 import {encodeCaf,parseCaf} from '../../src/freedsp/cafCodec.ts';
 import {modelWebBand,unityPreset,mixedPreset} from '../../src/freedsp/webRam.ts';
 import vectors from './fixtures/nativeM2sVectors.json';
@@ -56,12 +56,14 @@ describe('M2S upstream WebHID mock only',()=>{
  it('send failure stops, explicit unity recovery allowed, disconnect cancels pending and detaches listener',async()=>{
   const f=mock(),send=f.d.sendReport;f.d.sendReport=vi.fn(()=>Promise.reject(new Error('SENDFAIL')));await expect(f.c.sync(unityPreset())).rejects.toThrow('SENDFAIL');expect(f.d.sendReport).toHaveBeenCalledTimes(1);f.d.sendReport=send;await f.c.sync([],true);f.c.dispose();expect(f.listeners.size).toBe(0);await expect(f.c.sync([])).rejects.toThrow();
  });
- it('actual normal CONNECT chooser opens CAF with listener first and no auto commands/readback/preamp',async()=>{
+ it('actual normal CONNECT chooser uses native metadata only and no auto commands/readback/preamp',async()=>{
   const f=mock();f.c.dispose();Object.defineProperty(f.d,"opened",{value:false,writable:true});const order:string[]=[];f.d.open=vi.fn(async()=>{order.push('open');Object.defineProperty(f.d,"opened",{value:true,writable:true});});
   const elements:Record<string,{style:Record<string,string>;classList:{remove:()=>void;add:()=>void};innerText?:string}>={};
   const ctx={device:null,window:{},document:{getElementById:(id:string)=>elements[id]||null},navigator:{hid:{requestDevice:vi.fn(async()=>[f.d])}},activeDacs:[],VID_AUDIOCULAR:1,VID_SAVITECH_OFFICIAL:2,VID_SAVITECH:3,VID_SAVITECH_ALT:4,VID_COMTRUE:5,VID_FIIO:6,
-   isExperimentalFreeDspActive:()=>false,isFreeDsp,selectCafDevice,attachFreeDsp:(d:HIDDevice)=>{order.push('listener');return attachFreeDsp(d,()=>{});},log:vi.fn(),console:{debug(){}},localStorage:{getItem:()=>null,setItem:vi.fn()},adjustBandsForDevice:vi.fn(),identifyConnectedDac:vi.fn(),getProtocol:()=> 'CONEXANT',enableControls:vi.fn(),configureFreeDspUI:vi.fn(),setupListener:vi.fn(),eqState:unityPreset(),renderUI:vi.fn(),autoPreampEnabled:false};
-  await runInNewContext(extracted('connectToDevice',fnSource)+'\nconnectToDevice()',ctx);expect(order).toEqual(['listener','open']);expect(ctx.device).toBe(f.d);expect(f.sent).toHaveLength(0);expect(ctx.configureFreeDspUI).toHaveBeenCalledWith(true);expect(ctx.log.mock.calls.join()).not.toContain('Connection Error');detachFreeDsp(f.d);
+   isExperimentalFreeDspActive:()=>false,isFreeDsp,selectCafDevice,connectFreeDsp:async()=>{order.push('native metadata');},log:vi.fn(),console:{debug(){}},localStorage:{getItem:()=>null,setItem:vi.fn()},adjustBandsForDevice:vi.fn(),identifyConnectedDac:vi.fn(),getProtocol:()=> 'CONEXANT',enableControls:vi.fn(),configureFreeDspUI:vi.fn(),setupListener:vi.fn(),eqState:unityPreset(),renderUI:vi.fn(),autoPreampEnabled:false};
+  await runInNewContext(extracted('connectToDevice',fnSource)+'\nconnectToDevice()',ctx);expect(order).toEqual(['native metadata']);expect(f.d.open).not.toHaveBeenCalled();expect(ctx.device).toBe(f.d);expect(f.sent).toHaveLength(0);expect(ctx.configureFreeDspUI).toHaveBeenCalledWith(true);expect(ctx.log.mock.calls.join()).not.toContain('Connection Error');detachFreeDsp(f.d);
+  const other={...f.d,productId:1,open:vi.fn(async()=>{})} as unknown as HIDDevice;ctx.navigator.hid.requestDevice.mockResolvedValue([other]);ctx.device=null;Object.assign(ctx,{loadManualPreampState:vi.fn(),configurePreampUI:vi.fn(),globalGainState:0});
+  await runInNewContext(extracted('connectToDevice',fnSource)+'\nconnectToDevice()',ctx);expect(other.open).toHaveBeenCalledOnce();expect(order).toEqual(['native metadata']);expect(ctx.device).toBe(other);
  });
  it('actual connected graph edit callback sends no realtime writes; other DAC callback retains queue',async()=>{
   const state=unityPreset(),queue=vi.fn(),ctx={device:mock().d,eqState:state,autoPreampEnabled:false,isFreeDsp,parseFloat,Math,Boolean,setEQ:(i:number,k:keyof Band,v:never)=>{state[i][k]=v;},renderUI:vi.fn(),setLastAppliedEqName:vi.fn(),queueRealtimeBandWrite:queue};
@@ -95,7 +97,7 @@ describe('M2S upstream WebHID mock only',()=>{
   const set=runInNewContext(extracted('setABCompareState',fnSource)+'\nsetABCompareState',ctx);const before=ctx.eqState.map(b=>({...b}));await set('B');expect(ctx.eqState).toHaveLength(9);expect(ctx.eqState.every(b=>b.gain===0)).toBe(true);await set('A');expect(ctx.eqState).toEqual(before);await set('Off');expect(sync).not.toHaveBeenCalled();expect(f.sent).toHaveLength(0);
   ctx.device={...f.d,productId:1} as HIDDevice;await set('B');expect(sync).toHaveBeenCalledTimes(1);expect(ctx.eqState).toHaveLength(10);f.c.dispose();
  });
- it('normal UI has no bridge workflow, explicit Sync dispatch; flash/realtime guarded; dev native optional',()=>{
-  expect(mainSource).not.toContain('mountGraphicalRam');expect(mainSource).toContain('await syncToDevice(true)');expect(dspSource).toContain('if(!explicit)return');expect(dspSource).toContain('if(isFreeDsp(device))return; // Explicit RAM Sync only');expect(devSource).toContain('param([switch]$NativeDebug)');expect(devSource).toContain('if ($NativeDebug)');
+ it('normal UI has one CONNECT workflow, explicit Sync dispatch; helper managed by dev',()=>{
+  expect(mainSource).not.toContain('mountGraphicalRam');expect(mainSource).toContain('await syncToDevice(true)');expect(dspSource).toContain('if(!explicit)return');expect(dspSource).toContain('if(isFreeDsp(device))return; // Explicit RAM Sync only');expect(devSource).toContain('[switch]$WebHidOnly');expect(devSource).toContain('if (-not $WebHidOnly)');expect(devSource).toContain('serveTransport');
  });
 });

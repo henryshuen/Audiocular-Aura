@@ -512,6 +512,51 @@ Test("M2S native-generated21 vectors stay equal to browser equivalence fixture",
  var actual=System.Text.Json.Nodes.JsonNode.Parse(System.Text.Json.JsonSerializer.Serialize(M2sVectors()));
  Check(System.Text.Json.Nodes.JsonNode.DeepEquals(expected,actual),"Native/WebHID codec parity fixture drift");
 });
+Test("M2S primitive accepts actual21 vectors without native coefficient math",()=>{
+ foreach(var v in M2sVectors()){
+  using var doc=System.Text.Json.JsonDocument.Parse(System.Text.Json.JsonSerializer.Serialize(v));
+  byte[] tx=Convert.FromBase64String(doc.RootElement.GetProperty("helper").GetString()!);
+  var request=new TransportRequest(Convert.ToBase64String(tx));Check(request.Bytes().SequenceEqual(tx),"Preserve serializer bytes");
+  int cmd=doc.RootElement.GetProperty("command").GetInt32();using var hid=new MockHid(cmd==346?Reply():NonMatch(cmd));using var log=new StringWriter();
+  Check(TransportExchange.Run(hid,request,log,()=>new FakeClock())==0,"Matching primitive");
+  Check(hid.Transmissions.Single().SequenceEqual(tx),"Exactly one unchanged SET");
+  Check(log.ToString().Contains("CAF_NATIVE_REPLY="+Convert.ToBase64String(cmd==346?Reply():NonMatch(cmd))),"Actual raw matching reply preserved");
+ }
+});
+Test("M2S primitive rejects unknown commands/fields before SET",()=>{
+ var valid=RamDebug.Packet(4,RamDebug.Calculate(48000,new(4,1000,6,1,"PK",true),false),1);
+ foreach(var mutation in new Action<byte[]>[]{b=>b[0]=2,b=>b[1]=1,b=>b[4]=220,b=>b[6]=1,b=>b[10]=2,b=>b[14]=10,b=>b[18]=26,b=>b[58]=1,b=>b[2]=12,b=>b[5]|=128}){
+  var tx=(byte[])valid.Clone();mutation(tx);using var hid=new MockHid(NonMatch(190));using var log=new StringWriter();
+  Throws(()=>TransportExchange.Run(hid,new(Convert.ToBase64String(tx)),log));Check(hid.Transmissions.Count==0,"No native SET after invalid shape");
+ }
+});
+Test("M2S primitive nonmatch polling never resends; timeout/API failure yields no reply",()=>{
+ using var hid=new MockHid(NonMatch(188));hid.Responses.Enqueue(NonMatch(190));using var log=new StringWriter();
+ Check(TransportExchange.Run(hid,new(Convert.ToBase64String(SafeRam.Enable())),log,()=>new FakeClock())==0&&hid.Transmissions.Count==1,"GET nonmatch then matching, single SET");
+ foreach(bool apiFail in new[]{false,true}){
+  using var fail=new MockHid(NonMatch(190));if(apiFail)fail.GetResult=new(false,31);using var failLog=new StringWriter();
+  Check(TransportExchange.Run(fail,new(Convert.ToBase64String(SafeRam.Enable())),failLog,()=>new FakeClock())==7&&fail.Transmissions.Count==1,"Bounded STOP no resend");
+  Check(!failLog.ToString().Contains("CAF_NATIVE_REPLY="),"No fabricated matching response");
+ }
+});
+Test("M2S minimal HTTP helper metadata/transport only; no business /ram endpoint",()=>RunTransportBridgeMock().GetAwaiter().GetResult());
+async Task RunTransportBridgeMock(){
+ using var cancellation=new CancellationTokenSource();var ready=new TaskCompletionSource<string>(TaskCreationOptions.RunContinuationsAsynchronously);
+ var calls=new List<string>();var server=DebugBridge.RunAsync((op,json)=>{calls.Add(op);return Task.FromResult<object>(new{ok=true,exitCode=0,reply=Convert.ToBase64String(NonMatch(188)),log="FAKE ONLY"});},cancellation.Token,0,url=>ready.SetResult(url),diagnostics:false);
+ try{
+  string url=await ready.Task.WaitAsync(TimeSpan.FromSeconds(10));using var client=new HttpClient();client.DefaultRequestHeaders.Add("Origin",DebugBridge.Origin);
+  using var session=System.Text.Json.JsonDocument.Parse(await client.GetStringAsync(url+"/session"));
+  Check(session.RootElement.GetProperty("mode").GetString()=="M2S CAF TRANSPORT"&&calls.Count==0,"Session has no child");
+  client.DefaultRequestHeaders.Add("X-AuraPEQ-Session",session.RootElement.GetProperty("token").GetString());
+  Check((await client.PostAsync(url+"/connect",null)).IsSuccessStatusCode&&calls.Single()=="debugInspect","Metadata only");
+  Check((int)(await client.PostAsync(url+"/ram",new StringContent("{}",System.Text.Encoding.UTF8,"application/json"))).StatusCode==404&&calls.Count==1,"No PEQ business endpoint");
+  Check((int)(await client.PostAsync(url+"/transport",new StringContent("{}",System.Text.Encoding.UTF8,"application/json"))).StatusCode==400&&calls.Count==1,"Malformed request no child");
+  string body=System.Text.Json.JsonSerializer.Serialize(new TransportRequest(Convert.ToBase64String(SafeRam.Enable())));
+  var result=await client.PostAsync(url+"/transport",new StringContent(body,System.Text.Encoding.UTF8,"application/json"));
+  Check(result.IsSuccessStatusCode&&calls.SequenceEqual(new[]{"debugInspect","transportExchange"}),"Only primitive child operation");
+  using var response=System.Text.Json.JsonDocument.Parse(await result.Content.ReadAsStringAsync());Check(response.RootElement.GetProperty("reply").GetString()==Convert.ToBase64String(NonMatch(188)),"Raw response passed through");
+ }finally{cancellation.Cancel();await server;}
+}
 if(args.Length==2 && args[0]=="--export-m2s")File.WriteAllText(args[1],System.Text.Json.JsonSerializer.Serialize(M2sVectors(),new System.Text.Json.JsonSerializerOptions{WriteIndented=true}));
 Console.WriteLine($"Native offline tests: {passed} passed; SYNTHETIC / MOCK ONLY; no hardware access.");
 return 0;

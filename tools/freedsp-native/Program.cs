@@ -13,6 +13,9 @@ if (!OperatingSystem.IsWindows())
     return 2;
 }
 if (args[0] == "serveDebug") return await DebugBridge.RunAsync();
+if (args[0] == "serveTransport") return await DebugBridge.RunAsync(diagnostics:false);
+TransportRequest? transportRequest=null;
+if(args[0]=="transportExchange"){try{transportRequest=TransportRequest.Parse(Console.In.ReadToEnd());}catch(Exception error){Console.Error.WriteLine("INVALID TRANSPORT before discovery: "+error.Message);return 2;}}
 RamDebugRequest? debugRequest = null;
 if (args[0] == "debugRam")
 {
@@ -41,6 +44,10 @@ try
     Console.WriteLine("Input1/Output1 confirmed by HidP_InitializeReportForID (preparsed data only)");
     Console.Out.Flush();
     if (args[0] == "debugInspect") { Console.WriteLine("CONNECTED: exact FreeDSP CAF collection verified; metadata only, no SET/GET"); return 0; }
+    if(transportRequest is not null){
+      var tx=transportRequest.Bytes();using var scoped=NativeHid.OpenScoped(target,b=>b.AsSpan().SequenceEqual(tx));
+      return TransportExchange.Run(scoped,transportRequest,Console.Out);
+    }
     if (ChannelProbe.TryOperation(args[0],out _,out _))
     {
         var allowed=new List<byte[]> {SafeRam.Enable(),SafeRam.Bypass(),Caf346.CreateQuery()};

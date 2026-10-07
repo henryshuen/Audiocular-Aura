@@ -2322,3 +2322,35 @@ CleanbaselineM2P wire5 PK400/-12/Q1 hardware:0changesLEFT/EarL/ImageR;1changesRI
 
 ### M2Q final automated verification
 Focusedfrontend2files/19testsPASS; native63synthetic/mocktestsPASS, includingexact2/18writes,currentratepairedcoeffparity,disabled/Restorebothunity,five-ratepreflightfailurebeforeanySET andfailureateachofthe18positionswithnoextraSET/rollback/falsecompletion. M2P12PowerShellmockscenariosPASS includingfinalsummaryaggregation. verify.ps1onceexit0: TypeScript/Vitebuild and19files/156testsPASS. Productionbrowserruntime,SafeRam/ChannelProbe/math,bridgeAPI,devprocesslifecycleunchanged. Generateddistrestored; intendedgitdiffcheckPASS. No physicaldiscovery/connect/SET/GETbyCodex. M2P hardware COMPLETE; M2Q softwareREADY withWebBand5＋fullnine18-writestereoreversalhardwarePENDING; no persistence/readback/productioncompletion claim.
+
+## 2026-10-08 — M2S transport capability correction / native main-page candidate
+### Research checkpoint
+- Examined: Henry single real WebHID Restore result, existing M2G evidence, shared CAF/maths, exact native collection/SET/Input-GET implementation and owned dev lifecycle.
+- Verified hardware evidence: original CONNECT/open/identity ONLINE PASS;188 sendReport PASS; matching inputreport NONE/TIMEOUT; STOP/no retry/no190. Prior native Input GET_REPORT response PASS. PEQ wire1..9/stereo/positive/negative hardware evidence is retained, not retested.
+- Decision: pure WebHID BLOCKED; common TypeScript RAM protocol session with minimal native exchange transport is the normal-main-UI candidate. WebHID exchange retained for diagnostics/mocks only.
+- Unresolved: native main-page end-to-end hardware gate and per-packet child startup timing; offline mocks cannot confirm them.
+- Next validation: deterministic mock/parity/native offline tests, then Henry normal CONNECT/Restore/explicit mixed Sync/local edit/explicit Sync/Restore. No Codex hardware access.
+
+### Problem / hypothesis / next action
+Observed problem: original WebHID sends188 but no matching event, so first Restore stops before190.
+Verified facts: safe STOP worked; Windows native host-initiated Input GET_REPORT previously works; same PEQ/mapping evidence retained.
+Possible causes: browser transport capability gap; no evidence of a new coefficient/PEQ defect in this attempt.
+Ruled out / weakened: sendReport success as DSP success, ACK weakening, automatic retry or skip188/187/346.
+Next validation: one normal UI workflow over native transport candidate, after offline checks; Henry alone performs hardware validation.
+Possible fix direction: common TypeScript serializer/math/safety/packet preflight -> CafTransport -> exact-scoped native SET once + bounded Input GET; preserve other DAC WebHID.
+
+## Evidence for upstream / Issue #3 — M2S transport correction
+Physical CAF remains ID1/61 data bytes (native62 including ID), exact35D8:1496/consumer0x0c:1/MI03. Single real browser Restore188 sends successfully but zero matching inputreport, timeout correctly stops with no190, matching earlier M2G zero events. Native HidD_GetInputReport has matching response evidence. Pure WebHID unsupported for this verified response flow. Main UI stays CONNECT/edit/explicit RAM Sync/Restore; shared TS serializer/math/safety/business, native metadata + per-packet transport primitive only. Windows/.NET10 development helper dependency is explicit; no browser-only/packaged production claim. Flash/preamp/EQ readback/persistence remain disabled/unsupported. Native main-page hardware validation pending.
+
+### Research checkpoint — native adapter implementation / offline completion
+- Implemented: CafRamSession common TypeScript preflight/safety/math/188->187->346->18 paired190; nativeTransport preserves shared bytes exactly and validates actual matching reply; session routes original CONNECT to metadata only. Browser handle released before native ownership. Other DAC open path preserved.
+- Native serveTransport exposes session/connect/transport only; no /ram business endpoint, no coefficient calculation on primitive path. Exact62/ID1/module/command/field-shape gate before discovery, single exact scoped SET and existing bounded fresh-buffer Input GET. Native diagnostic math retained only as reference/fixture tooling.
+- Lifecycle: default dev.ps1 owns hidden helper, exact DLL/path/creation-time/PID checks accept serveTransport/serveDebug; -WebHidOnly is other-DAC fallback. Session/exchange HTTP35s, native child30s kill-own-tree, polling1000ms (346 firstGET excludes clock as validated); first error stops without retry/rollback. Disconnect aborts HTTP but cannot undo an already-sent SET, so partial RAM state remains possible/unknown.
+- Verified offline: focused33 frontend tests,69 native synthetic tests (including fake loopback HTTP), owned-process mocks and dev.ps1 parser PASS. Final verify.ps1 PASS: build +194 tests/22files. No real helper/service/device opened by Codex; isolated native build output only.
+- Hardware gate PENDING: Henry restarts dev, original CONNECT, explicit18write Restore; safe band5 negative Sync/listen stereo, local edit produces no writes, explicit Sync then unityRestore. Stop first error. No browser-only claim; no Flash/preamp/readback/persistence.
+
+### Scope / regression check
+- FreeDSP-specific files changed: src/freedsp/cafRam.ts, nativeTransport.ts, session.ts, webHid.ts; tools/freedsp-native transport/bridge entry/exchange hook.
+- Analysis/test files changed: FreeDSP frontend/native fixtures tests and lifecycle mocks.
+- Shared files changed: src/fn.ts, src/dsp.ts, index.html (FreeDSP-only dispatch/status), scripts/dev.ps1/lifecycle (managed helper), four docs.
+- Non-FreeDSP protocol code changed: NO. Other-DAC CONNECT open regression mock PASS. No CAF190/math/mapping changes; no hardware actions.
