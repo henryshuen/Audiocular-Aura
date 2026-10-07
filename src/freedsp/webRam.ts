@@ -17,7 +17,8 @@ export function validateBands(value:unknown):Band[] {
   });
 }
 // Independent offline parity model for the native executor, never a WebHID sender.
-export function modelWebBand(b:Band,sampleIndex:number,restore=false) {
+export function modelWebBand(b:Band,sampleIndex:number,restore=false,path=0) {
+  if(path!==0 && path!==1)throw new Error('M2Q path 必須是0或1');
   validateBands(Array.from({length:9},(_,index)=>({...b,index})));
   const wire=uiToWire(b.index);
   if (!Number.isInteger(sampleIndex) || sampleIndex<4 || sampleIndex>8) throw new Error('未知sample rate；不fallback');
@@ -28,7 +29,7 @@ export function modelWebBand(b:Band,sampleIndex:number,restore=false) {
   if(words.some(w=>w<-8388608 || w>8388607))throw new Error('signed24 overflow');
   const a1=-words[3]/scale.scale,a2=-words[4]/scale.scale;
   if(!(Math.abs(a2)<1 && 1+a1+a2>0 && 1-a1+a2>0))throw new Error('quantized instability');
-  const payload=[0,wire,scale.gain,...words,0,0,0,0,0];
+  const payload=[path,wire,scale.gain,...words,0,0,0,0,0];
   const bytes=new Uint8Array(62),view=new DataView(bytes.buffer);bytes[0]=1;
   view.setUint32(2,0x00be000d,true);view.setUint32(6,0xb32d2300,true);
   payload.forEach((word,i)=>view.setInt32(10+i*4,word,true));

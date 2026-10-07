@@ -28,44 +28,54 @@ function startup(failConnect=false,Bridge?:new()=>RamBridge){
  return {...d,calls:()=>calls};
 }
 describe('M2N frontend startup only; no bridge/HID',()=>{
- it('M2O failure stops the page without retry or automatic restore/confirmation',async()=>{
+ it('M2Q failure stops the page without retry or automatic restore/confirmation',async()=>{
    const actions:string[]=[];
    class FailedBridge extends RamBridge {
      async connect(){return {ok:true,log:'MOCK metadata'};}
      async run(action:Parameters<RamBridge['run']>[0]):Promise<never>{actions.push(action);throw new Error('MOCK WIRE2 FAIL partial operation');}
    }
    const d=startup(false,FailedBridge);await d.nodes.connect.listeners.get('click')!();
-   await d.nodes.sync.listeners.get('click')!();await d.nodes.sync.listeners.get('click')!();
-   expect(actions).toEqual(['syncNine']);expect(d.nodes.status.textContent).toContain('STOP');
+   await d.nodes.apply.listeners.get('click')!();await d.nodes.apply.listeners.get('click')!();
+   expect(actions).toEqual(['applyBand']);expect(d.nodes.status.textContent).toContain('STOP');
    expect(d.nodes.log.value).toContain('WIRE2 FAIL');expect(d.nodes.heardApply.disabled).toBe(true);
    expect(d.nodes.flat.disabled).toBe(true);expect(d.nodes.sync.disabled).toBe(true);
  });
- it('M2O uses prior gate, explicit preset/apply/restore and separate manual listening confirmations',async()=>{
+ it('M2Q requires new Band5 stereo gate before fullnine and independent listening confirmations',async()=>{
    const actions:string[]=[];
    class MockBridge extends RamBridge {
      async connect(){return {ok:true,log:'MOCK metadata'};}
      async run(action:Parameters<RamBridge['run']>[0],_index:number,bands:Parameters<RamBridge['run']>[2]){
-       actions.push(action);expect(bands).toEqual(fullNinePreset());return {ok:true,log:'MOCK PROTOCOL COMPLETE bands=9'};
+       actions.push(action);
+       if(action==='syncNine' || action==='restoreNine')expect(bands).toEqual(fullNinePreset());
+       else expect(bands[4]).toMatchObject({index:4,freq:400,gain:-12,q:1,enabled:true});
+       return {ok:true,log:'MOCK PROTOCOL COMPLETE paths=2'};
      }
    }
    const d=startup(false,MockBridge);
    d.nodes.preset.listeners.get('click')!();expect(actions).toEqual([]);
-   await d.nodes.connect.listeners.get('click')!();expect(d.nodes.sync.disabled).toBe(false);
+   await d.nodes.connect.listeners.get('click')!();expect(d.nodes.sync.disabled).toBe(true);
+   await d.nodes.sync.listeners.get('click')!();expect(actions).toEqual([]);
+   d.nodes.gatePreset.listeners.get('click')!();expect(d.nodes.selection.value).toBe('4');
+   d.nodes.confirm.listeners.get('click')!();expect(d.nodes.sync.disabled).toBe(true);
+   await d.nodes.apply.listeners.get('click')!();d.nodes.confirm.listeners.get('click')!();expect(d.nodes.sync.disabled).toBe(true);
+   await d.nodes.restore.listeners.get('click')!();d.nodes.confirm.listeners.get('click')!();expect(d.nodes.sync.disabled).toBe(false);
+   expect(d.nodes.log.value).toContain('both ears equally changed, center retained, both restored YES');
+   d.nodes.preset.listeners.get('click')!();
    expect(d.nodes.heardApply.disabled).toBe(true);
    await d.nodes.sync.listeners.get('click')!();
    expect(d.nodes.log.value).not.toContain('Error');
-   expect(actions).toEqual(['syncNine']);expect(d.nodes.heardApply.disabled).toBe(false);
+   expect(actions).toEqual(['applyBand','restoreBand','syncNine']);expect(d.nodes.heardApply.disabled).toBe(false);
    expect(d.nodes.heardRestore.disabled).toBe(true);
    d.nodes.heardApply.listeners.get('click')!();expect(d.nodes.log.value).toContain('audible Apply YES');
    await d.nodes.flat.listeners.get('click')!();
-   expect(actions).toEqual(['syncNine','restoreNine']);expect(d.nodes.heardRestore.disabled).toBe(false);
+   expect(actions).toEqual(['applyBand','restoreBand','syncNine','restoreNine']);expect(d.nodes.heardRestore.disabled).toBe(false);
    d.nodes.heardRestore.listeners.get('click')!();expect(d.nodes.log.value).toContain('audible Restore YES');
    expect(d.nodes.gate.textContent).toContain('Restore聽感YES');
  });
  it('renders all nine rows and enables Connect with zero startup fetch/session calls',()=>{
    const d=startup();expect(d.nodes.bands.children).toHaveLength(9);expect(d.nodes.selection.children).toHaveLength(9);
    expect(d.nodes.connect.disabled).toBe(false);expect(d.nodes.connect.listeners.has('click')).toBe(true);
-   expect(d.nodes.apply.disabled).toBe(true);expect(d.calls()).toBe(0);expect(d.nodes.log.value).toContain('M2N UI READY');
+   expect(d.nodes.apply.disabled).toBe(true);expect(d.calls()).toBe(0);expect(d.nodes.log.value).toContain('M2Q UI READY');
  });
  it('bridge failure remains visible and retryable; editor never disappears',async()=>{
    const d=startup(true);await d.nodes.connect.listeners.get('click')!();

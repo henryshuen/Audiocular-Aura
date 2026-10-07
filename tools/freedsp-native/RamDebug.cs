@@ -51,30 +51,37 @@ public static class RamDebug
         if (!(Math.Abs(a2)<1 && 1+a1+a2>0 && 1-a1+a2>0)) throw new InvalidOperationException("Unstable quantized filter");
         return new(sampleHz,f,e,gain,scale,words);
     }
-    public static byte[] Packet(int uiIndex, SafeCoefficients c) => SafeRam.Encode(190,[0,Wire(uiIndex),c.Gain,..c.Words,0,0,0,0,0]);
+    public static byte[] Packet(int uiIndex, SafeCoefficients c, int path=0)
+    {
+        if(path is not (0 or 1))throw new InvalidOperationException("M2Q paths0/1 only");
+        return SafeRam.Encode(190,[path,Wire(uiIndex),c.Gain,..c.Words,0,0,0,0,0]);
+    }
     public static int[] Selected(RamDebugRequest r) => r.Action is "syncNine" or "restoreNine" ? Enumerable.Range(0,9).ToArray() : [r.UiIndex];
     public static int Run(IQueryHid hid, RamDebugRequest r, TextWriter log, List<byte[]> allowed, Func<IPollClock>? clocks = null)
     {
         r.Validate(); clocks ??= () => new PollClock();
-        log.WriteLine($"M2N action={r.Action}; RAM only; no90/220/Flash/preamp; native quantizer nearest approximation,1LSB uncertainty");
+        bool restore = r.Action is "restoreBand" or "restoreNine";
+        // Preflight every known-rate plan before ANY SET; matching346 chooses the current plan.
+        // A filter unsafe at any supported rate is rejected before device commands.
+        var plans=SafeRam.Rates.ToDictionary(hz=>hz,hz=>Selected(r).SelectMany(i=>{
+            var coeff=Calculate(hz,r.Bands[i],restore);
+            return new[]{0,1}.Select(path=>(Index:i,Path:path,Coeff:coeff,Tx:Packet(i,coeff,path)));
+        }).ToArray());
+        log.WriteLine($"M2Q action={r.Action}; all five known-rate plans validated before SET; path0 LEFT/path1 RIGHT are M2P hardware-derived labels; RAM only; no90/220/Flash/preamp; nearest quantizer1LSB uncertainty");
         foreach(var (cmd,tx) in new[] {(188,SafeRam.Enable()),(187,SafeRam.Bypass())})
             if (SafeRam.Exchange(hid,cmd,tx,log,clocks(),false) is null) return 7;
         var rate = SafeRam.Exchange(hid,346,Caf346.CreateQuery(),log,clocks(),true);
         if (rate?.SampleHz is not int hz) { log.WriteLine("STOP unknown/missing346 rate; no190"); return 7; }
-        bool restore = r.Action is "restoreBand" or "restoreNine";
-        // Prepare ALL selected packets before first190; no silent skip/truncation or partial invalid model.
-        var packets = Selected(r).Select(i => {
-            var coeff = Calculate(hz,r.Bands[i],restore);
-            return (Index:i, Coeff:coeff, Tx:Packet(i,coeff));
-        }).ToArray();
+        var packets=plans[hz];
         foreach(var item in packets) {
             byte[] tx = item.Tx; allowed.Add(tx);
-            log.WriteLine($"WIRE{Wire(item.Index)} {r.Action} BEGIN");
+            string channel=item.Path==0?"LEFT":"RIGHT";
+            log.WriteLine($"WIRE{Wire(item.Index)} {channel} BEGIN path{item.Path} {r.Action}");
             log.WriteLine($"UI Band{item.Index+1} index={item.Index} -> wire{Wire(item.Index)} currentHz={hz} Gain={item.Coeff.Gain} scale={item.Coeff.Scale} integers=[{string.Join(",",item.Coeff.Words)}]");
-            if (SafeRam.Exchange(hid,190,tx,log,clocks(),false,tx) is null) { log.WriteLine($"WIRE{Wire(item.Index)} {r.Action} FAIL"); log.WriteLine("STOP partial operation; no rollback/retry; some selected bands may remain active"); return 7; }
-            log.WriteLine($"WIRE{Wire(item.Index)} {r.Action} PASS");
+            if (SafeRam.Exchange(hid,190,tx,log,clocks(),false,tx) is null) { log.WriteLine($"WIRE{Wire(item.Index)} {channel} FAIL path{item.Path}"); log.WriteLine("STOP partial operation; no rollback/retry; stereo may be unequal and some selected paths may remain active"); return 7; }
+            log.WriteLine($"WIRE{Wire(item.Index)} {channel} PASS");
         }
-        log.WriteLine($"RESULT: PROTOCOL COMPLETE bands={packets.Length}; audible validation PENDING; unity is not prior-EQ backup; no persistence claim");
+        log.WriteLine($"RESULT: PROTOCOL COMPLETE bands={packets.Length/2} paths=2 writes190={packets.Length}; stereo/audible validation PENDING; unity is not prior-EQ backup; no persistence claim");
         return 0;
     }
 }
