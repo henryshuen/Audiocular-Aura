@@ -1,7 +1,9 @@
 import type {Band} from '../main.ts';
 import {RamBridge,validateBands} from './webRam.ts';
 if(import.meta.env.DEV && location.hostname==='localhost' && location.port==='5173'){
- const el=<T extends HTMLElement>(id:string)=>document.getElementById(id) as T;
+ const el=<T extends HTMLElement>(id:string)=>{
+   const node=document.getElementById(id);if(!node)throw new Error(`Missing M2N HTML element #${id}`);return node as T;
+ };
  const logBox=el<HTMLTextAreaElement>('log'),status=el<HTMLParagraphElement>('status'),select=el<HTMLSelectElement>('selection');
  const bridge=new RamBridge();let connected=false,busy=false,faulted=false,fullNineStarted=false;
  let bands:Band[]=[31,62,125,250,500,1000,2000,4000,8000].map((freq,index)=>({index,freq,gain:0,q:.7,type:'PK',enabled:true}));
@@ -32,6 +34,9 @@ if(import.meta.env.DEV && location.hostname==='localhost' && location.port==='51
      const type=document.createElement('td');type.textContent=b.type;row.append(type);el('bands').append(row);
    });update();
  };
+ render(); // Render editor and enable Connect before any explicit bridge request.
+ log('M2N UI READY: nine editor rows rendered; no bridge/session request or hardware action yet.');
+ status.textContent='九列編輯器已就緒；請按連線（僅metadata）。';
  for(let i=0;i<9;i++){const option=document.createElement('option');option.value=String(i);option.textContent=`UI Band${i+1} → wire${i+1}`;select.append(option);}
  el('connect').addEventListener('click',async()=>{
    busy=true;update();try{const r=await bridge.connect();log(r.log);if(r.logPath)log('Full log: '+r.logPath);connected=true;status.textContent='FreeDSP metadata已確認；沒有讀回EQ／沒有SET。選一段後手動Apply。';}
@@ -62,4 +67,8 @@ if(import.meta.env.DEV && location.hostname==='localhost' && location.port==='51
  el('apply').addEventListener('click',()=>void run('applyBand'));el('restore').addEventListener('click',()=>void run('restoreBand'));
  el('sync').addEventListener('click',()=>void run('syncNine'));el('flat').addEventListener('click',()=>void run('restoreNine'));
  el('copy').addEventListener('click',()=>{logBox.select();void navigator.clipboard.writeText(logBox.value).catch(()=>{log('請手動全選複製。');});});render();
-}else document.getElementById('status')!.textContent='僅限Vite DEV http://localhost:5173/；所有RAM操作停用。';
+}else {
+ const message='M2N UI STARTUP BLOCKED: 請使用Vite DEV http://localhost:5173/；目前origin='+location.origin;
+ document.getElementById('status')!.textContent=message;
+ (document.getElementById('log') as HTMLTextAreaElement).value+=message+'\n';
+}
