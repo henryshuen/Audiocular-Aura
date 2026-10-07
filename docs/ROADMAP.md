@@ -27,6 +27,7 @@ M2F單段官方格式診斷已實作；Henry手動硬體結果PENDING，正常pr
 M2G：Henry回報三次188 host send成功／無matching RX／2.5秒timeout，187/346/190皆未送；無EQ效果結論。
 M2H：M2G346實測rawTotal=0/newEvents=0已回報；正常Windows Chrome的官方Input GET_REPORT替代路徑不可行。
 本輪僅四份docs，Case C不要求手動test；native transport屬後續另輪，M2 RAM proof仍NOT PROVEN。
+M2I：FreeDSP-only native346 helper已建置／離線測試；Windows HID實機查詢PENDING HENRY HARDWARE RESULT，production不改。
 Round 0 結束時 dev server 正在執行，僅監聽 127.0.0.1:5173。
 HTTP 以 curl.exe --noproxy '*' 驗證；一般 Invoke-WebRequest 曾回傳 404，
 直接請求已確認 Vite 頁面正確，未改動系統代理設定。
@@ -100,6 +101,12 @@ Success: Henry can clearly hear the difference while all other variables remain 
 - [x] write-only、sample-rate替代來源、native方向與truthful success states比較。
 - [x] Case C：無新diagnostic或manual test；只四份docs，不進production implementation。
 - [ ] native transport硬體response及RAM/audio proof：尚未實作/測試，非M2H完成條件。
+
+### M2I — Windows native CAF346 transport proof — implementation READY / hardware PENDING
+- [x] 固定62-byte官方query、Windows HID/SetupAPI collection gate、SET state API→Input state API。
+- [x] 零外部套件C#/.NET10及one-script launcher；不修改driver、無EQ/Flash或production整合。
+- [x] Synthetic/mock及CLI rejection測試，四份文件同步。
+- [ ] Henry一次native query346完整output；SET/GET/matchingCAF成功前不能稱transport proof完成。
 
 ## M3 - Full 9-band real-time PEQ — PENDING
 - all 9 bands
@@ -427,6 +434,10 @@ Possible fix direction:
   保持external reportId及descriptor gate。若native words非13，依schema修正呼叫者，不能單純縮buffer。
 
 ## Evidence for upstream / Issue #3
+- M2I implementation status: isolated Windows/.NET10 Query346; HID caps/MI03/usage gate, Input1/Output1 preparsed-data validation,
+  HidD_SetOutputReport then HidD_GetInputReport, each once. No driver replacement, browser runtime or mutation changes.
+  Serializer/parser/mock build evidence only; PENDING HENRY HARDWARE RESULT. Windows USB completion/setup not captured.
+  M2G rawTotal=0 retained; M2H protected-interface and missing WebHID Input GET limitation retained; no unchanged browser retries.
 - M2H update (Henry-reported M2G query): raw listener ACTIVE before open/send; command346 reportId1/data61 host send resolved;
   2.5s timeout, rawTotal=0/newEvents=0, no inputreport of any ID/size. Parser received nothing; no DSP acceptance/rejection conclusion.
 - Official current APK explicitly selects HID class3/subclass0/protocol0/interface3; request setup confirmed again from bytecode:
@@ -1296,3 +1307,113 @@ Possible fix direction:
 - Discarded hypotheses: 以build/test通過當作HID response或可聽EQ成功。
 - Unresolved fields: actual device Input GET result、native completion、RAM/audio/persistence；不延伸本輪。
 - Next search target: 停止M2H，等待Henry下一輪指示；本輪No manual test required this round。
+
+## M2I — Windows native CAF346 query
+
+### Research checkpoint — native implementation / offline validation
+- Examined: Microsoft HID/SetupAPI/ReportID docs、本機SDK10.0.401、既有官方serializer及346 sample-rate來源。
+- Verified facts: 已建立獨立C#/.NET10 console與query script，零外部套件；native build零warning/error，22項native offline tests通過。
+- Verified facts: verify.ps1 exit0，13files/118tests通過；新4tests包含native golden與既有WebHID helper/data逐byte相同及production/CLI scope。
+- Hypotheses: native state GET能取得官方回應；尚未探索/開啟裝置或執行Query346。
+- Discarded hypotheses: host SET success可以當DSP acceptance、mock回應可以當實機proof。
+- Unresolved fields: Windows caps/path/access實值、兩個API實際結果、matching CAF346、USB completion/setup。
+- Next search target: Henry只執行一次query script並貼完整output；本輪不進EQ/Flash/production。
+
+### Native helper and discovery
+- tools/freedsp-native/FreeDspQuery.csproj，net10.0，no PackageReference，NuGet.Config清空sources；bin/obj局部ignore。
+- SetupDiGetClassDevs/EnumDeviceInterfaces/GetDeviceInterfaceDetail列出HID；matching path先按35D8/1496篩選，
+  access0 metadata handle用HidD_GetAttributes確認VID/PID，用HidD_GetPreparsedData/HidP_GetCaps讀usage與report lengths。
+- 不取第一項：usagePage0x0C/usage1、MI_03與input/output62唯一才接受；不能讀取任一matching path也停止，避免未識別第二CAF。
+- Windows path MI_03是USB interface number的保守識別；若driver不提供此標記就停止並保留paths，不依caps盲猜其他介面。
+- HidP_InitializeReportForID在preparsed data本機核對Input1/Output1；不送任何USB command。
+- 查詢handle固定GENERIC_READ|GENERIC_WRITE(0xC0000000)、shareREAD|WRITE(3)、OPEN_EXISTING(3)、同步flags0；再核對caps/identity。
+- 不需要driver replacement或admin；實際permission/open仍PENDING。失敗時保留Win32Error，不換access/driver或試第二path。
+
+### Fixed outgoing report and state APIs
+Native62 = report ID1 + WebHID61，command346/count13/moduleB32D2300/words [62,0×12]。
+完整TX（離線golden，非hardware capture）：
+```text
+01 00 0d 00 5a 01 00 23 2d b3 3e 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+00 00 00 00 00 00 00 00 00 00 00 00 00 00
+```
+- SET: HidD_SetOutputReport(handle, tx, caps.OutputReportByteLength)，本輪gate要求62。
+- GET: SET Boolean success後立即一次HidD_GetInputReport(handle, freshRX, caps.InputReportByteLength)，本輪要求62、RX[0]=1其餘0。
+- 不用WriteFile、Feature GET或官方polling loop。這是Windows state report IOCTL API，USB transport由driver處理；
+  沒有擷取Henry的USB setup，不能把API成功等同exact request params已在實體匯流排確認。
+- 兩者只有Boolean/GetLastError及buffer，沒有timeout參數或actual byte-count。30s watchdog只限制childprocess，
+  timeout標completion UNKNOWN，不宣稱DSP拒絕或driver transaction已取消。每個API呼叫前flush logs。
+- CLI args僅query346；Native SET exact-buffer guard阻止其他TX，one SET/one GET，沒有mutation或retry入口。
+Sources: [SET output](https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/hidsdi/nf-hidsdi-hidd_setoutputreport)、
+[GET input](https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/hidsdi/nf-hidsdi-hidd_getinputreport)、
+[HID caps](https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/hidpi/ns-hidpi-_hidp_caps)、
+[ID validation](https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/hidpi/nf-hidpi-hidp_initializereportforid)。
+
+### Response classification
+| Result | Conditions / evidence limit |
+| --- | --- |
+|VALID CAF346 RESPONSE |SET andGET true; ID1/prefix0/reply1/command346/CTRL/count2..13；word1 present |
+|GET_INPUT_REPORT SUCCEEDED BUT RESPONSE UNEXPECTED |GET true但header/count/identity不符；raw及capacity words保留，不稱DSP拒絕 |
+|GET_INPUT_REPORT FAILED |GET false，保存error及buffer；failed buffer不當confirmed RX解析 |
+|DEVICE OPEN / ACCESS FAILED |metadata、ambiguous collection、caps/ID gate或CreateFile失敗；沒有query |
+|HOST SET_REPORT FAILED |SET false；GET NOT ATTEMPTED，另列prerequisite failure，避免誤判GET/open |
+|NATIVE CALL TIMEOUT / COMPLETION UNKNOWN |launcher30s時限，終止其child；無額外query |
+
+Parser：ID@0、prefix high@1、packed LE32@2（count U16、command bits16..30、reply31）、module@6、signedwords@10。
+官方getCurSampleRate讀word1/full bufferoffset14；index4/5/6/7/8→44100/48000/96000/192000/384000。
+未知index仍保存matching CAF transport且Hz UNKNOWN，不猜48000；valid query不證可用EQ bank或音訊效果。
+實際346 reply count未captured。count>=2是比官方capacity-word讀取更嚴格的完整logical response要求，count0亦會保存fullraw供分析。
+API success/RX buffer長度不提供actual transfer completeness或Flash/RAM成功；failed SET不是DSP rejection證明。
+
+### Permanent failed-approach history
+| Round | Attempt / result | Retry policy |
+| --- | --- | --- |
+|M2F |WebHID188 host success→timeout；190未達到 |不原樣重試 |
+|M2G |WebHID346 persistent raw listener→host success，rawTotal0/newEvents0 |沒有parser input；不原樣重試 |
+|M2H |WebUSB/hybrid source audit→normalChrome protected-interface path不實用 |不當正常部署方案、不換driver |
+|M2I |Native346 implementation/build/mock ready |PENDING HENRY HARDWARE RESULT；本輪只一次query |
+
+### Problem / hypothesis / next action
+Observed problem:
+- WebHID host成功而raw零輸入；官方使用browser未提供的Input GET。Native硬體結果尚未取得。
+Verified facts:
+- Query-only native helper已建置、22native tests與118project tests通過；沒有Codex device access、production或其他protocol變更。
+- 已保留M2F/G/H結果，不能把parser更改或host send當作解決傳輸問題。
+Possible causes:
+- 若native失敗，暫定依實際stage/error排序：①state GET/SET支援或driver路徑差異；②handle權限/分享衝突；
+  ③collection/caps映射不符（gate先阻止）；④single GET取得未ready/stale response，官方則會poll；⑤firmware/source版本或狀態差異。
+- 尚無native failure觀測；不能先判是哪一項，實際Win32Error/raw reply才決定下一步。
+Ruled out / weakened:
+- WebHID parser漏ACK解釋本次零事件、Feature讀取替代、一般WebUSB hybrid、離線mock證明實機接受均不成立。
+Next validation:
+- Henry執行下方script一次，貼從build/header到RESULT的完整output，包含paths/caps/access/TX/SET/GET/errors/RX/parsed。
+- 成功只成立native query transport；失敗停止，不改driver、不試多個排列組合，不前進190。
+Possible fix direction:
+- 若matching response成立，另輪才評估native bridge與production成功語義；若失敗依error/source追查，不在本輪重試或猜封包。
+
+### Henry manual test — one query only
+已安裝.NET10 SDK；script自動build，不需Git或admin。程式不需dev server。
+```powershell
+cd D:\Henry\Documents\ChatGPT\AuraPEQ
+.\scripts\query-freedsp-native.ps1
+```
+貼完整output，不只RESULT。成功需同時看到HOST SET_REPORT SUCCESS、GET_INPUT_REPORT SUCCESS、VALID CAF346 RESPONSE，
+以及command346/reply1/moduleB32D2300/word1 raw index；unknown index不假冒已知Hz。
+Current milestone: M2I — Windows native CAF346 transport proof，implementation READY / hardware PENDING。STOP。
+
+### Scope / regression check
+- FreeDSP-specific native code: tools/freedsp-native/*.cs、project/config/ignore；scripts/query-freedsp-native.ps1。
+- Tests: tools/freedsp-native/Tests/、tests/freedsp/nativeQueryScope.test.ts。
+- Shared runtime files changed: NONE；Production runtime changed: NO；Non-FreeDSP protocol changed: NO。
+- Documentation files: GENERAL/ROADMAP/DECISIONS/DONE only；New documentation files created: NO。
+- Codex hardware access/RAM/Flash writes: NONE。
+
+### Research checkpoint — M2I verified handoff
+- Examined: final code/docs scope、nativebuild/22mock tests、完整verify13files/118tests、PowerShell syntax與launcher離線probe。
+- Verified facts: 兩個build及全部tests通過；PowerShell逐行轉送stdout/stderr，用非法CLI argument測到usage/exit2且沒有HID探索。
+  三個generated tracked dist已還原；production source/runtime/config無差異，git diff --check通過；new .md NONE。
+- Hypotheses: native state346回應相容性仍未測，沒有mock或host成功冒充hardware proof。
+- Discarded hypotheses: 子程序hidden就能保證Console輸出直接可見；已以explicit redirected log pump處理。
+- Unresolved fields: PENDING HENRY HARDWARE RESULT；native paths/caps/SET/GET/CAF需實機output。
+- Next search target: Henry一次script完整output；STOP，不進RAM190/production或自動retry。

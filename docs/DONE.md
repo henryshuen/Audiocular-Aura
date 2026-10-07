@@ -207,3 +207,15 @@
 - 最終verify.ps1 exit0：12files/114tests全部通過，TypeScript/Vite build/test typecheck通過；未新增測試或fake success fixture。
 - Flash helper writeGolemCmdToDevice的SET/GET constants/call亦再次靜態核對；未送Flash命令。
 - 還原本輪生成的三個tracked dist files後，只四份指定docs有差異；git diff --check通過。
+
+## 2026-10-07 — M2I native query implementation (hardware pending)
+- 起始working tree乾淨，fix/freedsp-conexant與origin同步，M2H commit6d34de3。
+- 新增FreeDSP-only C#/.NET10 console、SetupAPI/HID interop、固定346 serializer/parser、單次SET→Input GET runner及PowerShell launcher。
+- 無外部套件；NuGet sources清空，build outputs局部ignore；production/browser/runtime/package/config未修改。
+- Native build成功，0warnings/0errors；22項synthetic/mock tests通過，未呼叫裝置探索或hardware report APIs。
+- Launcher PowerShell語法解析通過；實際built CLI的query190非法參數在探索前拒絕，exit2，沒有硬體存取。
+- 四份文件保留M2F/G/H結果、native成功標準、capability/path gate、失敗停止政策；沒有新增.md。
+- 原生Query346硬體結果PENDING HENRY HARDWARE RESULT，沒有把offline結果當成transport/RAM/audio proof。
+- 最終verify.ps1 exit0：13files/118tests、TypeScript/Vite build/test typecheck全部通過；新增4項native golden/scope tests。
+- Launcher改為stdout/stderr逐行轉送；以in-memory非法CLI probe驗證完整build/launch/log pump及exit2，沒有執行query346或裝置探索。
+- 最終native build零warning/error、22項offline tests通過；還原tracked dist後git diff --check通過，無production差異。

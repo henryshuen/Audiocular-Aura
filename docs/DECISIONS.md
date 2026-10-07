@@ -173,3 +173,29 @@ Case C：不增加WebUSB inspection/query按鈕、不要求Henry再測browser。
 188/187/190/220官方helper都有GET polling。GET是否為mutation生效必要條件UNKNOWN；ignored bool不構成write-only可靠性證據。
 write-only可以送出但不能truthfully verify DSP acceptance；未確認current rate亦不能安全推導當前bank。
 不盲寫Flash、不為timeout延長等待後再原樣重試、不以parser改動代替缺失的transport。
+
+## D027 — M2I native346 is an isolated transport experiment
+tools/freedsp-native以C#/.NET10、P/Invoke既有Windows HID/SetupAPI，零外部套件、不改driver/admin/production。
+CLI只接受query346；wrapper無參數。唯一TX是官方13words [62,0×12]／CTRL／command346，native62bytes包含ID1。
+探索只開metadata access0並列matching paths/caps/errors；query handle固定GENERIC_READ|WRITE、SHARE_READ|WRITE、OPEN_EXISTING、flags0。
+Windows MI_03 path + confirmed35D8/1496 + usage0C/1 + input/output62是保守collection gate；不硬猜Windows interface數字與path第一項等價。
+任一matching path無法inspect、零/多個合格目標即停止；opened handle再次檢查identity/caps。
+HidP_InitializeReportForID在preparsed data確認Input1/Output1存在；純本機parser工作，不送report。
+SET選HidD_SetOutputReport（state/output IOCTL），不用WriteFile；GET選HidD_GetInputReport（state/input IOCTL），不用Feature GET。
+這是最符合官方state SET→GET的Windows HID client API；USB HID control request由driver/minidriver處理，
+本輪沒有physical USB setup capture，不能聲稱已驗證Henry裝置的exact21/09/0201/3與A1/01/0101/3。
+Microsoft明示部分裝置不支持state API；因此只作一次346 probe，API失敗不改driver或重試排列組合。
+API buffer[0]=ID1，長度由HIDP_CAPS核對為62；GET fresh buffer不能複製TX。Boolean success不提供actual transfer length。
+單次SET→單次GET，不移植官方poll loop；未ready reply亦可能標unexpected，不能立刻判serializer/device錯誤。
+同步HidD沒有timeout參數；script30秒process watchdog是主機等待限制，不是USB per-call1000ms，也不保證取消了driver內部完成。
+輸出保留path/caps/access/API/Win32Error/TX/RX/header/logical words/capacity words，失敗不解析成已確認回應。
+分類：VALID CAF346 RESPONSE；GET_INPUT_REPORT SUCCEEDED BUT RESPONSE UNEXPECTED；GET_INPUT_REPORT FAILED；DEVICE OPEN / ACCESS FAILED。
+SET失敗另標HOST SET_REPORT FAILED／GET NOT ATTEMPTED，避免誤稱GET或open失敗；watchdog標COMPLETION UNKNOWN。
+Valid須ID1/prefix0/reply1/command346/CTRL/count2..13；word1 index4..8映射已證五rates。Unknown index保留，Hz UNKNOWN。
+比官方的replybit-only判斷更嚴格；count0即使capacity word1有值也不假冒完整logical reply，保留raw供後續研究。
+Mock/serializer/build成功不代表native裝置相容性；硬體proof需Henry實際SET成功+GET成功+plausible matching CAF346。
+成功亦只證query transport，不證RAM190、可聽效果或Flash persistence；STOP於M2I。
+Sources: [SET API](https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/hidsdi/nf-hidsdi-hidd_setoutputreport)、
+[Input GET API](https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/hidsdi/nf-hidsdi-hidd_getinputreport)、
+[HIDP_CAPS](https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/hidpi/ns-hidpi-_hidp_caps)、
+[Report ID parser validation](https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/hidpi/nf-hidpi-hidp_initializereportforid)。

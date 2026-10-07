@@ -205,7 +205,7 @@ Persistent listener在open/send前註冊，timeout後保留；connection只open�
 沒有新證據不得把188降級成send-success-only，更不得因transport猜測自動前進190。
 Query346 raw index未知時保留matching response並標Hz UNKNOWN，不猜fallback或宣稱RAM可用。
 
-## Current M2H response transport policy
+## Historical M2H response transport policy
 Henry提供的M2G結果：raw listener在open/send前ACTIVE，ID1/data61的346 host send resolved，
 等2.5秒後rawTotal=0/newEvents=0，沒有任何ID/長度的inputreport。這是Henry回報，非Codex硬體擷取。
 本次parser沒有收到事件；不得宣稱DSP拒絕346、沒有回應或RAM失敗。不得要求重做descriptor或原樣重試WebHID346。
@@ -217,3 +217,16 @@ sendReport resolved僅能稱Host write sent／Device acceptance unverified，不
 匹配CAF response、verified readback、可聽變化、Flash persistence須分開記錄；AudioContext/MediaDevices rate不是已驗證CAF current rate。
 188/187/190/220是否不讀GET也能生效仍UNKNOWN，不以caller忽略結果推導可省略response。
 本輪Case C：No manual test required this round。禁止RAM/Flash/90/Apply/Restore，停止於M2H。
+
+## Current M2I native query-only policy
+M2F188 timeout未到190；M2G346 host success/raw零事件；M2H一般Chrome無官方Input GET替代路徑，保留歷史，不原樣重試。
+M2I僅tools/freedsp-native的Windows C#/.NET10診斷，唯一CLI為query346；不整合production、不更換driver、不要求admin。
+SetupAPI列出35D8/1496所有matching paths，HidD attributes核對；usagePage0C/usage1、MI_03及input/output caps各62bytes須唯一。
+HidP_InitializeReportForID只用preparsed data驗證Input1/Output1；不是硬體GET。任何metadata失敗、模糊目標或caps不符即停止。
+Windows report buffer含ID，固定官方62byte346；HidD_SetOutputReport一次成功後立即HidD_GetInputReport一次。
+沒有WriteFile/Feature fallback、poll/retry或188/187/190/90/220；不因失敗試別的path/access/driver。
+CLI先驗證args再探索；native SET另有exact346-buffer guard。RX未知index保留且Hz UNKNOWN，echo不能算reply。
+兩個HidD API同步且無timeout參數；launcher只對新子程序設30秒watchdog，timeout標completion UNKNOWN並停止，不判DSP拒絕。
+HidD沒有actual bytes-transferred輸出；62是requested/caps buffer length，不能當成已擷取的USB完成長度。
+Codex僅build/mock/offline，不執行Query346或裝置探索；Henry執行一次script並貼完整output，M2I hardware proof保持PENDING。
+文件仍僅GENERAL/ROADMAP/DECISIONS/DONE；本輪結束後停止，不進RAM190/production integration。
