@@ -110,8 +110,8 @@ public sealed class NativeHid : IQueryHid
 
     public HidCallResult SetOutputReport(byte[] buffer)
     {
-        if (!buffer.AsSpan().SequenceEqual(Caf346.CreateQuery()))
-            throw new InvalidOperationException("Only the exact fixed Query346 report is permitted");
+        if (!SafeRam.IsAllowedReport(buffer))
+            throw new InvalidOperationException("Only fixed Query346 / safe RAM test reports are permitted");
         bool ok = NativeMethods.HidD_SetOutputReport(handle, buffer, (uint)buffer.Length);
         return new(ok, ok ? 0 : Marshal.GetLastWin32Error());
     }
