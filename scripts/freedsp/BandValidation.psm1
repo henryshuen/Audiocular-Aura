@@ -14,22 +14,24 @@ function Read-FreeDspChoice {
 }
 
 function Get-FreeDspSummary {
-    param($Results, [string]$LogPath, [string]$StopReason, [int]$ActiveBand, [ValidateRange(1,4)][int]$StartSdkBand = 1)
+    param($Results, [string]$LogPath, [string]$StopReason, [int]$ActiveBand, [ValidateRange(1,4)][int]$StartSdkBand = 1, [ValidateSet('SdkRemaining','WireCandidates')][string]$Profile = 'SdkRemaining')
     $lines = [System.Collections.Generic.List[string]]::new()
     $lines.Add('==================================================')
-    $lines.Add('M2L BAND MAP SUMMARY')
+    $candidate = $Profile -eq 'WireCandidates'
+    $lines.Add($(if ($candidate) { 'M2M UNRESOLVED SLOT SUMMARY (candidate mapping)' } else { 'M2L BAND MAP SUMMARY' }))
     $lines.Add('Filter: PK400Hz / -12dB / Q1.0; selector0; current rate from matching346')
-    $lines.Add('SDK0 -> wire5: PREVIOUSLY VERIFIED (M2K), not retested')
-    $lines.Add("Run selection: StartSdkBand=$StartSdkBand; SDK$StartSdkBand through SDK4")
+    if ($candidate) { $lines.Add('wire5..9: VERIFIED (Henry final M2L report); not retested. SDK field for wire1..4 UNKNOWN.') }
+    else { $lines.Add('SDK0 -> wire5: PREVIOUSLY VERIFIED (M2K), not retested') }
+    $lines.Add($(if ($candidate) { "Run selection: candidate wire$StartSdkBand through wire4; SDK field UNKNOWN" } else { "Run selection: StartSdkBand=$StartSdkBand; SDK$StartSdkBand through SDK4" }))
     foreach ($r in $Results) {
         $lines.Add('')
-        $lines.Add(('SDK{0} -> wire{1}:' -f $r.SdkBand, $r.Wire))
-        if ($r.SdkBand -eq 1) { $lines.Add('Prior evidence: PREVIOUSLY VERIFIED (M2L prior run)') }
-        if ($r.SdkBand -eq 2) { $lines.Add('Prior evidence: PROTOCOL VERIFIED / AUDIBLE RESTORE UNCONFIRMED; Apply audible YES (M2L prior run)') }
+        $lines.Add($(if ($candidate) { 'CANDIDATE raw slot -> wire' + $r.Wire + ':' } else { ('SDK{0} -> wire{1}:' -f $r.SdkBand, $r.Wire) }))
+        if (-not $candidate -and $r.SdkBand -eq 1) { $lines.Add('Prior evidence: PREVIOUSLY VERIFIED (M2L prior run)') }
+        if (-not $candidate -and $r.SdkBand -eq 2) { $lines.Add('Prior evidence: PROTOCOL VERIFIED / AUDIBLE RESTORE UNCONFIRMED; Apply audible YES (M2L prior run)') }
         if ($r.SdkBand -lt $StartSdkBand) {
             $lines.Add('This run: SKIPPED because StartSdkBand was used')
-            $lines.Add($(if ($r.SdkBand -eq 1) { 'RESULT wire6: PREVIOUSLY VERIFIED (M2L prior run)' }
-                elseif ($r.SdkBand -eq 2) { 'RESULT wire7: PROTOCOL VERIFIED / AUDIBLE RESTORE UNCONFIRMED (prior run); STILL PENDING' }
+            $lines.Add($(if (-not $candidate -and $r.SdkBand -eq 1) { 'RESULT wire6: PREVIOUSLY VERIFIED (M2L prior run)' }
+                elseif (-not $candidate -and $r.SdkBand -eq 2) { 'RESULT wire7: PROTOCOL VERIFIED / AUDIBLE RESTORE UNCONFIRMED (prior run); STILL PENDING' }
                 else { "RESULT wire$($r.Wire): SKIPPED / STILL PENDING" }))
             continue
         }
@@ -67,27 +69,35 @@ function Get-FreeDspSummary {
 # RunProtocol and ReadAnswer are dependency seams for offline mocks, not script/CLI parameters.
 function Invoke-FreeDspBandValidation {
     param([scriptblock]$RunProtocol, [scriptblock]$ReadAnswer, [scriptblock]$Emit, [string]$LogPath,
-        [ValidateSet('1','2','3','4')][string]$StartSdkBand = '1')
+        [ValidateSet('1','2','3','4')][string]$StartSdkBand = '1', [ValidateSet('SdkRemaining','WireCandidates')][string]$Profile = 'SdkRemaining')
+    $candidate = $Profile -eq 'WireCandidates'
     $firstBand = [int]$StartSdkBand
+    # SdkBand is the legacy controller ordinal only in WireCandidates; SDK semantics are UNKNOWN.
     $results = @(1..4 | ForEach-Object { [pscustomobject]@{
-        SdkBand = $_; Wire = $_ + 5; ProtocolApply = 'NOT RUN'; AudibleApply = 'NOT TESTED';
+        SdkBand = $_; Wire = $(if ($candidate) { $_ } else { $_ + 5 }); ProtocolApply = 'NOT RUN'; AudibleApply = 'NOT TESTED';
         ProtocolRestore = 'NOT RUN'; AudibleRestore = 'NOT TESTED'
     } })
     $stopReason = ''; $activeBand = 0; $firstApply = $true
     try {
+        if ($candidate) {
+            & $Emit "FreeDSP M2M: raw slot candidates wire$firstBand..4 only; SDK field UNKNOWN."
+            & $Emit 'wire5..9 VERIFIED by Henry; no retest. Restoring means same-slot unity, NOT previous-EQ backup.'
+        } else {
         & $Emit 'FreeDSP M2L Remaining Band Validation; SDK0/wire5 VERIFIED in M2K, not retested.'
         & $Emit "StartSdkBand=$firstBand; testing SDK$firstBand/wire$($firstBand+5) through SDK4/wire9, one at a time."
         & $Emit 'Prior evidence: SDK1/wire6 VERIFIED; SDK2/wire7 protocol passed, audible Restore unconfirmed. Skipped bands are not retested.'
+        }
         & $Emit 'Safety: APO OFF; Windows output=FreeDSP; initial volume1-2/100; FIRST APPLY with IEM OUT OF EARS.'
         & $Emit 'Familiar music, no tone; SAME song and SAME comparison volume; no Flash/90/220.'
         & $Emit 'Sudden loudness/noise/distortion/imbalance/disconnect: STOP immediately. Q at prompts; Ctrl+C during a command.'
         & $Emit 'Q never auto-restores; if already applied, the test band may remain active. Do not retry or test later bands.'
         foreach ($r in ($results | Where-Object { $_.SdkBand -ge $firstBand })) {
-            & $Emit ("=== Test {0}/{1}: SDK{2} -> wire{3} ===" -f ($r.SdkBand-$firstBand+1), (5-$firstBand), $r.SdkBand, $r.Wire)
+            $label = $(if ($candidate) { "CANDIDATE raw slot -> wire$($r.Wire)" } else { "SDK$($r.SdkBand) -> wire$($r.Wire)" })
+            & $Emit ("=== Test {0}/{1}: {2} ===" -f ($r.SdkBand-$firstBand+1), (5-$firstBand), $label)
             $state = 'UNKNOWN (no operation in this run yet)'
             $applied = $false; $restored = $false
             while ($true) {
-                & $Emit "Current band: SDK$($r.SdkBand) -> wire$($r.Wire); STATE: $state"
+                & $Emit "Current band: $label; STATE: $state"
                 $answer = Read-FreeDspChoice $ReadAnswer $Emit 'A=APPLY; R=RESTORE; ENTER=CONFIRM VERIFIED; N=NO CLEAR DIFFERENCE; Q=ABORT.' @('A','R','','N','Q')
                 if ($answer -eq 'Q') { $stopReason = "Aborted at wire$($r.Wire)"; break }
                 if ($answer -eq 'N') {
@@ -106,7 +116,7 @@ function Invoke-FreeDspBandValidation {
                 $isRestore = $answer -eq 'R'
                 $phase = $(if ($isRestore) { 'RESTORE' } else { 'APPLY' })
                 if (-not $isRestore) { $activeBand = $r.Wire }
-                $marker = "SDK$($r.SdkBand) / wire$($r.Wire) $phase"
+                $marker = "$label $phase"
                 & $Emit "===== $marker BEGIN ====="
                 try {
                     $code = & $RunProtocol $r.SdkBand $isRestore $Emit
@@ -131,7 +141,7 @@ function Invoke-FreeDspBandValidation {
         }
     } catch { $stopReason = 'Interrupted/error: ' + $_.Exception.Message }
     finally {
-        foreach ($line in (Get-FreeDspSummary $results $LogPath $stopReason $activeBand $firstBand)) { & $Emit $line }
+        foreach ($line in (Get-FreeDspSummary $results $LogPath $stopReason $activeBand $firstBand $Profile)) { & $Emit $line }
     }
     return [pscustomobject]@{ Results = $results; StopReason = $stopReason; ActiveBand = $activeBand }
 }
@@ -139,7 +149,9 @@ function Invoke-FreeDspBandValidation {
 function Invoke-FreeDspNativeCommand {
     param([string]$Dotnet, [string]$Dll,
         [ValidateSet('ApplyRemainingBand1','RestoreRemainingBand1','ApplyRemainingBand2','RestoreRemainingBand2',
-            'ApplyRemainingBand3','RestoreRemainingBand3','ApplyRemainingBand4','RestoreRemainingBand4')][string]$Operation,
+            'ApplyRemainingBand3','RestoreRemainingBand3','ApplyRemainingBand4','RestoreRemainingBand4',
+            'ApplyCandidateWire1','RestoreCandidateWire1','ApplyCandidateWire2','RestoreCandidateWire2',
+            'ApplyCandidateWire3','RestoreCandidateWire3','ApplyCandidateWire4','RestoreCandidateWire4')][string]$Operation,
         [scriptblock]$Emit)
     $start = [System.Diagnostics.ProcessStartInfo]::new()
     $start.FileName = $Dotnet; $start.Arguments = '"' + $Dll + '" ' + $Operation

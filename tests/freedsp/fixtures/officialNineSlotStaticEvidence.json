@@ -1,0 +1,3166 @@
+{
+  "apkSha256": "04756b49acfea523758d86101c96c1824b7b209ae3a8836c07837088e795d2d5",
+  "source": "https://download.moondroplab.com/moondroplink/android-release.apk",
+  "tool": "androguard4.1.3",
+  "methods": [
+    {
+      "class": "Lcom/conexant/cnxtusbcheadset/FreemanCnxtUsbDevice;",
+      "name": "setDefaultAvailable",
+      "descriptor": "()V",
+      "instructions": [
+        {
+          "offset": 0,
+          "op": "move-object/from16",
+          "args": "v0, v22"
+        },
+        {
+          "offset": 4,
+          "op": "iget-object",
+          "args": "v0, v0, Lcom/conexant/cnxtusbcheadset/CnxtUsbDeviceBase;->mCurFwVersion Ljava/lang/String;"
+        },
+        {
+          "offset": 8,
+          "op": "const-string",
+          "args": "v1, \"7.49.0.0\""
+        },
+        {
+          "offset": 12,
+          "op": "invoke-virtual",
+          "args": "v0, v1, Ljava/lang/String;->compareTo(Ljava/lang/String;)I"
+        },
+        {
+          "offset": 18,
+          "op": "move-result",
+          "args": "v0"
+        },
+        {
+          "offset": 20,
+          "op": "if-ltz",
+          "args": "v0, +009h"
+        },
+        {
+          "offset": 24,
+          "op": "sget-object",
+          "args": "v0, Lcom/conexant/cnxtusbcheadset/FreemanCnxtUsbDevice;->TAG Ljava/lang/String;"
+        },
+        {
+          "offset": 28,
+          "op": "const-string",
+          "args": "v1, \"setDefaultAvailable: mCurFwVersion lager than 7.49.0.0\""
+        },
+        {
+          "offset": 32,
+          "op": "invoke-static",
+          "args": "v0, v1, Landroid/util/Log;->d(Ljava/lang/String; Ljava/lang/String;)I"
+        },
+        {
+          "offset": 38,
+          "op": "const/4",
+          "args": "v0, 0"
+        },
+        {
+          "offset": 40,
+          "op": "move",
+          "args": "v1, v0"
+        },
+        {
+          "offset": 42,
+          "op": "const/16",
+          "args": "v2, 9"
+        },
+        {
+          "offset": 46,
+          "op": "if-gt",
+          "args": "v1, v2, +063h"
+        },
+        {
+          "offset": 50,
+          "op": "const/16",
+          "args": "v2, 13"
+        },
+        {
+          "offset": 54,
+          "op": "new-array",
+          "args": "v3, v2, [J"
+        },
+        {
+          "offset": 58,
+          "op": "const-wide/16",
+          "args": "v4, 0"
+        },
+        {
+          "offset": 62,
+          "op": "aput-wide",
+          "args": "v4, v3, v0"
+        },
+        {
+          "offset": 66,
+          "op": "int-to-long",
+          "args": "v6, v1"
+        },
+        {
+          "offset": 68,
+          "op": "const/4",
+          "args": "v8, 1"
+        },
+        {
+          "offset": 70,
+          "op": "aput-wide",
+          "args": "v6, v3, v8"
+        },
+        {
+          "offset": 74,
+          "op": "const/4",
+          "args": "v9, 2"
+        },
+        {
+          "offset": 76,
+          "op": "const-wide/16",
+          "args": "v10, 3"
+        },
+        {
+          "offset": 80,
+          "op": "aput-wide",
+          "args": "v10, v3, v9"
+        },
+        {
+          "offset": 84,
+          "op": "const/4",
+          "args": "v12, 3"
+        },
+        {
+          "offset": 86,
+          "op": "const-wide/32",
+          "args": "v13, 4194304"
+        },
+        {
+          "offset": 92,
+          "op": "aput-wide",
+          "args": "v13, v3, v12"
+        },
+        {
+          "offset": 96,
+          "op": "const/4",
+          "args": "v15, 4"
+        },
+        {
+          "offset": 98,
+          "op": "aput-wide",
+          "args": "v4, v3, v15"
+        },
+        {
+          "offset": 102,
+          "op": "const/16",
+          "args": "v16, 5"
+        },
+        {
+          "offset": 106,
+          "op": "aput-wide",
+          "args": "v4, v3, v16"
+        },
+        {
+          "offset": 110,
+          "op": "const/16",
+          "args": "v17, 6"
+        },
+        {
+          "offset": 114,
+          "op": "aput-wide",
+          "args": "v4, v3, v17"
+        },
+        {
+          "offset": 118,
+          "op": "const/16",
+          "args": "v18, 7"
+        },
+        {
+          "offset": 122,
+          "op": "aput-wide",
+          "args": "v4, v3, v18"
+        },
+        {
+          "offset": 126,
+          "op": "const-string",
+          "args": "v19, \"CTRL\""
+        },
+        {
+          "offset": 130,
+          "op": "move/from16",
+          "args": "v22, v0"
+        },
+        {
+          "offset": 134,
+          "op": "invoke-static/range",
+          "args": "v19, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getCafId(Ljava/lang/String;)I"
+        },
+        {
+          "offset": 140,
+          "op": "move-result",
+          "args": "v0"
+        },
+        {
+          "offset": 142,
+          "op": "move-wide/from16",
+          "args": "v20, v4"
+        },
+        {
+          "offset": 146,
+          "op": "const/16",
+          "args": "v4, 190"
+        },
+        {
+          "offset": 150,
+          "op": "invoke-static",
+          "args": "v4, v0, v3, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getCmd(I I [J)Lcom/conexant/universalfunction/CnxtUsbCommand;"
+        },
+        {
+          "offset": 156,
+          "op": "move-result-object",
+          "args": "v0"
+        },
+        {
+          "offset": 158,
+          "op": "sget-object",
+          "args": "v3, Lcom/conexant/cnxtusbcheadset/CnxtUsbDeviceBase;->mConnection Landroid/hardware/usb/UsbDeviceConnection;"
+        },
+        {
+          "offset": 162,
+          "op": "invoke-static",
+          "args": "v3, v0, v8, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->sendCmd(Landroid/hardware/usb/UsbDeviceConnection; Lcom/conexant/universalfunction/CnxtUsbCommand; I)Z"
+        },
+        {
+          "offset": 168,
+          "op": "new-array",
+          "args": "v0, v2, [J"
+        },
+        {
+          "offset": 172,
+          "op": "const-wide/16",
+          "args": "v2, 1"
+        },
+        {
+          "offset": 176,
+          "op": "aput-wide",
+          "args": "v2, v0, v22"
+        },
+        {
+          "offset": 180,
+          "op": "aput-wide",
+          "args": "v6, v0, v8"
+        },
+        {
+          "offset": 184,
+          "op": "aput-wide",
+          "args": "v10, v0, v9"
+        },
+        {
+          "offset": 188,
+          "op": "aput-wide",
+          "args": "v13, v0, v12"
+        },
+        {
+          "offset": 192,
+          "op": "aput-wide",
+          "args": "v20, v0, v15"
+        },
+        {
+          "offset": 196,
+          "op": "aput-wide",
+          "args": "v20, v0, v16"
+        },
+        {
+          "offset": 200,
+          "op": "aput-wide",
+          "args": "v20, v0, v17"
+        },
+        {
+          "offset": 204,
+          "op": "aput-wide",
+          "args": "v20, v0, v18"
+        },
+        {
+          "offset": 208,
+          "op": "invoke-static/range",
+          "args": "v19, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getCafId(Ljava/lang/String;)I"
+        },
+        {
+          "offset": 214,
+          "op": "move-result",
+          "args": "v2"
+        },
+        {
+          "offset": 216,
+          "op": "invoke-static",
+          "args": "v4, v2, v0, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getCmd(I I [J)Lcom/conexant/universalfunction/CnxtUsbCommand;"
+        },
+        {
+          "offset": 222,
+          "op": "move-result-object",
+          "args": "v0"
+        },
+        {
+          "offset": 224,
+          "op": "sget-object",
+          "args": "v2, Lcom/conexant/cnxtusbcheadset/CnxtUsbDeviceBase;->mConnection Landroid/hardware/usb/UsbDeviceConnection;"
+        },
+        {
+          "offset": 228,
+          "op": "invoke-static",
+          "args": "v2, v0, v8, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->sendCmd(Landroid/hardware/usb/UsbDeviceConnection; Lcom/conexant/universalfunction/CnxtUsbCommand; I)Z"
+        },
+        {
+          "offset": 234,
+          "op": "add-int/lit8",
+          "args": "v1, v1, 1"
+        },
+        {
+          "offset": 238,
+          "op": "move/from16",
+          "args": "v0, v22"
+        },
+        {
+          "offset": 242,
+          "op": "goto",
+          "args": "-64h"
+        },
+        {
+          "offset": 244,
+          "op": "return-void",
+          "args": ""
+        }
+      ]
+    },
+    {
+      "class": "Lcom/conexant/cnxtusbcheadset/FreemanCnxtUsbDevice;",
+      "name": "setFreeman3EQ",
+      "descriptor": "(Lcom/conexant/genericfeature/EQParam;)Z",
+      "instructions": [
+        {
+          "offset": 0,
+          "op": "new-instance",
+          "args": "v0, Lcom/conexant/cnxtusbcheadset/EQBandParam;"
+        },
+        {
+          "offset": 4,
+          "op": "invoke-direct",
+          "args": "v0, Lcom/conexant/cnxtusbcheadset/EQBandParam;-><init>()V"
+        },
+        {
+          "offset": 10,
+          "op": "iget",
+          "args": "v1, v7, Lcom/conexant/genericfeature/EQParam;->filterType I"
+        },
+        {
+          "offset": 14,
+          "op": "iput",
+          "args": "v1, v0, Lcom/conexant/cnxtusbcheadset/EQBandParam;->flags I"
+        },
+        {
+          "offset": 18,
+          "op": "iget",
+          "args": "v1, v7, Lcom/conexant/genericfeature/EQParam;->frequency I"
+        },
+        {
+          "offset": 22,
+          "op": "iput",
+          "args": "v1, v0, Lcom/conexant/cnxtusbcheadset/EQBandParam;->Freq_Hz I"
+        },
+        {
+          "offset": 26,
+          "op": "iget-wide",
+          "args": "v1, v7, Lcom/conexant/genericfeature/EQParam;->gain D"
+        },
+        {
+          "offset": 30,
+          "op": "const-wide/high16",
+          "args": "v3, 4643211215818981376"
+        },
+        {
+          "offset": 34,
+          "op": "mul-double/2addr",
+          "args": "v1, v3"
+        },
+        {
+          "offset": 36,
+          "op": "double-to-int",
+          "args": "v1, v1"
+        },
+        {
+          "offset": 38,
+          "op": "iput",
+          "args": "v1, v0, Lcom/conexant/cnxtusbcheadset/EQBandParam;->Gain_dB I"
+        },
+        {
+          "offset": 42,
+          "op": "iget-wide",
+          "args": "v1, v7, Lcom/conexant/genericfeature/EQParam;->qFactor D"
+        },
+        {
+          "offset": 46,
+          "op": "mul-double/2addr",
+          "args": "v1, v3"
+        },
+        {
+          "offset": 48,
+          "op": "double-to-int",
+          "args": "v1, v1"
+        },
+        {
+          "offset": 50,
+          "op": "iput",
+          "args": "v1, v0, Lcom/conexant/cnxtusbcheadset/EQBandParam;->Qfactor I"
+        },
+        {
+          "offset": 54,
+          "op": "iget",
+          "args": "v1, v7, Lcom/conexant/genericfeature/EQParam;->sampleRate I"
+        },
+        {
+          "offset": 58,
+          "op": "invoke-virtual",
+          "args": "v6, Lcom/conexant/cnxtusbcheadset/FreemanCnxtUsbDevice;->getCurSampleRate()I"
+        },
+        {
+          "offset": 64,
+          "op": "move-result",
+          "args": "v2"
+        },
+        {
+          "offset": 66,
+          "op": "const/4",
+          "args": "v3, 4"
+        },
+        {
+          "offset": 68,
+          "op": "if-lt",
+          "args": "v2, v3, +011h"
+        },
+        {
+          "offset": 72,
+          "op": "const/16",
+          "args": "v4, 8"
+        },
+        {
+          "offset": 76,
+          "op": "if-gt",
+          "args": "v2, v4, +00dh"
+        },
+        {
+          "offset": 80,
+          "op": "sget-object",
+          "args": "v1, Lcom/conexant/universalfunction/CnxtUsbConstants;->FREQ_SAMPLE_RATE [I"
+        },
+        {
+          "offset": 84,
+          "op": "aget",
+          "args": "v1, v1, v2"
+        },
+        {
+          "offset": 88,
+          "op": "sget-object",
+          "args": "v2, Lcom/conexant/cnxtusbcheadset/FreemanCnxtUsbDevice;->TAG Ljava/lang/String;"
+        },
+        {
+          "offset": 92,
+          "op": "const-string",
+          "args": "v4, \"setFreeman3EQ: sampleRate: \""
+        },
+        {
+          "offset": 96,
+          "op": "invoke-static",
+          "args": "v1, v4, v2, Lgf3;->A(I Ljava/lang/String; Ljava/lang/String;)V"
+        },
+        {
+          "offset": 102,
+          "op": "new-instance",
+          "args": "v2, Lcom/conexant/cnxtusbcheadset/Eq2Coeff;"
+        },
+        {
+          "offset": 106,
+          "op": "invoke-direct",
+          "args": "v2, Lcom/conexant/cnxtusbcheadset/Eq2Coeff;-><init>()V"
+        },
+        {
+          "offset": 112,
+          "op": "new-instance",
+          "args": "v4, Lcom/conexant/cnxtusbcheadset/CX2070xBandEQCoeffs;"
+        },
+        {
+          "offset": 116,
+          "op": "invoke-direct",
+          "args": "v4, Lcom/conexant/cnxtusbcheadset/CX2070xBandEQCoeffs;-><init>()V"
+        },
+        {
+          "offset": 122,
+          "op": "iput-object",
+          "args": "v4, v6, Lcom/conexant/cnxtusbcheadset/FreemanCnxtUsbDevice;->eqCoeff Lcom/conexant/cnxtusbcheadset/CX2070xBandEQCoeffs;"
+        },
+        {
+          "offset": 126,
+          "op": "const/16",
+          "args": "v4, 24"
+        },
+        {
+          "offset": 130,
+          "op": "invoke-virtual",
+          "args": "v2, v1, v0, v4, Lcom/conexant/cnxtusbcheadset/Eq2Coeff;->CxAudioConvertEqParams2Coeffs(I Lcom/conexant/cnxtusbcheadset/EQBandParam; I)Lcom/conexant/cnxtusbcheadset/CX2070xBandEQCoeffs;"
+        },
+        {
+          "offset": 136,
+          "op": "move-result-object",
+          "args": "v0"
+        },
+        {
+          "offset": 138,
+          "op": "iput-object",
+          "args": "v0, v6, Lcom/conexant/cnxtusbcheadset/FreemanCnxtUsbDevice;->eqCoeff Lcom/conexant/cnxtusbcheadset/CX2070xBandEQCoeffs;"
+        },
+        {
+          "offset": 142,
+          "op": "const/4",
+          "args": "v1, 0"
+        },
+        {
+          "offset": 144,
+          "op": "if-nez",
+          "args": "v0, +00ah"
+        },
+        {
+          "offset": 148,
+          "op": "sget-object",
+          "args": "v6, Lcom/conexant/cnxtusbcheadset/FreemanCnxtUsbDevice;->TAG Ljava/lang/String;"
+        },
+        {
+          "offset": 152,
+          "op": "const-string",
+          "args": "v7, \"setFreeman3EQ: eqCoeff == null\""
+        },
+        {
+          "offset": 156,
+          "op": "invoke-static",
+          "args": "v6, v7, Landroid/util/Log;->e(Ljava/lang/String; Ljava/lang/String;)I"
+        },
+        {
+          "offset": 162,
+          "op": "return",
+          "args": "v1"
+        },
+        {
+          "offset": 164,
+          "op": "const/16",
+          "args": "v0, 13"
+        },
+        {
+          "offset": 168,
+          "op": "new-array",
+          "args": "v0, v0, [J"
+        },
+        {
+          "offset": 172,
+          "op": "const-wide/16",
+          "args": "v4, 0"
+        },
+        {
+          "offset": 176,
+          "op": "aput-wide",
+          "args": "v4, v0, v1"
+        },
+        {
+          "offset": 180,
+          "op": "iget",
+          "args": "v7, v7, Lcom/conexant/genericfeature/EQParam;->band I"
+        },
+        {
+          "offset": 184,
+          "op": "invoke-static",
+          "args": "v7, Lcom/conexant/universalfunction/CommonUtil;->shiftEQBandForFreeman3(I)I"
+        },
+        {
+          "offset": 190,
+          "op": "move-result",
+          "args": "v7"
+        },
+        {
+          "offset": 192,
+          "op": "int-to-long",
+          "args": "v1, v7"
+        },
+        {
+          "offset": 194,
+          "op": "const/4",
+          "args": "v7, 1"
+        },
+        {
+          "offset": 196,
+          "op": "aput-wide",
+          "args": "v1, v0, v7"
+        },
+        {
+          "offset": 200,
+          "op": "iget-object",
+          "args": "v6, v6, Lcom/conexant/cnxtusbcheadset/FreemanCnxtUsbDevice;->eqCoeff Lcom/conexant/cnxtusbcheadset/CX2070xBandEQCoeffs;"
+        },
+        {
+          "offset": 204,
+          "op": "iget-byte",
+          "args": "v1, v6, Lcom/conexant/cnxtusbcheadset/CX2070xBandEQCoeffs;->Gain B"
+        },
+        {
+          "offset": 208,
+          "op": "int-to-long",
+          "args": "v1, v1"
+        },
+        {
+          "offset": 210,
+          "op": "const/4",
+          "args": "v4, 2"
+        },
+        {
+          "offset": 212,
+          "op": "aput-wide",
+          "args": "v1, v0, v4"
+        },
+        {
+          "offset": 216,
+          "op": "iget",
+          "args": "v1, v6, Lcom/conexant/cnxtusbcheadset/CX2070xBandEQCoeffs;->B0 I"
+        },
+        {
+          "offset": 220,
+          "op": "int-to-long",
+          "args": "v1, v1"
+        },
+        {
+          "offset": 222,
+          "op": "const/4",
+          "args": "v4, 3"
+        },
+        {
+          "offset": 224,
+          "op": "aput-wide",
+          "args": "v1, v0, v4"
+        },
+        {
+          "offset": 228,
+          "op": "iget",
+          "args": "v1, v6, Lcom/conexant/cnxtusbcheadset/CX2070xBandEQCoeffs;->B1 I"
+        },
+        {
+          "offset": 232,
+          "op": "int-to-long",
+          "args": "v1, v1"
+        },
+        {
+          "offset": 234,
+          "op": "aput-wide",
+          "args": "v1, v0, v3"
+        },
+        {
+          "offset": 238,
+          "op": "iget",
+          "args": "v1, v6, Lcom/conexant/cnxtusbcheadset/CX2070xBandEQCoeffs;->B2 I"
+        },
+        {
+          "offset": 242,
+          "op": "int-to-long",
+          "args": "v1, v1"
+        },
+        {
+          "offset": 244,
+          "op": "const/4",
+          "args": "v3, 5"
+        },
+        {
+          "offset": 246,
+          "op": "aput-wide",
+          "args": "v1, v0, v3"
+        },
+        {
+          "offset": 250,
+          "op": "iget",
+          "args": "v1, v6, Lcom/conexant/cnxtusbcheadset/CX2070xBandEQCoeffs;->A0 I"
+        },
+        {
+          "offset": 254,
+          "op": "int-to-long",
+          "args": "v1, v1"
+        },
+        {
+          "offset": 256,
+          "op": "const/4",
+          "args": "v3, 6"
+        },
+        {
+          "offset": 258,
+          "op": "aput-wide",
+          "args": "v1, v0, v3"
+        },
+        {
+          "offset": 262,
+          "op": "iget",
+          "args": "v6, v6, Lcom/conexant/cnxtusbcheadset/CX2070xBandEQCoeffs;->A1 I"
+        },
+        {
+          "offset": 266,
+          "op": "int-to-long",
+          "args": "v1, v6"
+        },
+        {
+          "offset": 268,
+          "op": "const/4",
+          "args": "v6, 7"
+        },
+        {
+          "offset": 270,
+          "op": "aput-wide",
+          "args": "v1, v0, v6"
+        },
+        {
+          "offset": 274,
+          "op": "const-string",
+          "args": "v6, \"CTRL\""
+        },
+        {
+          "offset": 278,
+          "op": "invoke-static",
+          "args": "v6, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getCafId(Ljava/lang/String;)I"
+        },
+        {
+          "offset": 284,
+          "op": "move-result",
+          "args": "v6"
+        },
+        {
+          "offset": 286,
+          "op": "const/16",
+          "args": "v1, 190"
+        },
+        {
+          "offset": 290,
+          "op": "invoke-static",
+          "args": "v1, v6, v0, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getCmd(I I [J)Lcom/conexant/universalfunction/CnxtUsbCommand;"
+        },
+        {
+          "offset": 296,
+          "op": "move-result-object",
+          "args": "v6"
+        },
+        {
+          "offset": 298,
+          "op": "sget-object",
+          "args": "v0, Lcom/conexant/cnxtusbcheadset/CnxtUsbDeviceBase;->mConnection Landroid/hardware/usb/UsbDeviceConnection;"
+        },
+        {
+          "offset": 302,
+          "op": "invoke-static",
+          "args": "v0, v6, v7, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->sendCmd(Landroid/hardware/usb/UsbDeviceConnection; Lcom/conexant/universalfunction/CnxtUsbCommand; I)Z"
+        },
+        {
+          "offset": 308,
+          "op": "move-result",
+          "args": "v6"
+        },
+        {
+          "offset": 310,
+          "op": "return",
+          "args": "v6"
+        }
+      ]
+    },
+    {
+      "class": "Lcom/conexant/cnxtusbcheadset/FreemanCnxtUsbDevice;",
+      "name": "getF3EQCoefficientList",
+      "descriptor": "()Ljava/util/List;",
+      "instructions": [
+        {
+          "offset": 0,
+          "op": "move-object/from16",
+          "args": "v0, v16"
+        },
+        {
+          "offset": 4,
+          "op": "sget-object",
+          "args": "v1, Lcom/conexant/cnxtusbcheadset/FreemanCnxtUsbDevice;->TAG Ljava/lang/String;"
+        },
+        {
+          "offset": 8,
+          "op": "const-string",
+          "args": "v2, \"getF3EQCoefficientList: MAX_BAND_INDEX = 9\""
+        },
+        {
+          "offset": 12,
+          "op": "invoke-static",
+          "args": "v1, v2, Landroid/util/Log;->d(Ljava/lang/String; Ljava/lang/String;)I"
+        },
+        {
+          "offset": 18,
+          "op": "iget-object",
+          "args": "v2, v0, Lcom/conexant/cnxtusbcheadset/CnxtUsbDeviceBase;->mDeviceName Ljava/lang/String;"
+        },
+        {
+          "offset": 22,
+          "op": "const-string",
+          "args": "v3, \"Freeman3\""
+        },
+        {
+          "offset": 26,
+          "op": "invoke-virtual",
+          "args": "v2, v3, Ljava/lang/String;->equals(Ljava/lang/Object;)Z"
+        },
+        {
+          "offset": 32,
+          "op": "move-result",
+          "args": "v2"
+        },
+        {
+          "offset": 34,
+          "op": "const/4",
+          "args": "v3, 0"
+        },
+        {
+          "offset": 36,
+          "op": "if-nez",
+          "args": "v2, +008h"
+        },
+        {
+          "offset": 40,
+          "op": "const-string",
+          "args": "v0, \"getF3EQCoefficientList: not Freeman3 device\""
+        },
+        {
+          "offset": 44,
+          "op": "invoke-static",
+          "args": "v1, v0, Landroid/util/Log;->e(Ljava/lang/String; Ljava/lang/String;)I"
+        },
+        {
+          "offset": 50,
+          "op": "return-object",
+          "args": "v3"
+        },
+        {
+          "offset": 52,
+          "op": "invoke-direct",
+          "args": "v0, Lcom/conexant/cnxtusbcheadset/FreemanCnxtUsbDevice;->claimInterfaceByBaseClass()V"
+        },
+        {
+          "offset": 58,
+          "op": "iget-object",
+          "args": "v2, v0, Lcom/conexant/cnxtusbcheadset/CnxtUsbDeviceBase;->mContext Landroid/content/Context;"
+        },
+        {
+          "offset": 62,
+          "op": "const-string",
+          "args": "v4, \"audio\""
+        },
+        {
+          "offset": 66,
+          "op": "invoke-virtual",
+          "args": "v2, v4, Landroid/content/Context;->getSystemService(Ljava/lang/String;)Ljava/lang/Object;"
+        },
+        {
+          "offset": 72,
+          "op": "move-result-object",
+          "args": "v2"
+        },
+        {
+          "offset": 74,
+          "op": "check-cast",
+          "args": "v2, Landroid/media/AudioManager;"
+        },
+        {
+          "offset": 78,
+          "op": "const-string",
+          "args": "v4, \"android.media.property.OUTPUT_SAMPLE_RATE\""
+        },
+        {
+          "offset": 82,
+          "op": "invoke-virtual",
+          "args": "v2, v4, Landroid/media/AudioManager;->getProperty(Ljava/lang/String;)Ljava/lang/String;"
+        },
+        {
+          "offset": 88,
+          "op": "move-result-object",
+          "args": "v2"
+        },
+        {
+          "offset": 90,
+          "op": "if-eqz",
+          "args": "v2, +006h"
+        },
+        {
+          "offset": 94,
+          "op": "invoke-virtual",
+          "args": "v2, Ljava/lang/String;->isEmpty()Z"
+        },
+        {
+          "offset": 100,
+          "op": "move-result",
+          "args": "v4"
+        },
+        {
+          "offset": 102,
+          "op": "invoke-static",
+          "args": "v2, Ljava/lang/Integer;->parseInt(Ljava/lang/String;)I"
+        },
+        {
+          "offset": 108,
+          "op": "move-result",
+          "args": "v2"
+        },
+        {
+          "offset": 110,
+          "op": "new-instance",
+          "args": "v4, Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 114,
+          "op": "const-string",
+          "args": "v5, \"getF3EQCoefficientList: os supported SampleRate: \""
+        },
+        {
+          "offset": 118,
+          "op": "invoke-direct",
+          "args": "v4, v5, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V"
+        },
+        {
+          "offset": 124,
+          "op": "invoke-virtual",
+          "args": "v4, v2, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 130,
+          "op": "invoke-virtual",
+          "args": "v4, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;"
+        },
+        {
+          "offset": 136,
+          "op": "move-result-object",
+          "args": "v4"
+        },
+        {
+          "offset": 138,
+          "op": "invoke-static",
+          "args": "v1, v4, Landroid/util/Log;->d(Ljava/lang/String; Ljava/lang/String;)I"
+        },
+        {
+          "offset": 144,
+          "op": "invoke-virtual",
+          "args": "v0, Lcom/conexant/cnxtusbcheadset/FreemanCnxtUsbDevice;->getFwVersion()V"
+        },
+        {
+          "offset": 150,
+          "op": "new-instance",
+          "args": "v1, Ljava/util/ArrayList;"
+        },
+        {
+          "offset": 154,
+          "op": "invoke-direct",
+          "args": "v1, Ljava/util/ArrayList;-><init>()V"
+        },
+        {
+          "offset": 160,
+          "op": "const/4",
+          "args": "v4, 1"
+        },
+        {
+          "offset": 162,
+          "op": "move",
+          "args": "v5, v4"
+        },
+        {
+          "offset": 164,
+          "op": "const/16",
+          "args": "v6, 9"
+        },
+        {
+          "offset": 168,
+          "op": "if-gt",
+          "args": "v5, v6, +12dh"
+        },
+        {
+          "offset": 172,
+          "op": "const/16",
+          "args": "v6, 13"
+        },
+        {
+          "offset": 176,
+          "op": "new-array",
+          "args": "v6, v6, [J"
+        },
+        {
+          "offset": 180,
+          "op": "const/4",
+          "args": "v7, 0"
+        },
+        {
+          "offset": 182,
+          "op": "const-wide/16",
+          "args": "v8, 0"
+        },
+        {
+          "offset": 186,
+          "op": "aput-wide",
+          "args": "v8, v6, v7"
+        },
+        {
+          "offset": 190,
+          "op": "int-to-long",
+          "args": "v7, v5"
+        },
+        {
+          "offset": 192,
+          "op": "aput-wide",
+          "args": "v7, v6, v4"
+        },
+        {
+          "offset": 196,
+          "op": "const-string",
+          "args": "v7, \"CTRL\""
+        },
+        {
+          "offset": 200,
+          "op": "invoke-static",
+          "args": "v7, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getCafId(Ljava/lang/String;)I"
+        },
+        {
+          "offset": 206,
+          "op": "move-result",
+          "args": "v7"
+        },
+        {
+          "offset": 208,
+          "op": "sget-object",
+          "args": "v8, Lcom/conexant/cnxtusbcheadset/CnxtUsbDeviceBase;->mConnection Landroid/hardware/usb/UsbDeviceConnection;"
+        },
+        {
+          "offset": 212,
+          "op": "const/16",
+          "args": "v9, 446"
+        },
+        {
+          "offset": 216,
+          "op": "invoke-static",
+          "args": "v9, v7, v6, v8, v4, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->readDataFromDevice(I I [J Landroid/hardware/usb/UsbDeviceConnection; I)[B"
+        },
+        {
+          "offset": 222,
+          "op": "move-result-object",
+          "args": "v6"
+        },
+        {
+          "offset": 224,
+          "op": "invoke-static",
+          "args": "v6, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->isExecuteSuccess([B)Z"
+        },
+        {
+          "offset": 230,
+          "op": "move-result",
+          "args": "v7"
+        },
+        {
+          "offset": 232,
+          "op": "if-nez",
+          "args": "v7, +00bh"
+        },
+        {
+          "offset": 236,
+          "op": "sget-object",
+          "args": "v1, Lcom/conexant/cnxtusbcheadset/FreemanCnxtUsbDevice;->TAG Ljava/lang/String;"
+        },
+        {
+          "offset": 240,
+          "op": "const-string",
+          "args": "v2, \"getF3EQCoefficientList: execute failure, band index is: \""
+        },
+        {
+          "offset": 244,
+          "op": "invoke-static",
+          "args": "v5, v2, v1, Ln50;->D(I Ljava/lang/String; Ljava/lang/String;)V"
+        },
+        {
+          "offset": 250,
+          "op": "goto/16",
+          "args": "+105h"
+        },
+        {
+          "offset": 254,
+          "op": "new-instance",
+          "args": "v7, Lcom/conexant/genericfeature/BandEQCoefficient;"
+        },
+        {
+          "offset": 258,
+          "op": "invoke-direct",
+          "args": "v7, Lcom/conexant/genericfeature/BandEQCoefficient;-><init>()V"
+        },
+        {
+          "offset": 264,
+          "op": "iput",
+          "args": "v2, v7, Lcom/conexant/genericfeature/BandEQCoefficient;->sampleRate I"
+        },
+        {
+          "offset": 268,
+          "op": "iput",
+          "args": "v5, v7, Lcom/conexant/genericfeature/BandEQCoefficient;->band I"
+        },
+        {
+          "offset": 272,
+          "op": "const/16",
+          "args": "v8, 18"
+        },
+        {
+          "offset": 276,
+          "op": "aget-byte",
+          "args": "v9, v6, v8"
+        },
+        {
+          "offset": 280,
+          "op": "iput-byte",
+          "args": "v9, v7, Lcom/conexant/genericfeature/BandEQCoefficient;->Gain B"
+        },
+        {
+          "offset": 284,
+          "op": "const/16",
+          "args": "v9, 22"
+        },
+        {
+          "offset": 288,
+          "op": "invoke-static",
+          "args": "v6, v9, Lcom/conexant/universalfunction/CommonUtil;->formatByteToInt([B I)I"
+        },
+        {
+          "offset": 294,
+          "op": "move-result",
+          "args": "v9"
+        },
+        {
+          "offset": 296,
+          "op": "iput",
+          "args": "v9, v7, Lcom/conexant/genericfeature/BandEQCoefficient;->B0 I"
+        },
+        {
+          "offset": 300,
+          "op": "const/16",
+          "args": "v9, 26"
+        },
+        {
+          "offset": 304,
+          "op": "invoke-static",
+          "args": "v6, v9, Lcom/conexant/universalfunction/CommonUtil;->formatByteToInt([B I)I"
+        },
+        {
+          "offset": 310,
+          "op": "move-result",
+          "args": "v9"
+        },
+        {
+          "offset": 312,
+          "op": "iput",
+          "args": "v9, v7, Lcom/conexant/genericfeature/BandEQCoefficient;->B1 I"
+        },
+        {
+          "offset": 316,
+          "op": "const/16",
+          "args": "v9, 30"
+        },
+        {
+          "offset": 320,
+          "op": "invoke-static",
+          "args": "v6, v9, Lcom/conexant/universalfunction/CommonUtil;->formatByteToInt([B I)I"
+        },
+        {
+          "offset": 326,
+          "op": "move-result",
+          "args": "v9"
+        },
+        {
+          "offset": 328,
+          "op": "iput",
+          "args": "v9, v7, Lcom/conexant/genericfeature/BandEQCoefficient;->B2 I"
+        },
+        {
+          "offset": 332,
+          "op": "const/16",
+          "args": "v9, 34"
+        },
+        {
+          "offset": 336,
+          "op": "invoke-static",
+          "args": "v6, v9, Lcom/conexant/universalfunction/CommonUtil;->formatByteToInt([B I)I"
+        },
+        {
+          "offset": 342,
+          "op": "move-result",
+          "args": "v9"
+        },
+        {
+          "offset": 344,
+          "op": "iput",
+          "args": "v9, v7, Lcom/conexant/genericfeature/BandEQCoefficient;->A0 I"
+        },
+        {
+          "offset": 348,
+          "op": "const/16",
+          "args": "v9, 38"
+        },
+        {
+          "offset": 352,
+          "op": "invoke-static",
+          "args": "v6, v9, Lcom/conexant/universalfunction/CommonUtil;->formatByteToInt([B I)I"
+        },
+        {
+          "offset": 358,
+          "op": "move-result",
+          "args": "v9"
+        },
+        {
+          "offset": 360,
+          "op": "iput",
+          "args": "v9, v7, Lcom/conexant/genericfeature/BandEQCoefficient;->A1 I"
+        },
+        {
+          "offset": 364,
+          "op": "sget-object",
+          "args": "v9, Lcom/conexant/cnxtusbcheadset/FreemanCnxtUsbDevice;->TAG Ljava/lang/String;"
+        },
+        {
+          "offset": 368,
+          "op": "const-string",
+          "args": "v10, \"getF3EQCoefficientList 32 bits => EQ Coefficient list: band = \""
+        },
+        {
+          "offset": 372,
+          "op": "const-string",
+          "args": "v11, \" & gain= \""
+        },
+        {
+          "offset": 376,
+          "op": "invoke-static",
+          "args": "v5, v10, v11, Ln50;->o(I Ljava/lang/String; Ljava/lang/String;)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 382,
+          "op": "move-result-object",
+          "args": "v10"
+        },
+        {
+          "offset": 384,
+          "op": "iget-byte",
+          "args": "v12, v7, Lcom/conexant/genericfeature/BandEQCoefficient;->Gain B"
+        },
+        {
+          "offset": 388,
+          "op": "invoke-virtual",
+          "args": "v10, v12, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 394,
+          "op": "const-string",
+          "args": "v12, \" & B0 = \""
+        },
+        {
+          "offset": 398,
+          "op": "invoke-virtual",
+          "args": "v10, v12, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 404,
+          "op": "iget",
+          "args": "v13, v7, Lcom/conexant/genericfeature/BandEQCoefficient;->B0 I"
+        },
+        {
+          "offset": 408,
+          "op": "invoke-static",
+          "args": "v13, Ljava/lang/Integer;->toHexString(I)Ljava/lang/String;"
+        },
+        {
+          "offset": 414,
+          "op": "move-result-object",
+          "args": "v13"
+        },
+        {
+          "offset": 416,
+          "op": "invoke-virtual",
+          "args": "v10, v13, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 422,
+          "op": "const-string",
+          "args": "v13, \" & B1= \""
+        },
+        {
+          "offset": 426,
+          "op": "invoke-virtual",
+          "args": "v10, v13, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 432,
+          "op": "iget",
+          "args": "v14, v7, Lcom/conexant/genericfeature/BandEQCoefficient;->B1 I"
+        },
+        {
+          "offset": 436,
+          "op": "invoke-static",
+          "args": "v14, Ljava/lang/Integer;->toHexString(I)Ljava/lang/String;"
+        },
+        {
+          "offset": 442,
+          "op": "move-result-object",
+          "args": "v14"
+        },
+        {
+          "offset": 444,
+          "op": "invoke-virtual",
+          "args": "v10, v14, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 450,
+          "op": "const-string",
+          "args": "v14, \" & B2= \""
+        },
+        {
+          "offset": 454,
+          "op": "invoke-virtual",
+          "args": "v10, v14, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 460,
+          "op": "iget",
+          "args": "v15, v7, Lcom/conexant/genericfeature/BandEQCoefficient;->B2 I"
+        },
+        {
+          "offset": 464,
+          "op": "invoke-static",
+          "args": "v15, Ljava/lang/Integer;->toHexString(I)Ljava/lang/String;"
+        },
+        {
+          "offset": 470,
+          "op": "move-result-object",
+          "args": "v15"
+        },
+        {
+          "offset": 472,
+          "op": "invoke-virtual",
+          "args": "v10, v15, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 478,
+          "op": "const-string",
+          "args": "v15, \" & A0= \""
+        },
+        {
+          "offset": 482,
+          "op": "invoke-virtual",
+          "args": "v10, v15, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 488,
+          "op": "iget",
+          "args": "v3, v7, Lcom/conexant/genericfeature/BandEQCoefficient;->A0 I"
+        },
+        {
+          "offset": 492,
+          "op": "invoke-static",
+          "args": "v3, Ljava/lang/Integer;->toHexString(I)Ljava/lang/String;"
+        },
+        {
+          "offset": 498,
+          "op": "move-result-object",
+          "args": "v3"
+        },
+        {
+          "offset": 500,
+          "op": "invoke-virtual",
+          "args": "v10, v3, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 506,
+          "op": "const-string",
+          "args": "v3, \" & A1= \""
+        },
+        {
+          "offset": 510,
+          "op": "invoke-virtual",
+          "args": "v10, v3, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 516,
+          "op": "iget",
+          "args": "v4, v7, Lcom/conexant/genericfeature/BandEQCoefficient;->A1 I"
+        },
+        {
+          "offset": 520,
+          "op": "invoke-static",
+          "args": "v4, Ljava/lang/Integer;->toHexString(I)Ljava/lang/String;"
+        },
+        {
+          "offset": 526,
+          "op": "move-result-object",
+          "args": "v4"
+        },
+        {
+          "offset": 528,
+          "op": "invoke-virtual",
+          "args": "v10, v4, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 534,
+          "op": "invoke-virtual",
+          "args": "v10, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;"
+        },
+        {
+          "offset": 540,
+          "op": "move-result-object",
+          "args": "v4"
+        },
+        {
+          "offset": 542,
+          "op": "invoke-static",
+          "args": "v9, v4, Landroid/util/Log;->d(Ljava/lang/String; Ljava/lang/String;)I"
+        },
+        {
+          "offset": 548,
+          "op": "aget-byte",
+          "args": "v4, v6, v8"
+        },
+        {
+          "offset": 552,
+          "op": "iput-byte",
+          "args": "v4, v7, Lcom/conexant/genericfeature/BandEQCoefficient;->Gain B"
+        },
+        {
+          "offset": 556,
+          "op": "iget",
+          "args": "v4, v7, Lcom/conexant/genericfeature/BandEQCoefficient;->B0 I"
+        },
+        {
+          "offset": 560,
+          "op": "shl-int/lit8",
+          "args": "v4, v4, 8"
+        },
+        {
+          "offset": 564,
+          "op": "shr-int/lit8",
+          "args": "v4, v4, 8"
+        },
+        {
+          "offset": 568,
+          "op": "iput",
+          "args": "v4, v7, Lcom/conexant/genericfeature/BandEQCoefficient;->B0 I"
+        },
+        {
+          "offset": 572,
+          "op": "iget",
+          "args": "v4, v7, Lcom/conexant/genericfeature/BandEQCoefficient;->B1 I"
+        },
+        {
+          "offset": 576,
+          "op": "shl-int/lit8",
+          "args": "v4, v4, 8"
+        },
+        {
+          "offset": 580,
+          "op": "shr-int/lit8",
+          "args": "v4, v4, 8"
+        },
+        {
+          "offset": 584,
+          "op": "iput",
+          "args": "v4, v7, Lcom/conexant/genericfeature/BandEQCoefficient;->B1 I"
+        },
+        {
+          "offset": 588,
+          "op": "iget",
+          "args": "v4, v7, Lcom/conexant/genericfeature/BandEQCoefficient;->B2 I"
+        },
+        {
+          "offset": 592,
+          "op": "shl-int/lit8",
+          "args": "v4, v4, 8"
+        },
+        {
+          "offset": 596,
+          "op": "shr-int/lit8",
+          "args": "v4, v4, 8"
+        },
+        {
+          "offset": 600,
+          "op": "iput",
+          "args": "v4, v7, Lcom/conexant/genericfeature/BandEQCoefficient;->B2 I"
+        },
+        {
+          "offset": 604,
+          "op": "iget",
+          "args": "v4, v7, Lcom/conexant/genericfeature/BandEQCoefficient;->A0 I"
+        },
+        {
+          "offset": 608,
+          "op": "shl-int/lit8",
+          "args": "v4, v4, 8"
+        },
+        {
+          "offset": 612,
+          "op": "shr-int/lit8",
+          "args": "v4, v4, 8"
+        },
+        {
+          "offset": 616,
+          "op": "iput",
+          "args": "v4, v7, Lcom/conexant/genericfeature/BandEQCoefficient;->A0 I"
+        },
+        {
+          "offset": 620,
+          "op": "iget",
+          "args": "v4, v7, Lcom/conexant/genericfeature/BandEQCoefficient;->A1 I"
+        },
+        {
+          "offset": 624,
+          "op": "shl-int/lit8",
+          "args": "v4, v4, 8"
+        },
+        {
+          "offset": 628,
+          "op": "shr-int/lit8",
+          "args": "v4, v4, 8"
+        },
+        {
+          "offset": 632,
+          "op": "iput",
+          "args": "v4, v7, Lcom/conexant/genericfeature/BandEQCoefficient;->A1 I"
+        },
+        {
+          "offset": 636,
+          "op": "const-string",
+          "args": "v4, \"getF3EQCoefficientList 24bits => EQ Coefficient list: band = \""
+        },
+        {
+          "offset": 640,
+          "op": "invoke-static",
+          "args": "v5, v4, v11, Ln50;->o(I Ljava/lang/String; Ljava/lang/String;)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 646,
+          "op": "move-result-object",
+          "args": "v4"
+        },
+        {
+          "offset": 648,
+          "op": "iget-byte",
+          "args": "v6, v7, Lcom/conexant/genericfeature/BandEQCoefficient;->Gain B"
+        },
+        {
+          "offset": 652,
+          "op": "invoke-virtual",
+          "args": "v4, v6, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 658,
+          "op": "invoke-virtual",
+          "args": "v4, v12, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 664,
+          "op": "iget",
+          "args": "v6, v7, Lcom/conexant/genericfeature/BandEQCoefficient;->B0 I"
+        },
+        {
+          "offset": 668,
+          "op": "invoke-virtual",
+          "args": "v4, v6, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 674,
+          "op": "invoke-virtual",
+          "args": "v4, v13, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 680,
+          "op": "iget",
+          "args": "v6, v7, Lcom/conexant/genericfeature/BandEQCoefficient;->B1 I"
+        },
+        {
+          "offset": 684,
+          "op": "invoke-virtual",
+          "args": "v4, v6, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 690,
+          "op": "invoke-virtual",
+          "args": "v4, v14, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 696,
+          "op": "iget",
+          "args": "v6, v7, Lcom/conexant/genericfeature/BandEQCoefficient;->B2 I"
+        },
+        {
+          "offset": 700,
+          "op": "invoke-virtual",
+          "args": "v4, v6, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 706,
+          "op": "invoke-virtual",
+          "args": "v4, v15, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 712,
+          "op": "iget",
+          "args": "v6, v7, Lcom/conexant/genericfeature/BandEQCoefficient;->A0 I"
+        },
+        {
+          "offset": 716,
+          "op": "invoke-virtual",
+          "args": "v4, v6, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 722,
+          "op": "invoke-virtual",
+          "args": "v4, v3, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 728,
+          "op": "iget",
+          "args": "v3, v7, Lcom/conexant/genericfeature/BandEQCoefficient;->A1 I"
+        },
+        {
+          "offset": 732,
+          "op": "invoke-virtual",
+          "args": "v4, v3, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 738,
+          "op": "invoke-virtual",
+          "args": "v4, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;"
+        },
+        {
+          "offset": 744,
+          "op": "move-result-object",
+          "args": "v3"
+        },
+        {
+          "offset": 746,
+          "op": "invoke-static",
+          "args": "v9, v3, Landroid/util/Log;->d(Ljava/lang/String; Ljava/lang/String;)I"
+        },
+        {
+          "offset": 752,
+          "op": "invoke-virtual",
+          "args": "v1, v7, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z"
+        },
+        {
+          "offset": 758,
+          "op": "add-int/lit8",
+          "args": "v5, v5, 1"
+        },
+        {
+          "offset": 762,
+          "op": "const/4",
+          "args": "v3, 0"
+        },
+        {
+          "offset": 764,
+          "op": "const/4",
+          "args": "v4, 1"
+        },
+        {
+          "offset": 766,
+          "op": "goto/16",
+          "args": "-12dh"
+        },
+        {
+          "offset": 770,
+          "op": "move-object",
+          "args": "v3, v1"
+        },
+        {
+          "offset": 772,
+          "op": "invoke-direct",
+          "args": "v0, Lcom/conexant/cnxtusbcheadset/FreemanCnxtUsbDevice;->releaseInterfaceByBaseClass()V"
+        },
+        {
+          "offset": 778,
+          "op": "sget-object",
+          "args": "v0, Lcom/conexant/cnxtusbcheadset/FreemanCnxtUsbDevice;->TAG Ljava/lang/String;"
+        },
+        {
+          "offset": 782,
+          "op": "new-instance",
+          "args": "v1, Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 786,
+          "op": "const-string",
+          "args": "v2, \"getF3EQCoefficientList: size = \""
+        },
+        {
+          "offset": 790,
+          "op": "invoke-direct",
+          "args": "v1, v2, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V"
+        },
+        {
+          "offset": 796,
+          "op": "invoke-interface",
+          "args": "v3, Ljava/util/List;->size()I"
+        },
+        {
+          "offset": 802,
+          "op": "move-result",
+          "args": "v2"
+        },
+        {
+          "offset": 804,
+          "op": "invoke-virtual",
+          "args": "v1, v2, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 810,
+          "op": "invoke-virtual",
+          "args": "v1, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;"
+        },
+        {
+          "offset": 816,
+          "op": "move-result-object",
+          "args": "v1"
+        },
+        {
+          "offset": 818,
+          "op": "invoke-static",
+          "args": "v0, v1, Landroid/util/Log;->d(Ljava/lang/String; Ljava/lang/String;)I"
+        },
+        {
+          "offset": 824,
+          "op": "return-object",
+          "args": "v3"
+        }
+      ]
+    },
+    {
+      "class": "Lcom/conexant/cnxtusbcheadset/FreemanCnxtUsbDevice;",
+      "name": "getFreeman3EQParam",
+      "descriptor": "(Lcom/conexant/genericfeature/EQParam;)I",
+      "instructions": [
+        {
+          "offset": 0,
+          "op": "const/16",
+          "args": "v0, 13"
+        },
+        {
+          "offset": 4,
+          "op": "new-array",
+          "args": "v0, v0, [J"
+        },
+        {
+          "offset": 8,
+          "op": "const-wide/16",
+          "args": "v1, 0"
+        },
+        {
+          "offset": 12,
+          "op": "const/4",
+          "args": "v3, 0"
+        },
+        {
+          "offset": 14,
+          "op": "aput-wide",
+          "args": "v1, v0, v3"
+        },
+        {
+          "offset": 18,
+          "op": "iget",
+          "args": "v1, v9, Lcom/conexant/genericfeature/EQParam;->band I"
+        },
+        {
+          "offset": 22,
+          "op": "invoke-static",
+          "args": "v1, Lcom/conexant/universalfunction/CommonUtil;->shiftEQBandForFreeman3(I)I"
+        },
+        {
+          "offset": 28,
+          "op": "move-result",
+          "args": "v1"
+        },
+        {
+          "offset": 30,
+          "op": "int-to-long",
+          "args": "v1, v1"
+        },
+        {
+          "offset": 32,
+          "op": "const/4",
+          "args": "v4, 1"
+        },
+        {
+          "offset": 34,
+          "op": "aput-wide",
+          "args": "v1, v0, v4"
+        },
+        {
+          "offset": 38,
+          "op": "const-string",
+          "args": "v1, \"CTRL\""
+        },
+        {
+          "offset": 42,
+          "op": "invoke-static",
+          "args": "v1, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getCafId(Ljava/lang/String;)I"
+        },
+        {
+          "offset": 48,
+          "op": "move-result",
+          "args": "v1"
+        },
+        {
+          "offset": 50,
+          "op": "sget-object",
+          "args": "v2, Lcom/conexant/cnxtusbcheadset/CnxtUsbDeviceBase;->mConnection Landroid/hardware/usb/UsbDeviceConnection;"
+        },
+        {
+          "offset": 54,
+          "op": "const/16",
+          "args": "v5, 446"
+        },
+        {
+          "offset": 58,
+          "op": "invoke-static",
+          "args": "v5, v1, v0, v2, v4, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getMsgByCmd(I I [J Landroid/hardware/usb/UsbDeviceConnection; I)[B"
+        },
+        {
+          "offset": 64,
+          "op": "move-result-object",
+          "args": "v0"
+        },
+        {
+          "offset": 66,
+          "op": "invoke-static",
+          "args": "v0, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->isExecuteSuccess([B)Z"
+        },
+        {
+          "offset": 72,
+          "op": "move-result",
+          "args": "v1"
+        },
+        {
+          "offset": 74,
+          "op": "const/16",
+          "args": "v2, -1001"
+        },
+        {
+          "offset": 78,
+          "op": "if-nez",
+          "args": "v1, +00ah"
+        },
+        {
+          "offset": 82,
+          "op": "sget-object",
+          "args": "v8, Lcom/conexant/cnxtusbcheadset/FreemanCnxtUsbDevice;->TAG Ljava/lang/String;"
+        },
+        {
+          "offset": 86,
+          "op": "const-string",
+          "args": "v9, \"getFreeman3EQParam: execute failure\""
+        },
+        {
+          "offset": 90,
+          "op": "invoke-static",
+          "args": "v8, v9, Landroid/util/Log;->e(Ljava/lang/String; Ljava/lang/String;)I"
+        },
+        {
+          "offset": 96,
+          "op": "return",
+          "args": "v2"
+        },
+        {
+          "offset": 98,
+          "op": "new-instance",
+          "args": "v1, Lcom/conexant/cnxtusbcheadset/CX2070xBandEQCoeffs;"
+        },
+        {
+          "offset": 102,
+          "op": "invoke-direct",
+          "args": "v1, Lcom/conexant/cnxtusbcheadset/CX2070xBandEQCoeffs;-><init>()V"
+        },
+        {
+          "offset": 108,
+          "op": "const/16",
+          "args": "v4, 22"
+        },
+        {
+          "offset": 112,
+          "op": "invoke-static",
+          "args": "v0, v4, Lcom/conexant/universalfunction/CommonUtil;->formatByteToInt([B I)I"
+        },
+        {
+          "offset": 118,
+          "op": "move-result",
+          "args": "v4"
+        },
+        {
+          "offset": 120,
+          "op": "iput",
+          "args": "v4, v1, Lcom/conexant/cnxtusbcheadset/CX2070xBandEQCoeffs;->B0 I"
+        },
+        {
+          "offset": 124,
+          "op": "const/16",
+          "args": "v4, 26"
+        },
+        {
+          "offset": 128,
+          "op": "invoke-static",
+          "args": "v0, v4, Lcom/conexant/universalfunction/CommonUtil;->formatByteToInt([B I)I"
+        },
+        {
+          "offset": 134,
+          "op": "move-result",
+          "args": "v4"
+        },
+        {
+          "offset": 136,
+          "op": "iput",
+          "args": "v4, v1, Lcom/conexant/cnxtusbcheadset/CX2070xBandEQCoeffs;->B1 I"
+        },
+        {
+          "offset": 140,
+          "op": "const/16",
+          "args": "v4, 30"
+        },
+        {
+          "offset": 144,
+          "op": "invoke-static",
+          "args": "v0, v4, Lcom/conexant/universalfunction/CommonUtil;->formatByteToInt([B I)I"
+        },
+        {
+          "offset": 150,
+          "op": "move-result",
+          "args": "v4"
+        },
+        {
+          "offset": 152,
+          "op": "iput",
+          "args": "v4, v1, Lcom/conexant/cnxtusbcheadset/CX2070xBandEQCoeffs;->B2 I"
+        },
+        {
+          "offset": 156,
+          "op": "const/16",
+          "args": "v4, 34"
+        },
+        {
+          "offset": 160,
+          "op": "invoke-static",
+          "args": "v0, v4, Lcom/conexant/universalfunction/CommonUtil;->formatByteToInt([B I)I"
+        },
+        {
+          "offset": 166,
+          "op": "move-result",
+          "args": "v4"
+        },
+        {
+          "offset": 168,
+          "op": "iput",
+          "args": "v4, v1, Lcom/conexant/cnxtusbcheadset/CX2070xBandEQCoeffs;->A0 I"
+        },
+        {
+          "offset": 172,
+          "op": "const/16",
+          "args": "v4, 38"
+        },
+        {
+          "offset": 176,
+          "op": "invoke-static",
+          "args": "v0, v4, Lcom/conexant/universalfunction/CommonUtil;->formatByteToInt([B I)I"
+        },
+        {
+          "offset": 182,
+          "op": "move-result",
+          "args": "v4"
+        },
+        {
+          "offset": 184,
+          "op": "iput",
+          "args": "v4, v1, Lcom/conexant/cnxtusbcheadset/CX2070xBandEQCoeffs;->A1 I"
+        },
+        {
+          "offset": 188,
+          "op": "const/16",
+          "args": "v5, 18"
+        },
+        {
+          "offset": 192,
+          "op": "aget-byte",
+          "args": "v0, v0, v5"
+        },
+        {
+          "offset": 196,
+          "op": "iput-byte",
+          "args": "v0, v1, Lcom/conexant/cnxtusbcheadset/CX2070xBandEQCoeffs;->Gain B"
+        },
+        {
+          "offset": 200,
+          "op": "iget",
+          "args": "v0, v1, Lcom/conexant/cnxtusbcheadset/CX2070xBandEQCoeffs;->B0 I"
+        },
+        {
+          "offset": 204,
+          "op": "shl-int/lit8",
+          "args": "v0, v0, 8"
+        },
+        {
+          "offset": 208,
+          "op": "shr-int/lit8",
+          "args": "v0, v0, 8"
+        },
+        {
+          "offset": 212,
+          "op": "iput",
+          "args": "v0, v1, Lcom/conexant/cnxtusbcheadset/CX2070xBandEQCoeffs;->B0 I"
+        },
+        {
+          "offset": 216,
+          "op": "iget",
+          "args": "v0, v1, Lcom/conexant/cnxtusbcheadset/CX2070xBandEQCoeffs;->B1 I"
+        },
+        {
+          "offset": 220,
+          "op": "shl-int/lit8",
+          "args": "v0, v0, 8"
+        },
+        {
+          "offset": 224,
+          "op": "shr-int/lit8",
+          "args": "v0, v0, 8"
+        },
+        {
+          "offset": 228,
+          "op": "iput",
+          "args": "v0, v1, Lcom/conexant/cnxtusbcheadset/CX2070xBandEQCoeffs;->B1 I"
+        },
+        {
+          "offset": 232,
+          "op": "iget",
+          "args": "v0, v1, Lcom/conexant/cnxtusbcheadset/CX2070xBandEQCoeffs;->B2 I"
+        },
+        {
+          "offset": 236,
+          "op": "shl-int/lit8",
+          "args": "v0, v0, 8"
+        },
+        {
+          "offset": 240,
+          "op": "shr-int/lit8",
+          "args": "v0, v0, 8"
+        },
+        {
+          "offset": 244,
+          "op": "iput",
+          "args": "v0, v1, Lcom/conexant/cnxtusbcheadset/CX2070xBandEQCoeffs;->B2 I"
+        },
+        {
+          "offset": 248,
+          "op": "iget",
+          "args": "v0, v1, Lcom/conexant/cnxtusbcheadset/CX2070xBandEQCoeffs;->A0 I"
+        },
+        {
+          "offset": 252,
+          "op": "shl-int/lit8",
+          "args": "v0, v0, 8"
+        },
+        {
+          "offset": 256,
+          "op": "shr-int/lit8",
+          "args": "v0, v0, 8"
+        },
+        {
+          "offset": 260,
+          "op": "iput",
+          "args": "v0, v1, Lcom/conexant/cnxtusbcheadset/CX2070xBandEQCoeffs;->A0 I"
+        },
+        {
+          "offset": 264,
+          "op": "shl-int/lit8",
+          "args": "v0, v4, 8"
+        },
+        {
+          "offset": 268,
+          "op": "shr-int/lit8",
+          "args": "v0, v0, 8"
+        },
+        {
+          "offset": 272,
+          "op": "iput",
+          "args": "v0, v1, Lcom/conexant/cnxtusbcheadset/CX2070xBandEQCoeffs;->A1 I"
+        },
+        {
+          "offset": 276,
+          "op": "sget-object",
+          "args": "v0, Lcom/conexant/cnxtusbcheadset/FreemanCnxtUsbDevice;->TAG Ljava/lang/String;"
+        },
+        {
+          "offset": 280,
+          "op": "new-instance",
+          "args": "v4, Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 284,
+          "op": "const-string",
+          "args": "v5, \"getFreeman3EQParam: band = \""
+        },
+        {
+          "offset": 288,
+          "op": "invoke-direct",
+          "args": "v4, v5, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V"
+        },
+        {
+          "offset": 294,
+          "op": "iget",
+          "args": "v6, v9, Lcom/conexant/genericfeature/EQParam;->band I"
+        },
+        {
+          "offset": 298,
+          "op": "invoke-virtual",
+          "args": "v4, v6, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 304,
+          "op": "const-string",
+          "args": "v6, \" & B0 = \""
+        },
+        {
+          "offset": 308,
+          "op": "invoke-virtual",
+          "args": "v4, v6, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 314,
+          "op": "iget",
+          "args": "v6, v1, Lcom/conexant/cnxtusbcheadset/CX2070xBandEQCoeffs;->B0 I"
+        },
+        {
+          "offset": 318,
+          "op": "invoke-virtual",
+          "args": "v4, v6, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 324,
+          "op": "const-string",
+          "args": "v6, \" & B1= \""
+        },
+        {
+          "offset": 328,
+          "op": "invoke-virtual",
+          "args": "v4, v6, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 334,
+          "op": "iget",
+          "args": "v6, v1, Lcom/conexant/cnxtusbcheadset/CX2070xBandEQCoeffs;->B1 I"
+        },
+        {
+          "offset": 338,
+          "op": "invoke-virtual",
+          "args": "v4, v6, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 344,
+          "op": "const-string",
+          "args": "v6, \" & B2= \""
+        },
+        {
+          "offset": 348,
+          "op": "invoke-virtual",
+          "args": "v4, v6, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 354,
+          "op": "iget",
+          "args": "v6, v1, Lcom/conexant/cnxtusbcheadset/CX2070xBandEQCoeffs;->B2 I"
+        },
+        {
+          "offset": 358,
+          "op": "invoke-virtual",
+          "args": "v4, v6, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 364,
+          "op": "const-string",
+          "args": "v6, \" & A0= \""
+        },
+        {
+          "offset": 368,
+          "op": "invoke-virtual",
+          "args": "v4, v6, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 374,
+          "op": "iget",
+          "args": "v6, v1, Lcom/conexant/cnxtusbcheadset/CX2070xBandEQCoeffs;->A0 I"
+        },
+        {
+          "offset": 378,
+          "op": "invoke-virtual",
+          "args": "v4, v6, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 384,
+          "op": "const-string",
+          "args": "v6, \" & A1= \""
+        },
+        {
+          "offset": 388,
+          "op": "invoke-virtual",
+          "args": "v4, v6, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 394,
+          "op": "iget",
+          "args": "v6, v1, Lcom/conexant/cnxtusbcheadset/CX2070xBandEQCoeffs;->A1 I"
+        },
+        {
+          "offset": 398,
+          "op": "invoke-virtual",
+          "args": "v4, v6, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 404,
+          "op": "const-string",
+          "args": "v6, \" & gain= \""
+        },
+        {
+          "offset": 408,
+          "op": "invoke-virtual",
+          "args": "v4, v6, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 414,
+          "op": "iget-byte",
+          "args": "v6, v1, Lcom/conexant/cnxtusbcheadset/CX2070xBandEQCoeffs;->Gain B"
+        },
+        {
+          "offset": 418,
+          "op": "invoke-virtual",
+          "args": "v4, v6, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 424,
+          "op": "invoke-virtual",
+          "args": "v4, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;"
+        },
+        {
+          "offset": 430,
+          "op": "move-result-object",
+          "args": "v4"
+        },
+        {
+          "offset": 432,
+          "op": "invoke-static",
+          "args": "v0, v4, Landroid/util/Log;->d(Ljava/lang/String; Ljava/lang/String;)I"
+        },
+        {
+          "offset": 438,
+          "op": "new-instance",
+          "args": "v4, Lcom/conexant/cnxtusbcheadset/Eq2Coeff;"
+        },
+        {
+          "offset": 442,
+          "op": "invoke-direct",
+          "args": "v4, Lcom/conexant/cnxtusbcheadset/Eq2Coeff;-><init>()V"
+        },
+        {
+          "offset": 448,
+          "op": "iget",
+          "args": "v6, v8, Lcom/conexant/cnxtusbcheadset/FreemanCnxtUsbDevice;->DEFAULT_FREEMAN3_SAMPLERATE I"
+        },
+        {
+          "offset": 452,
+          "op": "const/16",
+          "args": "v7, 24"
+        },
+        {
+          "offset": 456,
+          "op": "invoke-virtual",
+          "args": "v4, v6, v1, v7, Lcom/conexant/cnxtusbcheadset/Eq2Coeff;->CxAudioConvertCoeffs2EqParams(I Lcom/conexant/cnxtusbcheadset/CX2070xBandEQCoeffs; I)Lcom/conexant/cnxtusbcheadset/EQBandParam;"
+        },
+        {
+          "offset": 462,
+          "op": "move-result-object",
+          "args": "v1"
+        },
+        {
+          "offset": 464,
+          "op": "if-nez",
+          "args": "v1, +008h"
+        },
+        {
+          "offset": 468,
+          "op": "const-string",
+          "args": "v8, \"getFreeman3EQParam: eqParam is null\""
+        },
+        {
+          "offset": 472,
+          "op": "invoke-static",
+          "args": "v0, v8, Landroid/util/Log;->e(Ljava/lang/String; Ljava/lang/String;)I"
+        },
+        {
+          "offset": 478,
+          "op": "return",
+          "args": "v2"
+        },
+        {
+          "offset": 480,
+          "op": "iget",
+          "args": "v2, v1, Lcom/conexant/cnxtusbcheadset/EQBandParam;->flags I"
+        },
+        {
+          "offset": 484,
+          "op": "and-int/lit8",
+          "args": "v2, v2, 15"
+        },
+        {
+          "offset": 488,
+          "op": "iput",
+          "args": "v2, v9, Lcom/conexant/genericfeature/EQParam;->filterType I"
+        },
+        {
+          "offset": 492,
+          "op": "iget",
+          "args": "v2, v1, Lcom/conexant/cnxtusbcheadset/EQBandParam;->Freq_Hz I"
+        },
+        {
+          "offset": 496,
+          "op": "iput",
+          "args": "v2, v9, Lcom/conexant/genericfeature/EQParam;->frequency I"
+        },
+        {
+          "offset": 500,
+          "op": "iget",
+          "args": "v2, v1, Lcom/conexant/cnxtusbcheadset/EQBandParam;->Qfactor I"
+        },
+        {
+          "offset": 504,
+          "op": "int-to-float",
+          "args": "v2, v2"
+        },
+        {
+          "offset": 506,
+          "op": "const/high16",
+          "args": "v4, 1132462080"
+        },
+        {
+          "offset": 510,
+          "op": "div-float/2addr",
+          "args": "v2, v4"
+        },
+        {
+          "offset": 512,
+          "op": "invoke-static",
+          "args": "v2, Lcom/conexant/universalfunction/CommonUtil;->formatDecimal(F)D"
+        },
+        {
+          "offset": 518,
+          "op": "move-result-wide",
+          "args": "v6"
+        },
+        {
+          "offset": 520,
+          "op": "iput-wide",
+          "args": "v6, v9, Lcom/conexant/genericfeature/EQParam;->qFactor D"
+        },
+        {
+          "offset": 524,
+          "op": "iget",
+          "args": "v1, v1, Lcom/conexant/cnxtusbcheadset/EQBandParam;->Gain_dB I"
+        },
+        {
+          "offset": 528,
+          "op": "int-to-float",
+          "args": "v1, v1"
+        },
+        {
+          "offset": 530,
+          "op": "div-float/2addr",
+          "args": "v1, v4"
+        },
+        {
+          "offset": 532,
+          "op": "float-to-int",
+          "args": "v1, v1"
+        },
+        {
+          "offset": 534,
+          "op": "int-to-double",
+          "args": "v1, v1"
+        },
+        {
+          "offset": 536,
+          "op": "iput-wide",
+          "args": "v1, v9, Lcom/conexant/genericfeature/EQParam;->gain D"
+        },
+        {
+          "offset": 540,
+          "op": "iget",
+          "args": "v8, v8, Lcom/conexant/cnxtusbcheadset/FreemanCnxtUsbDevice;->DEFAULT_FREEMAN3_SAMPLERATE I"
+        },
+        {
+          "offset": 544,
+          "op": "iput",
+          "args": "v8, v9, Lcom/conexant/genericfeature/EQParam;->sampleRate I"
+        },
+        {
+          "offset": 548,
+          "op": "new-instance",
+          "args": "v8, Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 552,
+          "op": "invoke-direct",
+          "args": "v8, v5, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V"
+        },
+        {
+          "offset": 558,
+          "op": "iget",
+          "args": "v1, v9, Lcom/conexant/genericfeature/EQParam;->band I"
+        },
+        {
+          "offset": 562,
+          "op": "invoke-virtual",
+          "args": "v8, v1, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 568,
+          "op": "const-string",
+          "args": "v1, \" & filterType = \""
+        },
+        {
+          "offset": 572,
+          "op": "invoke-virtual",
+          "args": "v8, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 578,
+          "op": "iget",
+          "args": "v1, v9, Lcom/conexant/genericfeature/EQParam;->filterType I"
+        },
+        {
+          "offset": 582,
+          "op": "invoke-virtual",
+          "args": "v8, v1, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 588,
+          "op": "const-string",
+          "args": "v1, \" & frequency = \""
+        },
+        {
+          "offset": 592,
+          "op": "invoke-virtual",
+          "args": "v8, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 598,
+          "op": "iget",
+          "args": "v1, v9, Lcom/conexant/genericfeature/EQParam;->frequency I"
+        },
+        {
+          "offset": 602,
+          "op": "invoke-virtual",
+          "args": "v8, v1, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 608,
+          "op": "const-string",
+          "args": "v1, \" & qFactor = \""
+        },
+        {
+          "offset": 612,
+          "op": "invoke-virtual",
+          "args": "v8, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 618,
+          "op": "iget-wide",
+          "args": "v1, v9, Lcom/conexant/genericfeature/EQParam;->qFactor D"
+        },
+        {
+          "offset": 622,
+          "op": "invoke-virtual",
+          "args": "v8, v1, v2, Ljava/lang/StringBuilder;->append(D)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 628,
+          "op": "const-string",
+          "args": "v1, \" & gain = \""
+        },
+        {
+          "offset": 632,
+          "op": "invoke-virtual",
+          "args": "v8, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 638,
+          "op": "iget-wide",
+          "args": "v1, v9, Lcom/conexant/genericfeature/EQParam;->gain D"
+        },
+        {
+          "offset": 642,
+          "op": "invoke-virtual",
+          "args": "v8, v1, v2, Ljava/lang/StringBuilder;->append(D)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 648,
+          "op": "invoke-virtual",
+          "args": "v8, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;"
+        },
+        {
+          "offset": 654,
+          "op": "move-result-object",
+          "args": "v8"
+        },
+        {
+          "offset": 656,
+          "op": "invoke-static",
+          "args": "v0, v8, Landroid/util/Log;->d(Ljava/lang/String; Ljava/lang/String;)I"
+        },
+        {
+          "offset": 662,
+          "op": "return",
+          "args": "v3"
+        }
+      ]
+    },
+    {
+      "class": "Lcom/conexant/cnxtusbcheadset/FreemanCnxtUsbDevice;",
+      "name": "setEQParam",
+      "descriptor": "(Lcom/conexant/genericfeature/EQParam;)I",
+      "instructions": [
+        {
+          "offset": 0,
+          "op": "if-eqz",
+          "args": "v15, +0d4h"
+        },
+        {
+          "offset": 4,
+          "op": "iget",
+          "args": "v0, v15, Lcom/conexant/genericfeature/EQParam;->band I"
+        },
+        {
+          "offset": 8,
+          "op": "if-ltz",
+          "args": "v0, +0d0h"
+        },
+        {
+          "offset": 12,
+          "op": "const/4",
+          "args": "v1, 4"
+        },
+        {
+          "offset": 14,
+          "op": "const-string",
+          "args": "v2, \"Freeman3\""
+        },
+        {
+          "offset": 18,
+          "op": "if-le",
+          "args": "v0, v1, +00ah"
+        },
+        {
+          "offset": 22,
+          "op": "iget-object",
+          "args": "v0, v14, Lcom/conexant/cnxtusbcheadset/CnxtUsbDeviceBase;->mDeviceName Ljava/lang/String;"
+        },
+        {
+          "offset": 26,
+          "op": "invoke-virtual",
+          "args": "v0, v2, Ljava/lang/String;->equals(Ljava/lang/Object;)Z"
+        },
+        {
+          "offset": 32,
+          "op": "move-result",
+          "args": "v0"
+        },
+        {
+          "offset": 34,
+          "op": "if-nez",
+          "args": "v0, +0c3h"
+        },
+        {
+          "offset": 38,
+          "op": "iget-object",
+          "args": "v0, v14, Lcom/conexant/cnxtusbcheadset/CnxtUsbDeviceBase;->mDeviceName Ljava/lang/String;"
+        },
+        {
+          "offset": 42,
+          "op": "invoke-virtual",
+          "args": "v0, Ljava/lang/Object;->getClass()Ljava/lang/Class;"
+        },
+        {
+          "offset": 48,
+          "op": "invoke-virtual",
+          "args": "v0, Ljava/lang/String;->hashCode()I"
+        },
+        {
+          "offset": 54,
+          "op": "move-result",
+          "args": "v1"
+        },
+        {
+          "offset": 56,
+          "op": "const/4",
+          "args": "v3, 1"
+        },
+        {
+          "offset": 58,
+          "op": "const/4",
+          "args": "v4, 0"
+        },
+        {
+          "offset": 60,
+          "op": "const/4",
+          "args": "v5, -1"
+        },
+        {
+          "offset": 62,
+          "op": "sparse-switch",
+          "args": "v1, +00000bfh"
+        },
+        {
+          "offset": 68,
+          "op": "goto",
+          "args": "+1fh"
+        },
+        {
+          "offset": 70,
+          "op": "const-string",
+          "args": "v1, \"Freeman\""
+        },
+        {
+          "offset": 74,
+          "op": "invoke-virtual",
+          "args": "v0, v1, Ljava/lang/String;->equals(Ljava/lang/Object;)Z"
+        },
+        {
+          "offset": 80,
+          "op": "move-result",
+          "args": "v0"
+        },
+        {
+          "offset": 82,
+          "op": "if-nez",
+          "args": "v0, +003h"
+        },
+        {
+          "offset": 86,
+          "op": "goto",
+          "args": "+16h"
+        },
+        {
+          "offset": 88,
+          "op": "const/4",
+          "args": "v5, 2"
+        },
+        {
+          "offset": 90,
+          "op": "goto",
+          "args": "+14h"
+        },
+        {
+          "offset": 92,
+          "op": "invoke-virtual",
+          "args": "v0, v2, Ljava/lang/String;->equals(Ljava/lang/Object;)Z"
+        },
+        {
+          "offset": 98,
+          "op": "move-result",
+          "args": "v0"
+        },
+        {
+          "offset": 100,
+          "op": "if-nez",
+          "args": "v0, +003h"
+        },
+        {
+          "offset": 104,
+          "op": "goto",
+          "args": "+dh"
+        },
+        {
+          "offset": 106,
+          "op": "move",
+          "args": "v5, v3"
+        },
+        {
+          "offset": 108,
+          "op": "goto",
+          "args": "+bh"
+        },
+        {
+          "offset": 110,
+          "op": "const-string",
+          "args": "v1, \"Freeman2\""
+        },
+        {
+          "offset": 114,
+          "op": "invoke-virtual",
+          "args": "v0, v1, Ljava/lang/String;->equals(Ljava/lang/Object;)Z"
+        },
+        {
+          "offset": 120,
+          "op": "move-result",
+          "args": "v0"
+        },
+        {
+          "offset": 122,
+          "op": "if-nez",
+          "args": "v0, +003h"
+        },
+        {
+          "offset": 126,
+          "op": "goto",
+          "args": "+2h"
+        },
+        {
+          "offset": 128,
+          "op": "move",
+          "args": "v5, v4"
+        },
+        {
+          "offset": 130,
+          "op": "packed-switch",
+          "args": "v5, +00000abh"
+        },
+        {
+          "offset": 136,
+          "op": "move-object",
+          "args": "v5, v14"
+        },
+        {
+          "offset": 138,
+          "op": "move",
+          "args": "v14, v4"
+        },
+        {
+          "offset": 140,
+          "op": "goto/16",
+          "args": "+079h"
+        },
+        {
+          "offset": 144,
+          "op": "iget",
+          "args": "v7, v15, Lcom/conexant/genericfeature/EQParam;->sampleRate I"
+        },
+        {
+          "offset": 148,
+          "op": "iget",
+          "args": "v8, v15, Lcom/conexant/genericfeature/EQParam;->band I"
+        },
+        {
+          "offset": 152,
+          "op": "iget",
+          "args": "v9, v15, Lcom/conexant/genericfeature/EQParam;->frequency I"
+        },
+        {
+          "offset": 156,
+          "op": "iget-wide",
+          "args": "v10, v15, Lcom/conexant/genericfeature/EQParam;->qFactor D"
+        },
+        {
+          "offset": 160,
+          "op": "iget-wide",
+          "args": "v0, v15, Lcom/conexant/genericfeature/EQParam;->gain D"
+        },
+        {
+          "offset": 164,
+          "op": "double-to-float",
+          "args": "v12, v0"
+        },
+        {
+          "offset": 166,
+          "op": "iget",
+          "args": "v13, v15, Lcom/conexant/genericfeature/EQParam;->filterType I"
+        },
+        {
+          "offset": 170,
+          "op": "move-object",
+          "args": "v6, v14"
+        },
+        {
+          "offset": 172,
+          "op": "invoke-direct/range",
+          "args": "v6 ... v13, Lcom/conexant/cnxtusbcheadset/FreemanCnxtUsbDevice;->setFreemanEQ(I I I D F I)Z"
+        },
+        {
+          "offset": 178,
+          "op": "move-result",
+          "args": "v14"
+        },
+        {
+          "offset": 180,
+          "op": "move-object",
+          "args": "v5, v6"
+        },
+        {
+          "offset": 182,
+          "op": "goto",
+          "args": "+64h"
+        },
+        {
+          "offset": 184,
+          "op": "move-object",
+          "args": "v5, v14"
+        },
+        {
+          "offset": 186,
+          "op": "sget-object",
+          "args": "v14, Lcom/conexant/cnxtusbcheadset/FreemanCnxtUsbDevice;->TAG Ljava/lang/String;"
+        },
+        {
+          "offset": 190,
+          "op": "new-instance",
+          "args": "v0, Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 194,
+          "op": "const-string",
+          "args": "v1, \"setEQParam: mFreeman3EQEnabled = \""
+        },
+        {
+          "offset": 198,
+          "op": "invoke-direct",
+          "args": "v0, v1, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V"
+        },
+        {
+          "offset": 204,
+          "op": "iget-boolean",
+          "args": "v1, v5, Lcom/conexant/cnxtusbcheadset/FreemanCnxtUsbDevice;->mFreeman3EQEnabled Z"
+        },
+        {
+          "offset": 208,
+          "op": "invoke-virtual",
+          "args": "v0, v1, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 214,
+          "op": "invoke-virtual",
+          "args": "v0, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;"
+        },
+        {
+          "offset": 220,
+          "op": "move-result-object",
+          "args": "v0"
+        },
+        {
+          "offset": 222,
+          "op": "invoke-static",
+          "args": "v14, v0, Landroid/util/Log;->d(Ljava/lang/String; Ljava/lang/String;)I"
+        },
+        {
+          "offset": 228,
+          "op": "iget-boolean",
+          "args": "v14, v5, Lcom/conexant/cnxtusbcheadset/FreemanCnxtUsbDevice;->mFreeman3EQEnabled Z"
+        },
+        {
+          "offset": 232,
+          "op": "if-nez",
+          "args": "v14, +008h"
+        },
+        {
+          "offset": 236,
+          "op": "invoke-direct",
+          "args": "v5, Lcom/conexant/cnxtusbcheadset/FreemanCnxtUsbDevice;->setFreeman3EQEnabled()V"
+        },
+        {
+          "offset": 242,
+          "op": "invoke-direct",
+          "args": "v5, Lcom/conexant/cnxtusbcheadset/FreemanCnxtUsbDevice;->setEQCFGIsBypass()V"
+        },
+        {
+          "offset": 248,
+          "op": "invoke-direct",
+          "args": "v5, v15, Lcom/conexant/cnxtusbcheadset/FreemanCnxtUsbDevice;->setFreeman3EQ(Lcom/conexant/genericfeature/EQParam;)Z"
+        },
+        {
+          "offset": 254,
+          "op": "move-result",
+          "args": "v14"
+        },
+        {
+          "offset": 256,
+          "op": "goto",
+          "args": "+3fh"
+        },
+        {
+          "offset": 258,
+          "op": "move-object",
+          "args": "v5, v14"
+        },
+        {
+          "offset": 260,
+          "op": "iget",
+          "args": "v7, v15, Lcom/conexant/genericfeature/EQParam;->band I"
+        },
+        {
+          "offset": 264,
+          "op": "iget",
+          "args": "v8, v15, Lcom/conexant/genericfeature/EQParam;->frequency I"
+        },
+        {
+          "offset": 268,
+          "op": "iget-wide",
+          "args": "v9, v15, Lcom/conexant/genericfeature/EQParam;->qFactor D"
+        },
+        {
+          "offset": 272,
+          "op": "iget-wide",
+          "args": "v0, v15, Lcom/conexant/genericfeature/EQParam;->gain D"
+        },
+        {
+          "offset": 276,
+          "op": "double-to-float",
+          "args": "v11, v0"
+        },
+        {
+          "offset": 278,
+          "op": "iget",
+          "args": "v12, v15, Lcom/conexant/genericfeature/EQParam;->filterType I"
+        },
+        {
+          "offset": 282,
+          "op": "const",
+          "args": "v6, 96000"
+        },
+        {
+          "offset": 288,
+          "op": "invoke-direct/range",
+          "args": "v5 ... v12, Lcom/conexant/cnxtusbcheadset/FreemanCnxtUsbDevice;->setFreemanEQ(I I I D F I)Z"
+        },
+        {
+          "offset": 294,
+          "op": "move-result",
+          "args": "v14"
+        },
+        {
+          "offset": 296,
+          "op": "iget",
+          "args": "v7, v15, Lcom/conexant/genericfeature/EQParam;->band I"
+        },
+        {
+          "offset": 300,
+          "op": "iget",
+          "args": "v8, v15, Lcom/conexant/genericfeature/EQParam;->frequency I"
+        },
+        {
+          "offset": 304,
+          "op": "iget-wide",
+          "args": "v9, v15, Lcom/conexant/genericfeature/EQParam;->qFactor D"
+        },
+        {
+          "offset": 308,
+          "op": "iget-wide",
+          "args": "v0, v15, Lcom/conexant/genericfeature/EQParam;->gain D"
+        },
+        {
+          "offset": 312,
+          "op": "double-to-float",
+          "args": "v11, v0"
+        },
+        {
+          "offset": 314,
+          "op": "iget",
+          "args": "v12, v15, Lcom/conexant/genericfeature/EQParam;->filterType I"
+        },
+        {
+          "offset": 318,
+          "op": "const",
+          "args": "v6, 44100"
+        },
+        {
+          "offset": 324,
+          "op": "invoke-direct/range",
+          "args": "v5 ... v12, Lcom/conexant/cnxtusbcheadset/FreemanCnxtUsbDevice;->setFreemanEQ(I I I D F I)Z"
+        },
+        {
+          "offset": 330,
+          "op": "move-result",
+          "args": "v0"
+        },
+        {
+          "offset": 332,
+          "op": "iget",
+          "args": "v7, v15, Lcom/conexant/genericfeature/EQParam;->band I"
+        },
+        {
+          "offset": 336,
+          "op": "iget",
+          "args": "v8, v15, Lcom/conexant/genericfeature/EQParam;->frequency I"
+        },
+        {
+          "offset": 340,
+          "op": "iget-wide",
+          "args": "v9, v15, Lcom/conexant/genericfeature/EQParam;->qFactor D"
+        },
+        {
+          "offset": 344,
+          "op": "iget-wide",
+          "args": "v11, v15, Lcom/conexant/genericfeature/EQParam;->gain D"
+        },
+        {
+          "offset": 348,
+          "op": "double-to-float",
+          "args": "v11, v11"
+        },
+        {
+          "offset": 350,
+          "op": "iget",
+          "args": "v12, v15, Lcom/conexant/genericfeature/EQParam;->filterType I"
+        },
+        {
+          "offset": 354,
+          "op": "const",
+          "args": "v6, 48000"
+        },
+        {
+          "offset": 360,
+          "op": "invoke-direct/range",
+          "args": "v5 ... v12, Lcom/conexant/cnxtusbcheadset/FreemanCnxtUsbDevice;->setFreemanEQ(I I I D F I)Z"
+        },
+        {
+          "offset": 366,
+          "op": "move-result",
+          "args": "v15"
+        },
+        {
+          "offset": 368,
+          "op": "if-eqz",
+          "args": "v14, -073h"
+        },
+        {
+          "offset": 372,
+          "op": "if-eqz",
+          "args": "v0, -075h"
+        },
+        {
+          "offset": 376,
+          "op": "if-eqz",
+          "args": "v15, -077h"
+        },
+        {
+          "offset": 380,
+          "op": "move",
+          "args": "v14, v3"
+        },
+        {
+          "offset": 382,
+          "op": "iget-boolean",
+          "args": "v15, v5, Lcom/conexant/cnxtusbcheadset/FreemanCnxtUsbDevice;->mEQEnabled Z"
+        },
+        {
+          "offset": 386,
+          "op": "if-nez",
+          "args": "v15, +00dh"
+        },
+        {
+          "offset": 390,
+          "op": "iget-object",
+          "args": "v15, v5, Lcom/conexant/cnxtusbcheadset/CnxtUsbDeviceBase;->mDeviceName Ljava/lang/String;"
+        },
+        {
+          "offset": 394,
+          "op": "invoke-virtual",
+          "args": "v15, v2, Ljava/lang/String;->equals(Ljava/lang/Object;)Z"
+        },
+        {
+          "offset": 400,
+          "op": "move-result",
+          "args": "v15"
+        },
+        {
+          "offset": 402,
+          "op": "if-nez",
+          "args": "v15, +005h"
+        },
+        {
+          "offset": 406,
+          "op": "invoke-virtual",
+          "args": "v5, v3, Lcom/conexant/cnxtusbcheadset/FreemanCnxtUsbDevice;->setEQEnabled(Z)V"
+        },
+        {
+          "offset": 412,
+          "op": "if-eqz",
+          "args": "v14, +003h"
+        },
+        {
+          "offset": 416,
+          "op": "return",
+          "args": "v4"
+        },
+        {
+          "offset": 418,
+          "op": "const/16",
+          "args": "v14, -1001"
+        },
+        {
+          "offset": 422,
+          "op": "return",
+          "args": "v14"
+        },
+        {
+          "offset": 424,
+          "op": "sget-object",
+          "args": "v14, Lcom/conexant/cnxtusbcheadset/FreemanCnxtUsbDevice;->TAG Ljava/lang/String;"
+        },
+        {
+          "offset": 428,
+          "op": "const-string",
+          "args": "v15, \"setEQParam: RC_INVALID_PARAMETER\""
+        },
+        {
+          "offset": 432,
+          "op": "invoke-static",
+          "args": "v14, v15, Landroid/util/Log;->d(Ljava/lang/String; Ljava/lang/String;)I"
+        },
+        {
+          "offset": 438,
+          "op": "const/16",
+          "args": "v14, -1005"
+        },
+        {
+          "offset": 442,
+          "op": "return",
+          "args": "v14"
+        },
+        {
+          "offset": 444,
+          "op": "sparse-switch-payload",
+          "args": "-57cb955c -57cb955b 3f3b7f4e"
+        },
+        {
+          "offset": 472,
+          "op": "packed-switch-payload",
+          "args": "0 1 2"
+        }
+      ]
+    },
+    {
+      "class": "Lcom/conexant/universalfunction/CommonUtil;",
+      "name": "shiftEQBandForFreeman3",
+      "descriptor": "(I)I",
+      "instructions": [
+        {
+          "offset": 0,
+          "op": "add-int/lit8",
+          "args": "v0, v0, 5"
+        },
+        {
+          "offset": 4,
+          "op": "return",
+          "args": "v0"
+        }
+      ]
+    }
+  ],
+  "usbHelperDumpTagPresent": false,
+  "limits": [
+    "Static DEX, not actual transfer captures",
+    "446 list and190 unity initialization do not prove audible independent slots1..4",
+    "SDK0..4 shifted5..9; no SDK values inferred for raw slots1..4",
+    "No hardware access"
+  ]
+}

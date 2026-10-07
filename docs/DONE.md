@@ -294,3 +294,23 @@ Fix: 手動改為A=Apply、R=Restore，可反覆切換，顯示STATE APPLIED/RES
 N=no clear difference並停止；Q立即停止；不自動Restore。尚無本run操作時STATE UNKNOWN，不冒稱已還原。
 若Enter確認時仍APPLIED，接受聽感確認但停止後續bands並警示，避免累積；建議R後Enter。
 StartSdkBand1..4與TEMP完整log保留；native/CAF/190/math/mapping/payload/rate/Flash/90/220/production/nonFreeDSP未修改。
+
+## 2026-10-07 — M2L COMPLETE (Henry final hardware report)
+SDK0/wire5、SDK1/wire6、SDK2/wire7、SDK3/wire8、SDK4/wire9全部VERIFIED。
+每個映射都有successful protocol Apply、audible EQ change、successful protocol Restore、audible restoration。
+M2L官方五段live mapping已完成，不再排程重測wire5–9；不外推AuraPEQ九段UI完整mapping、bitexact或Flash。
+新里程碑M2M：完整九段PEQ映射＋Web RAM debug integration；優先PEQ，不研究GlobalPreamp/MasterGain。
+
+## 2026-10-07 — M2M offline research and unresolved-slot harness
+- Recovered and directly replayed six selected methods from hash-pinned official APK; added deterministic static extractor and fixture for direct446 slot list, SDK+5 and190 unity initialization. No APK/native execution.
+- Traced nine editable AuraPEQ row/index defaults and upstream e7da5b5 provenance; documented full nine-row table with unknown SDK fields and separate physical evidence status.
+- Added fixed ApplyCandidateWire1..4/RestoreCandidateWire1..4 operations and strict cut/unity report allowlist; reused existing negative PK/current-rate math, serializer,188/187/346/190 matching/polling/target gates.
+- Added scripts/test-freedsp-native-unresolved-slots.ps1 and candidate toggle profile; only raw1..4, no wire5..9 selection. A/R repeats, confirmation/failure/abort/active-slot gates and complete external TEMP logging retained.
+- Added offline-only nine-band model with explicit candidate labels, exact index/length checks, PK/rate/packed-range/stability guards, disabled same-slot unity and non-transmitting reports. It is not imported by production runtime.
+- Expanded offline C#/PowerShell/Vitest tests. No hardware discovery/write or listening by Codex; no preamp/Flash/shared production/non-FreeDSP changes.
+- Updated exactly GENERAL/ROADMAP/DECISIONS/DONE. Web runtime integration was not implemented. Current handoff: M2M manual validation ready, remaining physical evidence pending.
+
+### M2M automated verification completed
+- C# diagnostic build0warnings/0errors;47 Native synthetic/mock tests;15 PowerShell mock tests; pinned APK six-method static replay identical.
+- Focused Vitest3files/15tests; final verify.ps1 once exit0, TypeScript/Vite build＋16files/134tests passed.
+- Generated dist restored; no retained production source/dist change. Git diff whitespace/scope review completed before save. No physical device APIs executed by Codex.

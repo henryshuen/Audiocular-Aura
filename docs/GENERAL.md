@@ -313,3 +313,18 @@ Fix: 手動改為A=Apply、R=Restore，可反覆切換，顯示STATE APPLIED/RES
 N=no clear difference並停止；Q立即停止；不自動Restore。尚無本run操作時STATE UNKNOWN，不冒稱已還原。
 若Enter確認時仍APPLIED，接受聽感確認但停止後續bands並警示，避免累積；建議R後Enter。
 StartSdkBand1..4與TEMP完整log保留；native/CAF/190/math/mapping/payload/rate/Flash/90/220/production/nonFreeDSP未修改。
+
+## 2026-10-07 — M2L COMPLETE (Henry final hardware report)
+SDK0/wire5、SDK1/wire6、SDK2/wire7、SDK3/wire8、SDK4/wire9全部VERIFIED。
+每個映射都有successful protocol Apply、audible EQ change、successful protocol Restore、audible restoration。
+M2L官方五段live mapping已完成，不再排程重測wire5–9；不外推AuraPEQ九段UI完整mapping、bitexact或Flash。
+新里程碑M2M：完整九段PEQ映射＋Web RAM debug integration；優先PEQ，不研究GlobalPreamp/MasterGain。
+
+## M2M current policy — PEQ first / isolated unresolved-slot validation
+- M2L COMPLETE: SDK0..4/wire5..9 are Henry-verified protocol+audible reversals. Do not schedule retesting them.
+- Keep uiIndex, SDK band and raw wire slot distinct. Nine-row UI index is not a nine-band SDK field; SDK accepts0..4 only and shifts+5. Official446 lists1..9 directly, but raw1..4 live effects/partition remain unverified.
+- Current manual entry is scripts/test-freedsp-native-unresolved-slots.ps1 (optional -StartWire1..4), wire1..4 only. Historical M2L entry is superseded for current work.
+- Fixed negative PK400/-12/Q1 and same-slot unity only, known matching346 current rate, selector0, proven188/187/346/190. A/R repeated explicit toggles; R then Enter after audible restoration; no automatic retries/restores or later-slot accumulation on applied confirmation/failure. R is not old-EQ backup;188/187 have existing enable/bypass side effects.
+- Offline nine-band model is explicitly proposed/non-transmitting, not a verified adapter. No production Web path or automatic sync until remaining physical evidence; future FreeDSP-only debug path before production.
+- Finish PEQ first. No Global Preamp/Master Gain investigation/implementation and no Flash persistence work. Do not extrapolate unknownSDK5..8, raw0 or10..13.
+- Docs remain these four existing files; runtime logs stay outside repo in unique TEMP/AuraPEQ files. Codex never tests physical hardware. Local web URL always http://localhost:5173/; start .\scripts\dev.ps1 when Web validation is actually ready.

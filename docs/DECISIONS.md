@@ -290,3 +290,21 @@ Fix: 手動改為A=Apply、R=Restore，可反覆切換，顯示STATE APPLIED/RES
 N=no clear difference並停止；Q立即停止；不自動Restore。尚無本run操作時STATE UNKNOWN，不冒稱已還原。
 若Enter確認時仍APPLIED，接受聽感確認但停止後續bands並警示，避免累積；建議R後Enter。
 StartSdkBand1..4與TEMP完整log保留；native/CAF/190/math/mapping/payload/rate/Flash/90/220/production/nonFreeDSP未修改。
+
+## 2026-10-07 — M2L COMPLETE (Henry final hardware report)
+SDK0/wire5、SDK1/wire6、SDK2/wire7、SDK3/wire8、SDK4/wire9全部VERIFIED。
+每個映射都有successful protocol Apply、audible EQ change、successful protocol Restore、audible restoration。
+M2L官方五段live mapping已完成，不再排程重測wire5–9；不外推AuraPEQ九段UI完整mapping、bitexact或Flash。
+新里程碑M2M：完整九段PEQ映射＋Web RAM debug integration；優先PEQ，不研究GlobalPreamp/MasterGain。
+
+## 2026-10-07 — M2M: direct nine coefficient slots, physical gate before Web
+### Problem / hypothesis / next action
+Observed problem: M2L five-slot reversal is complete, but nine UI assignment and front-four slot effects are unverified.
+Verified facts: pinned Freeman3 getF3EQCoefficientList loops1..9 with446/word0=0, preserves slot into BandEQCoefficient.band; same446 getter uses SDK+5; public setter accepts0..4. Official initialization190 writes raw0..9 unity for word0=0/1. These are static facts, not nine-slot audible proof.
+Possible causes: front-four may be reserved/shared bank/other physical partition; source does not identify its purpose.
+Ruled out / weakened: no official raw1..4 evidence, nine UI indices can pass SDK+5, Flash metadata is sufficient, hardware effects can be proven by static/native mocks.
+Next validation: one explicit manual raw1..4 A/R sequence; known slots5..9 excluded. Fixed cut/unity profile and exact proven flow reused, no446/90/220 or initialization loop.
+Possible fix direction: if remaining effects reverse, isolated FreeDSP current-rate debug Web adapter with explicit UI-index validation, disabled unity and supported PK semantics; later independent UI/full-nine gate still required.
+Decision: select request CaseA. Treat physical UI assignments as unresolved even though coefficient-slot existence has strong source support. Do not introduce Web transport/production changes before that gate. Candidate native operations are separate from SDK operations, with exact allowlist; no inferred negative or out-of-range SDK field. Offline-only nine-row models/tests establish a proposed convention, not runtime authority. No preamp/Flash.
+
+Validation boundary:47 native mock＋15 PowerShell mock＋134 project tests and pinned six-method replay passed. They validate fixed candidate packet construction/flow/guards/offline UI models, not wire1..4 audibility. The single manual entry remains the next evidence gate; no Web integration inferred from offline success.

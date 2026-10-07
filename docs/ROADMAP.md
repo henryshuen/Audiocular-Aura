@@ -1788,3 +1788,110 @@ Fix: 手動改為A=Apply、R=Restore，可反覆切換，顯示STATE APPLIED/RES
 N=no clear difference並停止；Q立即停止；不自動Restore。尚無本run操作時STATE UNKNOWN，不冒稱已還原。
 若Enter確認時仍APPLIED，接受聽感確認但停止後續bands並警示，避免累積；建議R後Enter。
 StartSdkBand1..4與TEMP完整log保留；native/CAF/190/math/mapping/payload/rate/Flash/90/220/production/nonFreeDSP未修改。
+
+## 2026-10-07 — M2L COMPLETE (Henry final hardware report)
+SDK0/wire5、SDK1/wire6、SDK2/wire7、SDK3/wire8、SDK4/wire9全部VERIFIED。
+每個映射都有successful protocol Apply、audible EQ change、successful protocol Restore、audible restoration。
+M2L官方五段live mapping已完成，不再排程重測wire5–9；不外推AuraPEQ九段UI完整mapping、bitexact或Flash。
+新里程碑M2M：完整九段PEQ映射＋Web RAM debug integration；優先PEQ，不研究GlobalPreamp/MasterGain。
+
+## 2026-10-07 — M2M research phase 1: nine-slot source evidence
+
+### Research checkpoint
+- Evidence examined: pinned official APK classes.dex (SHA256 04756b49acfea523758d86101c96c1824b7b209ae3a8836c07837088e795d2d5), getF3EQCoefficientList/getFreeman3EQParam/setDefaultAvailable; upstream e7da5b51199538e20a6442190e501ec26b29e2a2 and current nine-row UI/index flow; saved Issue #3 body/comments and July official helper dump provenance.
+- Verified facts: Freeman3 getter446 directly iterates wire1..9, requests [0,slot,0,...,0] (13 words: eleven trailing zeros), saves unchanged slot to BandEQCoefficient.band, parses Gain plus five signed24 coefficients. Setter190 public SDK accepts only0..4 and shifts+5; initialization writes raw0..9 unity with word0=0/1. Henry verified SDK0..4/wire5..9 reversibly; M2L complete.
+- Surviving hypotheses: wire1..9 are live coefficient slots; current UI position0..8 -> raw selector1..9 is a plausible proposed adapter. Physical independence/effect of raw1..4 remains unknown; five editable SDK slots coexist with nine coefficient slots.
+- Rejected hypotheses: SDK0..8 -> wire5..13; Flash220 metadata alone proves RAM mapping; slot field is the sample-rate index (rate is separate346 and word0 remains0 in realtime path).
+- Exact unresolved items: raw1..4 audible effect/reversal and independent accumulation; front-four/back-five partition meaning, word0=0/1 channel/bank meaning, equivalence of existing UI labels to official SDK band semantics. No confirmed raw190 cut capture for1..4 in existing logs.
+- Next action: prepare fixed raw1..4 candidate A/R harness using proven188/187/346/190 only; preserve known native math/transport. No new hardware query446, no initialization loop, no runtime or Web integration before physical evidence.
+
+## M2M — nine-band mapping: manual validation ready
+
+本節 supersedes earlier M2L pending/resume sections。M2L COMPLETE；Henry最後報告SDK0..4/wire5..9均protocol Apply/Restore PASS＋audible reversal VERIFIED。
+
+### Evidence inventory / source boundaries
+|Source|Provenance|What it proves|What it does not prove|Confidence|
+|---|---|---|---|---|
+|Henry final M2L report|2026-10-07; user-provided physical observations|SDK0..4 → wire5..9 individually reversible with protocol and audible success|Nine UI state, full-nine iteration, slot independence under simultaneous filters, bit exact coefficients|HIGH for reported five-slot reversal|
+|officialNineSlotStaticEvidence.json|Pinned APK SHA256 04756b49acfea523758d86101c96c1824b7b209ae3a8836c07837088e795d2d5; six exact DEX methods replayed|Freeman3 raw coefficient getter446 enumerates1..9; setter/getter SDK only0..4 shifted+5; initialization190 includes1..4|Current firmware physical effect/partition of1..4; actual wire captures; nine editable SDK bands|HIGH static / UNVERIFIED live1..4|
+|official helper dump and existing deterministic analysis|Issue #3 July1 log.txt; 57 TX/RX pairs; primary helper buffers, derived offset reports|Flash220 metadata/coefficient use1..9; existing envelope/field evidence|No real-time190 filter capture for1..4; Flash is not RAM mapping proof|HIGH buffer contents / weak independent RAM inference|
+|Current src/fn.ts / src/dsp.ts / upstream history|e7da5b51199538e20a6442190e501ec26b29e2a2, 2026-07-01; current source at aad01c7|Nine editable row positions0..8; production uses band.index+1; defaults31/62/125/250/500/1000/2000/4000/8000Hz|No independent source or hardware proof for that UI-to-wire convention|HIGH implementation provenance / mapping unverified|
+|Issue #3 body/comments and attachments|Saved local issue-body/issue-comments (updated2026-10-06), original-log.txt; log.txt and COPY.MSG.LOG.txt attachments|History and known protocol assumptions; no recovered cut190 wire1..4 evidence in these artifacts|Current upstream issue state (live browser fetch unavailable); firmware internal slot topology|Historical primary logs; derived interpretations separately treated|
+|Known WebHID descriptor + native M2K/M2L observations|reportId1; 61 data bytes; Windows caps62 input/output, feature0; matching native responses|Windows report format and native path already exercised|Raw USB completion length, browser GET equivalence, Flash persistence|HIGH descriptor/caps, limited transfer inference|
+
+### Official slot-field interpretation
+- getF3EQCoefficientList is explicitly gated to Freeman3 (offsets18–50), names MAX_BAND_INDEX=9, loops1..9 (160–168), word0=0 (186), word1=iterator (190–192), command446 (212), and stores unchanged iterator as BandEQCoefficient.band (268).
+- Gain byte18, B0/B1/B2/A0/A1 byte22/26/30/34/38; signed24 expansion via shl8/arithmetic shr8 (556–632). Logical request has13 words. getFreeman3EQParam uses the same446 plus SDK+5 shift, supporting446 as counterpart to190 (190|0x100).
+- setDefaultAvailable uses firmware string comparison against7.49.0.0 and raw0..9 unity190 for word0=0 and1. This is initialization evidence, not permission to execute the reset loop. slot0 and word0=1 remain outside this harness.
+- The evidence names word1 a coefficient band/slot, not a Hz/rate index. It does NOT establish whether the slots span a cascade, channels, banks or a reserved/user partition. Public SDK exposes only the last five editable slots; no native artifact explains the front-four/back-five role.
+- A nine-slot getter plus unity initialization establishes a slot domain. It cannot prove that a non-unity filter on1..4 affects the listening path or that multiple slots accumulate independently. Thus section9 of the request applies; complete UI mapping is not yet MEDIUM/HIGH as a physical-behavior claim.
+
+### Explicit nine-row proposed mapping (not a final verified UI mapping)
+|AuraPEQ UI band|Internal index|SDK field|wire selector|Evidence|Confidence|
+|---|---:|---|---|---|---|
+|1|0|UNKNOWN / not exposed by five-band SDK|Candidate1; final UNKNOWN|446 direct1..9;190 unity initialization; upstream index+1 only|HIGH slot existence; UNKNOWN live/UI mapping|
+|2|1|UNKNOWN / not exposed by five-band SDK|Candidate2; final UNKNOWN|Same direct-slot evidence|HIGH slot existence; UNKNOWN live/UI mapping|
+|3|2|UNKNOWN / not exposed by five-band SDK|Candidate3; final UNKNOWN|Same direct-slot evidence|HIGH slot existence; UNKNOWN live/UI mapping|
+|4|3|UNKNOWN / not exposed by five-band SDK|Candidate4; final UNKNOWN|Same direct-slot evidence|HIGH slot existence; UNKNOWN live/UI mapping|
+|5|4|SDK0 (target slot equivalence only)|Proposed5|SDK+5; Henry wire5 reversal; upstream index+1|HIGH wire5 reversal; proposed UI assignment|
+|6|5|SDK1 (target slot equivalence only)|Proposed6|SDK+5; Henry wire6 reversal; upstream index+1|HIGH wire6 reversal; proposed UI assignment|
+|7|6|SDK2 (target slot equivalence only)|Proposed7|SDK+5; Henry wire7 reversal; upstream index+1|HIGH wire7 reversal; proposed UI assignment|
+|8|7|SDK3 (target slot equivalence only)|Proposed8|SDK+5; Henry wire8 reversal; upstream index+1|HIGH wire8 reversal; proposed UI assignment|
+|9|8|SDK4 (target slot equivalence only)|Proposed9|SDK+5; Henry wire9 reversal; upstream index+1|HIGH wire9 reversal; proposed UI assignment|
+UI labels/default frequencies are editable presets, not fixed hardware frequency slots. Internal index is not SDK band. Existing nine-element localStorage can retain stale/duplicate indices: future adapter must validate position===index, uniqueness and integer bounds, not just length.
+
+### Implementation / smallest remaining experiment
+- New entry: `scripts/test-freedsp-native-unresolved-slots.ps1`, default rawwire1..4; optional `-StartWire 1..4` for an explicitly selected resume. It never schedules5..9. Historical M2L entry/operations remain for provenance, not the current task.
+- Fixed negative PK400Hz/-12dB/Q1, current known rate from matching346, word0=0, word1 rawcandidate1..4. Native math/encoder/transport timing are unchanged; the candidate packet differs from the proven SDK1/wire6 packet ONLY in word1.
+- Exact fixed eight candidate CLI operation names; no numeric tuning/positive gain/arbitrary command. New allowlist extends only these fixed cut/unity packets at the five known rates. Invalid slot and ambiguous SDK+candidate fail before any SET.
+- Each explicit A/R runs188 matching →187 matching →346 matching/knownHz →190 matching, once per command with bounded GET/no resend. No446 hardware reads,90,220,Flash, initialization loop or all-nine write.
+- Controller keeps A/R repeat toggles, Enter requires both successful operations; N/Q/failure stops immediately. Enter while still APPLIED stops before another slot, warning it may remain active. R then Enter avoids accumulation. Unity Restore is not a backup of previous EQ. 188/187 enable/bypass have the same shared device-state side effects as the proven native procedure.
+- Offline-only nine-band model is a proposed adapter/fixture generator, never a transport: all9 rows explicit; current rate, signed words/dynamic Gain, disabled same-slot unity, negative PK-only; fail closed on unsupported type/nonfinite data/mismatched index/extra or missing rows/Nyquist or packed-field overflow. Native quantizer1LSB uncertainty remains.
+- Runtime Web integration remains BLOCKED on raw1..4 live reversal/slot role. After confirmation: isolated FreeDSP diagnostic RAM adapter first, explicit UI state normalization, no production sync/tilt/automatic90. Browser transport must resolve official polling through the proven native path; do not assume successful WebHID sendReport implies completion.
+- Later production gate remains: two different UI bands independently reversible, full9 protocol success, no unexpected accumulation, reconnect not treated as Flash proof. These are not part of this four-candidate experiment.
+
+### Research checkpoint
+- Evidence examined: six-method pinned APK replay; UI/history trace; fixture/log/Issue chronology; candidate serializer and toggle controller; separate offline nine-band model.
+- Verified facts: direct446 coefficient slots1..9; public SDK0..4+5; Henry five-slot reversal; focused tests cover only mock/synthetic hardware and deterministic data.
+- Surviving hypotheses: raw1..4 are remaining editable live slots; nine UI positions can be assigned slot1..9 if physical behavior supports it.
+- Rejected hypotheses: SDK5..8 are accepted; blindly+5 nine UI indices; Flash metadata alone proves RAM; a mock VERIFIED summary proves real audio; protocol matching alone proves audibility.
+- Exact unresolved items: raw1..4 audible reversal/physical partition/independence, full-nine UI/native transport integration; native optimum1LSB.
+- Next action: final automated verification + scoped commit/push; STOP for one four-candidate Henry A/R run, no additional offline guessing or Web production integration.
+
+## Evidence for upstream / Issue #3
+- Target FreeDSP35D8:1496, CONEXANT/Freeman3; reportID1+61 data, Windows input/output62/feature0 and native ID metadata verified. Raw transfer capture absent.
+- Henry reports SDK0..4/wire5..9 Apply and Restore each protocol PASS and audible reversible: M2L COMPLETE. Native sequence188/187/346/190 works; replies must match after bounded GET, no automatic90/Flash needed for this test.
+- NEW pinned APK source: Freeman3 `getF3EQCoefficientList` directly reads446 with [0,slot,eleven zeros] for slot1..9; stores slot as BandEQCoefficient.band, parses Gain plus signed24 coefficients. Initialization190 also addresses raw1..4 with unity. Public five-band setter/getter separately shiftsSDK+5. This supports raw1..4 candidates but does not prove their non-unity effect.
+- July official helper arrays are not new RAM190 captures; metadata220 cannot settle physical RAM slot semantics. Upstream e7da5b5 added nine UI rows/index+1 without a documented mapping derivation.
+- Current production remains different: five rate-index RAM writes rather than current-rate/selector0, fixed Gain/RBJ math, automatic90, enabled+tilt/type handling and stale index risks. This research does not replace that path.
+- Prepared minimal raw1..4 reversible negative-PK native experiment; existing wire5..9 not retested. Web debug RAM integration and final nine-UI mapping pending physical evidence. No preamp/Flash/non-FreeDSP changes. No issue comment posted.
+
+### Problem / hypothesis / next action
+Observed problem:
+- Five official editable live bands work; full nine UI mapping is still unverified and production sync does not use the proven native path.
+Verified facts:
+- Official446 direct nine-slot list,190 raw-slot unity initialization, SDK five-slot guard/+5, Henry reversible wire5..9. UI rows are editable positions; existing index+1 was introduced without independent provenance.
+Possible causes:
+- Front-four slots may be reserved/another bank or part of the same live cascade; public SDK may expose only a subset. Word0/channel/bank semantics remain unknown.
+Ruled out / weakened:
+- Five verified slots need another replay; no official evidence exists for raw1..4; arbitrary0/10..13 probing; nine SDK bands; preamp or Flash is required to validate PEQ.
+Next validation:
+- Henry one command, candidateswire1→2→3→4, A/R repeat at same low song/volume, R then Enter after audible reversal; N/Q/protocol error stop. No existing-slot retest.
+Possible fix direction:
+- If remaining slots reverse audibly, use explicit position→rawslot adapter and current-rate native serializer in isolated FreeDSP Web debug RAM path. Do not claim physical independence/full-nine completion until the later stated gate passes.
+
+### Scope / regression check
+- FreeDSP-specific changes: fixed candidate native operations/SafeRam/Program and reusable toggle profile.
+- Analysis/test changes: six-method static extractor/fixture, offline nine-band model, focused Vitest/PowerShell/C# tests, candidate entry script.
+- Shared runtime files changed: NONE; production src changed: NONE.
+- Non-FreeDSP protocol code changed: NO.
+- Docs: GENERAL/ROADMAP/DECISIONS/DONE only; no new Markdown or committed runtime logs.
+- No hardware access by Codex. No Web server started; future localhost remains http://localhost:5173/ via .\scripts\dev.ps1.
+
+### M2M final automated verification / research checkpoint
+- Native production diagnostic build: success,0warnings/0errors; never run against a physical device. C# Tests assembly47 passed (synthetic/mock only).
+- Windows PowerShell toggle controller15 passed (injected mock answers/protocol results only), covering all candidate1..4 and old controller regression.
+- Six-method pinned APK static replay exactly matched committed fixture; no APK/native code executed.
+- Focused Vitest3files/15tests passed; test TypeScript check passed. Initial sandbox Vitest cache rename EPERM occurred before test loading; normal-permission retry passed, no product defect inferred.
+- Final verify.ps1 run once: exit0; production TypeScript/Vite build and16files/134tests passed. Generated dist files restored, no runtime source/dist scope changes retained.
+- Next action: scoped Git commit/push, then STOP for Henry. M2M manual validation READY; rawwire1..4 still physically UNVERIFIED. Mock test VERIFIED labels are not actual device evidence.

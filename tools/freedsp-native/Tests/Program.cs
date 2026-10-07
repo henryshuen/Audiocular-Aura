@@ -261,6 +261,48 @@ Test("M2L each band runs identical proven flow with its own190 payload", () => {
     using var invalid=new MockHid(Reply()); using var invalidLog=new StringWriter();
     Throws(()=>SafeRam.Run(invalid,false,invalidLog,()=>new FakeClock(),0)); Check(invalid.Calls.Count==0,"Reject band before anySET");
 });
+Test("M2M raw candidate slots1..4, NOT SDK indices; exact allowlist", () => {
+    foreach(int hz in SafeRam.Rates) foreach(bool flat in new[]{false,true}) for(int wire=1;wire<=4;wire++) {
+        var b=SafeRam.CandidateRam(hz,flat,wire);
+        Check(SafeRam.IsAllowedReport(b)&&b.Length==62,"Only fixed reports");
+        Check(BinaryPrimitives.ReadInt32LittleEndian(b.AsSpan(14))==wire,"Raw selector unchanged");
+        var reference=SafeRam.Ram(hz,flat,1); Array.Clear(b,14,4); Array.Clear(reference,14,4);
+        Check(b.SequenceEqual(reference),"Only selector differs from hardware-proven flow");
+    }
+    foreach(int wire in new[]{-1,0,5,6,9,10,13,100}) Throws(()=>SafeRam.CandidateRam(48000,false,wire));
+    for(int wire=1;wire<=4;wire++) foreach(bool flat in new[]{false,true}) {
+        string op=(flat?"Restore":"Apply")+"CandidateWire"+wire;
+        Check(SafeRam.IsOperation([op])&&SafeRam.TryCandidateOperation(op,out int result,out bool restore)&&result==wire&&restore==flat,"Fixed CLI");
+    }
+    foreach(string op in new[]{"ApplyCandidateWire0","ApplyCandidateWire5","ApplyCandidateWire01","190","446"}) Check(!SafeRam.IsOperation([op]),"No arbitrary or verified selector");
+    Check(!SafeRam.IsOperation(["ApplyCandidateWire1","2"]),"No numeric tuning");
+});
+Test("M2M each candidate uses known current rate and proven matching chain only", () => {
+    for(int wire=1;wire<=4;wire++) foreach(bool flat in new[]{false,true}) foreach(int rateIndex in Enumerable.Range(4,5)) {
+        using var hid=new MockHid(NonMatch(190)); foreach(var b in new[]{NonMatch(188),NonMatch(187),Reply(rateIndex)}) hid.Responses.Enqueue(b);
+        using var log=new StringWriter(); Check(SafeRam.Run(hid,flat,log,()=>new FakeClock(),candidateWire:wire)==0,"Synthetic matching flow");
+        Check(hid.Transmissions.Count==4&&hid.Transmissions.Last().SequenceEqual(SafeRam.CandidateRam(SafeRam.Rates[rateIndex-4],flat,wire)),"No multirate RAM and no90/220/446");
+        Check(log.ToString().Contains("SDK field unknown"),"No invented SDK index");
+    }
+});
+Test("M2M invalid or ambiguous slot fails before any SET", () => {
+    using var hid=new MockHid(Reply()); using var log=new StringWriter();
+    foreach(int wire in new[]{0,5,9}) Throws(()=>SafeRam.Run(hid,false,log,candidateWire:wire));
+    Throws(()=>SafeRam.Run(hid,false,log,sdkBand:2,candidateWire:1)); Check(hid.Calls.Count==0,"No hardware calls");
+});
+Test("M2M candidate report mutations fail closed", () => {
+    var reference=SafeRam.CandidateRam(48000,false,1);
+    foreach(int offset in new[]{0,1,2,4,6,10,14,18,22,26,42,61}) {
+        var bad=(byte[])reference.Clone(); bad[offset]^=0x40;
+        Check(!SafeRam.IsAllowedReport(bad),"No arbitrary values, rate selector or tail padding");
+    }
+});
+Test("M2M candidate prerequisite and rate failures stop before190", () => {
+    using var hid=new MockHid(Reply(9)); hid.Responses.Enqueue(NonMatch(188)); hid.Responses.Enqueue(NonMatch(187));
+    using var log=new StringWriter(); Check(SafeRam.Run(hid,false,log,()=>new FakeClock(),candidateWire:1)==7&&hid.Transmissions.Count==3,"Unknown not guessed48k");
+    using var failed=new MockHid(Reply()) {SetResult=new(false,5)};
+    Check(SafeRam.Run(failed,false,log,()=>new FakeClock(),candidateWire:1)==7&&failed.Transmissions.Count==1,"No laterSET");
+});
 Console.WriteLine($"Native offline tests: {passed} passed; SYNTHETIC / MOCK ONLY; no hardware access.");
 return 0;
 

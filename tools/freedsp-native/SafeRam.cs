@@ -7,13 +7,14 @@ namespace FreeDspNative;
 public sealed record SafeCoefficients(int SampleHz, float[] Floats, int Exponent, int Gain, int Scale, int[] Words)
 {
     public int[] Payload(int sdkBand) => [0, SafeRam.WireBand(sdkBand), Gain, .. Words, 0, 0, 0, 0, 0];
+    public int[] CandidatePayload(int wire) => [0, SafeRam.CandidateWire(wire), Gain, .. Words, 0, 0, 0, 0, 0];
 }
 
 public static class SafeRam
 {
     public static IReadOnlyList<int> Rates { get; } = Array.AsReadOnly(new[] {44100, 48000, 96000, 192000, 384000});
     public static bool IsOperation(string[] args) => args.Length == 1 &&
-        (args[0] == "query346" || TryRemainingOperation(args[0], out _, out _));
+        (args[0] == "query346" || TryRemainingOperation(args[0], out _, out _) || TryCandidateOperation(args[0], out _, out _));
     public static bool TryRemainingOperation(string operation, out int sdkBand, out bool restore)
     {
         (sdkBand, restore) = operation switch {
@@ -27,6 +28,22 @@ public static class SafeRam
     }
     public static int WireBand(int sdkBand) => sdkBand is >= 1 and <= 4 ? sdkBand + 5 :
         throw new InvalidOperationException("M2L permits SDK1..4 / wire6..9 only; no arbitrary band or wire5 retest");
+
+    // Raw coefficient slot candidates, NOT SDK band numbers. Official446 lists1..9;
+    // reversible live effect remains unverified for1..4. No arbitrary CLI tuning.
+    public static bool TryCandidateOperation(string operation, out int wire, out bool restore)
+    {
+        (wire, restore) = operation switch {
+            "ApplyCandidateWire1" => (1, false), "RestoreCandidateWire1" => (1, true),
+            "ApplyCandidateWire2" => (2, false), "RestoreCandidateWire2" => (2, true),
+            "ApplyCandidateWire3" => (3, false), "RestoreCandidateWire3" => (3, true),
+            "ApplyCandidateWire4" => (4, false), "RestoreCandidateWire4" => (4, true),
+            _ => (0, false)
+        };
+        return wire is >= 1 and <= 4;
+    }
+    public static int CandidateWire(int wire) => wire is >= 1 and <= 4 ? wire :
+        throw new InvalidOperationException("M2M permits unresolved wire1..4 only; no verified slot retest");
 
     public static SafeCoefficients Calculate(int sampleHz, bool restore)
     {
@@ -70,17 +87,21 @@ public static class SafeRam
     // Microsoft HidD_SetOutputReport contract + hidapi/windows/hid.c hid_send_output_report.
     public static byte[] Bypass() => Encode(187, [0]);
     public static byte[] Ram(int sampleHz, bool restore, int sdkBand = 1) => Encode(190, Calculate(sampleHz, restore).Payload(sdkBand));
+    public static byte[] CandidateRam(int sampleHz, bool restore, int wire) => Encode(190, Calculate(sampleHz, restore).CandidatePayload(wire));
     public static bool IsAllowedReport(byte[] b) => b.AsSpan().SequenceEqual(Caf346.CreateQuery()) ||
         b.AsSpan().SequenceEqual(Enable()) || b.AsSpan().SequenceEqual(Bypass()) ||
         Enumerable.Range(1, 4).Any(band => Rates.Any(rate =>
-            b.AsSpan().SequenceEqual(Ram(rate, false, band)) || b.AsSpan().SequenceEqual(Ram(rate, true, band))));
+            b.AsSpan().SequenceEqual(Ram(rate, false, band)) || b.AsSpan().SequenceEqual(Ram(rate, true, band)) ||
+            b.AsSpan().SequenceEqual(CandidateRam(rate, false, band)) || b.AsSpan().SequenceEqual(CandidateRam(rate, true, band))));
 
-    public static int Run(IQueryHid hid, bool restore, TextWriter log, Func<IPollClock>? clocks = null, int sdkBand = 1)
+    public static int Run(IQueryHid hid, bool restore, TextWriter log, Func<IPollClock>? clocks = null, int sdkBand = 1, int? candidateWire = null)
     {
-        int wire = WireBand(sdkBand); // Validate before any SET, even for internal callers.
+        if (candidateWire.HasValue && sdkBand != 1) throw new InvalidOperationException("Ambiguous SDK/candidate selection");
+        int wire = candidateWire.HasValue ? CandidateWire(candidateWire.Value) : WireBand(sdkBand); // Validate before any SET, even for internal callers.
+        string label = candidateWire.HasValue ? $"CANDIDATE raw slot / wire{wire} (SDK field unknown)" : $"SDK band{sdkBand} / wire{wire}";
         clocks ??= () => new PollClock();
-        log.WriteLine(restore ? $"RESTORE: flat/unity on SDK band{sdkBand} / wire{wire} only; NOT a backup of previous EQ" :
-            $"TEST: PK 400 Hz / -12 dB / Q1.0 / single SDK band{sdkBand} / wire{wire}; NOT global preamp");
+        log.WriteLine(restore ? $"RESTORE: flat/unity on {label} only; NOT a backup of previous EQ" :
+            $"TEST: PK 400 Hz / -12 dB / Q1.0 / single {label}; NOT global preamp");
         log.WriteLine("No Flash, no220, no automatic90. Protocol failure: STOP; do not listen or retry.");
         log.WriteLine(restore ? "Expected: body/warmth returns at SAME song/volume; only tested band is made flat." :
             "Expected: less low-mid/body/warmth around400Hz; NOT an overall12dB volume reduction.");
@@ -99,8 +120,8 @@ public static class SafeRam
         log.WriteLine($"Verified rate source: matching346 word1={rateReply.SampleIndex}; sampleHz={hz}");
         log.WriteLine("Floats [B0,B1,B2,A0,A1]=[" + string.Join(",", coefficients.Floats.Select(v => v.ToString("R", CultureInfo.InvariantCulture))) + "]");
         log.WriteLine($"exponent={coefficients.Exponent} Gain={coefficients.Gain} scale={coefficients.Scale}; integers=[{string.Join(",", coefficients.Words)}]");
-        log.WriteLine($"RAM190 count13 payload=[{string.Join(",", coefficients.Payload(sdkBand))}]; native final quantizer uncertainty1LSB, not bit-exact");
-        if (Exchange(hid, 190, Ram(hz, restore, sdkBand), log, clocks(), false) is null) return Failed(log, 190);
+        log.WriteLine($"RAM190 count13 payload=[{string.Join(",", (candidateWire.HasValue ? coefficients.CandidatePayload(wire) : coefficients.Payload(sdkBand)))}]; native final quantizer uncertainty1LSB, not bit-exact");
+        if (Exchange(hid, 190, (candidateWire.HasValue ? CandidateRam(hz, restore, wire) : Ram(hz, restore, sdkBand)), log, clocks(), false) is null) return Failed(log, 190);
         log.WriteLine(restore ? "RESULT: PROTOCOL RESTORE VERIFIED / LISTENING PENDING" : "RESULT: PROTOCOL APPLY VERIFIED / LISTENING PENDING");
         log.WriteLine("Matching CAF replies do not prove audible EQ; restore covers this band only.");
         log.Flush(); return 0;
