@@ -1,48 +1,39 @@
 <!doctype html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>FreeDSP M2A 診斷</title>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>M2F EXPERIMENTAL RAM PROOF</title>
   <style>
-    :root { color-scheme: light dark; font: 16px/1.6 system-ui, sans-serif; }
-    body { max-width: 960px; margin: 2rem auto; padding: 0 1rem; }
-    button, select { font: inherit; padding: .45rem .65rem; margin: .3rem; }
-    fieldset { margin: 1rem 0; } pre { white-space: pre-wrap; overflow-wrap: anywhere; }
-    textarea { width: 100%; min-height: 18rem; box-sizing: border-box; font-family: monospace; }
-    [hidden] { display: none !important; }
+    :root { color-scheme:light dark; font:16px/1.6 system-ui,sans-serif; }
+    body { max-width:960px; margin:2rem auto; padding:0 1rem; }
+    button { font:inherit; padding:.5rem; margin:.4rem; } fieldset { margin:1rem 0; }
+    pre { white-space:pre-wrap; overflow-wrap:anywhere; } textarea { width:100%; min-height:22rem; box-sizing:border-box; font-family:monospace; }
+    [hidden] { display:none !important; }
   </style>
 </head>
 <body>
-  <h1>FreeDSP M2A：descriptor 與 RAM 探測</h1>
-  <p>僅限 VID 0x35D8 / PID 0x1496。此頁不自動連線、不回讀 DSP、不寫 Flash 或 preamp。</p>
-  <p>先關閉其他 AuraPEQ 頁籤，停用 Equalizer APO、Windows 音量調到極低，第一次套用時不要佩戴 IEM。</p>
-  <p id="status" role="status">等待手動選取。選取與檢查不開啟裝置，也不傳送 report。</p>
+  <h1>M2F EXPERIMENTAL RAM PROOF</h1>
+  <p>Original Moondrop FreeDSP / VID35D8 / PID1496。RAM only，no Flash；只有SDK band0 → wire5。</p>
+  <p><strong>Windows音量調低；第一次套用時IEM不要放在耳內。測試只有衰減，沒有正增益或preamp。</strong></p>
+  <p>先關閉其他AuraPEQ／官方控制程式，停用其他EQ。連線不自動傳送命令。DO NOT USE FLASH.</p>
+  <p id="status" role="status">等待手動選取。</p>
   <div id="controls" hidden>
-    <button id="select-device">1. 手動選取 FreeDSP（僅檢查）</button>
-    <button id="inspect" disabled>重新檢查 descriptor（不寫入）</button>
-    <details open><summary>WebHID metadata / descriptor</summary><pre id="descriptor">尚無資料</pre></details>
+    <button id="select-device">1. Inspect / connect FreeDSP（不寫入）</button>
+    <button id="inspect" disabled>重新檢查descriptor</button>
+    <details><summary>WebHID descriptor</summary><pre id="descriptor">尚無資料</pre></details>
     <fieldset>
-      <legend>2. 手動 RAM 測試</legend>
-      <label>Framing <select id="framing">
-        <option value="CURRENT">CURRENT</option>
-        <option value="CANDIDATE_NO_EMBEDDED_REPORT_ID">CANDIDATE_NO_EMBEDDED_REPORT_ID</option>
-      </select></label>
-      <label>與 Windows 播放格式相同的取樣率 <select id="sample-rate">
-        <option value="44100">44100 Hz</option><option value="48000" selected>48000 Hz</option>
-        <option value="96000">96000 Hz</option><option value="192000">192000 Hz</option>
-        <option value="384000">384000 Hz</option>
-      </select></label>
-      <p>CURRENT = 61 bytes；候選 = 62 bytes。descriptor 必須恰好匹配；不符就停止，不補零、不截斷。</p>
-      <p>每次只對選定取樣率送出 9 段係數（其他段設 flat），再啟用既有 mode 0，共 10 個封包。這不是九段功能驗證。</p>
-      <label><input id="safety" type="checkbox"> 我已確認音量極低、未佩戴 IEM、取樣率相同，且只測 RAM。</label>
-      <div>
-        <button id="flat" disabled>套用 Flat（僅 RAM）</button>
-        <button id="attenuation" disabled>套用單段 −12 dB（僅 RAM）</button>
-      </div>
-      <p>單段設定：第 1 段 PK / 1000 Hz / −12 dB / Q 0.7；其餘 8 段 0 dB。兩次比較維持相同 framing、取樣率、來源及音量。</p>
+      <legend>單段RAM對照</legend>
+      <label><input id="safety" type="checkbox"> 已調低音量、IEM不在耳內、關閉其他控制頁；只測RAM。</label>
+      <p>相同band、相同來源與音量。只有匹配CAF回應才繼續；ACK仍不代表可聽效果。</p>
+      <button id="attenuation" disabled>2. Apply SAFE TEST：band0→wire5 / PK1000Hz / −12dB / Q0.7</button>
+      <br><button id="flat" disabled>3. Restore tested band to FLAT（僅wire5）</button>
+      <p>收到STOP／TIMEOUT／MISMATCH就保存日誌並停止。Flat只將本段設0dB，不恢復先前未知的EQ設定；失敗時不要假定已還原。</p>
     </fieldset>
-    <label for="log">診斷與完整 TX 日誌（可全選複製）</label>
+    <details><summary>獨立mode90診斷（不屬於這次三步測試）</summary>
+      <p>custom0 preset操作可能影響RAM，效果未確認。第一次測試不要按；流程不會自動執行。</p>
+      <button id="custom-mode" disabled>手動選取custom mode0（command90）</button>
+    </details>
+    <label for="log">完整TX／RX／ACK／錯誤日誌（全選複製）</label>
     <textarea id="log" readonly></textarea>
   </div>
   <script type="module" src="/src/freedsp/debugPage.ts"></script>
