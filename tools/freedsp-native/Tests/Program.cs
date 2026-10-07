@@ -341,25 +341,29 @@ Test("M2N invalid full-state/action data rejected before HID",()=>{
     Check(RamDebugRequest.Parse(json).Bands.Length==9,"Exact schema");
     string camel=System.Text.Json.JsonSerializer.Serialize(new RamDebugRequest("applyBand",0,Nine()),new System.Text.Json.JsonSerializerOptions {PropertyNamingPolicy=System.Text.Json.JsonNamingPolicy.CamelCase}); Check(RamDebugRequest.Parse(camel).Bands[0].Enabled,"Browser camelCase required fields");var missing=System.Text.Json.Nodes.JsonNode.Parse(json)!; missing["Bands"]![0]!.AsObject().Remove("Enabled"); Throws(()=>RamDebugRequest.Parse(missing.ToJsonString()));
 });
-Test("M2N single-band48k uses matched346 and one190; no90/220",()=>{
+Test("M2Q single-band48k uses matched346 and paired190; no90/220",()=>{
     foreach(int index in new[]{0,4,8}) foreach(string action in new[]{"applyBand","restoreBand"}) {
         var r=new RamDebugRequest(action,index,Nine());using var hid=new MockHid(NonMatch(190));
         foreach(var b in new[]{NonMatch(188),NonMatch(187),Reply(5)})hid.Responses.Enqueue(b);
         using var log=new StringWriter();var allowed=new List<byte[]>();
         Check(RamDebug.Run(hid,r,log,allowed,()=>new FakeClock())==0,"Complete");
-        Check(hid.Transmissions.Count==4&&hid.Transmissions.Last().SequenceEqual(RamDebug.Packet(index,RamDebug.Calculate(48000,r.Bands[index],action=="restoreBand"))),"Exact48k selected packet");
-        Check(allowed.Count==1,"Exact request authorization only");
+        Check(hid.Transmissions.Count==5,"Three prerequisites+two190");
+        for(int path=0;path<2;path++)Check(hid.Transmissions[3+path].SequenceEqual(RamDebug.Packet(index,RamDebug.Calculate(48000,r.Bands[index],action=="restoreBand"),path)),"Exact48k stereo packet");
+        Check(allowed.Count==2,"Exact request authorization only");
     }
 });
-Test("M2N fullnine iterates exactly once; disabled slot unity; restoreNine allunity",()=>{
+Test("M2Q fullnine eighteen writes in wire/path order; disabled andRestore both unity",()=>{
     foreach(string action in new[]{"syncNine","restoreNine"}) {
         var r=new RamDebugRequest(action,0,Nine());r.Bands[2]=r.Bands[2] with {Enabled=false};
         using var hid=new MockHid(NonMatch(190));foreach(var b in new[]{NonMatch(188),NonMatch(187),Reply()})hid.Responses.Enqueue(b);
         using var log=new StringWriter();Check(RamDebug.Run(hid,r,log,[],()=>new FakeClock())==0,"Full state");
-        Check(hid.Transmissions.Count==12,"Three prerequisites+nine190 only");
-      for(int wire=1;wire<=9;wire++)Check(log.ToString().Contains($"WIRE{wire} {action} PASS"),"Per-wire protocol PASS");
-        Check(hid.Transmissions.Skip(3).Select(b=>BinaryPrimitives.ReadInt32LittleEndian(b.AsSpan(14))).SequenceEqual(Enumerable.Range(1,9)),"All slots unique");
-        Check(BinaryPrimitives.ReadInt32LittleEndian(hid.Transmissions[5].AsSpan(22))==4194304,"Disabled B0 unity");
+        Check(hid.Transmissions.Count==21,"Three prerequisites+eighteen190 only");
+        for(int wire=1;wire<=9;wire++)foreach(string channel in new[]{"LEFT","RIGHT"})Check(log.ToString().Contains($"WIRE{wire} {channel} PASS"),"Per-channel PASS");
+        Check(hid.Transmissions.Skip(3).Select(b=>BinaryPrimitives.ReadInt32LittleEndian(b.AsSpan(14))).SequenceEqual(Enumerable.Range(1,9).SelectMany(w=>new[]{w,w})),"All slots in paired order");
+        Check(hid.Transmissions.Skip(3).Select(b=>BinaryPrimitives.ReadInt32LittleEndian(b.AsSpan(10))).SequenceEqual(Enumerable.Range(1,9).SelectMany(_=>new[]{0,1})),"path0 thenpath1");
+        for(int i=0;i<9;i++)Check(hid.Transmissions[3+i*2].Skip(14).SequenceEqual(hid.Transmissions[4+i*2].Skip(14)),"Identical coefficients each pair");
+        Check(BinaryPrimitives.ReadInt32LittleEndian(hid.Transmissions[7].AsSpan(22))==4194304&&BinaryPrimitives.ReadInt32LittleEndian(hid.Transmissions[8].AsSpan(22))==4194304,"Disabled both unity");
+        Check(log.ToString().Contains("writes190=18"),"Completion onlyafter18");
         if(action=="restoreNine")Check(hid.Transmissions.Skip(3).All(b=>BinaryPrimitives.ReadInt32LittleEndian(b.AsSpan(22))==4194304),"Allunity");
     }
 });
@@ -371,8 +375,8 @@ Test("M2N fullnine iterates exactly once; disabled slot unity; restoreNine allun
           using var hid=new MockHid(NonMatch(190));foreach(var b in new[]{NonMatch(188),NonMatch(187),Reply()})hid.Responses.Enqueue(b);
           using var log=new StringWriter();var allowed=new List<byte[]>();
           Check(RamDebug.Run(hid,new(action,0,bands),log,allowed,()=>new FakeClock())==0,"Complete preset");
-          Check(allowed.Count==9,"Nine authorized packets");
-          for(int i=0;i<9;i++)Check(hid.Transmissions[i+3].SequenceEqual(RamDebug.Packet(i,RamDebug.Calculate(48000,bands[i],action=="restoreNine"))),"Exact precomputed packet");
+          Check(allowed.Count==18,"Eighteen authorized packets");
+          for(int i=0;i<9;i++)for(int path=0;path<2;path++)Check(hid.Transmissions[i*2+path+3].SequenceEqual(RamDebug.Packet(i,RamDebug.Calculate(48000,bands[i],action=="restoreNine"),path)),"Exact precomputed packet");
       }
   });
 Test("M2N failed/unknown rate or partial190 aborts without retries/rollback",()=>{
@@ -381,7 +385,21 @@ Test("M2N failed/unknown rate or partial190 aborts without retries/rollback",()=
     using var failed=new MockHid(NonMatch(190));foreach(var b in new[]{NonMatch(188),NonMatch(187),Reply(),NonMatch(190)})failed.Responses.Enqueue(b);
     for(int j=0;j<4;j++)failed.Results.Enqueue(new(true,0));failed.Results.Enqueue(new(false,31));
     Check(RamDebug.Run(failed,new("syncNine",0,Nine()),log,[],()=>new FakeClock())==7&&failed.Transmissions.Count==5,"First190 done, second fails, no later slot");
-      Check(log.ToString().Contains("WIRE2 syncNine FAIL")&&!log.ToString().Contains("RESULT: PROTOCOL COMPLETE"),"Failure log never claims full completion");
+      Check(log.ToString().Contains("WIRE1 RIGHT FAIL")&&!log.ToString().Contains("RESULT: PROTOCOL COMPLETE"),"Failure log never claims full completion");
+});
+Test("M2Q quantized-unsafe final band rejects before any SET and invalidpath never builds",()=>{
+    var r=new RamDebugRequest("syncNine",0,Nine());r.Bands[8]=r.Bands[8] with {Freq=20,Q=10};
+    using var hid=new MockHid(Reply());using var log=new StringWriter();
+    Throws(()=>RamDebug.Run(hid,r,log,[]));Check(hid.Transmissions.Count==0,"Allrate packet preflight precedes prerequisites");
+    Throws(()=>RamDebug.Packet(0,SafeRam.Calculate(48000,false),2));
+});
+Test("M2Q failure at any one of eighteen190 packets stops with no laterwrite or rollback",()=>{
+    for(int failedWrite=1;failedWrite<=18;failedWrite++){
+        using var hid=new MockHid(NonMatch(190));foreach(var b in new[]{NonMatch(188),NonMatch(187),Reply()})hid.Responses.Enqueue(b);
+        for(int i=0;i<3+failedWrite-1;i++)hid.Results.Enqueue(new(true,0));hid.Results.Enqueue(new(false,31));
+        using var log=new StringWriter();Check(RamDebug.Run(hid,new("syncNine",0,Nine()),log,[],()=>new FakeClock())==7,"Failure propagated");
+        Check(hid.Transmissions.Count==3+failedWrite&&!log.ToString().Contains("RESULT: PROTOCOL COMPLETE"),"No extraSET or falsecompletion");
+    }
 });
 Test("M2N bridge origin/host constraints reject external, null,127UI and other ports",()=>{
     Check(DebugBridge.AllowedOrigin("http://localhost:5173","127.0.0.1:5174"),"Exact origins");

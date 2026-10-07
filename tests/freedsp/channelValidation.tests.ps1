@@ -56,4 +56,8 @@ Write-Host 'PASS failure stops without retries/rollback'
 $module=Get-Content (Join-Path $PSScriptRoot '../../scripts/freedsp/ChannelValidation.psm1') -Raw
 Assert ($module -notmatch 'Stop-Process|taskkill|Get-CimInstance|Get-Process') 'Toggle UX never touches process ownership'
 Write-Host 'PASS unrelated process behavior untouched'
-Write-Host 'M2P Chinese toggle: 11 focused mock scenarios PASS; no hardware operations'
+$m=Mock @('U','0','A','O','L','R','R','','1','A','O','R','L','R','','B','A','O','B','C','R','','Q')
+foreach($entry in @('Path0 Ear=L Image=R','Path1 Ear=R Image=L','Both Ear=B Image=C')){Assert ($m.Text -match ('(?m)^'+[regex]::Escape($entry))) 'Final summary aggregates saved observations'}
+Assert ($m.Result.Results.Length -eq 3) 'All observations retained'
+Write-Host 'PASS final summary aggregates path0/path1/both observations'
+Write-Host 'M2P Chinese toggle: 12 focused mock scenarios PASS; no hardware operations'

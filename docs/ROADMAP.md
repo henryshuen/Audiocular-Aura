@@ -1,6 +1,6 @@
 ﻿# AuraPEQ FreeDSP Roadmap
 
-> Current gate: M2P stereo investigation. M2O full-nine protocol/audible PASS, stereo correctness FAIL / unresolved; NOT production-complete. Latest M2P observations are inconsistent with the prior LEFT-only interpretation; a later path0 Restore audibly changed BOTH ears. Selector0/1 stereo semantics remain UNRESOLVED; clean-baseline repeatable toggle testing is the current gate.
+> Current gate: M2Q dual-channel Web RAM. M2P clean-baseline hardware validation COMPLETE: path0=LEFT/path1=RIGHT (hardware-derived names), Both changes both ears equally and remains centered. M2O stereo bug: path0-only Web writes. M2Q Band5 and full-nine Web stereo validation PENDING; production sender unchanged.
 
 ## M0 - Local reproducible baseline — COMPLETE
 - [x] fork / upstream configured：Round 0.5 已確認 origin 分支可讀取且與本機 HEAD 相同。
@@ -2116,3 +2116,29 @@ Earlier reported RIGHTward image / LEFT reduction is historical observation, not
 
 ### M2P 中文 toggle 最終自動驗證
 Windows PowerShell：11個toggle聚焦mock情境PASS（中文help/menu、U雙path成功／失敗、各模式反覆A/R、返回持續選單、無效／取消O不退出、RESTORE/CLEAN明確逃生、狀態警示、無自動寫入）；既有devBridgeLifecycle7個mock檢查PASS。三份PowerShellAST語法解析PASS。verify.ps1本輪一次exit0：TypeScript/Vite與19files/155testsPASS。Native/protocol/coefficients/mapping/Web/M2O/dev-process sources diff為空；未操作硬體。Generateddist已還原；gitdiffcheckPASS。立體聲mapping仍UNRESOLVED，下一步由Henry先U建立wire5雙pathunitybaseline，再自行反覆切換。
+
+## 2026-10-08 — M2P hardware COMPLETE / M2Q dual-channel Web preparation
+Henry completed clean-baseline repeated wire5 PK400Hz/-12dB/Q1 toggles: baselinepath0unityPASS,path1unityPASS; Path0 Ear=L/Image=R; Path1 Ear=R/Image=L; Both Ear=B/Image=C, equal-ear change with centered image. Hardware-derived mapping: selector/path0=LEFT, selector/path1=RIGHT on this FreeDSP setup. Official SDK names remain unnamed; do not present these labels as recovered official field names. This newer controlled evidence supersedes the prior inconsistent/unclean-baseline observations.
+Full log reviewed read-only: C:/Users/Henry/AppData/Local/Temp/AuraPEQ/freedsp-m2p-aa02128f24704c3284b5da2b9592719b.log; SHA25626d4efdf43b460874047257705577b4b119c1ec47a85bf5fa00f26d3f42e1c7e. Baseline completionline97; recorded Path0line471, Path1line1131, Bothline1643; all saved in log despite missing prior final aggregate. O may record recollected toggle effects afterRestore; this is Henry's reported listening validation, not an instrumented channel-amplitude measurement. Raw logs remain outsideGit.
+M2O protocol/effect/recovery passed but stereo failed because Web190word0 was always0: onlyLEFT coefficient path updated. M2Q changes isolated debug RAM operations to identical path0/path1 pairs for each requested wire; no production replacement. Single-band2writes; full-nine18writes orderedwire1path0,wire1path1,...,wire9path1. Disabled andRestore unitybothpaths. FixednegativePKscope/math/current346 lookup preserved. Precompute/validate allfiveknownrateplans beforeANYSET; matching346 chooses oneplan; unsafeatanysupportedrate rejectsbeforecommands, unknownrate stopsno190. Existing188/187 prerequisites remainexplicit/logged. No retry/rollback; failure may leave unequalchannels andrequiresSTOP/review.
+M2Q firstmanualWebgate: fillBand5=400/-12/Q1, explicitpairedApply/listen(bothears equal,center), pairedRestore/listen(bothbaseline), manualconfirmation. Freshpagegate requiredbeforefullnineApply; fullRestore remainsavailablefor explicitunity. Thenfillnegativefullninepreset, paired18Apply/listen/confirmation, paired18Restore/listen/confirmation. No Flash/preamp/positivegain/nonPK/persistence/EQreadback claims; hardwareandprotocolsuccessremainseparate. Codexdidnottesthardware. M2Q softwareREADY, WebstereogatesPENDING.
+
+### Problem / hypothesis / next action
+Observed problem: M2N/M2O Web writes path0only, causing LEFT-only EQ and stereo image shift.
+Verified facts: Henry's cleanbaseline M2P wire5 repeated toggles establishpath0 LEFT/path1 RIGHT, Both equal-and-centered. Same190coefflayout, channelword0 is onlypairedpacketdifference. Allthreeobservations saved in full log; priorCLI finalaggregation omission corrected.
+Possible causes: omissionofpath1 fullyaccountsfortheobservedWebstereodefect given currenthardwaremapping; no newcoefficient/math defect established.
+Ruled out / weakened: path0 broadcasts stereo,1notrightunderthissetup, protocolcompleteisfullstereovalidation,missingCLIaggregate meansBoth observationwaslost.
+Next validation: Henry's isolatedWeb Band5 dualApply/Restore equal-ears/center/recovery gate, then full-nine18pairedwrites andunityRestore. Stopfailure/unequalresults,retainfullWeblog.
+Possible fix direction: currentisolatedpairingimplementation; productionintegrationonlyafterseparateWebhardwarevalidation andlaterexplicitround. NoFlash/preamp/nonPK/positivegain.
+
+## Evidence for upstream / Issue #3 — M2Q
+CleanbaselineM2P wire5 PK400/-12/Q1 hardware:0changesLEFT/EarL/ImageR;1changesRIGHT/EarR/ImageL; pairedsameEQ changesboth/EarB/ImageC. UnitybaselinebothpathsPASS, repeatedreversibleoperationsPASS. Labelsarehardwarederived,notofficialSDKfieldnames. PinnedSDKunityinitialization0then1nowalignswithobservedcomplementarystereopaths; officialsingle190setterstill0only andhistorical57helperpairsstillNO190. PreviousWebbuilderonly0explainsM2Ostereodefect. IsolatedM2Q addswire1..9 paired0/1current-rate190,18writesfullstate,fullpreflight,boundedmatchingCAF,stopfirstfailure/noauto-retry/rollback. Native1LSBquantizeruncertaintyunchanged. WebBand5+fullnineM2QstereoverificationisPENDING; production/Flash/preampunchanged.
+
+### Scope / regression check
+- FreeDSP-specific files: tools/freedsp-native/RamDebug.cs, src/freedsp/webRam.ts, src/freedsp/ramDebugPage.ts, freedsp-ram-debug.html; optionalM2PCLIaggregate in scripts/freedsp/ChannelValidation.psm1.
+- Analysis/test files: nativeTests/Program.cs, tests/freedsp/webRam.test.ts, ramUiStartup.test.ts, channelValidation.tests.ps1.
+- Shared production runtime / bridge HTTP API / process lifecycle files changed: NONE.
+- Non-FreeDSP protocol code changed: NO.
+
+### M2Q final automated verification
+Focusedfrontend2files/19testsPASS; native63synthetic/mocktestsPASS, includingexact2/18writes,currentratepairedcoeffparity,disabled/Restorebothunity,five-ratepreflightfailurebeforeanySET andfailureateachofthe18positionswithnoextraSET/rollback/falsecompletion. M2P12PowerShellmockscenariosPASS includingfinalsummaryaggregation. verify.ps1onceexit0: TypeScript/Vitebuild and19files/156testsPASS. Productionbrowserruntime,SafeRam/ChannelProbe/math,bridgeAPI,devprocesslifecycleunchanged. Generateddistrestored; intendedgitdiffcheckPASS. No physicaldiscovery/connect/SET/GETbyCodex. M2P hardware COMPLETE; M2Q softwareREADY withWebBand5＋fullnine18-writestereoreversalhardwarePENDING; no persistence/readback/productioncompletion claim.

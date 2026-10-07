@@ -74,8 +74,9 @@ function Invoke-FreeDspChannelValidation {
     } catch {$stopReason=$_.Exception.Message}
     finally {
         & $Emit '[M2P 結束摘要]';& $showState
+        foreach($r in $results){& $Emit "$($r.Path) Ear=$($r.Ear) Image=$($r.Image)（紀錄當時 path0=$($r.Path0State)，path1=$($r.Path1State)）"}
         if($stopReason){& $Emit "STOP：$stopReason"}
-        & $Emit '立體聲映射仍未解；退出／返回選單沒有自動 Restore。完整紀錄供後續判讀。'
+        & $Emit '退出／返回選單沒有自動 Restore；摘要彙整聽感，不自動判定新測試是否通過。'
     }
     return [pscustomobject]@{Results=$results.ToArray();StopReason=$stopReason;States=$states;MayRemainActive=($states.Path0 -ne 'UNITY' -or $states.Path1 -ne 'UNITY')}
 }

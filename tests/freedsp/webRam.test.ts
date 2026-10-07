@@ -20,6 +20,20 @@ function fakeBridge(){
  return {bridge:new RamBridge(fetcher),calls,setFail:()=>{fail=true;},setHold:(p:Promise<Response>)=>{hold=p;}};
 }
 describe('M2N Web/native RAM contract; no physical HID',()=>{
+ it('M2Q pairs18 offline packets and both-pathunity; coefficients differ only bypath',()=>{
+   for(const rate of [4,5,6,7,8])for(const restore of [false,true]){
+     const models=fullNinePreset().flatMap(b=>[0,1].map(path=>modelWebBand(b,rate,restore,path)));
+     expect(models.map(m=>m.payload.slice(0,2))).toEqual(Array.from({length:9},(_,i)=>[[0,i+1],[1,i+1]]).flat());
+     for(let i=0;i<18;i+=2){
+       expect(models[i].payload.slice(1)).toEqual(models[i+1].payload.slice(1));
+       expect(models[i].bytes.slice(14)).toEqual(models[i+1].bytes.slice(14));
+       if(restore)expect(models[i].payload.slice(2,8)).toEqual([3,4194304,0,0,0,0]);
+     }
+   }
+   expect(()=>modelWebBand(bands()[0],5,false,2)).toThrow('path');
+   const disabled={...bands()[0],enabled:false};
+   for(const path of [0,1])expect(modelWebBand(disabled,5,false,path).payload.slice(2,8)).toEqual([3,4194304,0,0,0,0]);
+ });
  it('M2O distinguishable negative PK preset validates all nine packets at every known rate',()=>{
    const b=validateBands(fullNinePreset());
    expect(b.map(v=>v.freq)).toEqual([250,400,630,1000,1600,2500,4000,6300,10000]);
