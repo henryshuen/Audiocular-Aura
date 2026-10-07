@@ -28,6 +28,19 @@ function startup(failConnect=false,Bridge?:new()=>RamBridge){
  return {...d,calls:()=>calls};
 }
 describe('M2N frontend startup only; no bridge/HID',()=>{
+ it('invalid gain disables Apply but keeps explicit Restore available without entering transport STOP',async()=>{
+   const f=vi.fn(async(url:RequestInfo|URL)=>new Response(JSON.stringify(String(url).endsWith('/session')
+     ? {token:'A'.repeat(64),mode:'M2N RAM ONLY'} : {ok:true,log:'MOCK unity complete'}),{status:200}));
+   class MockBridge extends RamBridge{constructor(){super(f as typeof fetch);}}
+   const d=startup(false,MockBridge);await d.nodes.connect.listeners.get('click')!();
+   const gain=d.nodes.bands.children[0].children[2].children[0];gain.value='-13';gain.listeners.get('input')!();
+   expect(d.nodes.apply.disabled).toBe(true);expect(d.nodes.restore.disabled).toBe(false);expect(d.nodes.flat.disabled).toBe(false);
+   await d.nodes.apply.listeners.get('click')!();expect(f).toHaveBeenCalledTimes(2);
+   expect(d.nodes.log.value).toContain('EDITOR VALIDATION');expect(d.nodes.status.textContent).not.toContain('STOP');
+   await d.nodes.restore.listeners.get('click')!();await d.nodes.flat.listeners.get('click')!();
+   expect(f).toHaveBeenCalledTimes(4);expect(d.nodes.restore.disabled).toBe(false);expect(d.nodes.flat.disabled).toBe(false);
+   expect(d.nodes.bands.children[0].children[2].children[0].value).toBe('-13');
+ });
  it('M2Q failure stops the page without retry or automatic restore/confirmation',async()=>{
    const actions:string[]=[];
    class FailedBridge extends RamBridge {

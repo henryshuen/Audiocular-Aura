@@ -8,6 +8,7 @@ body{font:16px/1.6 system-ui,sans-serif;max-width:1060px;margin:24px auto;paddin
 <p>僅 Moondrop FreeDSP35D8:1496／Windows native bridge。RAM only；無Flash、Preamp、90。PK負增益。正式頁面的Sync不使用此路徑。</p>
 <p>APO OFF、Windows輸出FreeDSP、初始音量1–2/100；首次Apply耳機離耳。協定成功且無異常後才低音量聽；同曲、同比較音量。異常立即停止。Restore是unity，不是原EQ備份。</p>
 <p>此頁是獨立九段編輯器；初值未讀回裝置，沒有自動Apply。可手動載入正式UI儲存狀態，但不載入tilt／Preamp。</p>
+<p>PK／20–20000Hz／−12..0dB／Q0.1..10 是 debug 安全範圍，並非已確認的硬體限制。無效編輯值只阻擋 Apply；Restore 使用固定 unity，不依賴編輯值。傳輸失敗仍 STOP，不自動重試或還原。</p>
 <button id="connect">連線 FreeDSP（僅metadata）</button><button id="load">載入正式UI儲存的九段</button>
 <p id="status">請使用 .\scripts\dev.ps1，然後連線。尚未送任何命令。</p>
 <div class="scroll"><table><thead><tr><th>UI band → raw slot</th><th>Hz</th><th>dB（負值）</th><th>Q</th><th>Enabled</th><th>Type</th></tr></thead><tbody id="bands"></tbody></table></div>
