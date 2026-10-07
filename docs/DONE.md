@@ -219,3 +219,16 @@
 - 最終verify.ps1 exit0：13files/118tests、TypeScript/Vite build/test typecheck全部通過；新增4項native golden/scope tests。
 - Launcher改為stdout/stderr逐行轉送；以in-memory非法CLI probe驗證完整build/launch/log pump及exit2，沒有執行query346或裝置探索。
 - 最終native build零warning/error、22項offline tests通過；還原tracked dist後git diff --check通過，無production差異。
+
+## 2026-10-07 — M2J M2I hardware record / synchronized implementation
+- 起始git乾淨，fix/freedsp-conexant，M2I c88abcf與origin同步。
+- Henry回報M2I只執行一次：matching HID paths2，MI_03 col01、usage0C/1、input/output62、feature0，SET346/GET均SUCCESS/error0。
+- 回傳已知prefix14bytes：01 00 01 00 bc 80 00 23 2d b3 01 00 00 00；解析command188/reply1/count1/CTRL/words=[1]。
+- 已成立Level1 native HID transport；CAF346 matching未取得，RAM/EQ仍未驗證；沒有把M2I判transport失敗或推論FIFO。
+- 已重播pinned APK12methods與保存fixture完全一致，逐instruction核對initialGET、replybit stop、1000ms及5ms輪詢。
+- Native parser區分structuralCAF與Matching346；runner SET一次、bounded GET，每次RX/分類保存，nonmatch188明列，error停止。
+- Native build0warnings/0errors；30項deterministic fake-clock/mock tests通過，無device exploration/report calls。
+- GENERAL/ROADMAP/DECISIONS/DONE記錄官方reply-only stop與診斷matching correction，沒有新增.md。
+- M2J HARDWARE RESULT PENDING；Codex沒有硬體操作、mutation、driver或production變更。
+- 最終verify.ps1 exit0：13files/119tests及TypeScript/Vite build/test typecheck通過；native build0warnings/0errors、30項mock tests通過。
+- 還原generated tracked dist後，git diff --check通過；僅四docs、native診斷及offline tests有差異，無新增文件或production變更。

@@ -6,8 +6,23 @@ import launcher from '../../scripts/query-freedsp-native.ps1?raw';
 import production from '../../src/main.ts?raw';
 import nativeTests from '../../tools/freedsp-native/Tests/Program.cs?raw';
 import { encodeCaf } from '../../src/freedsp/officialRamProof.ts';
+import sourceText from './fixtures/officialResponseStaticEvidence.json?raw';
 
-describe('M2I native diagnostic deployment boundary; no hardware', () => {
+describe('M2J native diagnostic deployment boundary; no hardware', () => {
+  it('official polling has initial GET, reply-only stop,1000ms budget and5ms sleep, no command matching', () => {
+    const source = JSON.parse(sourceText.replace(/^\uFEFF/, ''));
+    const poll = source.methods.find((m: { name: string }) => m.name === 'getMsgByCmd');
+    const byOffset = new Map<number, { args: string; op: string }>(poll.instructions.map((i: { offset: number; args: string; op: string }) => [i.offset, i]));
+    expect(byOffset.get(86)!.args).toContain('receiveHIDReport');
+    expect(byOffset.get(102)!.args).toContain('currentTimeMillis');
+    expect(byOffset.get(136)!.op).toBe('if-eq');
+    expect(byOffset.get(140)!.args).toContain('1000');
+    expect(byOffset.get(168)!.args).toContain('receiveHIDReport');
+    expect(byOffset.get(194)!.args).toContain('5');
+    expect(byOffset.get(198)!.args).toContain('sleep');
+    expect(poll.instructions.filter((i: { args: string }) => i.args.includes('sendHIDReport'))).toHaveLength(1);
+    expect(poll.instructions.some((i: { args: string }) => /formatByteToInt|from2ByteToInt/.test(i.args))).toBe(false);
+  });
   it('native independent golden equals the already tested official WebHID helper62', () => {
     const golden = nativeTests.match(/Convert.FromHexString\("([0-9A-F]+)" \+ new string\('0', (\d+)\)\)/)!;
     const hex = golden[1] + '0'.repeat(Number(golden[2]));

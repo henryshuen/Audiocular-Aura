@@ -27,7 +27,8 @@ M2F單段官方格式診斷已實作；Henry手動硬體結果PENDING，正常pr
 M2G：Henry回報三次188 host send成功／無matching RX／2.5秒timeout，187/346/190皆未送；無EQ效果結論。
 M2H：M2G346實測rawTotal=0/newEvents=0已回報；正常Windows Chrome的官方Input GET_REPORT替代路徑不可行。
 本輪僅四份docs，Case C不要求手動test；native transport屬後續另輪，M2 RAM proof仍NOT PROVEN。
-M2I：FreeDSP-only native346 helper已建置／離線測試；Windows HID實機查詢PENDING HENRY HARDWARE RESULT，production不改。
+M2I：Henry實測SET346/GET成功、有效CAF188回應，Level1 native transport VERIFIED；matchingCAF346 NOT YET VERIFIED。
+M2J：官方bounded cadence加明列matching correction實作，硬體結果PENDING；production不改、不進RAM190。
 Round 0 結束時 dev server 正在執行，僅監聽 127.0.0.1:5173。
 HTTP 以 curl.exe --noproxy '*' 驗證；一般 Invoke-WebRequest 曾回傳 404，
 直接請求已確認 Vite 頁面正確，未改動系統代理設定。
@@ -102,11 +103,17 @@ Success: Henry can clearly hear the difference while all other variables remain 
 - [x] Case C：無新diagnostic或manual test；只四份docs，不進production implementation。
 - [ ] native transport硬體response及RAM/audio proof：尚未實作/測試，非M2H完成條件。
 
-### M2I — Windows native CAF346 transport proof — implementation READY / hardware PENDING
+### M2I — Windows native CAF346 transport proof — transport VERIFIED / CAF346 NOT YET VERIFIED
 - [x] 固定62-byte官方query、Windows HID/SetupAPI collection gate、SET state API→Input state API。
 - [x] 零外部套件C#/.NET10及one-script launcher；不修改driver、無EQ/Flash或production整合。
 - [x] Synthetic/mock及CLI rejection測試，四份文件同步。
-- [ ] Henry一次native query346完整output；SET/GET/matchingCAF成功前不能稱transport proof完成。
+- [x] Henry一次query：SET346成功、GET成功，有效CAF188/reply1/count1/CTRL/word0=1。
+- [ ] matchingCAF346未取得；RAM190仍未送。Level1與Level2分開，非transport失敗。
+
+### M2J — Native CAF response synchronization — implementation READY / hardware PENDING
+- [x] 官方firstGET/replybit-only/1000ms/5ms流程核對，明列diagnostic matching346 correction。
+- [x] OneSET、bounded GET、全部raw分類、genericCAF parser及mock synchronization tests。
+- [ ] Henry執行一次同步query，matching346前不能稱Level2完成；不進Level3 RAM/EQ。
 
 ## M3 - Full 9-band real-time PEQ — PENDING
 - all 9 bands
@@ -434,6 +441,13 @@ Possible fix direction:
   保持external reportId及descriptor gate。若native words非13，依schema修正呼叫者，不能單純縮buffer。
 
 ## Evidence for upstream / Issue #3
+- M2J hardware update (Henry-reported M2I): Windows SET346 and GET_INPUT_REPORT both SUCCESS/error0;
+  selected MI_03 col01, usage0C/1, input/output62, feature0, two matching HID paths.
+  RX knownprefix01 00 01 00 bc 80 00 23 2d b3 01 00 00 00 = valid CAF188/reply1/count1/CTRL/word0=1.
+  Level1 native HID transport VERIFIED; Level2 CAF346 NOT YET VERIFIED. Full remaining bytes/path not supplied; no FIFO/cache-origin proof.
+- Exact official polling stops on ANY replybit1, not matchingcommand; first188 would stop source helper too.
+  M2J retains oneSET, initialGET then1000ms outerbudget and5ms afterrepeatGET, explicitly adds matching346/error-stop guards.
+  No reSET/mutation. M2J hardware result PENDING; all changes diagnostic, production still unchanged.
 - M2I implementation status: isolated Windows/.NET10 Query346; HID caps/MI03/usage gate, Input1/Output1 preparsed-data validation,
   HidD_SetOutputReport then HidD_GetInputReport, each once. No driver replacement, browser runtime or mutation changes.
   Serializer/parser/mock build evidence only; PENDING HENRY HARDWARE RESULT. Windows USB completion/setup not captured.
@@ -1417,3 +1431,121 @@ Current milestone: M2I — Windows native CAF346 transport proof，implementatio
 - Discarded hypotheses: 子程序hidden就能保證Console輸出直接可見；已以explicit redirected log pump處理。
 - Unresolved fields: PENDING HENRY HARDWARE RESULT；native paths/caps/SET/GET/CAF需實機output。
 - Next search target: Henry一次script完整output；STOP，不進RAM190/production或自動retry。
+
+## M2J — synchronized native CAF query
+
+### Research checkpoint — M2I result and official control flow
+- Examined: Henry的M2I實機摘要、current native code、pinned APK getMsgByCmd/isExecuteSuccess/getCurSampleRate、Microsoft state-report docs。
+- Verified facts: Henry一次實測SET346/GET各success/error0；CAF188 header與logicalword1筆有效。2matching paths，MI03 col01/usage0C1/input/output62/feature0。
+- Verified facts: source12methods本輪重新抽取與fixture相同；官方initialGET不是無條件discard，ANY replybit1即return，沒有command匹配。
+- Hypotheses: retained/current188與新reply尚未ready最合理，但holder/producer/queue模型未確認。
+- Discarded hypotheses: native transport全失敗、CAF188結構invalid、官方會自動略過188直到346。
+- Unresolved fields: matching346、completeRX尾部/fullWindows path、188來源與持有者、actualUSB setup。
+- Next search target: 在oneSET後用source時間bound做matching診斷poll；不送mutation或重複SET。
+
+### M2I verified facts / proof levels
+Henry-reported，非Codex硬體擷取：
+- Native device discovery成功，two matching HID paths，唯一CAF目標MI_03 col01、usagePage000C/usage0001。
+- Windows caps input62/output62/feature0；native report buffer含ID1。
+- SET346返回true/Win32Error0；GET返回true/Win32Error0。
+- 已提供RX prefix14bytes：01 00 01 00 bc 80 00 23 2d b3 01 00 00 00。
+  packed80BC0001 → command188/reply1/count1，moduleB32D2300，word0=1。
+- 此回應是structurally VALID CAF NON-MATCH，不是INVALID CAF或GET failure。完整尾部未提供，不能以零padding假冒capture。
+- Level1 NATIVE HID TRANSPORT VERIFIED（API層bidirectional CAF觀測）；Level2 CAF346 QUERY NOT YET VERIFIED；Level3 RAM/EQ NOT VERIFIED。
+- 無論188來源如何，M2I沒有matching346證據；不判host SET346等於DSP接受346，也不抹掉已成立的Level1。
+
+### Why188 first? — ranked hypotheses, not findings
+| Rank / hypothesis | Evidence supporting | Unresolved / discrimination | Confidence |
+| --- | --- | --- | --- |
+|1 C/A/F: current/retained188 snapshot，346尚未ready；device可能保留last reply |GetInputReport是state API；188有效而346剛送；官方也有GET/sleep輪詢 |單樣本不能判holder或producer；188→346也可能只是延遲更新，非FIFO |MEDIUM |
+|2 D: SET346未產生新response（未處理/不支持/仍pending） |Host success不是DSP acceptance；只有188 |持續188不能區分pending/拒絕/未產生；matching346會削弱此假說 |MEDIUM |
+|3 B: device response queue，firstGET取older188 |單次188與舊命令歷史相容 |沒有consume/order/depth證據；stateAPI不保證FIFO；多GET出現不同命令亦未必queue |LOW/MEDIUM |
+|4 E: Windows HID cached/staged older state |Windows driver位於中間層，尚無actualUSB capture |沒有本機cache來源證據；不能把ReadFile ring-buffer規則套給GetInputReport |LOW |
+|A的來源特定推論: exactly M2F188留下的reply |已知M2F曾送188；現在看到188 |沒有timestamp/transaction關聯，亦未排除其他producer；只算相容，不算歸因確認 |UNKNOWN |
+
+Microsoft將HidD_GetInputReport用於current state；ReadFile/ring buffer的FIFO描述是不同路徑。
+這削弱「原生GET必定consumes FIFO」推論，但不禁止vendor firmware自行queue。
+Sources: [state vs read](https://learn.microsoft.com/en-us/windows-hardware/drivers/hid/obtaining-hid-reports)、
+[Input report API](https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/hidsdi/nf-hidsdi-hidd_getinputreport)。
+
+### Exact official346 polling — full bytecode trace
+| Stage / instruction offsets | Verified behavior |
+| --- | --- |
+|getCurSampleRate0..40 |13long words[62,0×12]，command346，CTRL，reportID1，呼叫getMsgByCmd |
+|getMsgByCmd52 |SET_REPORT一次，無loop resend |
+|66..86 |分配一次freshRX，initialGET一次；之後poll沿用同RX |
+|98..116 |initialGET完成後才建立wallclock起點，elapsed設0 |
+|120..136 |先讀RX[5]bit7；等於1立即return254，firstGET不會無條件丟棄 |
+|140..148 |若無reply，elapsed>=1000則return；沒有固定attemptcount |
+|152..168 |時間未到則repeatGET一次，firstrepeat前沒有sleep |
+|194..198 |每個repeatGET之後sleep5ms，包括之後發現reply那次 |
+|216..252 |重算elapsed，再回到先reply後deadline的loop |
+|UsbHelper0/2/18 |length=array.length，每個Android controlTransfer timeout1000ms；會超過outerwalltime |
+|isExecuteSuccess8..42 |nonnull、replybit1、countU16>=0（冗餘），不比command/module或有效logicalword數 |
+|getCurSampleRate48..90 |helper success後讀fullbufferoffset14/word1；failure−1001；不辨188或驗count>=2 |
+
+因此官方收到本次188/reply1會立刻退出，不繼續等346；若caller認success，就讀capacityword1，並非188的logicalpayload。
+沒有證據支持「官方丟firstGET」「固定N次」「nonmatch就reSET」或「官方檢查command/module」。
+source：tests/freedsp/fixtures/officialResponseStaticEvidence.json完整instruction arrays，本輪靜態replay相同。
+
+### Native synchronized flow / explicit differences
+Original M2I: strict346 parser將188一起判invalid，oneGET立即停。
+Updated M2J: genericCAF structural Valid與Matching346分開；oneSET→initialGET→startouter1000ms→
+若未matching且未deadline，repeatGET→sleep5ms→檢查matching/deadline。每次header/raw/logicalwords/classification皆記錄。
+每個GET標MATCHING CAF346／VALID CAF NON-MATCH／INVALID CAF／GET FAILED；188明列，不藏掉。
+Match須ID1/prefix0/CTRL/reply1/command346/count2..13；word1（offset14）與mapping4..8不變，unknownHz不fallback。
+明確不同於官方：
+- stop條件增加matching346；source遇188會停，本診斷會在sourcebound內繼續。這是Henry要求的query修正，非source原樣。
+- NativeGET false立刻停，不延續官方ignored return；保存attempt/error/fullbuffer，但不當confirmed response解析。
+- 每GET用freshzeroed RX+ID1；官方reuseRX。本機避免carryover，無更改requestID/length或TX。
+- 使用monotonic Stopwatch；Windows HidD沒有per-call1000ms，30slauncherwatchdog只是另層process限制。
+沒有CLI tuning、不增加任意命令、沒有reSET、mutation/driver/production changes。沒有固定attempt上限；bound是官方1000ms。
+理想mock zero-durationGET時最多initial1+200repeats（5ms×200），這是測試推導，不是官方fixed count或實機預期。
+已在期限內開始的nativeGET可能晚回；若matching，reply判斷先於下次deadline，如source，不能宣稱API耗時一定<=1s。
+持續相同188至bound標appears retained/stale，停止；不判FIFO、不繼續hammer。188→346僅支持bounded同步有效／立即oneGET不足。
+
+### Failed approach history — current interpretation
+| Round | Attempt / observed result | Next policy |
+| --- | --- | --- |
+|M2F |WebHID188 hostsuccess→timeout，190未送 |不原樣重試；本次188不能確定歸因M2F |
+|M2G |WebHID346 persistent rawlistener→hostsuccess/rawTotal0/newEvents0 |無parser input；不原樣重試 |
+|M2H |普通Chrome WebUSB/hybrid保護限制 |不當正常deployment，不換driver |
+|M2I |NativeSET346 success＋GETsuccess＋validCAF188 |Level1 VERIFIED，oneGET insufficient for matching346；非transport failure |
+|M2J |Bounded matching GET implementation，oneSET |HARDWARE PENDING，Henry只執行一次，不進190 |
+
+### Problem / hypothesis / next action
+Observed problem:
+- NativeGET有有效CAF188，但沒有matching346；原本oneGET立即停。
+Verified facts:
+- Level1成立；官方replybit-only，first188亦會返回；1000msouterbound/5mspostGET/oneSET已追證。
+Possible causes:
+- retained/currentreply與新回應延遲；新346未產生；devicequeue或Windowsstaging。排序見表，沒有一項已被確認。
+Ruled out / weakened:
+- native GET全失敗、188結構無效、官方必定匹配346、單樣本FIFO、hostsuccess等於DSP接受346。
+Next validation:
+- Henry同一script只執行一次，貼所有GET #N/raw/parse/classifications與finalRESULT；不需localhost/listening/EQ/Git。
+- 若188→346，確認Level2並保留時序；若identical188或error，停止並分析實際attempt/Win32Error，不自動改封包或重試。
+Possible fix direction:
+- 若Level2成立，下一輪再評估其他command的matching與nativebridge；本輪不進RAM190或production。
+
+### Research checkpoint — synchronized implementation
+- Examined: nativegenericCAF/parser、oneSET boundedrunner、sourcepolicy regressiontest、fake-clock cases。
+- Verified facts: nativebuild0warnings/0errors；30offline tests通過，包括188→346、severalnonmatches、all188/deadline、invalid/failure、known/unknownrate、oneSET。
+- Hypotheses: hardware同步是否取得346尚未知；tests全為synthetic/mock，不新增fake hardware capture。
+- Discarded hypotheses: generalCAF Valid必須command346/count>=2；M2I nonmatch可直接叫transport failure。
+- Unresolved fields: Level2 matching346與response origin；Level3RAM/EQ。
+- Next search target: finalverify/scope/Git後停止，等待Henry一次M2Joutput。
+
+### Research checkpoint — M2J verified handoff
+- Examined: final nativediff、30fake-clock/mock tests、13files/119project tests、source12methods replay及scope。
+- Verified facts: verify.ps1 exit0、nativebuild零warning/error、所有tests通過；git diff --check通過，tracked dist已還原。
+- Hypotheses: M2J同步是否返回346尚未實測，queue/snapshot origin仍UNKNOWN。
+- Discarded hypotheses: 將official reply-only stop命名為command matching；將mock188→346序列當hardware evidence。
+- Unresolved fields: Level2 CAF346 pending；Level3 RAM/EQ untouched；完整M2I RX/path未提供。
+- Next search target: commit/push後STOP，Henry執行一次現有query script並貼所有GET，不要求localhost/listening/Git。
+
+### Scope / regression check
+- FreeDSP native code: Caf346.cs、Query346.cs、Program.cs；tests: nativeTests/Program.cs、nativeQueryScope.test.ts。
+- Shared runtime files changed: NONE；Production runtime changed: NO；Non-FreeDSP protocol code changed: NO。
+- Documentation: GENERAL/ROADMAP/DECISIONS/DONE only；New documentation files created: NO。
+- CLI硬體TX仍只有346，SET一次；Codex硬體操作/EQ/Flash writes: NONE。

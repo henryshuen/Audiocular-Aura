@@ -218,7 +218,7 @@ sendReport resolved僅能稱Host write sent／Device acceptance unverified，不
 188/187/190/220是否不讀GET也能生效仍UNKNOWN，不以caller忽略結果推導可省略response。
 本輪Case C：No manual test required this round。禁止RAM/Flash/90/Apply/Restore，停止於M2H。
 
-## Current M2I native query-only policy
+## Historical M2I native query-only policy
 M2F188 timeout未到190；M2G346 host success/raw零事件；M2H一般Chrome無官方Input GET替代路徑，保留歷史，不原樣重試。
 M2I僅tools/freedsp-native的Windows C#/.NET10診斷，唯一CLI為query346；不整合production、不更換driver、不要求admin。
 SetupAPI列出35D8/1496所有matching paths，HidD attributes核對；usagePage0C/usage1、MI_03及input/output caps各62bytes須唯一。
@@ -230,3 +230,15 @@ CLI先驗證args再探索；native SET另有exact346-buffer guard。RX未知inde
 HidD沒有actual bytes-transferred輸出；62是requested/caps buffer length，不能當成已擷取的USB完成長度。
 Codex僅build/mock/offline，不執行Query346或裝置探索；Henry執行一次script並貼完整output，M2I hardware proof保持PENDING。
 文件仍僅GENERAL/ROADMAP/DECISIONS/DONE；本輪結束後停止，不進RAM190/production integration。
+
+## Current M2J synchronized native query policy
+Henry實測M2I一次：2個matching HID paths，MI_03 col01、usage0C/1、input/output62、feature0；SET346與GET皆成功/error0。
+RX已知prefix為01 00 01 00 bc 80 00 23 2d b3 01 00 00 00，CAF188/reply1/count1/CTRL/words=[1]，其餘bytes未提供。
+Level1 native HID transport VERIFIED；Level2 CAF346 QUERY NOT YET VERIFIED；Level3 RAM/EQ NOT VERIFIED。不得稱M2I transport失敗。
+官方getMsgByCmd：SET一次、initialGET一次，之後才開始outer1000ms；replybit1即返回，不匹配command/count/module。
+若initial無reply，每次repeatGET後sleep5ms再檢查reply/deadline；無固定retry count，Android每call timeout1000ms。
+M2J保留官方oneSET/cadence/deadline，明確修正為matching346才完成；官方會停在188，本工具繼續至matching/deadline。
+每個GET保存完整RX與genericCAF分類，188是VALID CAF NON-MATCH；GET失敗立即停止，不reSET或送mutation。
+Windows沒有per-call timeout參數，仍保留30s childwatchdog；freshRX及monotonic clock是診斷適配，不聲稱完全照抄Android。
+Native GetInputReport是state API，不以單一188推論FIFO、Windowscache、priorM2F來源或「GET會消耗queue」。
+硬體唯一TX仍346；Codex只做offline/build，Henry執行script一次；M2J結果PENDING，不進RAM190/Flash/production。

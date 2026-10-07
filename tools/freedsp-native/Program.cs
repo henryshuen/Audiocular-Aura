@@ -16,7 +16,7 @@ Console.WriteLine("FreeDSP Native CAF Query — command346 ONLY");
 Console.WriteLine("VID/PID: 0x35D8 / 0x1496; no EQ/Flash or driver changes");
 Console.WriteLine($"TX preview ({Caf346.ReportBytes} bytes): {Caf346.Hex(Caf346.CreateQuery())}");
 Console.WriteLine("Discovery access=0; query access=GENERIC_READ|GENERIC_WRITE (0xC0000000), share=READ|WRITE (3), synchronous flags=0");
-Console.WriteLine("HidD calls have no timeout parameter. Launcher limits this process to30s; no automatic retries.");
+Console.WriteLine("HidD calls have no timeout parameter. Launcher limits process to30s; GET polling budget1000ms after initial GET, no SET resend.");
 Console.Out.Flush();
 try
 {

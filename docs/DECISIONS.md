@@ -199,3 +199,30 @@ Sources: [SET API](https://learn.microsoft.com/en-us/windows-hardware/drivers/dd
 [Input GET API](https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/hidsdi/nf-hidsdi-hidd_getinputreport)、
 [HIDP_CAPS](https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/hidpi/ns-hidpi-_hidp_caps)、
 [Report ID parser validation](https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/hidpi/nf-hidpi-hidp_initializereportforid)。
+
+## D028 — CAF validity, command matching and proof levels are separate
+Henry提供M2I實測：oneSET346 success/error0，oneGET success/error0，MI03 col01、usage0C/1、input/output62、feature0。
+RX已知14byte prefix可解析CAF188/reply1/count1/CTRL/word0=1；不是matching346，也不是結構無效或transport failure。
+完整buffer剩餘bytes與fullWindows path未貼出，不補零當hardware capture；native188離線案例尾部為明確synthetic padding。
+- Level1 NATIVE HID TRANSPORT VERIFIED：Windows SET成功與GET成功，且取得有效CAF reply（188）；不聲稱fresh346被DSP接受。
+- Level2 CAF346 QUERY VERIFIED：必須匹配346/reply1/CTRL/ID1及logical word1；未知index保留，Hz UNKNOWN。
+- Level3 RAM/EQ VERIFIED：仍NOT VERIFIED，不屬M2J；Level1/2不等同聽感或persistence。
+GenericCAF Valid只檢查ID/prefix/reply/CTRL/count容量，不要求command346或count>=2；Matching346另加query條件。
+這修正M2I「有效188也算INVALID」的混淆；native GET成功但nonmatch不能證query完成。
+
+## D029 — Official cadence with an explicit diagnostic matching correction
+Pinned APK getMsgByCmd先GET@86，建立clock@102後，@120..136檢查buffer[5]replybit，等於1即return@254。
+@140..148檢查elapsed>=1000；未到deadline才GET@168；sleep5@194..198，算elapsed@216..250，回loop@252。
+沒有fixed retry count；firstGET不是無條件discard；首次reply188亦會立即返回，不會「忽略舊command直到346」。
+isExecuteSuccess只nonnull/replybit1及unsignedcount>=0冗餘條件；不比command/module。getCurSampleRate只在success後讀offset14/word1，
+不驗logicalcount>=2、不辨188，失敗回-1001。因此官方接受stale188時可能讀capacityword1，不可照抄成已驗證rate。
+M2J依Henry要求修正匹配：oneSET→initialGET→start1000ms→while未matching且未deadline repeatGET→sleep5ms。
+Valid非matching（含188）及invalidcandidate保留並在bound內繼續；matching判斷先於下一次deadline檢查，已開始的GET可晚回。
+非官方差異明列：①matching346而非anyreply；②nativeGET失敗即停止（官方忽略return）；③freshRX每次、避免buffer殘留；
+④Stopwatch monotonic而非Java wallclock；⑤Windows HidD沒有Android per-call1000ms，只能另有30sprocesswatchdog。
+不是exact Android policy複製，亦不是任意retry參數；CLI不可調deadline/count，不reSET，不送188/187/190/90/220。
+取得188→346支持立即oneGET不足及bounded synchronization有效，但不單憑此序列判FIFO（可能只是時間延遲更新）。
+持續identical188至官方deadline標appears retained/stale，不再讀；GET error記exactattempt/code後停止。
+Snapshot/retained response比FIFO更符合stateAPI描述，device/Windows持有者仍UNKNOWN。
+Source: [Microsoft state vs read report semantics](https://learn.microsoft.com/en-us/windows-hardware/drivers/hid/obtaining-hid-reports)
+及pinned officialResponseStaticEvidence.json完整bytecode；M2J再抽取12methods與fixture完全一致。
