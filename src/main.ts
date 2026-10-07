@@ -1,4 +1,5 @@
 import "./style.css";
+import {mountGraphicalRam} from './freedsp/graphicalRam.ts';
 import {
 	flashToFlash,
 	syncToDevice,
@@ -32,6 +33,8 @@ import {
 	getFocusedBandIndex,
 	getEqState,
 	renderUI,
+	setEqState, setBassTiltState, setTrebleTiltState, setAutoPreampEnabled, setGlobalGainState,
+	getBassTiltState, getTrebleTiltState, getAutoPreampEnabled, getGlobalGainState,
 } from "./fn.ts";
 import { setGlobalGain, log, createRatingElement, createNotesElement } from "./helpers.ts";
 import { exportProfile, exportProfileAsText, importProfile } from "./importExport.ts";
@@ -60,12 +63,27 @@ export type EQ = Band[];
 if (import.meta.env.DEV) {
 	const link = document.createElement("a");
 	link.href = "./freedsp-ram-debug.html";
-	link.textContent = "FreeDSP M2N RAM debug（九段／手動）";
+	link.textContent = "FreeDSP M2R RAM debug（正增益／雙聲道／瞬變）";
 	document.querySelector(".logo-area")?.appendChild(link);
 }
 
 // Initialize state and render PEQ on page load
 initState();
+const freeGraph=import.meta.env.DEV && location.hostname==='localhost' && location.port==='5173'
+  ? mountGraphicalRam({getBands:getEqState,getDevice,log,
+    unsupportedIsZero:()=>getGlobalGainState()===0 && getBassTiltState()===0 && getTrebleTiltState()===0 && !getAutoPreampEnabled(),
+    setBands:(bands)=>{setEqState(bands);document.getElementById('eqStrips')?.replaceChildren();renderUI(bands);},
+    resetUnsupported:()=>{
+      setAutoPreampEnabled(false);setGlobalGainState(0);setBassTiltState(0);setTrebleTiltState(0);
+      const badge=document.getElementById('statusBadge');if(badge){badge.textContent='FreeDSP metadata 已連線（RAM 實驗模式）';badge.classList.remove('badge-offline');badge.classList.add('badge-online');}
+      const genericConnect=document.getElementById('btnConnect');if(genericConnect)genericConnect.style.display='none';
+      for(const id of ['globalGainSlider','checkAutoPreamp','slideBassTilt','slideTrebleTilt']){
+        const e=document.getElementById(id) as HTMLInputElement|null;if(e){e.disabled=true;e.value='0';if(e.type==='checkbox')e.checked=false;}
+      }
+      const tilt=document.getElementById('tiltTextValue');if(tilt)tilt.textContent='FreeDSP: Bass +0.0 dB, Treble +0.0 dB（未支援）';
+      const gain=document.getElementById('globalGainDisplay');if(gain)gain.textContent='FreeDSP preamp 未支援（不送出）';
+      document.querySelectorAll<HTMLInputElement|HTMLButtonElement|HTMLSelectElement>('.utility-card-full input, .utility-card-full select, .utility-card-full button').forEach(e=>e.disabled=true);
+    }}) : null;
 setTimeout(async () => {
 	renderFavorites();
 	await loadDeviceDatabase();
@@ -133,6 +151,7 @@ btnResetFlat?.addEventListener("click", async () => {
 let safetyActionPending: "sync" | "flash" | null = null;
 
 async function safeSyncToDevice() {
+	if(freeGraph?.active()){await freeGraph.sync();return;}
 	if ((window as any).isConfigurationUnsafe?.()) {
 		showSafetyModal("sync");
 	} else {
@@ -141,6 +160,7 @@ async function safeSyncToDevice() {
 }
 
 async function safeFlashToFlash() {
+	if(freeGraph?.active()){log('FreeDSP M2R: Flash 未開放。');return;}
 	if ((window as any).isConfigurationUnsafe?.()) {
 		showSafetyModal("flash");
 	} else {
@@ -229,9 +249,9 @@ btnSafetyProceed?.addEventListener("click", async () => {
 	const action = safetyActionPending;
 	closeSafetyModal();
 	if (action === "sync") {
-		await syncToDevice();
+		if(freeGraph?.active())await freeGraph.sync();else await syncToDevice();
 	} else if (action === "flash") {
-		await flashToFlash();
+		if(freeGraph?.active())log('FreeDSP M2R: Flash 未開放。');else await flashToFlash();
 	}
 });
 

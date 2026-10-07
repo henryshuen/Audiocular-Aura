@@ -8,6 +8,20 @@
 - 安全範圍不是硬體限制；正增益/native/係數/production/preamp/Flash 未修改；Codex 未操作硬體。
 - 本輪驗證：聚焦 2 files／21 tests PASS；verify.ps1 一次 exit0，TypeScript/Vite build 與 19 files／158 tests PASS；git diff --check PASS。首次 sandbox Vitest 因暫存 rename EPERM 未執行測試，正常權限重跑通過。僅 Restore UX 離線驗證，不新增硬體結論。
 
+## 2026-10-08 — M2R long milestone offline implementation
+- 基準 d5e1516；Henry 指定一次備妥隔離驗證與主圖形驗證，後續兩個手動 session。本輪沒有硬體操作；正增益／圖形硬體結果仍 PENDING。
+- webRam validator 支援 PK 每段−12..+12dB，保留 frequency/Q/index/schema checks；另加五個速率量化係數的合成響應估計與6dB正增益預算硬阻擋。Restore 不依賴 editor 或 Apply safety。
+- P1 Band5=1000Hz/+6dB/Q1，其餘unity；P2 三段250/1000/4000Hz各+1/Q1，其餘unity；混合圖形預設再加100Hz/-3/Q1。沒有9×+6預設。
+- 新 graphicalRam bridge-only session 在本地手動關卡之前拒絕連線，從未設置 legacy HID device。主頁明確Sync路由到native；拖曳／數值／profile／undo 維持本地。預檢先於 request，18writes執行由native負責；fault鎖Apply，明確全九段unityRestore仍可用。
+- main/fn/peq 的共享修改限於 FreeDSP session掛接、exact35D8:1496 legacy連線阻擋、編輯器解鎖及原生float圖形分支；其他模式保留原RBJ，非FreeDSP協定程式未修改。FreeDSP GUI48k只是視覺模型；matching346才是實際write rate。
+- 聚焦 mock 已執行真實 updateState 103次本地編輯、mounted connect/mixed/sync/restore、手動gate、unsafe阻擋與faultRestore；沒有硬體存取。四份文件保留 M2Q 負增益硬體PASS與 M2R 未驗證界線。
+
+- Native RamDebug 正增益／五速率量化合成預檢與190單調SET/GET/exchange計時完成；64項離線/mock測試PASS。原Release DLL被既有dev bridge鎖住，測試改用隔離輸出，未停止服務；測試輸出已清理。
+
+- M2R隔離面板完成P1/P2/NEG、每次觀察重設U、最近紀錄確認／矛盾撤銷gate、先unitybaseline及單段累積防護；明確Restore不受invalid/觀察/fault限制。frontend三檔31項focused PASS；TypeScript test compile PASS。
+
+- 最終verify.ps1本輪一次PASS：TypeScript/Vite build、20files/168tests；native64 PASS。generated dist還原、測試暫存移除、git diff --check PASS。四份docs完成；未操作硬體／沒有PR／沒有Flash/preamp或非FreeDSP協定修改。
+
 ## 2026-10-07 — Round 0
 - 確認開始時專案目錄為空，尚非 Git repository。
 - 從 upstream clone 到 D:\Henry\Documents\ChatGPT\AuraPEQ，沒有額外巢狀目錄。
@@ -31,6 +45,8 @@
 - 還原本輪 build 產生的已追蹤 dist 差異；確認 src、package.json、package-lock.json、
   dist 與基準無差異。最終僅新增 docs/ 與 scripts/，未 commit、push 或建立 PR。
 - 未執行任何實體 HID、RAM、Flash、聽感或 Android 測試；沒有硬體成果列為完成。
+
+- Native RamDebug 正增益／五速率量化合成預檢與190單調SET/GET/exchange計時完成；64項離線/mock測試PASS。原Release DLL被既有dev bridge鎖住，測試改用隔離輸出，未停止服務；測試輸出已清理。
 
 ## 2026-10-07 — Round 0.5
 - 開始時 git status 乾淨；目前分支 fix/freedsp-conexant。

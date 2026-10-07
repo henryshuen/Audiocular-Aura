@@ -1,6 +1,67 @@
 ﻿# AuraPEQ FreeDSP Roadmap
 
-> Current gate: M2Q full-nine dual-channel Web RAM hardware PASS (Henry): 18 command190 per Apply/Restore, equal-ear change, centered stereo, normal restoration. Next A positive-gain PK, B click/pop investigation, C Restore UX (offline fix this round), D production Web PEQ integration. No preamp/Flash; production unchanged.
+> Current gate: M2R long milestone READY for Henry manual validation #1/#2. M2Q negative nine-band stereo Apply/Restore hardware PASS. Prepare positive PK, timing/observation panel and gated graphical explicit Sync in ONE build; exactly two future manual sessions. Positive gain and graphical integration hardware results remain PENDING. No preamp/Flash.
+
+## M2R research checkpoint — preparation
+- Examined: d5e1516 baseline; Henry's four screenshots and full milestone request; main/fn graph-edit callbacks, generic safety modal, native RamDebug and existing official RAM/SDK fixtures.
+- Verified: per-band ±12dB does not bound cascade gain; existing generic peak calculation uses 200 log samples, RBJ coefficients and tilt; preamp is checked separately by the modal, not included in that peak. Gain-sum warning is a conservative heuristic, not a calculated cascade peak. Native model differs in float/scaling/Q conversion and is the required FreeDSP write model.
+- Verified: official Java first-enable sequence188 `[1,0×12]`,187 `[0]`,346/current rate,190; setFreeman3EQ has no recovered automatic90 afterward. Official names setFreeman3EQEnabled/setEQCFGIsBypass do not prove187 is a transient-free update window. Historical57helperpairs contain no190. No confirmed smoothing/crossfade/bank/atomic-update mechanism in examined evidence.
+- Hypotheses: one hot coefficient update per wire may produce one perceptual pop because stereo writes are close; approximately9 vs18 is not timestamp-correlated. DSP state, prerequisites and polling effects remain possible.
+- Discarded: allnine+6dB as safe test; perband+12 implies combined+12; generic utility UI implies FreeDSP support; arbitrary mute/commit commands as a click fix.
+- Unresolved: positive hardware behavior, pop cause, official channel names, exact native1LSB rounding, mid-operation sample-rate changes, Flash/preamp/utility semantics.
+- Next target: paired positive-model tests, native preflight composite safety, monotonic190 logs; isolated observations/gate then main graphical local edits and explicit native Sync.
+
+### Research checkpoint — graphical integration
+- Examined: new src/freedsp/graphicalRam.ts session, main explicit Sync/modal routing, fn manual/autoconnect and rendered inputs, peq native float display branch.
+- Verified offline: manual gate prevents metadata connect until user-reported local validation; bridge-only mode does not assign a legacy HID device. Actual updateState ran103 local edits in a VM without queue calls; mounted buttons perform only explicit Sync/Restore. Unsafe or unsupported gain/tilt state blocks transport. Other-mode RBJ coefficients unchanged; FreeDSP plot uses native float48k visual model, actual SET rate remainsmatching346.
+- Hypotheses: graphical perceived PEQ should align with paired model but hardware proof is session#2, not these mocks.
+- Discarded: debounce as sufficient protection from drag writes; generic Proceed Anyway bypassing FreeDSP hard policy; main curve as readback or exactcurrent-rate response.
+- Unresolved: positive and graphical hardware outcome; click cause; native1LSB approximation.
+- Next target: finish isolated observation panel/native timings andfocused tests, finalverify, then the two Henry sessions without another implementation round.
+
+### Research checkpoint — M2R implementation ready
+- Examined: final isolated observation UI, native Safety/TimingHid, paired packet mocks, main graphical mounted controls and actual local-edit callback.
+- Verified offline: 31 focused frontend tests PASS; native64 mock/offline tests PASS. No automatic startup bridge calls; nine rows/Connect render first. Full-nine baseline Restore required before isolated Apply. Single-band accumulation guarded; all Apply plans and composite response checked before transport/SET. Observation selectors resetU after each operation, cannot imply hearing from protocol PASS.
+- Verified: P1/P2/NEG each exact preset records Apply audibleY+stereoC and Restore recoveryY+stereoC before local gate; click/pop optionalU. Latest contradictory observation revokes gate; every hardware operation revokes old gate pending new confirmation. Invalid editor and protocol fault do not disable explicit full-nine Restore; fault prevents further Apply until successful full Restore. This is a new manual unity operation, not automatic rollback/retry.
+- Hypotheses/unresolved: positive audibility/stereo and graphical behavior are PENDING hardware; pop cause remainsUNKNOWN. Host monotonic SET/GET/matching timing is not audio or USB bus capture.
+- Discarded: automatic listening success, stale observation reuse, enabling graphical path on protocol success alone.
+- Next search/validation target: Henry's TWO sessions below; no intermediate coding round or hardware action by Codex.
+
+### M2R final automated verification
+Focused frontend:3files/31tests PASS; test TypeScript compile PASS. Native:64 offline/mock tests PASS using isolated output because existing Henry dev bridge held Release DLL; no service stopped, no hardware touched; temporary output removed. Final verify.ps1 ONCE: TypeScript/Vite build PASS,20files/168tests PASS. Generated tracked dist restored; git diff --check PASS on intended source/docs. Native coefficient serializer/math remains the existing model, with positive validation/safety/timing in isolated executor only. Positive/graphical hardware tests remain PENDING.
+
+## M2R manual validation — same build, two sessions
+Restart old dev with Ctrl+C, then `cd D:\Henry\Documents\ChatGPT\AuraPEQ` and `.\scripts\dev.ps1`; open **http://localhost:5173/**.
+1. Isolated session: click M2R debug link → metadata Connect → Emergency Restore full-nine. P1 fill Band5 1000Hz/+6/Q1 → Apply selected → listen/record audibleY orN/U, stereoC/L/R/U, popN/1/B/M/U → Restore selected → record recovery/stereo/pop. P2 fill three+1 preset → full-nine Apply/record → full-nine Restore/record. NEG fill existing negative-nine → full-nine Apply/record → full-nine Restore/record. Explicit observations only; never selectYES without hearing it. P1/P2/NEG successful centered/recovered records unlock local graphical gate; clicks canremainU.
+2. Graphical session: return main page → gated FreeDSP metadata Connect → explicit Emergency Restore all unity → fill conservative mixed preset (local only) → drag/edit gain/Hz/Q/enable, PK only → check composite → explicit Sync → listen both ears/center → edit again → explicit Sync → Emergency Restore → confirm both sides baseline. Dragging never sends. Restore leaves editor unchanged; resync reapplies editor.
+Safety both sessions: APO OFF, Windows1–2/100 initially, firstpositiveApply IEM out, music only/no test tones; abnormal loudness/noise/distortion stop. No preamp/Flash. Positive boost can clip;6dB budget is not certified headroom.
+
+### Scope / regression check — M2R
+- FreeDSP-specific files changed: src/freedsp/webRam.ts, graphicalRam.ts, ramDebugPage.ts; freedsp-ram-debug.html; tools/freedsp-native/RamDebug.cs; fourprojectdocs.
+- Analysis/test files changed: tests/freedsp/webRam.test.ts, graphicalRam.test.ts, ramUiStartup.test.ts; tools/freedsp-native/Tests/Program.cs.
+- Shared runtime files changed: src/main.ts, src/fn.ts, src/peq.ts strictly for FreeDSP routing/editor/native visual model. Generic protocol sender/math branch unchanged.
+- Non-FreeDSP protocol code changed: NO.
+
+## Evidence for upstream / Issue #3 — M2R offline increment
+- Hardware VERIFIED (Henry): UI1..9→wire1..9; path0 LEFT/path1 RIGHT, hardware-derived names; M2Q negative full-nine Apply/Restore each18command190, equal-ear/center/recovery PASS. Invalid-editor explicit unity Restore regression verified offline.
+- Offline implemented: PK±12 coefficient validation; identical stereo plans precomputed at allfive knownrates before ANY SET; matching346 selects one current rate. Positive budget≤6dB plus sampled quantized cascade peak≤6.1dB hard-block, no Proceed Anyway/preamp. +12 mathematical support does not authorize +12 Apply under this test budget.
+- Positive and graphical hardware validation PENDING. Main GUI bridge-only gate prevents legacy HID sender and realtime drag writes; explicit Sync/Restore only. No readback/persistence claim.
+- Click evidence: approximately9 transient sounds reported per18writes; no190 in historical57helper pairs. Recovered Java first-enable188→187→346→190 does not establish mute/smoothing/atomic commit. No extra protocol commands added. Host Stopwatch SET/GET/exchange logs are instrumentation, not USB/audio timestamps.
+- UNKNOWN: exact pop cause, official SDK channel names, native1LSB rounding, preamp, persistence/Flash, generic utility-control support. Next evidence: one isolated positive/negative observation session, followed by gated graphical session in the same build.
+
+## M2R future roadmap after both PEQ sessions pass
+1. Preamp: investigate real global-gain protocol; old setGlobalGainConexant was a no-op. No biquad stacking emulation. Negative/positive gain, Auto Preamp and headroom require evidence.
+2. Global Tone Tilt: determine native support versus translation to supported PEQ; neither assumed or implemented now.
+3. Device Utility Controls: DAC filter/amp mode/gain mode/channel balance/mic loopback/mic gain/factory reset/refresh database/firmware version are UNKNOWN for the generic main controls' FreeDSP protocol support. debugInspect confirms only exact HID collection/metadata, no SET/GET and no firmware query. UI availability is not support evidence; no generic command sent.
+4. Persistence/Flash: separate command220/official persistence study and explicit hardware validation plan only after RAM/controls stable; no Flash now.
+
+### Problem / hypothesis / next action
+Observed problem: M2Q stereo works but ~9 clicks per Apply/Restore; positive gain and graphical Sync remain unverified.
+Verified facts: paired19018writes at current rate work for negative PK; invalid editor no longer blocks unity Restore. Graph drag callback currently queues only if legacy device exists.
+Possible causes: hot replacement/state discontinuity, not established. Combined boost can greatly exceed each filter's gain.
+Ruled out / weakened: path0-only as current paired-write issue; need for another implementation round between isolated and graphical manual sessions.
+Next validation: software/mocks first; Henry session#1 P1/P2/negative Apply/Restore stereo/audible/click observations, then session#2 gated graphical mixed edits/Sync/Restore in same build.
+Possible fix direction: one positive PK RAM pipeline, explicit-only updates, perband±12 plus conservative6dB positive budget and quantized-model sampledpeak≤6.1dB (0.1dB numerical allowance). Restore independent of editor/observations; no speculative hardware commands.
 
 ## 2026-10-08 — M2Q hardware evidence update / Restore UX
 Henry 回報全九段 Apply／Restore 各 18 command190 PASS，雙耳等量、中心不偏、Restore 正常。負增益九段有預期強烈頻譜塑形；低頻手動塑形有 high-pass-like 聽感，支持 per-wire frequency/gain 行為，不等於頻率響應量測或 HP filter 驗證。本輪依使用者回報，未提供／檢查新 raw log，Codex 不操作硬體。

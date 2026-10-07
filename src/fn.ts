@@ -14,6 +14,7 @@ import { enableControls, log, updateGlobalGainUI, refreshStripUI, updateGlobalGa
 import type { Band, EQ } from "./main.ts";
 import { renderPEQ, resizeCanvas } from "./peq.ts";
 import { t } from "./i18n.ts";
+import {isExperimentalFreeDspActive,isFreeDsp} from './freedsp/graphicalRam.ts';
 
 /**
  * STATE
@@ -654,28 +655,28 @@ export function renderUI(eqState: EQ) {
 					<div class="slider-container">
 						<span class="slider-label">${t("band_gain") || "Gain (dB)"}</span>
 						<input type="range" orient="vertical" min="-12" max="12" step="0.1" value="${band.gain}" 
-							oninput="window.updateState(${i}, 'gain', this.value)" onchange="window.pushHistory()" ${device ? "" : "disabled"} class="vertical-slider">
+							oninput="window.updateState(${i}, 'gain', this.value)" onchange="window.pushHistory()" ${device || isExperimentalFreeDspActive() ? "" : "disabled"} class="vertical-slider">
 						<div class="gain-input-wrapper">
 							<input type="number" value="${band.gain}" step="0.1" min="-12" max="12"
-								onchange="window.updateState(${i}, 'gain', this.value); window.pushHistory()" id="num-gain-${i}" ${device ? "" : "disabled"} class="strip-input font-mono" size="6">
+								onchange="window.updateState(${i}, 'gain', this.value); window.pushHistory()" id="num-gain-${i}" ${device || isExperimentalFreeDspActive() ? "" : "disabled"} class="strip-input font-mono" size="6">
 						</div>
 					</div>
 
 					<div class="strip-field">
 						<label class="strip-field-label">${t("band_freq") || "Freq (Hz)"}</label>
 						<input type="number" value="${band.freq}" min="20" max="20000" step="1"
-							onchange="window.updateState(${i}, 'freq', this.value); window.pushHistory()" id="num-freq-${i}" ${device ? "" : "disabled"} class="strip-input font-mono" size="6">
+							onchange="window.updateState(${i}, 'freq', this.value); window.pushHistory()" id="num-freq-${i}" ${device || isExperimentalFreeDspActive() ? "" : "disabled"} class="strip-input font-mono" size="6">
 					</div>
 
 					<div class="strip-field">
 						<label class="strip-field-label">${t("band_q") || "Q Factor"}</label>
 						<input type="number" value="${band.q}" min="0.1" max="10" step="0.05"
-							onchange="window.updateState(${i}, 'q', this.value); window.pushHistory()" id="num-q-${i}" ${device ? "" : "disabled"} class="strip-input font-mono" size="6">
+							onchange="window.updateState(${i}, 'q', this.value); window.pushHistory()" id="num-q-${i}" ${device || isExperimentalFreeDspActive() ? "" : "disabled"} class="strip-input font-mono" size="6">
 					</div>
 
 					<div class="strip-field">
 						<label class="strip-field-label">${t("band_type") || "Type"}</label>
-						<select onchange="window.updateState(${i}, 'type', this.value); window.pushHistory()" id="sel-type-${i}" ${device ? "" : "disabled"} class="strip-select">
+						<select onchange="window.updateState(${i}, 'type', this.value); window.pushHistory()" id="sel-type-${i}" ${device || isExperimentalFreeDspActive() ? "" : "disabled"} class="strip-select">
 							<option value="PK" ${band.type === "PK" ? "selected" : ""}>${t("band_type_peak") || "Peak"}</option>
 							<option value="LSQ" ${band.type === "LSQ" ? "selected" : ""}>${t("band_type_low") || "Low Shelf"}</option>
 							<option value="HSQ" ${band.type === "HSQ" ? "selected" : ""}>${t("band_type_high") || "High Shelf"}</option>
@@ -703,6 +704,7 @@ export function renderUI(eqState: EQ) {
  */
 export async function connectToDevice() {
 	try {
+		if(isExperimentalFreeDspActive()){log('先結束 FreeDSP 實驗圖形模式，再連線其他 DAC。');return;}
 		// Build filters dynamically from activeDacs database to include all supported VIDs
 		const vendorIds = new Set<number>([
 			VID_AUDIOCULAR,
@@ -760,6 +762,8 @@ export async function connectToDevice() {
 
 		console.debug(`[DEBUG] connectToDevice: selected device collections:`, dev.collections?.map(c => `UsagePage: 0x${c.usagePage?.toString(16)}, Usage: 0x${c.usage?.toString(16)}`));
 
+		if(isFreeDsp(dev)){log('FreeDSP 請使用 M2R native bridge 連線；舊 WebHID sender／utility 未開放。');return;}
+		if(isExperimentalFreeDspActive())return; // Recheck after the asynchronous browser chooser.
 		device = dev;
 		(window as any).device = dev;
 		await dev.open();
@@ -1034,6 +1038,7 @@ export async function updateState(
  * Scan for previously authorized WebHID devices and connect automatically
  */
 export async function autoConnectDevice() {
+	if(isExperimentalFreeDspActive())return;
 	if (!navigator.hid) return;
 	if (device) return; // Prevent auto-connecting when already connected
 	try {
@@ -1070,6 +1075,8 @@ export async function autoConnectDevice() {
 
 		// FreeDSP DEV validation uses the isolated native bridge; no legacy auto-connect/preamp side effects.
 		if (import.meta.env.DEV && dev.vendorId === 0x35d8 && dev.productId === 0x1496) return;
+		if(isFreeDsp(dev))return; // Production build must not silently use the legacy unvalidated sender.
+		if(isExperimentalFreeDspActive())return; // Recheck after getDevices resolves.
 
 		device = dev;
 		(window as any).device = dev;

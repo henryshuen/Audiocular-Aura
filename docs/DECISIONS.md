@@ -7,6 +7,11 @@
 本地驗證先於 bridge 呼叫攔截且不設 fault；Restore 固定九列合法 gain0/PK 快照、保留 action/uiIndex，native 既有 Restore 分支生成 unity。保留 editor、不自動 TX。真正 bridge/native 失敗仍 STOP，不解鎖未知狀態重試。
 debug 安全範圍不是 hardware limit；native/math/190/API/production/non-FreeDSP 不改；手動確認按鈕無已確認 bug。
 
+## M2R preparation decision — one build / two manual sessions
+Use existing native PK math/dynamicGain/signed24; extend validation, not protocol. Perband±12 and conservativepositivebudget6 are independent. Estimate combined response from quantized native-model coefficients at all5knownrates on a loggrid plusbandcenters/DC/Nyquist. Dense grid does not prove a continuous maximum; idealPKpositivegain sum provides an additional conservative budget, with0.1dB numerical allowance for estimated quantizedpeak. +12 coefficient representability can pass while actual Apply is blocked by6dB policy.
+P1 onlyBand5+6/1000/Q1; P2 onlythree separated+1/Q1, never9×+6. Do not add undocumented mute/commit: examined official enable/bypass names and first-enable sequence do not establish click-free update semantics. Timing logs must distinguish SET start/end and matching reply/poll interval; no claimed physical USB timing accuracy.
+Separate graphical native session from generic WebHID device state so drag and automatic profile/undo sync cannot emit190. Main explicit Sync hooks gated session only; exactFreeDSP legacyconnectionblocked, non-FreeDSP unchanged. Local storage manual gate is user-reported evidence, not device authentication or firmware validation; native body/preflight checks still apply. No PR, hardware access, preamp/tilt/Flash or generic utility commands.
+
 ## D001
 Do not change Conexant packet code before a reproducible local baseline exists.
 
@@ -358,3 +363,6 @@ M2O protocol/effect/recovery passed but stereo failed because Web190word0 was al
 M2Q firstmanualWebgate: fillBand5=400/-12/Q1, explicitpairedApply/listen(bothears equal,center), pairedRestore/listen(bothbaseline), manualconfirmation. Freshpagegate requiredbeforefullnineApply; fullRestore remainsavailablefor explicitunity. Thenfillnegativefullninepreset, paired18Apply/listen/confirmation, paired18Restore/listen/confirmation. No Flash/preamp/positivegain/nonPK/persistence/EQreadback claims; hardwareandprotocolsuccessremainseparate. Codexdidnottesthardware. M2Q softwareREADY, WebstereogatesPENDING.
 
 M2Q decision: promote0=LEFT/1=RIGHT tohardwarevalidatedmapping for thisFreeDSPtarget,notofficialnames. Paireveryisolateddebugrequestperwire,calculatecoeffonce/reuseboth,fullfive-ratepreflightbeforeanySETtofulfillwrite-preparationrequirementwithoutassumingcurrentrate. Conservativelyrejectfilterunsafeatanyknownrate;346selectsactualrate,no fallback andnotfive-ratewrite-loop. Exactpacketperrequest allowlist andglobalSafeRam.IsAllowedReport remainunchanged. GatefullnineApplyonfreshBand5Webstereoreversal; pairedRestoreavailablewithoutgateforunitycleanup. PreserveproductionSync/bridgeAPI/188187/currentrate/math andnegativePKlimits. OptionalCLIaggregateprintsallrecordedobservationswithoutinferingnewpass. Do notpromoteM2Qtohardwarecompletefrommocks.
+
+### M2R manual evidence gate
+LocalStorage gate is user-reported evidence, not device readback or authentication. Exact P1/P2/negative Apply and Restore records plus centered/recovery confirmation are required; latest contradiction and new hardware operations revoke old approval. Full-nine explicit Restore remains available after STOP, is a distinct unity request, and never an automatic failed-packet retry.
