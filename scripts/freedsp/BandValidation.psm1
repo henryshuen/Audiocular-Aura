@@ -40,6 +40,7 @@ function Get-FreeDspSummary {
         $lines.Add('Audible Restore: ' + $r.AudibleRestore)
         $classification = 'NOT TESTED / PENDING'
         if ($r.ProtocolApply -eq 'FAIL' -or $r.ProtocolRestore -eq 'FAIL') { $classification = 'FAILED / REVIEW REQUIRED' }
+        elseif ($r.AudibleApply -eq 'NO') { $classification = 'AUDIBLE VALIDATION FAILED / NO CLEAR DIFFERENCE' }
         elseif ($r.ProtocolApply -eq 'PASS' -and $r.ProtocolRestore -eq 'PASS') {
             if ($r.AudibleApply -eq 'YES' -and $r.AudibleRestore -eq 'YES') { $classification = 'VERIFIED' }
             elseif ($r.AudibleApply -eq 'NO') { $classification = 'PROTOCOL-ONLY / NO AUDIBLE CHANGE / REVIEW REQUIRED' }
@@ -72,7 +73,7 @@ function Invoke-FreeDspBandValidation {
         SdkBand = $_; Wire = $_ + 5; ProtocolApply = 'NOT RUN'; AudibleApply = 'NOT TESTED';
         ProtocolRestore = 'NOT RUN'; AudibleRestore = 'NOT TESTED'
     } })
-    $stopReason = ''; $activeBand = 0
+    $stopReason = ''; $activeBand = 0; $firstApply = $true
     try {
         & $Emit 'FreeDSP M2L Remaining Band Validation; SDK0/wire5 VERIFIED in M2K, not retested.'
         & $Emit "StartSdkBand=$firstBand; testing SDK$firstBand/wire$($firstBand+5) through SDK4/wire9, one at a time."
@@ -83,37 +84,50 @@ function Invoke-FreeDspBandValidation {
         & $Emit 'Q never auto-restores; if already applied, the test band may remain active. Do not retry or test later bands.'
         foreach ($r in ($results | Where-Object { $_.SdkBand -ge $firstBand })) {
             & $Emit ("=== Test {0}/{1}: SDK{2} -> wire{3} ===" -f ($r.SdkBand-$firstBand+1), (5-$firstBand), $r.SdkBand, $r.Wire)
-            $answer = Read-FreeDspChoice $ReadAnswer $Emit 'Press ENTER to APPLY (Q to abort).' @('', 'Q')
-            if ($answer -eq 'Q') { $stopReason = "Aborted before SDK$($r.SdkBand) Apply"; break }
-            $activeBand = $r.Wire # A partial/failed write cannot be assumed harmless.
-            $marker = "SDK$($r.SdkBand) / wire$($r.Wire) APPLY"
-            & $Emit "===== $marker BEGIN ====="
-            try {
-                $code = & $RunProtocol $r.SdkBand $false $Emit
-                if ($null -eq $code -or $code -isnot [int]) { throw 'Protocol runner returned no valid exit code' }
-                $r.ProtocolApply = $(if ($code -eq 0) { 'PASS' } else { 'FAIL' })
-            } catch { $r.ProtocolApply = 'FAIL'; & $Emit ('ERROR: ' + $_.Exception.Message) }
-            finally { & $Emit "===== $marker END =====" }
-            if ($r.ProtocolApply -ne 'PASS') { $stopReason = "Apply protocol failure: $marker; do not listen, restore or continue"; break }
-            if ($r.SdkBand -eq $firstBand) { & $Emit 'Protocol success: only if no abnormal output, wear IEM and listen at low volume; adjust slightly if needed, then keep comparison volume fixed.' }
-            $answer = Read-FreeDspChoice $ReadAnswer $Emit 'Listen: did sound clearly change? ENTER=yes; N=no; S=subtle/uncertain; Q=abort.' @('', 'N', 'S', 'Q')
-            $r.AudibleApply = switch ($answer) { '' { 'YES' } 'N' { 'NO' } 'S' { 'UNCERTAIN' } 'Q' { 'ABORTED' } }
-            if ($answer -eq 'Q') { $stopReason = "Aborted after wire$($r.Wire) Apply; include both log sections, especially for abnormal audio"; break }
-            $answer = Read-FreeDspChoice $ReadAnswer $Emit 'Press ENTER to RESTORE the SAME band (Q to abort).' @('', 'Q')
-            if ($answer -eq 'Q') { $stopReason = "Aborted before wire$($r.Wire) Restore"; break }
-            $marker = "SDK$($r.SdkBand) / wire$($r.Wire) RESTORE"
-            & $Emit "===== $marker BEGIN ====="
-            try {
-                $code = & $RunProtocol $r.SdkBand $true $Emit
-                if ($null -eq $code -or $code -isnot [int]) { throw 'Protocol runner returned no valid exit code' }
-                $r.ProtocolRestore = $(if ($code -eq 0) { 'PASS' } else { 'FAIL' })
-            } catch { $r.ProtocolRestore = 'FAIL'; & $Emit ('ERROR: ' + $_.Exception.Message) }
-            finally { & $Emit "===== $marker END =====" }
-            if ($r.ProtocolRestore -ne 'PASS') { $stopReason = "Restore protocol failure: $marker; do not continue"; break }
-            $activeBand = 0
-            $answer = Read-FreeDspChoice $ReadAnswer $Emit 'SAME song/volume: did sound return? ENTER=yes; N=no; P=partial/uncertain; Q=abort.' @('', 'N', 'P', 'Q')
-            $r.AudibleRestore = switch ($answer) { '' { 'YES' } 'N' { 'NO' } 'P' { 'PARTIAL/UNCERTAIN' } 'Q' { 'ABORTED' } }
-            if ($answer -ne '') { $stopReason = "wire$($r.Wire) audible restoration not confirmed; stop before next band"; break }
+            $state = 'UNKNOWN (no operation in this run yet)'
+            $applied = $false; $restored = $false
+            while ($true) {
+                & $Emit "Current band: SDK$($r.SdkBand) -> wire$($r.Wire); STATE: $state"
+                $answer = Read-FreeDspChoice $ReadAnswer $Emit 'A=APPLY; R=RESTORE; ENTER=CONFIRM VERIFIED; N=NO CLEAR DIFFERENCE; Q=ABORT.' @('A','R','','N','Q')
+                if ($answer -eq 'Q') { $stopReason = "Aborted at wire$($r.Wire)"; break }
+                if ($answer -eq 'N') {
+                    $r.AudibleApply = 'NO'; $r.AudibleRestore = 'UNCONFIRMED'
+                    $stopReason = "wire$($r.Wire) audible validation failed / no clear difference"; break
+                }
+                if ($answer -eq '') {
+                    if (-not $applied -or -not $restored) {
+                        & $Emit 'Confirm blocked: successful APPLY and RESTORE are required at least once in this band.'
+                        continue
+                    }
+                    $r.AudibleApply = 'YES'; $r.AudibleRestore = 'YES'
+                    if ($activeBand -gt 0) { $stopReason = "Confirmed wire$($r.Wire), but still APPLIED; stopping before later bands to avoid accumulating filters" }
+                    break
+                }
+                $isRestore = $answer -eq 'R'
+                $phase = $(if ($isRestore) { 'RESTORE' } else { 'APPLY' })
+                if (-not $isRestore) { $activeBand = $r.Wire }
+                $marker = "SDK$($r.SdkBand) / wire$($r.Wire) $phase"
+                & $Emit "===== $marker BEGIN ====="
+                try {
+                    $code = & $RunProtocol $r.SdkBand $isRestore $Emit
+                    if ($null -eq $code -or $code -isnot [int]) { throw 'Protocol runner returned no valid exit code' }
+                } catch { $code = 7; & $Emit ('ERROR: ' + $_.Exception.Message) }
+                finally { & $Emit "===== $marker END =====" }
+                $pass = $(if ($code -eq 0) { 'PASS' } else { 'FAIL' })
+                if ($isRestore) { $r.ProtocolRestore = $pass } else { $r.ProtocolApply = $pass }
+                if ($code -ne 0) { $stopReason = "$phase protocol failure: $marker; do not listen, retry or continue"; break }
+                if ($isRestore) { $restored = $true; $state = 'RESTORED'; $activeBand = 0 }
+                else {
+                    $applied = $true; $state = 'APPLIED'
+                    if ($firstApply) {
+                        & $Emit 'Protocol success: only if no abnormal output, wear IEM and listen at low volume; keep comparison volume fixed.'
+                        $firstApply = $false
+                    }
+                }
+                & $Emit "===== STATE: $state ====="
+                & $Emit 'Listen now at SAME song/volume. Toggle A/R as needed; no automatic operation follows.'
+            }
+            if ($stopReason) { break }
         }
     } catch { $stopReason = 'Interrupted/error: ' + $_.Exception.Message }
     finally {

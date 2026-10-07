@@ -25,7 +25,8 @@ $emit = {
 }.GetNewClosure()
 try {
     & $emit ('Full log saved to: ' + $logPath)
-    & $emit 'Starting M2L offline build; no hardware command until you press ENTER at APPLY.'
+    & $emit 'Starting M2L offline build; no hardware command until you choose A or R.'
+    & $emit 'Toggle mode: A=Apply; R=Restore; Enter=confirm after both succeed; N=no clear difference; Q=abort.'
     $dotnet = (Get-Command dotnet.exe -ErrorAction Stop).Source
     $project = Join-Path $projectRoot 'tools\freedsp-native\FreeDspQuery.csproj'
     $dll = Join-Path $projectRoot 'tools\freedsp-native\bin\Release\net10.0\FreeDspQuery.dll'
