@@ -1,3 +1,4 @@
+import {attachFreeDsp,detachFreeDsp,selectCafDevice,isFreeDsp} from './freedsp/webHid.ts';
 import {
 	DEFAULT_FREQS,
 	DEFAULT_LABELS,
@@ -14,7 +15,7 @@ import { enableControls, log, updateGlobalGainUI, refreshStripUI, updateGlobalGa
 import type { Band, EQ } from "./main.ts";
 import { renderPEQ, resizeCanvas } from "./peq.ts";
 import { t } from "./i18n.ts";
-import {isExperimentalFreeDspActive,isFreeDsp} from './freedsp/graphicalRam.ts';
+import {isExperimentalFreeDspActive} from './freedsp/graphicalRam.ts';
 
 /**
  * STATE
@@ -330,7 +331,7 @@ export async function undo() {
 	renderUI(eqState);
 
 	if (device) {
-		await syncToDevice();
+		if(!isFreeDsp(device))await syncToDevice();
 	}
 	updateUndoRedoButtons();
 }
@@ -347,7 +348,7 @@ export async function redo() {
 	renderUI(eqState);
 
 	if (device) {
-		await syncToDevice();
+		if(!isFreeDsp(device))await syncToDevice();
 	}
 	updateUndoRedoButtons();
 }
@@ -462,7 +463,7 @@ export async function setABCompareState(state: "Off" | "A" | "B") {
 	setGlobalGain(globalGainState);
 
 	if (device) {
-		await syncToDevice();
+		if(!isFreeDsp(device))await syncToDevice();
 	}
 	updateSlotLabel();
 }
@@ -530,7 +531,7 @@ export function resetBand(index: number) {
 	eqState[index].enabled = true;
 
 	renderUI(eqState);
-	if (device) {
+	if (device && !isFreeDsp(device)) {
 		queueRealtimeBandWrite(device, eqState[index]);
 	}
 	pushHistory();
@@ -541,7 +542,7 @@ export function toggleBandEnabled(index: number) {
 	eqState[index].enabled = !eqState[index].enabled;
 
 	renderUI(eqState);
-	if (device) {
+	if (device && !isFreeDsp(device)) {
 		queueRealtimeBandWrite(device, eqState[index]);
 	}
 	pushHistory();
@@ -720,6 +721,7 @@ export async function connectToDevice() {
 		});
 
 		const filters: any[] = Array.from(vendorIds).map(vid => ({ vendorId: vid }));
+ filters.push({vendorId:0x35d8,productId:0x1496,usagePage:12,usage:1});
 
 		// Check for custom VID/PID overrides in the UI
 		const customVidEl = document.getElementById("customVid") as HTMLInputElement;
@@ -756,13 +758,13 @@ export async function connectToDevice() {
 			return;
 		}
 
-		const dev = devices.find(d =>
+		const dev = devices.some(isFreeDsp) ? selectCafDevice(devices) : devices.find(d =>
 			d.collections && d.collections.some(c => c.usagePage !== undefined && c.usagePage >= 0xff00 && c.usagePage <= 0xffff)
 		) || devices[0];
 
 		console.debug(`[DEBUG] connectToDevice: selected device collections:`, dev.collections?.map(c => `UsagePage: 0x${c.usagePage?.toString(16)}, Usage: 0x${c.usage?.toString(16)}`));
 
-		if(isFreeDsp(dev)){log('FreeDSP 請使用 M2R native bridge 連線；舊 WebHID sender／utility 未開放。');return;}
+		if(isFreeDsp(dev))attachFreeDsp(dev,log); // Register CAF listener before open; no automatic TX.
 		if(isExperimentalFreeDspActive())return; // Recheck after the asynchronous browser chooser.
 		device = dev;
 		(window as any).device = dev;
@@ -829,8 +831,7 @@ export async function connectToDevice() {
 		if (disconnectSection) disconnectSection.style.display = "flex";
 
 		enableControls(true);
-		loadManualPreampState();
-		configurePreampUI(globalGainState);
+		if(isFreeDsp(dev))configureFreeDspUI(true);else{loadManualPreampState();configurePreampUI(globalGainState);}
 
 		setupListener(device);
 
@@ -839,7 +840,7 @@ export async function connectToDevice() {
 		if (protocol === "SAVITECH" || protocol === "FIIO_JA11" || protocol === "MOONDROP") {
 			await readDeviceParams(device);
 		} else {
-			log("Note: Parameter reading is only supported for Savitech, FiiO JA11, and Moondrop devices. Starting with a flat profile.");
+			log(isFreeDsp(dev)?"FreeDSP WebHID已open；沒有PEQ讀回，editor為本地值，RAM須明確Sync。":"Note: Parameter reading is only supported for Savitech, FiiO JA11, and Moondrop devices. Starting with a flat profile.");
 			renderUI(eqState);
 		}
 
@@ -850,11 +851,12 @@ export async function connectToDevice() {
 			setLastAppliedEqName(savedName);
 		}
 
-		if (autoPreampEnabled) {
+		if (autoPreampEnabled && !isFreeDsp(dev)) {
 			await recalculateAutoPreamp(true);
 		}
 	} catch (err) {
-		log(`Connection Error: ${(err as Error).message}`);
+		if(device && isFreeDsp(device) && !device.opened){detachFreeDsp(device);device=null;(window as any).device=null;}
+        log(`Connection Error: ${(err as Error).message}`);
 	}
 }
 
@@ -865,6 +867,7 @@ export async function disconnectDevice() {
 	if (!device) return;
 	const protocol = getProtocol(device);
 	try {
+		if(isFreeDsp(device)){detachFreeDsp(device);configureFreeDspUI(false);}
 		log(`Disconnecting from: ${device.productName || "DAC"}`);
 		await device.close();
 	} catch (err) {
@@ -952,8 +955,8 @@ export async function resetToDefaults() {
 	setLastAppliedEqName("Flat Profile (Default)");
 	initSlots();
 
-	await syncToDevice();
-	log("Defaults applied and synced.");
+	if(!isFreeDsp(device))await syncToDevice();
+	log(isFreeDsp(device)?"FreeDSP defaults只更新本地；尚未Sync RAM。":"Defaults applied and synced.");
 	pushHistory();
 }
 
@@ -986,9 +989,9 @@ export async function resetToFlat() {
 	initSlots();
 
 	if (device) {
-		await syncToDevice();
+		if(!isFreeDsp(device))await syncToDevice();
 	}
-	log("Flat neutral profile applied and synced.");
+	log(isFreeDsp(device)?"FreeDSP Flat只重設本地editor；硬體Restore請用獨立unity按鈕。":"Flat neutral profile applied and synced.");
 	pushHistory();
 }
 
@@ -1026,7 +1029,7 @@ export async function updateState(
 
 	setLastAppliedEqName("Custom Profile (Tweaked)");
 
-	if (device) {
+	if (device && !isFreeDsp(device)) {
 		queueRealtimeBandWrite(device, eqState[index]);
 	}
 }
@@ -1073,7 +1076,7 @@ export async function autoConnectDevice() {
 
 		if (!dev) return;
 
-		// FreeDSP DEV validation uses the isolated native bridge; no legacy auto-connect/preamp side effects.
+		// M2S FreeDSP requires explicit original CONNECT during event-transport validation; no auto TX.
 		if (import.meta.env.DEV && dev.vendorId === 0x35d8 && dev.productId === 0x1496) return;
 		if(isFreeDsp(dev))return; // Production build must not silently use the legacy unvalidated sender.
 		if(isExperimentalFreeDspActive())return; // Recheck after getDevices resolves.
@@ -1108,8 +1111,7 @@ export async function autoConnectDevice() {
 		if (disconnectSection) disconnectSection.style.display = "flex";
 
 		enableControls(true);
-		loadManualPreampState();
-		configurePreampUI(globalGainState);
+		if(isFreeDsp(dev))configureFreeDspUI(true);else{loadManualPreampState();configurePreampUI(globalGainState);}
 		setupListener(dev);
 
 		const protocol = getProtocol(dev);
@@ -1126,7 +1128,7 @@ export async function autoConnectDevice() {
 			setLastAppliedEqName(savedName);
 		}
 
-		if (autoPreampEnabled) {
+		if (autoPreampEnabled && !isFreeDsp(dev)) {
 			await recalculateAutoPreamp(true);
 		}
 	} catch (err) {
@@ -1338,7 +1340,7 @@ export async function loadCustomProfile(name: string) {
 
 	if (device) {
 		log(`Syncing profile to DAC...`);
-		await syncToDevice();
+		if(!isFreeDsp(device))await syncToDevice();
 		log(`Synced: ${profile.name}`);
 	} else {
 		log("Profile loaded successfully. Connect DAC and click SYNC to apply.");
@@ -1685,7 +1687,7 @@ export async function reduceGainsSafely() {
 		}
 
 		if (device) {
-			await syncToDevice();
+			if(!isFreeDsp(device))await syncToDevice();
 		}
 		pushHistory();
 	}
@@ -1716,3 +1718,17 @@ export function resetTiltState() {
 
 
 
+
+export function configureFreeDspUI(active:boolean){
+ if(!active){
+   for(const id of ['freeDspStorageNote','btnFreeDspRestore']){const e=document.getElementById(id);if(e){e.hidden=true;if(id==='btnFreeDspRestore')e.style.display='none';}}
+   const flash=document.getElementById('btnFlash');if(flash){flash.setAttribute('data-i18n','btn_save_flash');flash.textContent=t('btn_save_flash');}return;
+ }
+ setAutoPreampEnabled(false);setGlobalGainState(0);setBassTiltState(0);setTrebleTiltState(0);
+ for(const id of ['globalGainSlider','checkAutoPreamp','slideBassTilt','slideTrebleTilt','btnFlash']){const e=document.getElementById(id) as HTMLInputElement|null;if(e)e.disabled=true;}
+ document.querySelectorAll<HTMLInputElement|HTMLButtonElement|HTMLSelectElement>('.utility-card-full input, .utility-card-full select, .utility-card-full button').forEach(e=>e.disabled=true);
+ const send=document.getElementById('btnSendToDevice');if(send)send.title='FreeDSP RAM only；本地Save不是硬體持久保存。';
+ const flash=document.getElementById('btnFlash');if(flash){flash.textContent='FreeDSP Flash 尚未驗證／停用';flash.removeAttribute('data-i18n');}
+ const note=document.getElementById('freeDspStorageNote');if(note)note.hidden=false;
+ const restore=document.getElementById('btnFreeDspRestore') as HTMLButtonElement|null;if(restore){restore.hidden=false;restore.style.display='';restore.disabled=false;}
+}

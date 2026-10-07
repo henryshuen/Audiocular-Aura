@@ -1,0 +1,158 @@
+[
+  {
+    "command": 190,
+    "index": 0,
+    "path": 0,
+    "gain": 0,
+    "hz": 48000,
+    "helper": "AQANAL4AACMtswAAAAABAAAAAwAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
+  },
+  {
+    "command": 190,
+    "index": 0,
+    "path": 0,
+    "gain": -6,
+    "hz": 48000,
+    "helper": "AQANAL4AACMtswAAAAABAAAAAwAAAD9MPQA01ov/KN43AMwpdACZ1cr/AAAAAAAAAAAAAAAAAAAAAAAAAAA="
+  },
+  {
+    "command": 190,
+    "index": 0,
+    "path": 0,
+    "gain": 6,
+    "hz": 48000,
+    "helper": "AQANAL4AACMtswAAAAABAAAAAwAAAEDSQgBKt4b/YoI3ALZIeQBfq8X/AAAAAAAAAAAAAAAAAAAAAAAAAAA="
+  },
+  {
+    "command": 190,
+    "index": 0,
+    "path": 1,
+    "gain": 0,
+    "hz": 48000,
+    "helper": "AQANAL4AACMtswEAAAABAAAAAwAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
+  },
+  {
+    "command": 190,
+    "index": 0,
+    "path": 1,
+    "gain": -6,
+    "hz": 48000,
+    "helper": "AQANAL4AACMtswEAAAABAAAAAwAAAD9MPQA01ov/KN43AMwpdACZ1cr/AAAAAAAAAAAAAAAAAAAAAAAAAAA="
+  },
+  {
+    "command": 190,
+    "index": 0,
+    "path": 1,
+    "gain": 6,
+    "hz": 48000,
+    "helper": "AQANAL4AACMtswEAAAABAAAAAwAAAEDSQgBKt4b/YoI3ALZIeQBfq8X/AAAAAAAAAAAAAAAAAAAAAAAAAAA="
+  },
+  {
+    "command": 190,
+    "index": 4,
+    "path": 0,
+    "gain": 0,
+    "hz": 48000,
+    "helper": "AQANAL4AACMtswAAAAAFAAAAAwAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
+  },
+  {
+    "command": 190,
+    "index": 4,
+    "path": 0,
+    "gain": -6,
+    "hz": 48000,
+    "helper": "AQANAL4AACMtswAAAAAFAAAAAwAAAD9MPQA01ov/KN43AMwpdACZ1cr/AAAAAAAAAAAAAAAAAAAAAAAAAAA="
+  },
+  {
+    "command": 190,
+    "index": 4,
+    "path": 0,
+    "gain": 6,
+    "hz": 48000,
+    "helper": "AQANAL4AACMtswAAAAAFAAAAAwAAAEDSQgBKt4b/YoI3ALZIeQBfq8X/AAAAAAAAAAAAAAAAAAAAAAAAAAA="
+  },
+  {
+    "command": 190,
+    "index": 4,
+    "path": 1,
+    "gain": 0,
+    "hz": 48000,
+    "helper": "AQANAL4AACMtswEAAAAFAAAAAwAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
+  },
+  {
+    "command": 190,
+    "index": 4,
+    "path": 1,
+    "gain": -6,
+    "hz": 48000,
+    "helper": "AQANAL4AACMtswEAAAAFAAAAAwAAAD9MPQA01ov/KN43AMwpdACZ1cr/AAAAAAAAAAAAAAAAAAAAAAAAAAA="
+  },
+  {
+    "command": 190,
+    "index": 4,
+    "path": 1,
+    "gain": 6,
+    "hz": 48000,
+    "helper": "AQANAL4AACMtswEAAAAFAAAAAwAAAEDSQgBKt4b/YoI3ALZIeQBfq8X/AAAAAAAAAAAAAAAAAAAAAAAAAAA="
+  },
+  {
+    "command": 190,
+    "index": 8,
+    "path": 0,
+    "gain": 0,
+    "hz": 48000,
+    "helper": "AQANAL4AACMtswAAAAAJAAAAAwAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
+  },
+  {
+    "command": 190,
+    "index": 8,
+    "path": 0,
+    "gain": -6,
+    "hz": 48000,
+    "helper": "AQANAL4AACMtswAAAAAJAAAAAwAAAD9MPQA01ov/KN43AMwpdACZ1cr/AAAAAAAAAAAAAAAAAAAAAAAAAAA="
+  },
+  {
+    "command": 190,
+    "index": 8,
+    "path": 0,
+    "gain": 6,
+    "hz": 48000,
+    "helper": "AQANAL4AACMtswAAAAAJAAAAAwAAAEDSQgBKt4b/YoI3ALZIeQBfq8X/AAAAAAAAAAAAAAAAAAAAAAAAAAA="
+  },
+  {
+    "command": 190,
+    "index": 8,
+    "path": 1,
+    "gain": 0,
+    "hz": 48000,
+    "helper": "AQANAL4AACMtswEAAAAJAAAAAwAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
+  },
+  {
+    "command": 190,
+    "index": 8,
+    "path": 1,
+    "gain": -6,
+    "hz": 48000,
+    "helper": "AQANAL4AACMtswEAAAAJAAAAAwAAAD9MPQA01ov/KN43AMwpdACZ1cr/AAAAAAAAAAAAAAAAAAAAAAAAAAA="
+  },
+  {
+    "command": 190,
+    "index": 8,
+    "path": 1,
+    "gain": 6,
+    "hz": 48000,
+    "helper": "AQANAL4AACMtswEAAAAJAAAAAwAAAEDSQgBKt4b/YoI3ALZIeQBfq8X/AAAAAAAAAAAAAAAAAAAAAAAAAAA="
+  },
+  {
+    "command": 188,
+    "helper": "AQANALwAACMtswEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
+  },
+  {
+    "command": 187,
+    "helper": "AQABALsAACMtswAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
+  },
+  {
+    "command": 346,
+    "helper": "AQANAFoBACMtsz4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
+  }
+]

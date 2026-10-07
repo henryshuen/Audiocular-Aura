@@ -1,3 +1,4 @@
+import {isFreeDsp} from './freedsp/webHid.ts';
 import type { Band } from "./main.ts";
 import {isExperimentalFreeDspActive} from './freedsp/graphicalRam.ts';
 import {nativePeakFloat} from '../scripts/freedsp/ram-semantics.mjs';
@@ -73,7 +74,7 @@ function calculateBiquad(band: Band, sampleRate: number = 48000) {
 		return { b0: 1, b1: 0, b2: 0, a1: 0, a2: 0 };
 	}
 	// FreeDSP graph uses the native float model; 48k is visual only, never a hardware rate fallback.
-	if(isExperimentalFreeDspActive() && band.type==='PK' && [band.freq,band.gain,band.q].every(Number.isFinite) && band.q>0){
+	if((isExperimentalFreeDspActive() || isFreeDsp((window as any).device)) && band.type==='PK' && [band.freq,band.gain,band.q].every(Number.isFinite) && band.q>0){
 		const [b0,b1,b2,p1,p2]=nativePeakFloat({frequency:band.freq,gainDb:band.gain,q:band.q,sampleHz:sampleRate}).coefficients;
 		return {b0,b1,b2,a1:-p1,a2:-p2};
 	}
