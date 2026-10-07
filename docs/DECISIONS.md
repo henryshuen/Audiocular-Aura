@@ -130,3 +130,17 @@ WebHID input events與官方GET_REPORT結果是否相同亦待硬體證據；未
 只採current-rate346有效index4..8；不猜fallback。Native最後neighbor未精確移植，nearest rounding明確標記，
 以signed24/穩定pole與離線頻率響應測試約束固定衰減設定。Flat只清測試band，並非備份restore。
 ACK不等同可聽EQ生效；Henry回報前M2F hardware proof保持PENDING。mode90獨立手動，首次測試不使用。
+
+## D023 — Response transport is part of the protocol
+188/187/190的sendCmd與346的getMsgByCmd皆同步SET_REPORT output1後GET_REPORT input1輪詢；不是interrupt response證據。
+188/187的caller不以false阻擋後續，不表示helper沒有等reply。四個命令沒有來源支持SEND_SUCCESS_ONLY。
+isExecuteSuccess讀unsigned16 count，>=0條件冗餘，主要測replybit；未比對command/module。後續matcher應明確說明較嚴格的條件。
+RX使用fresh array及controlTransfer IN原地寫入；buffer capacity不等於actual read length。
+July logger/hook不在current APK，不能把舊RX dump確定命名成interrupt ACK或排除hook mutation。
+
+## D024 — M2G isolates inbound behavior without EQ writes
+三次188 timeout只證host送出與current diagnostic無matching event；不證DSP accepted/rejected或EQ failure。
+DEV頁只提供inspect/open及346 query，持續保存全部輸入；停止M2F write controls，本輪不前進190。
+Candidate parser支持短logical response並保留unmatched/raw，但matching query須ID1/prefix0/reply1/346/CTRL及word1可用。
+Query的Hz未知與transport無response分開報告；synthetic346 fixture必須明確標記，不能假冒已知captured response。
+187Android短14-byte request已證，但61-byte WebHID padding的hardware等價性仍未知；本輪兩者皆不送。

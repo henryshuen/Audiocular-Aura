@@ -179,3 +179,17 @@
 - 最終verify.ps1 exit0：11files/94tests（新增21tests）、TypeScript/build/test typecheck全部通過。
 - 既有dev.ps1已啟動localhost:5173；root/debug HTML/diagnostic TS modules/model HTTP200。
   HTTP檢查不觸發HID，沒有稱為瀏覽器互動或硬體proof；等待Henry手動回報。
+
+## 2026-10-07 — M2G hardware record / transport implementation
+- Henry回報M2F三次：Apply兩次、Restore一次，descriptor gate通過，188 host send成功後約2.5秒timeout；沒有matching RX記錄。
+  187/346/190皆未送，故無可聽差異不能判為EQ失敗；沒有把188判為accepted/rejected。
+- 起始git乾淨、fix/freedsp-conexant、0ca80b5；baseline verify11files/94tests通過。
+- 完整靜態追出sendCmd/getMsgByCmd的SET/GET控制傳輸、fresh RX配置、caller回應使用及unsignedcount檢查。
+  新增inspect-response.py、完整來源JSON與證據說明；APK/native程式皆未執行。
+- 診斷頁只提供inspect/open與query346，persistent raw listener、event counter、所有ID/長度保存與短candidate解析；M2F Apply/Restore/90無控制入口。
+- 新增20項mock/source tests，與synthetic346/count4 fixture明確區分實際259/count4、90/220/count0證據。
+- GENERAL/ROADMAP/DECISIONS/DONE記錄三次實測結果與當前限制；Codex沒有硬體access或EQ/Flash寫入，production與non-FreeDSP不改。
+- 最終verify.ps1 exit0：12files/114tests、TypeScript/Vite build與test typecheck通過，原94tests保留，新增20tests。
+- inspect-response再次抽取12methods，保存JSON完全一致；currentAPK的UsbHelperDump tag absent。
+- 已以hidden dev.ps1啟動localhost:5173，root/M2G頁及兩個診斷TS模組直接HTTP200；僅驗證可提供，無瀏覽器/HID操作。
+- 還原本輪生成dist後，git diff --check通過，production source/舊M2F helper/config/package無差異。

@@ -1,0 +1,10 @@
+{
+  "category": "DERIVED synthetic query response; NOT an official captured346 RX",
+  "basis": "Official getCurSampleRate reads full-helper offset14 / WebHID data13 as word1",
+  "count": 4,
+  "countNote": "Chosen test case only; actual346 response count is unknown",
+  "reportId": 1,
+  "shortData": [0, 4, 0, 90, 129, 0, 35, 45, 179, 62, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  "expectedWords": [62, 5, 0, 0],
+  "expectedHz": 48000
+}

@@ -183,7 +183,7 @@ Flat 與 attenuation 只對選定的一個取樣率送九組係數與既有 mode
 Henry 手動維持相同來源、Windows 極低音量、framing 與播放取樣率；停用 Equalizer APO，
 第一次套用時不佩戴 IEM。不得寫 Flash、使用正增益或依賴 preamp；發生錯誤立即停止。
 
-## Current M2F controlled RAM proof
+## Historical M2F controlled RAM proof
 M2F取代診斷頁的舊CURRENT/candidate九段測試；正常production sync仍不變。
 僅DEV頁、手動操作、精確VID35D8/PID1496及input/output ID1各61bytes；無連線自動命令。
 只對selector0／SDKband0→wire5送PK1000Hz/-12dB/Q0.7或同段flat；不試未知bands、不寫Flash/preamp。
@@ -194,3 +194,13 @@ M2F取代診斷頁的舊CURRENT/candidate九段測試；正常production sync仍
 未知current rate不猜48000；係數dynamic Gain/scale，保留native最終neighbor未移植的限制。
 Henry以低Windows音量、IEM先離耳測試，維持相同來源/音量；flat不是完整原設定備份。
 硬體ACK、聽感與flat返回均須Henry回報；不得以mock tests提前標記RAM proof完成。
+
+## Current M2G transport diagnosis
+Henry回報兩次Apply與一次Restore都在188 host send成功後約2.5秒timeout，187/346/190未送；無EQ效果結論。
+本輪只診斷接收，DEV頁停用M2F Apply/Restore/90，唯一命令控制為346 query；不改production或非FreeDSP。
+所有input events須保存timestamp/counter/reportId/byteLength/fullhex，包括短資料、其他ID及unmatched candidate。
+Persistent listener在open/send前註冊，timeout後保留；connection只open接收，不自動TX。
+官方GET_REPORT Input與WebHID input event不同；feature read不得假冒Input GET_REPORT。
+命令lower-helper reply政策與caller丟棄結果分開判斷；ignored return不等於fire-and-forget。
+沒有新證據不得把188降級成send-success-only，更不得因transport猜測自動前進190。
+Query346 raw index未知時保留matching response並標Hz UNKNOWN，不猜fallback或宣稱RAM可用。

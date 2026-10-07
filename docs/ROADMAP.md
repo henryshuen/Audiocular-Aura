@@ -24,6 +24,7 @@ M2C-Research 找到官方 app helper TX/RX dump；M2D-Deep已恢復官方Java se
 M2D只完成離線格式研究；runtime尚未修改，M2 RAM proof仍NOT PROVEN。
 M2E已追到JNI/native數學、Gain/exponent、RAM band/rate及enable/service鏈；比較與離線模型完成，實機原因尚未隔離。
 M2F單段官方格式診斷已實作；Henry手動硬體結果PENDING，正常production runtime未更換。
+M2G：Henry回報三次188 host send成功／無matching RX／2.5秒timeout，187/346/190皆未送；無EQ效果結論。
 Round 0 結束時 dev server 正在執行，僅監聽 127.0.0.1:5173。
 HTTP 以 curl.exe --noproxy '*' 驗證；一般 Invoke-WebRequest 曾回傳 404，
 直接請求已確認 Vite 頁面正確，未改動系統代理設定。
@@ -84,6 +85,12 @@ Success: Henry can clearly hear the difference while all other variables remain 
 - [x] 單段selector0／SDKband0→wire5、current346、188/187/190、動態係數與same-band flat。
 - [x] DEV診斷頁手動控制，移除舊九段framing探測；Flash/production paths未改。
 - [ ] Henry connection/apply/listening/restore logs；RAM proof不可提前完成。
+- Henry已回報三次188 timeout；未到190，M2F RAM proof仍NOT PROVEN。M2G取代頁面write controls。
+
+### M2G — ACK / transport diagnosis — query controls READY / hardware PENDING
+- [x] 記錄三次實測、完整同步GET_REPORT來源與每command policy/caller差異。
+- [x] Persistent raw listener、所有輸入保存、short candidate parser、唯一manual query346。
+- [ ] Henry重新連線／raw listener／query346完整log；本輪不前進190。
 
 ## M3 - Full 9-band real-time PEQ — PENDING
 - all 9 bands
@@ -411,6 +418,11 @@ Possible fix direction:
   保持external reportId及descriptor gate。若native words非13，依schema修正呼叫者，不能單純縮buffer。
 
 ## Evidence for upstream / Issue #3
+- M2G hardware update (Henry reported): M2F Apply兩次、Restore一次，均在188 host send成功後timeout；descriptor gate通過。
+  無matching input event記錄；187/346/190皆未送，不能推論188 accepted/rejected或EQ failure。
+- M2G source update: SET_REPORT output1後同步GET_REPORT input1 (A1/01/0101/interface3/length62)，不是input endpoint listener。
+  187的SET/GET request length14；188/190 helper均wait reply，187丟bool、188只存flag；失敗未必阻擋上層。
+  新頁只query346並持續記錄全部input events，硬體查詢結果PENDING；舊July logger/hook仍缺，RX不是已證interrupt ACK。
 - Hardware: Henry 的 Moondrop FreeDSP / CONEXANT Freeman，VID35D8/PID1496。
 - Descriptor: usagePage12/usage1，input/output reportId1，count61×size8=488bits=61 data bytes；secondaryinputid2=1byte。
 - WebHID reportId外傳，61不可解釋為「ID+60」。
@@ -456,6 +468,18 @@ Possible fix direction:
 - FreeDSP-specific files changed: src/freedsp/conexantReconstruction.ts、tests/freedsp/conexantReconstruction.test.ts、tests/freedsp/fixtures/henryM2ADescriptor.ts。
 - Shared files changed: docs/GENERAL.md、ROADMAP.md、DECISIONS.md、DONE.md；共享runtime無修改。
 - Non-FreeDSP protocol code changed: NO。
+
+## M2G — CAF response transport diagnosis
+### Research checkpoint — source response origin / M2F hardware record
+- Examined: pinned APK完整CafCmdHelper.sendCmd/getMsgByCmd、UsbHelper、188/187/346/190 callers；WebHID規範與Chromium Windows backend。
+- Verified facts: Henry回報三次188 timeout、host send成功；無190，聽感無差異不構成EQ失敗證據。
+  官方SET_REPORT後同步GET_REPORT輪詢，bmRequestTypeA1/request1/value0101/interface3；不是interrupt listener。
+  fresh RX array獨立於TX，Android controlTransfer將IN資料寫入RX；receiveHIDReport傳回同array，caller直接讀已修改array。
+  188確實wait reply，結果設enable flag；187 wait但丟掉bool；188false不阻擋官方後續187/190。346讀GET_REPORT word1。
+- Hypotheses: control GET_REPORT-only回應未出現在WebHID inputreport是最強transport候選；Windows output途徑差異亦可能。
+- Discarded hypotheses: 官方188完全fire-and-forget；M2F是在send後才註冊listener；未送190也能判斷EQ效果。
+- Unresolved fields: 實機是否有任何interrupt events、query346實際count/words、July UsbHelperDump hook實作與complete transfer長度。
+- Next search target: 持續raw listener、寬容candidate parser及只送346的manual diagnostic；本輪不進190。
 
 ### M2B automated verification / delivery
 verify.ps1 exit 0：TypeScript、Vite 4.5.14 production build、測試型別檢查，6 files / 47 tests。
@@ -1014,3 +1038,89 @@ Possible fix direction:
 - Shared files: docs/GENERAL.md、ROADMAP.md、DECISIONS.md、DONE.md；shared runtime NONE。
 - Production runtime changed: NO。
 - Non-FreeDSP protocol code changed: NO。
+
+## M2G — source synthesis / controlled inbound test
+
+### Official response behavior
+| Command | Official send mechanism | Response expected? | Where response comes from | Used to gate next step? |
+| --- | --- | --- | --- | --- |
+|188 count13 [1,0×12] |synchronous sendCmd SET_REPORT |MUST_ACK: helper waits reply1 |GET_REPORT input1 endpoint0, fresh62-byte RX |bool stored in enable flag; false does NOT stop187/190 |
+|187 count1 [0] |same sendCmd, short14 bytes |MUST_ACK in helper; bool ignored by caller |GET_REPORT input1 length14 |waits, but caller ignores success/failure |
+|346 count13 [62,0×12] |getMsgByCmd SET plus initial/repeated GET |QUERY_RESPONSE_REQUIRED |GET_REPORT input1 length62; reads full-helper word1/offset14 |checks helper success, else -1001; EQ caller may use its fallback rate |
+|190 count13 RAM |synchronous sendCmd SET |MUST_ACK in helper |GET_REPORT input1 length62 |bool→setEQParam result; service may discard error |
+
+- SET: requestType0x21/request9/wValue0x0201/output/reportId1/interface3.
+- GET: requestType0xA1/request1/wValue0x0101/input/reportId1/interface3; separate IN control transaction, not same OUT response.
+- UsbHelper passes array.length/timeout1000ms; OUT returns integer, IN mutates RX. Both helpers ignore OUT result and IN returned object.
+- sendCmd allocates fresh RX52; getMsgByCmd allocates RX66; no TX copy. Poll reply bit with outer~1000ms and sleep5ms; blocking calls can extend wall time.
+- isExecuteSuccess onlynonnull/replybit1 plus redundant count>=0: decoder masks both bytes and produces unsigned16. No command/module match or semantic status check.
+-188 is NOT fire-and-forget. All four have response expectations; no source-supported SEND_SUCCESS_ONLY classification.
+- Count0 is observed for90/220, not188;346 exact response count/data not captured. Source reads capacityword1 even without positive logical count check.
+- New query policy is stricter: complete logical header/words, primaryID1/prefix0/reply1/command346/CTRL/count>=2; unknown index logs Hz UNKNOWN rather than transport failure.
+
+### RX origin and short187 conclusion
+Current source strongly supports device IN GET_REPORT-populated fresh RX; it does not generate a local TX echo.
+It discards actual read length, so array capacity and trailing bytes cannot be called complete transferred bytes.
+July57pairs use UsbHelperDump, whose tag/log implementation is absent from pinned APK. Exact hook is missing.
+Rank: GET_REPORT buffer (strong current-source support; historical compatibility only medium), July hook reuse/mutation (possible/unknown),
+currentJava parser-generated echo (weakened), sameOUT response/interrupt source (contradicted for recovered path).
+Many count0 buffers retaining payload could be returned capacity beyond logical count; this alone cannot distinguish old hook mutation.
+
+187: source-proven short SET/GET request14 despite descriptor61 data capacity; completion length unmeasured.
+WebHID send algorithm has no exact-length mandate, but OS handling differs. Cited Chromium Windows snapshot pads to collection maximum,
+uses WriteFile for output/ReadFile for input, not an exposed Input GET_REPORT API. This is backend evidence, not Henry's browser/USB trace.
+Consequently neither explicit61 padding nor shortJS187 is proven equivalent to Android shortcontrol. M2G sends neither187 nor188.
+Sources and full instruction offsets: tests/freedsp/fixtures/officialResponseEvidence.md / officialResponseStaticEvidence.json.
+
+### M2F listener audit / M2G changes
+- M2F was attached to the sending instance BEFORE send; immediate send reply timing and DataView offsets/reportId exclusion were correct.
+- Listener was attached AFTER open and removed at deadline; early unsolicited/open-time or late events could be lost.
+- During wait raw hex was logged before ID filtering; representative Henry log has no RX line, so parser rejection alone is a weaker explanation.
+- M2F parser required61, accepted onlyID1; shorter/different-ID CAF candidates were rejected for ACK, though wait-time raw data would be logged.
+- M2G attaches persistent listener BEFORE open; every report ID/length/time/fullhex/counter recorded. Parsing is observational; unknown/unmatched never erased.
+- Parser uses DataView byteOffset; header9 required, short logical responses supported, truncated/partial words marked. report2 remains raw/candidate, never presumed CAF reply.
+- Listener remains after timeout/success. Query matcher registered before send, exact instance checked; no feature GET fallback, no polling promise pretending to be Input GET_REPORT.
+- Browser opens explicitly on connection without any TX; descriptor collections/raw counter visible. No new keyboard shortcuts or write controls.
+
+### Root cause candidates ranked
+1. Highest: response transport mismatch. Official relies on Input GET_REPORT; WebHID exposes passive input events and feature reads, no Input GET_REPORT method.
+   Firmware may answer onlycontrol polling; actual device event behavior still unknown.
+2. Medium: OS output transport/interface/collection behavior differs from Android SET_REPORT; host completion is not DSP processing proof.
+   Backend WriteFile does not by itself prove interrupt-out or exactUSB setup on Henry's system.
+3. Lower: open-time/late/different-ID/short events missed or rejected by M2F lifecycle. Persistent raw logging now tests this; no earlier wait-time RX line observed.
+4. Unproven: firmware timing/state/188 prerequisites or unsupported command. No evidence yet establishes188 accepted/rejected/wrong.
+187 padding, coefficient Gain/sign andEQ190 cannot explain the point where this test stopped, since187/190 were never sent.
+
+### Problem / hypothesis / next action
+Observed problem:
+- Henry回報3次188 host send成功，無matching RX、約2.5秒timeout；187/346/190未送，沒有EQ效果結論。
+Verified facts:
+- Descriptor gate通過、host接受report；M2F send前listener存在。官方同步GET_REPORT input1與fresh RX已追出，caller policies不同。
+- 新DEV頁只inspect/open與手動346；所有input events持續保存，查詢後也不自動改EQ。
+Possible causes:
+- GET_REPORT-only回應、OS transport差異、遲到／其他ID／short input、未確認的firmwarestate。
+Ruled out / weakened:
+- 不可把無聽感變化當190失敗；188不是官方fire-and-forget；send後才註冊listener假說排除；parser-alone原因較弱。
+Next validation:
+- Henry重新連線，確認RAW LISTENER ACTIVE，再按Query current sample rate only (346)一次；逾時後等約2秒保存完整log及counter。
+- 首次不按Apply/Restore/90；頁面已移除入口。query取得回應與否都不能自動進190。
+Possible fix direction:
+- 若有raw inputs，依ID/length/fields定位parser/collection問題；若完全沒有，優先釐清Input GET_REPORT transport能力。
+- 若需要native Input GET_REPORT證明，屬後續另外授權的transport實作；本輪不安裝driver、建native helper或改production。
+
+### Scope / regression check
+- FreeDSP-specific files: src/freedsp/cafTransportDiagnosis.ts、src/freedsp/debugPage.ts、freedsp-debug.html。
+- Analysis/test files: inspect-response.py、cafTransportDiagnosis.test.ts、sourceJSON/evidence.md、synthetic schemaRate346.json。
+- Shared files: GENERAL/ROADMAP/DECISIONS/DONE only；shared production runtime NONE。
+- Production runtime changed: NO。
+- Non-FreeDSP protocol code changed: NO。
+- Codex硬體access、EQ/Flash寫入: NONE。
+
+### Research checkpoint — M2G verified delivery
+- Examined: complete source trace、20mock/source tests、DEV query-only route、production scope。
+- Verified facts: verify.ps1 exit0，12files/114tests及TypeScript/build通過；source12methods重播與保存JSON完全相同。
+  直接localhost HTTP200，query handler存在、RAM handler未載入；hidden dev.ps1啟動，沒有HID操作。
+- Hypotheses: control GET_REPORT-only回應最符合當前來源與188無matching event，但尚非實機transport capture證明。
+- Discarded hypotheses: ignored188/187 return就代表不需要RX；count>=0提供有效錯誤檢查。
+- Unresolved fields: Henry346 input result、actualUSB transfer routing/length、July hook；新346 fixture為synthetic，非captured。
+- Next search target: Henry一次query346完整raw log/counter；本輪停止，不改gating前進190。
