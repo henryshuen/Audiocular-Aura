@@ -13,8 +13,10 @@ if(import.meta.env.DEV && location.hostname==='localhost' && location.port==='51
  const log=(line:string)=>{logBox.value+=`${new Date().toISOString()} ${line}\n`;logBox.scrollTop=logBox.scrollHeight;};
  // M2P maps channels; a fresh M2Q Web Band5 stereo reversal is required before full-nine Apply.
  const update=()=>{
-   for(const id of ['apply','restore'])el<HTMLButtonElement>(id).disabled=!connected || busy || faulted;
-   el<HTMLButtonElement>('sync').disabled=!connected || busy || faulted || !stereoGate;
+   let invalid=false;try{validateBands(bands);}catch{invalid=true;}
+   el<HTMLButtonElement>('apply').disabled=!connected || busy || faulted || invalid;
+   el<HTMLButtonElement>('restore').disabled=!connected || busy || faulted;
+   el<HTMLButtonElement>('sync').disabled=!connected || busy || faulted || !stereoGate || invalid;
    el<HTMLButtonElement>('flat').disabled=!connected || busy || faulted;
    el<HTMLButtonElement>('connect').disabled=busy || faulted;
    for(const id of ['safe','gatePreset','load','confirm','preset'])el<HTMLButtonElement>(id).disabled=busy || faulted;
@@ -22,6 +24,7 @@ if(import.meta.env.DEV && location.hostname==='localhost' && location.port==='51
    el<HTMLButtonElement>('heardRestore').disabled=busy || faulted || !fullRestored || !applyHeard || restoreHeard;
    document.querySelectorAll<HTMLInputElement>('#bands input').forEach(input=>input.disabled=busy || faulted);
    select.disabled=busy || faulted;
+   if(invalid && connected && !busy && !faulted)status.textContent='編輯值超出 debug 安全範圍；Apply 已停用，仍可明確 Restore 本段或全九段雙聲道 unity。此範圍不是已確認硬體限制。';
    el('gate').textContent=`M2Q Band5 雙耳等量／置中／恢復關卡：${stereoGate?'YES':'待確認'}。全九段雙聲道：Apply聽感${applyHeard?'YES':'待確認'}／Restore聽感${restoreHeard?'YES':'待確認'}`;
  };
  const render=()=>{
@@ -59,6 +62,9 @@ if(import.meta.env.DEV && location.hostname==='localhost' && location.port==='51
  });
  const run=async(action:'applyBand'|'restoreBand'|'syncNine'|'restoreNine')=>{
    if(!connected || busy || faulted)return;const i=Number(select.value);
+   if(action==='applyBand' || action==='syncNine'){
+     try{validateBands(bands);}catch(e){log('EDITOR VALIDATION: '+String(e)+'；未送出請求，Restore 仍可用。');update();return;}
+   }
    if(action==='syncNine' && !stereoGate){log('先完成 Band5 雙聲道 Apply／Restore 與雙耳置中恢復確認。');return;}
    if(action==='applyBand' && [...active].some(n=>n!==i)){log('先Restore本次已Apply的其他band，避免累積。');return;}
    busy=true;status.textContent='等待native matching CAF；不會自動重試。';update();

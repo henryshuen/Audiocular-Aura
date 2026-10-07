@@ -1,5 +1,13 @@
 ﻿# AuraPEQ FreeDSP Verified Work
 
+## 2026-10-08 — M2Q 全九段雙聲道硬體 PASS / Restore UX
+- Henry 回報 Apply／Restore 各 18 command190 PASS，雙耳等量、聲像置中、Restore 正常；取代前輪 M2Q pending，不宣稱 production 完成。
+- 負增益九段有預期強烈頻譜塑形；手動低頻塑形有 high-pass-like 聽感。使用者聽感證據，不是量測曲線或 HP filter 驗證。
+- Henry 觀察每次約九個小 click/pop，原因未確認；低於 −12dB 曾鎖住操作，重啟 dev.ps1 並 Restore 恢復。全九段確認按鈕最終正常，未確認按鈕 bug。
+- 原本 Restore 共用 editor 驗證，頁面將本地例外設 faulted。已將 Apply 驗證移至傳輸前且不設 fault；Restore 用固定合法 unity 快照，無效值不鎖住本段／全九段 Restore。
+- 安全範圍不是硬體限制；正增益/native/係數/production/preamp/Flash 未修改；Codex 未操作硬體。
+- 本輪驗證：聚焦 2 files／21 tests PASS；verify.ps1 一次 exit0，TypeScript/Vite build 與 19 files／158 tests PASS；git diff --check PASS。首次 sandbox Vitest 因暫存 rename EPERM 未執行測試，正常權限重跑通過。僅 Restore UX 離線驗證，不新增硬體結論。
+
 ## 2026-10-07 — Round 0
 - 確認開始時專案目錄為空，尚非 Git repository。
 - 從 upstream clone 到 D:\Henry\Documents\ChatGPT\AuraPEQ，沒有額外巢狀目錄。

@@ -1,6 +1,38 @@
 ﻿# AuraPEQ FreeDSP Roadmap
 
-> Current gate: M2Q dual-channel Web RAM. M2P clean-baseline hardware validation COMPLETE: path0=LEFT/path1=RIGHT (hardware-derived names), Both changes both ears equally and remains centered. M2O stereo bug: path0-only Web writes. M2Q Band5 and full-nine Web stereo validation PENDING; production sender unchanged.
+> Current gate: M2Q full-nine dual-channel Web RAM hardware PASS (Henry): 18 command190 per Apply/Restore, equal-ear change, centered stereo, normal restoration. Next A positive-gain PK, B click/pop investigation, C Restore UX (offline fix this round), D production Web PEQ integration. No preamp/Flash; production unchanged.
+
+## 2026-10-08 — M2Q hardware evidence update / Restore UX
+Henry 回報全九段 Apply／Restore 各 18 command190 PASS，雙耳等量、中心不偏、Restore 正常。負增益九段有預期強烈頻譜塑形；低頻手動塑形有 high-pass-like 聽感，支持 per-wire frequency/gain 行為，不等於頻率響應量測或 HP filter 驗證。本輪依使用者回報，未提供／檢查新 raw log，Codex 不操作硬體。
+每次 Apply／Restore 約九個小 click/pop；原因未證實。PK／20–20000Hz／−12..0dB／Q0.1..10 是 debug 安全範圍，非已確認硬體限制。低於 −12dB 曾鎖住操作；重啟 dev.ps1 並 Restore 後恢復。全九段手動確認最終啟用正常，不能列為 confirmed button bug。
+
+### Research checkpoint
+- Examined: ramDebugPage.ts、webRam.ts、native RamDebug.cs 的 validator／failure／Restore／逐 path 寫入與既有測試。
+- Verified: Restore 共用 editor 驗證；本地例外設 faulted 並鎖住 RAM。native restore 生成 unity；host 逐 wire/path190 沒有顯式 ramp 或原子 batch commit。
+- Hypotheses: hot coefficient update／DSP state 突變可能造成 click；九次與九 wire 分組相符但未時間對齊，不能證明一對 190 一次瞬變。prerequisites／polling／state 亦未排除。
+- Discarded: −12dB 是硬體極限、確認按鈕已確認故障、本地輸入錯誤等同 partial hardware failure。
+- Unresolved: firmware smoothing／filter state、瞬變時間對應、正增益安全行為。
+- Next target: A 獨立正增益 PK 規劃；B 未來同步音訊與 command timing 的單段／全九段比較。本輪不要求硬體操作或更改 pacing。
+
+### Problem / hypothesis / next action
+Observed problem: 全九段效果與 stereo 通過，但約九次 click/pop；無效 editor 原本阻擋 unity Restore。
+Verified facts: Henry 雙耳等量／置中／恢復 PASS；本地 validator／faulted 鎖定已確認。固定合法 Restore 快照不需 editor 或讀回。
+Possible causes: hot-update／state discontinuity，尚無音訊與封包時間對齊，不能指定 firmware 原因。
+Ruled out / weakened: M2O path0-only stereo 缺陷由雙 path Web 驗證解決；不是 production completion；debug 範圍不是 hardware limit。
+Next validation: mock 驗證無效 gain／freq／Q 不送 Apply、仍可明確 Restore；transport failure 不自動解鎖。後續 A→B→C→D，C 小修本輪處理。
+Possible fix direction: 本輪只 editor preflight／獨立 unity 快照；未來依證據研究 smoothing／state，不盲加 mute／delay／重試。不開正增益、preamp 或 Flash。
+
+## Evidence for upstream / Issue #3 — M2Q hardware increment
+Henry reports full-nine Web RAM PASS: wire1..9 × path0 LEFT/path1 RIGHT, 18 command190 per Apply and unity Restore; equal-ear changes, centered stereo, normal restoration. Channel names are hardware-derived. Negative preset and manual low-frequency shaping support per-wire behavior, not response measurement/readback/persistence. About nine click/pop transients per operation; cause UNKNOWN. Debug bounds are safety policy, not device limits. Shared editor validation/fault previously blocked Restore; isolated frontend now uses fixed valid unity requests for explicit Restore. Native serializer/math/API/production unchanged. Positive-gain validation then click investigation before production; no preamp/Flash.
+
+### Scope / regression check
+- FreeDSP-specific files changed: src/freedsp/ramDebugPage.ts, src/freedsp/webRam.ts, freedsp-ram-debug.html; GENERAL/ROADMAP/DECISIONS/DONE.
+- Analysis/test files changed: tests/freedsp/ramUiStartup.test.ts, tests/freedsp/webRam.test.ts.
+- Shared runtime files changed: NONE.
+- Non-FreeDSP protocol code changed: NO.
+
+### M2Q hardware update / Restore UX automated verification
+Focused webRam + ramUiStartup: 2 files／21 tests PASS；包含 gain<-12、NaN frequency、Q0 的 Apply 拒絕與明確 Restore 有效 unity snapshot、不修改 editor，UI invalid input 不設 transport fault；既有 transport-failure STOP 回歸仍通過。verify.ps1 本輪一次 exit0：TypeScript/Vite build + 19 files／158 tests PASS。git diff --check PASS；generated dist 還原。首次 sandbox 測試因 temp rename EPERM 未執行，正常權限重跑通過。未操作硬體，未改 native/protocol/math/production。
 
 ## M0 - Local reproducible baseline — COMPLETE
 - [x] fork / upstream configured：Round 0.5 已確認 origin 分支可讀取且與本機 HEAD 相同。

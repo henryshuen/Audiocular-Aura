@@ -1,5 +1,12 @@
 # AuraPEQ FreeDSP Decisions
 
+## 2026-10-08 — M2Q hardware evidence / Restore 不依賴 editor
+接受 Henry 全九段雙路徑 18 command190 Apply／Restore 的協定、雙耳等量、置中與恢復 PASS；取代 M2Q Web pending，不代表 production／正增益／Flash／preamp 完成。
+負增益九段的強烈頻譜變化與低頻 high-pass-like 聽感支持 per-wire frequency/gain 行為，不等於量測響應或 HP filter 實作。
+每次約九個 click/pop 是觀察事實，原因未證實。isolated executor 逐 wire 送 path0/path1，沒有 host 係數漸變或原子批次提交；hot-update 僅是假說，不推定 firmware 沒有 smoothing。prerequisites／polling／DSP state 亦未排除。暫不加 delay／mute／新命令。
+本地驗證先於 bridge 呼叫攔截且不設 fault；Restore 固定九列合法 gain0/PK 快照、保留 action/uiIndex，native 既有 Restore 分支生成 unity。保留 editor、不自動 TX。真正 bridge/native 失敗仍 STOP，不解鎖未知狀態重試。
+debug 安全範圍不是 hardware limit；native/math/190/API/production/non-FreeDSP 不改；手動確認按鈕無已確認 bug。
+
 ## D001
 Do not change Conexant packet code before a reproducible local baseline exists.
 

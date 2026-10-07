@@ -52,8 +52,11 @@ export class RamBridge {
   }
   async run(action:RamAction,uiIndex:number,bands:Band[]):Promise<BridgeReply>{
     if(this.busy || !this.token)throw new Error('尚未連線或BUSY');
-    uiToWire(uiIndex);const snapshot=validateBands(bands);
+    uiToWire(uiIndex);
     if(!['applyBand','restoreBand','syncNine','restoreNine'].includes(action))throw new Error('無效action');
+    // Explicit unity Restore does not depend on potentially invalid editor values.
+    const snapshot=action==='restoreBand' || action==='restoreNine'
+      ? fullNinePreset().map(b=>({...b,gain:0})) : validateBands(bands);
     this.busy=true;try{return await this.post('/ram',{action,uiIndex,bands:snapshot});}finally{this.busy=false;}
   }
   private async post(path:string,body:unknown):Promise<BridgeReply>{

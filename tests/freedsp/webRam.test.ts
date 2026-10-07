@@ -20,6 +20,16 @@ function fakeBridge(){
  return {bridge:new RamBridge(fetcher),calls,setFail:()=>{fail=true;},setHold:(p:Promise<Response>)=>{hold=p;}};
 }
 describe('M2N Web/native RAM contract; no physical HID',()=>{
+ it('explicit Restore ignores invalid editor values and sends only a valid unity snapshot',async()=>{
+   const f=fakeBridge();await f.bridge.connect();const b=bands();b[0].gain=-13;b[1].freq=NaN;b[2].q=0;
+   for(const action of ['applyBand','syncNine'] as const)await expect(f.bridge.run(action,4,b)).rejects.toThrow();
+   expect(f.calls).toHaveLength(2);
+   for(const action of ['restoreBand','restoreNine'] as const)await f.bridge.run(action,4,b);
+   const bodies=f.calls.slice(2).map(c=>JSON.parse(c.init!.body as string));
+   expect(bodies.map(b=>[b.action,b.uiIndex])).toEqual([['restoreBand',4],['restoreNine',4]]);
+   for(const body of bodies){expect(validateBands(body.bands)).toHaveLength(9);expect(body.bands.every((b:Band)=>b.gain===0)).toBe(true);}
+   expect(b[0].gain).toBe(-13);expect(b[1].freq).toBeNaN();
+ });
  it('M2Q pairs18 offline packets and both-pathunity; coefficients differ only bypath',()=>{
    for(const rate of [4,5,6,7,8])for(const restore of [false,true]){
      const models=fullNinePreset().flatMap(b=>[0,1].map(path=>modelWebBand(b,rate,restore,path)));

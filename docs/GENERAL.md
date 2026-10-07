@@ -1,5 +1,12 @@
 ﻿# AuraPEQ FreeDSP Development Rules
 
+## 2026-10-08 — M2Q hardware PASS / 後續規則（取代先前 M2Q pending）
+- Henry 回報全九段雙聲道 Apply／Restore 硬體 PASS：各 18 command190；雙耳等量變化、聲像置中、Restore 正常。path0 LEFT／path1 RIGHT 為硬體推導名稱，非官方 SDK 名稱。
+- PK、20–20000Hz、−12..0dB、Q0.1..10 是 debug 安全範圍，不是已確認硬體限制；本輪不放寬正增益。
+- 無效 editor 值只阻擋 Apply，不得鎖住明確 unity Restore；Restore 使用獨立有效快照。本地驗證失敗不設 transport fault，真正傳輸失敗仍 STOP、不自動重試或 rollback。
+- 優先順序：A 正增益 PK 硬體驗證；B click/pop 調查；C 無效編輯／緊急 Restore UX（本輪離線修正）；D 之後才 production Web PEQ integration。無 preamp／Flash／其他濾波類型／persistence 或 readback 宣稱。
+- 全九段手動確認按鈕最終正常啟用，不記為已確認按鈕 bug。Codex 不操作硬體。
+
 ## Hardware
 - Original Moondrop FreeDSP
 - VID 0x35D8, PID 0x1496
