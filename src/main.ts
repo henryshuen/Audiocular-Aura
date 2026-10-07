@@ -251,7 +251,10 @@ btnSafetyAutoReduce?.addEventListener("click", async () => {
  * GLOBAL GAIN PREAMP LOGIC
  */
 const globalSlider = document.getElementById("globalGainSlider");
-globalSlider?.addEventListener("input", async (e) => setGlobalGain(e));
+globalSlider?.addEventListener("input", async (e) => {
+	if (isFreeDsp(getDevice())) { log('FreeDSP 全域增益命令尚未確認；沒有送出。'); return; }
+	await setGlobalGain(e);
+});
 
 // Auto Preamp Toggle Binding
 const checkAutoPreamp = document.getElementById("checkAutoPreamp") as HTMLInputElement;
@@ -262,6 +265,7 @@ if (checkAutoPreamp) {
 		(window as any).toggleAutoPreamp?.(autoPreampSaved, true);
 	}, 100);
 	checkAutoPreamp.addEventListener("change", async () => {
+		if (isFreeDsp(getDevice())) { checkAutoPreamp.checked = false; return; }
 		const enabled = checkAutoPreamp.checked;
 		localStorage.setItem("aura_auto_preamp_enabled", enabled ? "true" : "false");
 		await (window as any).toggleAutoPreamp?.(enabled);
@@ -288,6 +292,11 @@ if (slideBassTilt && slideTrebleTilt && lblBassTilt && lblTrebleTilt && tiltText
 	tiltTextValue.innerText = `Bass: ${initialBass >= 0 ? "+" : ""}${initialBass.toFixed(1)} dB, Treble: ${initialTreble >= 0 ? "+" : ""}${initialTreble.toFixed(1)} dB`;
 
 	const updateTiltUI = async () => {
+		if (isFreeDsp(getDevice())) {
+			(window as any).resetTiltState?.();
+			log('FreeDSP Tone Tilt 未支援：不占用九段 PEQ；沒有送出。');
+			return;
+		}
 		const bass = parseFloat(slideBassTilt.value);
 		const treble = parseFloat(slideTrebleTilt.value);
 
@@ -630,7 +639,22 @@ const meterR = document.getElementById("meterR") as HTMLElement;
 
 let micMeterAnimationId: number | null = null;
 
+function stopFreeDspMicDisplay() {
+	if (micMeterAnimationId !== null) cancelAnimationFrame(micMeterAnimationId);
+	micMeterAnimationId = null;
+	if (toggleMicMonitor) toggleMicMonitor.checked = false;
+	if (meterL) meterL.style.width = '0%';
+	if (meterR) meterR.style.width = '0%';
+	if (micMonitorStatus) {
+		micMonitorStatus.classList.remove('active');
+		micMonitorStatus.removeAttribute('data-i18n');
+		micMonitorStatus.innerText = 'FreeDSP 監聽／電平：未驗證';
+	}
+}
+(window as any).stopFreeDspMicDisplay = stopFreeDspMicDisplay;
+
 function animateMicMeters() {
+	if (isFreeDsp(getDevice())) { stopFreeDspMicDisplay(); return; }
 	if (!toggleMicMonitor?.checked) {
 		if (meterL) meterL.style.width = "0%";
 		if (meterR) meterR.style.width = "0%";
@@ -651,6 +675,7 @@ function animateMicMeters() {
 }
 
 toggleMicMonitor?.addEventListener("change", () => {
+	if (isFreeDsp(getDevice())) { stopFreeDspMicDisplay(); log('FreeDSP 麥克風監聽／電平未驗證；沒有送出。'); return; }
 	const isOn = toggleMicMonitor.checked;
 	if (micMonitorStatus) {
 		micMonitorStatus.setAttribute("data-i18n", isOn ? "monitoring_on" : "monitoring_off");
@@ -1223,8 +1248,11 @@ function updateDynamicTranslatedElements() {
 		}
 	}
 	if (toggleMicMonitor && micMonitorStatus) {
-		const isOn = toggleMicMonitor.checked;
-		micMonitorStatus.innerText = isOn ? t("monitoring_on") : t("monitoring_off");
+		if (isFreeDsp(getDevice())) stopFreeDspMicDisplay();
+		else {
+			const isOn = toggleMicMonitor.checked;
+			micMonitorStatus.innerText = isOn ? t("monitoring_on") : t("monitoring_off");
+		}
 	}
 	if (sliderBalance && balanceVal) {
 		const val = parseInt(sliderBalance.value);

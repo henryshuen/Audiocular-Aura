@@ -2395,3 +2395,57 @@ For each: SUPPORTED BY FREEDSP EVIDENCE / UNSUPPORTED / UNKNOWN. Do not reuse ge
 - Analysis/test files changed: FreeDSP editor/transport/diagnostic/frontend/native offline tests.
 - Shared files changed: src/fn.ts and src/main.ts (FreeDSP guarded editor/reset/warning only), scripts/dev.ps1 and vite.config.ts (canonical localhost), existing four docs.
 - Non-FreeDSP protocol code changed: NO. Original other-DAC gain/default/flat and generic Sync behavior tested unchanged.
+
+## M2T controls — research checkpoint
+Examined: upstream reset/tilt/preamp/mic source and history; pinned official APK Freeman3 device/controller/session/feature configuration and native symbol names; existing 57 helper pairs and Issue #3 evidence.
+Verified: generic Tone Tilt has independent editor state and displayed shelves, but serializes center-frequency gain offsets into existing PEQ bands, not two additional hardware shelves. Mic meters use Math.random; the toggle has no actual loopback/capture implementation. Auto Preamp computes a gain then depends on the device global-gain sender. The old Conexant sender is a no-op. No new control command is established by these sources.
+Hypotheses: FreeDSP may expose gain/mic controls through another interface or unexamined firmware; this is not implementation evidence.
+Discarded: command190 coefficient Gain exponent as dB preamp; generic utility commands as FreeDSP evidence; LRDetect feature bits as balance; random meters as input levels.
+Unresolved: true master/per-channel gain mapping, tone support independent of nine PK wires, mic gain/loopback/input reporting.
+Next search target: reproducible all-DEX Freeman control inventory and complete conversion/config method instructions; clarify unavailable controls only for FreeDSP, no speculative writes.
+
+## M2T controls milestone — classification and implementation
+
+### Research checkpoint — official control boundaries
+Examined: pinned official Moondrop Link APK v2.25.0c-260813ai, SHA256 04756b49acfea523758d86101c96c1824b7b209ae3a8836c07837088e795d2d5; all classes.dex/classes2.dex (153/0 com/conexant classes), complete Freeman Device/Controller/Session inventories, selected full Java conversion/config instructions and arm64 native symbols/JNI gain instructions. Reproduce with scripts/freedsp/inspect-controls.py APK PYTHON_LIBRARY_DIRECTORY; checked-in tests/freedsp/fixtures/officialControlsEvidence.json is static evidence, not hardware capture.
+Verified: the only control-name methods are CommonUtil conversions. convertGainIndex(F,I) calls its native wrapper; native 0x26b0..0x2710 is pure arithmetic/return, no transport calls. Selector0 converts gain using 63/30 and offset63; selector1 uses (gain-40)*63/80+63 before integer conversion; other selectors return0. These are conversion selectors, NOT proven audio paths or a FreeDSP command. formatBandGainValue/getOriginalGainValue convert between dB and 2^6-scaled linear gain; these utilities alone establish no master-gain application path. No com/conexant DEX caller links them to setFreeman3EQ in this APK.
+Verified: getFeatureConfigFM3 uses command346 with request words84/64 and returns EQInFW/HiFiFM/LPM/dongle LRDetect/diagnose flags; no globalgain/balance/mic map. getFreeman3EQConfig uses442 and reads sample-rate metadata. No queries were sent. MonitorButtonReport native symbols concern button reporting; CX2077x_MIC_BIQUAD conversion symbols concern generic math, not verified FreeDSP mic control. Existing 57 helper pairs (90/220/259) contain no identified mastergain/balance/mic transaction. Prior command190 Gain is the coefficient scaling exponent, not dB preamp.
+Limitations: no firmware/Dart AOT/reflection/UAC Feature Unit descriptor audit or physical transfer capture this round. Absence from these inventories is UNKNOWN support, not proof hardware cannot support a feature. Manufacturer microphone presence does not prove gain/loopback/meter controls: https://moondroplab.com/en/products/freedsp (Microphone shielded cable).
+
+| Control | Evidence / original behavior | FreeDSP classification | Implementation | Hardware validation |
+|---|---|---|---|---|
+| Negative/positive Preamp | Old Conexant sender introduced e7da5b5 is a no-op; APK conversions are not commands | UNKNOWN | Disabled with reason; no EQ stacking | No evidence-backed new test |
+| Auto Preamp | Calculates sampled response peak, targets negative gain, then calls hardware global gain setter | UNKNOWN dependent command | Disabled, including delayed saved-state initialization; generic preferences preserved | Not eligible |
+| Channel Balance | Generic utility packet on change; no FreeDSP dedicated/per-channel globalgain mapping | UNKNOWN | Disabled, no alteration of nine PEQ gains | Not eligible |
+| Bass/Treble Tone Tilt | Independent host state; displayed105/8000Hz shelves; hardware uses band-center tilt offsets | UNSUPPORTED by current FreeDSP PK adapter; independent hardware support UNKNOWN | Disabled with reason; no user slots consumed | Not eligible |
+| Microphone presence | Manufacturer product cable specification | SUPPORTED physical presence | No software capture claim | No new Codex hardware check |
+| Mic gain / loopback / input levels | Generic gain packet is another protocol; main monitor toggle only animates Math.random levels | UNKNOWN FreeDSP controls; actual loopback/meter is unimplemented here | Disabled, animation canceled and meters cleared; unavailable label | Not eligible |
+| Nine-band PK and unity Restore | Henry's normal native main-page positive/negative/stereo/18-write PASS | SUPPORTED | Existing explicit Sync/Restore unchanged | Already PASS |
+
+### Original application and reset audit
+Tone Tilt introduced b080ad8 (2026-06-16) changes separate host Bass/Treble state, not visible band gains. Graph renders LSQ/HSQ mathematical shelves; writeBand and generic Sync serialize existing band gain plus tilt at that band's center (clamped), not extra LSQ/HSQ filter allocations or dedicated tone commands. Input events can schedule realtime band writes on other DACs; it is not universally display-only until Sync. Thus graph shelves do not establish equivalent hardware shelves. FreeDSP guard prevents scheduling these writes; its nine PK plan has no Tilt implementation. No rapid new control writes added.
+Preamp input normally applies immediately; Auto Preamp is host calculation plus device gain application. Balance and mic gain normally apply on change, and generic utilities may subsequently refresh storage. None are reused for FreeDSP. Generic monitor toggle has no actual USB/audio loopback operation.
+Generic Defaults intentionally constructs10 frequency-spaced/Q.75 bands (JA11 has separate5). Flat constructs existing count at1000Hz/Q1/PK/enabled/gain0 and Syncs. Commit ea93274 (2026-06-09) explicitly implements that neutral reset: coded legacy/generic behavior, not a browser rendering failure; user-facing design rationale is not established, so not classified as a proven bug. Other DAC reset semantics unchanged. FreeDSP defaults9/Q.7 and Flat preserving frequency/Q/type/enabled with zero enabled gains remain local-only and now Henry hardware/UX PASS.
+
+### Problem / hypothesis / next action
+Observed problem: generic UI exposed controls without a verified FreeDSP command map and could display stale Tilt or simulated microphone levels after connection.
+Verified facts: original main native transport/PK/stereo/defaults/flat hardware PASS; no validated mastergain/balance/mic command in reviewed evidence; Tone Tilt hardware serialization is band-center gain approximation. About18 quiet pops correlate with18 path writes; exact cause remains UNKNOWN.
+Possible causes: additional controls may be implemented by unexamined firmware, Dart/FFI or USB Audio feature controls instead of the reviewed CAF API.
+Ruled out / weakened: coefficient Gain exponent as preamp; LRDetect as balance; mic math exports/button monitoring as audio control; random meters as measured input; generic utility packets as FreeDSP commands.
+Next validation: obtain a documented exact FreeDSP master/per-channel gain control or one actual official control transfer with interface/report/module/command/payload, units/sign/range and reply; for USB Audio controls, complete Feature Unit descriptors/entity IDs are needed. Without that artifact, listening tests with invented commands are not justified.
+Possible fix direction: integrate proven commands in the existing main UI/shared adapter, preserving nine user PEQ slots and native transport-only responsibility. No additional hardware tests are eligible this round.
+
+## Evidence for upstream / Issue #3 — M2T controls
+Original main-page native transport, nine PK wires x two hardware-derived LEFT/RIGHT paths, positive/negative gains and unity Restore are Henry PASS; defaults9/Q.7 and structure-preserving Flat also PASS. Pure browser reply flow remains blocked; ID1 data61/native62 unchanged. Old Conexant globalgain is a no-op. Pinned official APK all-DEX Freeman API/config and native gain conversion inventory does not establish master/per-channel gain, tone or mic command mappings. command190 Gain is coefficient exponent; 346 LRDetect is not balance. Generic Aura Tilt separately renders shelves but serializes band-center gain offsets; generic mic meters are random animation, not input measurement. These controls are disabled only for FreeDSP, with explicit UNKNOWN/unsupported explanations. Need documented command/interface semantics or actual official control transfer/UAC descriptor evidence before new integration. No speculative packets, no Flash, no persistence/readback claim.
+
+### Combined manual validation — one normal main-page session
+Start .\scripts\dev.ps1 and open http://localhost:5173/; original CONNECT DAC. Confirm nine defaults, Preamp/Auto/Tilt/Balance/Mic disabled with the new explanation, zero Tilt/preamp display and no mic animation. Existing PK Sync/Restore remains available independently of invalid editor values. No new preamp/balance/tilt/mic hardware test is eligible: do not send experimental commands. If checking existing PEQ regression, use normal audio/low volume and one explicit safe negative PK Sync then unity Restore, both ears centered; this is optional regression, not new control validation. No test tones. Flash remains LAST/disabled.
+
+### Research checkpoint — M2T verification and scope
+Focused controls/editor/native-transport tests:51 PASS. Final verify.ps1: TypeScript/Vite production build +235tests/24files PASS (after updating an existing VM harness for new UI dependencies). Native69 synthetic tests PASS, including FAKE HTTP loopback only; isolated build output, no device/native discovery. Initial sandbox loopback restriction resolved with authorized mock-only execution. No new preamp/balance/tilt/mic implementation or hardware validation claimed.
+### Scope / regression check
+- FreeDSP-specific files changed: src/freedsp/controls.ts (evidence policy/notes only).
+- Analysis/test files changed: pinned inspect-controls.py and officialControlsEvidence.json; controls.test.ts; existing webHid VM dependencies.
+- Shared files changed: src/fn.ts, src/main.ts, index.html (exact-FreeDSP UI guards/display only); four project docs.
+- Non-FreeDSP protocol code changed: NO.
+- CAF/native transport, command190, coefficients, mapping, RAM plan and Flash behavior changed: NO. Other-DAC control/reset regression mocks PASS.

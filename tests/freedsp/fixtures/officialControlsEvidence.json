@@ -1,0 +1,1907 @@
+{
+  "apkSha256": "04756b49acfea523758d86101c96c1824b7b209ae3a8836c07837088e795d2d5",
+  "source": "https://download.moondroplab.com/moondroplink/android-release.apk",
+  "scope": "All classes*.dex: com/conexant method names and selected full method instructions; arm64 CxAudio dynamic symbols.",
+  "limitations": "Not firmware, Dart AOT, reflection, USB Audio descriptors or a USB capture. Name absence does not prove no hardware support. Generic mic biquad math is not a FreeDSP control mapping.",
+  "dexes": [
+    {
+      "file": "classes.dex",
+      "sha256": "532514c94af7aaf8579ff455843b8820a37d7f9a27b1615bc1bbcfa4ee3d94e9",
+      "conexantClasses": 153
+    },
+    {
+      "file": "classes2.dex",
+      "sha256": "1992f8c791b9c89b5ae14af12589d8abde1bc17b61dd3eb35868dafc10db95a9",
+      "conexantClasses": 0
+    }
+  ],
+  "freemanInventory": [
+    {
+      "dex": "classes.dex",
+      "class": "Lcom/conexant/cnxtusbcheadset/CnxtUsbDeviceBase;",
+      "methods": [
+        "<init>(Landroid/content/Context; Landroid/hardware/usb/UsbDevice;)V",
+        "a(Lcom/conexant/cnxtusbcheadset/CnxtUsbDeviceBase; [B)V",
+        "b()Ljava/lang/String;",
+        "checkIsCnxtUsbDevice()Z",
+        "connectUsbDeviceByApplication()Z",
+        "disConnectUsbDeviceByApplication()I",
+        "getDeviceChipCode()I",
+        "getDeviceName()Ljava/lang/String;",
+        "getFirmwareParam(Lcom/syna/FirmwareParam;)V",
+        "getFwVersion()V",
+        "getHidBtnValue([B)V",
+        "getUpdateFwProgress()I",
+        "getUsbDevice()Landroid/hardware/usb/UsbDevice;",
+        "getUsbDeviceConnection()Landroid/hardware/usb/UsbDeviceConnection;",
+        "lambda$new$0([B)V",
+        "prepareUsbDevice()Z",
+        "reConnectUsbDeviceByApplication()I",
+        "releaseUsbDevice()V",
+        "resetDevice()V",
+        "setDeviceName(Ljava/lang/String;)V",
+        "updateFirmware(Ljava/lang/String;)Lcom/conexant/cnxtusbcheadset/GenericReturnValue;"
+      ],
+      "fields": [
+        "TAG:Ljava/lang/String;",
+        "hidMsgListener:Lcom/conexant/cnxtusbcheadset/HidInterruptReader$hidReaderMsgListener;",
+        "mConnection:Landroid/hardware/usb/UsbDeviceConnection;",
+        "mContext:Landroid/content/Context;",
+        "mCurFwVersion:Ljava/lang/String;",
+        "mDeviceName:Ljava/lang/String;",
+        "mHasConnectedByNative:Z",
+        "mHidEndpoint:Landroid/hardware/usb/UsbEndpoint;",
+        "mHidInterface:Landroid/hardware/usb/UsbInterface;",
+        "mHidReader:Lcom/conexant/cnxtusbcheadset/HidInterruptReader;",
+        "mInterfaceStateListener:Lcom/conexant/cnxtusbcheadset/CafCmdHelper$onInterfaceStateListener;",
+        "mIsDualInterface:Z",
+        "mUpdateFirmware:Lcom/syna/FirmwareUpdate;",
+        "mUsbDevice:Landroid/hardware/usb/UsbDevice;"
+      ]
+    },
+    {
+      "dex": "classes.dex",
+      "class": "Lcom/conexant/cnxtusbcheadset/FreemanCnxtUsbDevice;",
+      "methods": [
+        "<init>(Landroid/content/Context; Landroid/hardware/usb/UsbDevice;)V",
+        "addUsbKeyEventListener(Lcom/conexant/genericfeature/IUsbKeyEventListener;)V",
+        "canUpdate()Z",
+        "claimInterfaceByBaseClass()V",
+        "getCurSampleRate()I",
+        "getDeviceChipCode()I",
+        "getEQEnabled()Z",
+        "getEQMode()I",
+        "getEQParam(Lcom/conexant/genericfeature/EQParam;)V",
+        "getEQParamList()Ljava/util/List;",
+        "getEQParamsFromFlash(Lcom/conexant/genericfeature/PersistEQParams;)I",
+        "getF3EQCoefficientList()Ljava/util/List;",
+        "getFeatureConfigFM3(Lcom/conexant/genericfeature/FeatureConfigFM3;)I",
+        "getFreeman3EQConfig()V",
+        "getFreeman3EQParam(Lcom/conexant/genericfeature/EQParam;)I",
+        "getFwVersion()V",
+        "getHidBtnValue([B)V",
+        "handleHidBtnState(B)V",
+        "onKeyEvent(I)V",
+        "releaseInterfaceByBaseClass()V",
+        "releaseUsbDevice()V",
+        "saveEQParamsToFlash(Lcom/conexant/genericfeature/PersistEQParams;)I",
+        "setDefaultAvailable()V",
+        "setEQCFGIsBypass()V",
+        "setEQEnabled(Z)V",
+        "setEQParam(Lcom/conexant/genericfeature/EQParam;)I",
+        "setFreeman3EQ(Lcom/conexant/genericfeature/EQParam;)Z",
+        "setFreeman3EQEnabled()V",
+        "setFreemanEQ(I I I D F I)Z",
+        "switchEQMode(I)I"
+      ],
+      "fields": [
+        "$assertionsDisabled:Z",
+        "DEFAULT_FREEMAN3_SAMPLERATE:I",
+        "KEY_HOOK_ANSWER_AND_PLAY_OR_PAUSE:I",
+        "KEY_HOOK_PREVIOUS_SONG:I",
+        "KEY_HOOK_REJECT_AND_NEXT_SONG:I",
+        "KEY_VOLUME_DOWN:I",
+        "KEY_VOLUME_UP:I",
+        "TAG:Ljava/lang/String;",
+        "eq2Coeff:Lcom/conexant/cnxtusbcheadset/Eq2Coeff;",
+        "eqCoeff:Lcom/conexant/cnxtusbcheadset/CX2070xBandEQCoeffs;",
+        "mEQEnabled:Z",
+        "mFreeman3EQEnabled:Z",
+        "mHidEndpoint:Landroid/hardware/usb/UsbEndpoint;",
+        "mHidInterface:Landroid/hardware/usb/UsbInterface;",
+        "mHidReader:Lcom/conexant/cnxtusbcheadset/HidInterruptReader;",
+        "mIsFirstConnectFreeman3:Z",
+        "mKeyEventListeners:Ljava/util/List;"
+      ]
+    },
+    {
+      "dex": "classes.dex",
+      "class": "Lcom/conexant/conexantusbtypec/svcimpl/FreemanController;",
+      "methods": [
+        "<init>(Landroid/content/Context; Ljava/lang/String; Lcom/conexant/libcnxtservice/service/UsbSessionDescriptor;)V",
+        "getAHB(Lcom/conexant/universalfunction/HidCmdByteArray;)I",
+        "getCurSampleRate()I",
+        "getDeviceChipCode()I",
+        "getEQParam(Lcom/conexant/genericfeature/EQParam;)V",
+        "getEQParamList()Ljava/util/List;",
+        "getEQParamsFromFlash(Lcom/conexant/genericfeature/PersistEQParams;)I",
+        "getF3EQCoefficientList()Ljava/util/List;",
+        "getFeatureConfigFM3(Lcom/conexant/genericfeature/FeatureConfigFM3;)I",
+        "getFirmwareParam(Lcom/syna/FirmwareParam;)I",
+        "getFrequency(Lcom/conexant/universalfunction/HidCmdByteArray;)I",
+        "getRegisterSignalStrength(Lcom/conexant/universalfunction/HidCmdByteArray;)I",
+        "getSeekStation(Lcom/conexant/universalfunction/HidCmdByteArray;)I",
+        "getUpdateFirmwareProgress()I",
+        "readRegister(Lcom/conexant/universalfunction/HidCmdByteArray;)I",
+        "resetDevice()I",
+        "saveEQParamsToFlash(Lcom/conexant/genericfeature/PersistEQParams;)I",
+        "sendCmdToDevice(Lcom/conexant/universalfunction/CnxtUsbCommand;)Lcom/conexant/universalfunction/CnxtUsbCommand;",
+        "setAHB(Lcom/conexant/universalfunction/HidCmdByteArray;)I",
+        "setEQParam(Lcom/conexant/genericfeature/EQParam;)I",
+        "setFrequency(Lcom/conexant/universalfunction/HidCmdByteArray;)I",
+        "setHidCmdData(Lcom/conexant/universalfunction/HidCmdByteArray;)I",
+        "setNextFM()I",
+        "setPowerEnabled(Z)I",
+        "setPreviousFM()I",
+        "switchEQMode(I)I",
+        "updateFirmware(Ljava/lang/String;)Lcom/conexant/cnxtusbcheadset/GenericReturnValue;",
+        "writeRegister(Lcom/conexant/universalfunction/HidCmdByteArray;)I"
+      ],
+      "fields": [
+        "TAG:Ljava/lang/String;"
+      ]
+    },
+    {
+      "dex": "classes.dex",
+      "class": "Lcom/conexant/genericfeature/FeatureConfigFM3;",
+      "methods": [
+        "<clinit>()V",
+        "<init>(Landroid/os/Parcel;)V",
+        "describeContents()I",
+        "writeToParcel(Landroid/os/Parcel; I)V"
+      ],
+      "fields": [
+        "CREATOR:Landroid/os/Parcelable$Creator;",
+        "mIsDiagnoseAvailable:Z",
+        "mIsDiagnoseEnabled:Z",
+        "mIsDongleLRDetectAvailable:Z",
+        "mIsDongleLRDetectEnabled:Z",
+        "mIsEQInFWAvailable:Z",
+        "mIsEQInFWEnabled:Z",
+        "mIsFeatureCtrlEnabled:Z",
+        "mIsHiFiFMAvailable:Z",
+        "mIsHiFiFMEnabled:Z",
+        "mIsLPMAvailable:Z",
+        "mIsLPMEnabled:Z"
+      ]
+    },
+    {
+      "dex": "classes.dex",
+      "class": "Lcom/conexant/libcnxtservice/service/FreemanSession;",
+      "methods": [
+        "<init>(Landroid/content/Context; Landroid/hardware/usb/UsbDevice; Lcom/conexant/cnxtusbcheadset/CnxtUsbDeviceBase; I)V",
+        "a(Lcom/conexant/libcnxtservice/service/FreemanSession; I)V",
+        "bldCmdGetAHBData(I Lcom/conexant/universalfunction/HidCmdByteArray;)Lcom/conexant/libcnxtservice/ServiceModuleCommand;",
+        "bldCmdGetDeviceChipCode(I)Lcom/conexant/libcnxtservice/ServiceModuleCommand;",
+        "bldCmdGetEQ(I Lcom/conexant/genericfeature/EQParam;)Lcom/conexant/libcnxtservice/ServiceModuleCommand;",
+        "bldCmdGetEQCoeffsList(I)Lcom/conexant/libcnxtservice/ServiceModuleCommand;",
+        "bldCmdGetEQParamList(I)Lcom/conexant/libcnxtservice/ServiceModuleCommand;",
+        "bldCmdGetEQParamsFromFlash(I Lcom/conexant/genericfeature/PersistEQParams;)Lcom/conexant/libcnxtservice/ServiceModuleCommand;",
+        "bldCmdGetFeatureConfigFM3(I Lcom/conexant/genericfeature/FeatureConfigFM3;)Lcom/conexant/libcnxtservice/ServiceModuleCommand;",
+        "bldCmdGetFirmwareParam(I Lcom/syna/FirmwareParam;)Lcom/conexant/libcnxtservice/ServiceModuleCommand;",
+        "bldCmdGetFrequency(I Lcom/conexant/universalfunction/HidCmdByteArray;)Lcom/conexant/libcnxtservice/ServiceModuleCommand;",
+        "bldCmdGetRegisterData(I Lcom/conexant/universalfunction/HidCmdByteArray;)Lcom/conexant/libcnxtservice/ServiceModuleCommand;",
+        "bldCmdGetRegisterSignalStrength(I Lcom/conexant/universalfunction/HidCmdByteArray;)Lcom/conexant/libcnxtservice/ServiceModuleCommand;",
+        "bldCmdGetSeekStation(I Lcom/conexant/universalfunction/HidCmdByteArray;)Lcom/conexant/libcnxtservice/ServiceModuleCommand;",
+        "bldCmdGetUpdateFirmwareProgress(I)Lcom/conexant/libcnxtservice/ServiceModuleCommand;",
+        "bldCmdResetDevice(I)Lcom/conexant/libcnxtservice/ServiceModuleCommand;",
+        "bldCmdSaveCustomEQList(I Lcom/conexant/genericfeature/PersistEQParams;)Lcom/conexant/libcnxtservice/ServiceModuleCommand;",
+        "bldCmdSendCmdToDevice(I Lcom/conexant/universalfunction/CnxtUsbCommand;)Lcom/conexant/libcnxtservice/ServiceModuleCommand;",
+        "bldCmdSetAHBData(I Lcom/conexant/universalfunction/HidCmdByteArray;)Lcom/conexant/libcnxtservice/ServiceModuleCommand;",
+        "bldCmdSetEQ(I Lcom/conexant/genericfeature/EQParam;)Lcom/conexant/libcnxtservice/ServiceModuleCommand;",
+        "bldCmdSetFrequency(I Lcom/conexant/universalfunction/HidCmdByteArray;)Lcom/conexant/libcnxtservice/ServiceModuleCommand;",
+        "bldCmdSetHidCmdData(I Lcom/conexant/universalfunction/HidCmdByteArray;)Lcom/conexant/libcnxtservice/ServiceModuleCommand;",
+        "bldCmdSetNextFM(I)Lcom/conexant/libcnxtservice/ServiceModuleCommand;",
+        "bldCmdSetPowerEnabled(I Z)Lcom/conexant/libcnxtservice/ServiceModuleCommand;",
+        "bldCmdSetPreviousFM(I)Lcom/conexant/libcnxtservice/ServiceModuleCommand;",
+        "bldCmdSwitchEQMode(I I)Lcom/conexant/libcnxtservice/ServiceModuleCommand;",
+        "bldCmdUpdateFirmware(I Ljava/lang/String;)Lcom/conexant/libcnxtservice/ServiceModuleCommand;",
+        "bldCmdWriteRegisterData(I Lcom/conexant/universalfunction/HidCmdByteArray;)Lcom/conexant/libcnxtservice/ServiceModuleCommand;",
+        "doInit()Z",
+        "executeCommand(Lcom/conexant/libcnxtservice/ServiceModuleCommand;)Z",
+        "getUsbDeviceBase()Lcom/conexant/cnxtusbcheadset/CnxtUsbDeviceBase;",
+        "handelHookKey(I)V",
+        "lambda$handelHookKey$0(I)V",
+        "onPermissionChanged()V",
+        "onUsbKeyEvent(I Z)V",
+        "release()V"
+      ],
+      "fields": [
+        "CMD_GET_AHB_DATA:I",
+        "CMD_GET_DEVICE_CHIP_CODE:I",
+        "CMD_GET_EQ:I",
+        "CMD_GET_EQ_COEFFS_LIST:I",
+        "CMD_GET_EQ_PARAMS_FROM_FLASH:I",
+        "CMD_GET_EQ_PARAM_LIST:I",
+        "CMD_GET_FEATURE_CONFIG_FM3:I",
+        "CMD_GET_FIRMWARE_PARAM:I",
+        "CMD_GET_FREQUENCY:I",
+        "CMD_GET_REGISTER_DATA:I",
+        "CMD_GET_REGISTER_SIGNAL_STRENGTH:I",
+        "CMD_GET_SEEK_STATION:I",
+        "CMD_GET_UPDATE_FIRMWARE_PROGRESS:I",
+        "CMD_RESET_DEVICE:I",
+        "CMD_SAVE_CUSTOM_EQ_LIST:I",
+        "CMD_SEND_CMD_TO_DEVICE:I",
+        "CMD_SET_AHB_DATA:I",
+        "CMD_SET_EQ:I",
+        "CMD_SET_FREQUENCY:I",
+        "CMD_SET_HID_CMD_BYTES:I",
+        "CMD_SET_NEXT_FM:I",
+        "CMD_SET_POWER_ENABLED:I",
+        "CMD_SET_PREVIOUS_FM:I",
+        "CMD_SET_REGISTER_DATA:I",
+        "CMD_SWITCH_EQ_MODE:I",
+        "CMD_UPDATE_FIRMWARE:I",
+        "TAG:Ljava/lang/String;",
+        "mCnxtUsbDeviceBase:Lcom/conexant/cnxtusbcheadset/CnxtUsbDeviceBase;",
+        "mFreeman:Lcom/conexant/cnxtusbcheadset/FreemanCnxtUsbDevice;"
+      ]
+    }
+  ],
+  "controlNameMethods": [
+    {
+      "class": "Lcom/conexant/conexantusbtypec/util/CommonUtil;",
+      "method": "convertIndexToDBGain",
+      "descriptor": "(I I)I"
+    },
+    {
+      "class": "Lcom/conexant/universalfunction/CommonUtil;",
+      "method": "convertGainIndex",
+      "descriptor": "(F I)I"
+    },
+    {
+      "class": "Lcom/conexant/universalfunction/CommonUtil;",
+      "method": "formatBandGainValue",
+      "descriptor": "(D)I"
+    },
+    {
+      "class": "Lcom/conexant/universalfunction/CommonUtil;",
+      "method": "getOriginalGainValue",
+      "descriptor": "(I)D"
+    },
+    {
+      "class": "Lcom/conexant/universalfunction/CommonUtilNative;",
+      "method": "convertGainIndex",
+      "descriptor": "(F I)I"
+    }
+  ],
+  "methodInstructions": [
+    {
+      "dex": "classes.dex",
+      "class": "Lcom/conexant/cnxtusbcheadset/FreemanCnxtUsbDevice;",
+      "method": "getFeatureConfigFM3",
+      "descriptor": "(Lcom/conexant/genericfeature/FeatureConfigFM3;)I",
+      "instructions": [
+        {
+          "offset": 0,
+          "opcode": "const/16",
+          "args": "v13, 13"
+        },
+        {
+          "offset": 4,
+          "opcode": "new-array",
+          "args": "v0, v13, [J"
+        },
+        {
+          "offset": 8,
+          "opcode": "const-wide/16",
+          "args": "v1, 84"
+        },
+        {
+          "offset": 12,
+          "opcode": "const/4",
+          "args": "v3, 0"
+        },
+        {
+          "offset": 14,
+          "opcode": "aput-wide",
+          "args": "v1, v0, v3"
+        },
+        {
+          "offset": 18,
+          "opcode": "const-string",
+          "args": "v1, \"CTRL\""
+        },
+        {
+          "offset": 22,
+          "opcode": "invoke-static",
+          "args": "v1, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getCafId(Ljava/lang/String;)I"
+        },
+        {
+          "offset": 28,
+          "opcode": "move-result",
+          "args": "v2"
+        },
+        {
+          "offset": 30,
+          "opcode": "sget-object",
+          "args": "v4, Lcom/conexant/cnxtusbcheadset/CnxtUsbDeviceBase;->mConnection Landroid/hardware/usb/UsbDeviceConnection;"
+        },
+        {
+          "offset": 34,
+          "opcode": "const/16",
+          "args": "v5, 346"
+        },
+        {
+          "offset": 38,
+          "opcode": "const/4",
+          "args": "v6, 1"
+        },
+        {
+          "offset": 40,
+          "opcode": "invoke-static",
+          "args": "v5, v2, v0, v4, v6, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getMsgByCmd(I I [J Landroid/hardware/usb/UsbDeviceConnection; I)[B"
+        },
+        {
+          "offset": 46,
+          "opcode": "move-result-object",
+          "args": "v0"
+        },
+        {
+          "offset": 48,
+          "opcode": "invoke-static",
+          "args": "v0, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->isExecuteSuccess([B)Z"
+        },
+        {
+          "offset": 54,
+          "opcode": "move-result",
+          "args": "v2"
+        },
+        {
+          "offset": 56,
+          "opcode": "const/16",
+          "args": "v4, -1001"
+        },
+        {
+          "offset": 60,
+          "opcode": "if-nez",
+          "args": "v2, +00ah"
+        },
+        {
+          "offset": 64,
+          "opcode": "sget-object",
+          "args": "v13, Lcom/conexant/cnxtusbcheadset/FreemanCnxtUsbDevice;->TAG Ljava/lang/String;"
+        },
+        {
+          "offset": 68,
+          "opcode": "const-string",
+          "args": "v14, \"getFeatureConfigFM3: get feature's available status execute failure\""
+        },
+        {
+          "offset": 72,
+          "opcode": "invoke-static",
+          "args": "v13, v14, Landroid/util/Log;->e(Ljava/lang/String; Ljava/lang/String;)I"
+        },
+        {
+          "offset": 78,
+          "opcode": "return",
+          "args": "v4"
+        },
+        {
+          "offset": 80,
+          "opcode": "const/16",
+          "args": "v2, 14"
+        },
+        {
+          "offset": 84,
+          "opcode": "aget-byte",
+          "args": "v0, v0, v2"
+        },
+        {
+          "offset": 88,
+          "opcode": "and-int/lit8",
+          "args": "v7, v0, 1"
+        },
+        {
+          "offset": 92,
+          "opcode": "if-ne",
+          "args": "v7, v6, +004h"
+        },
+        {
+          "offset": 96,
+          "opcode": "move",
+          "args": "v7, v6"
+        },
+        {
+          "offset": 98,
+          "opcode": "goto",
+          "args": "+2h"
+        },
+        {
+          "offset": 100,
+          "opcode": "move",
+          "args": "v7, v3"
+        },
+        {
+          "offset": 102,
+          "opcode": "iput-boolean",
+          "args": "v7, v14, Lcom/conexant/genericfeature/FeatureConfigFM3;->mIsFeatureCtrlEnabled Z"
+        },
+        {
+          "offset": 106,
+          "opcode": "shr-int/lit8",
+          "args": "v7, v0, 1"
+        },
+        {
+          "offset": 110,
+          "opcode": "and-int/2addr",
+          "args": "v7, v6"
+        },
+        {
+          "offset": 112,
+          "opcode": "if-ne",
+          "args": "v7, v6, +004h"
+        },
+        {
+          "offset": 116,
+          "opcode": "move",
+          "args": "v7, v6"
+        },
+        {
+          "offset": 118,
+          "opcode": "goto",
+          "args": "+2h"
+        },
+        {
+          "offset": 120,
+          "opcode": "move",
+          "args": "v7, v3"
+        },
+        {
+          "offset": 122,
+          "opcode": "iput-boolean",
+          "args": "v7, v14, Lcom/conexant/genericfeature/FeatureConfigFM3;->mIsDiagnoseAvailable Z"
+        },
+        {
+          "offset": 126,
+          "opcode": "shr-int/lit8",
+          "args": "v7, v0, 2"
+        },
+        {
+          "offset": 130,
+          "opcode": "and-int/2addr",
+          "args": "v7, v6"
+        },
+        {
+          "offset": 132,
+          "opcode": "if-ne",
+          "args": "v7, v6, +004h"
+        },
+        {
+          "offset": 136,
+          "opcode": "move",
+          "args": "v7, v6"
+        },
+        {
+          "offset": 138,
+          "opcode": "goto",
+          "args": "+2h"
+        },
+        {
+          "offset": 140,
+          "opcode": "move",
+          "args": "v7, v3"
+        },
+        {
+          "offset": 142,
+          "opcode": "iput-boolean",
+          "args": "v7, v14, Lcom/conexant/genericfeature/FeatureConfigFM3;->mIsHiFiFMAvailable Z"
+        },
+        {
+          "offset": 146,
+          "opcode": "shr-int/lit8",
+          "args": "v7, v0, 3"
+        },
+        {
+          "offset": 150,
+          "opcode": "and-int/2addr",
+          "args": "v7, v6"
+        },
+        {
+          "offset": 152,
+          "opcode": "if-ne",
+          "args": "v7, v6, +004h"
+        },
+        {
+          "offset": 156,
+          "opcode": "move",
+          "args": "v7, v6"
+        },
+        {
+          "offset": 158,
+          "opcode": "goto",
+          "args": "+2h"
+        },
+        {
+          "offset": 160,
+          "opcode": "move",
+          "args": "v7, v3"
+        },
+        {
+          "offset": 162,
+          "opcode": "iput-boolean",
+          "args": "v7, v14, Lcom/conexant/genericfeature/FeatureConfigFM3;->mIsDongleLRDetectAvailable Z"
+        },
+        {
+          "offset": 166,
+          "opcode": "shr-int/lit8",
+          "args": "v7, v0, 4"
+        },
+        {
+          "offset": 170,
+          "opcode": "and-int/2addr",
+          "args": "v7, v6"
+        },
+        {
+          "offset": 172,
+          "opcode": "if-ne",
+          "args": "v7, v6, +004h"
+        },
+        {
+          "offset": 176,
+          "opcode": "move",
+          "args": "v7, v6"
+        },
+        {
+          "offset": 178,
+          "opcode": "goto",
+          "args": "+2h"
+        },
+        {
+          "offset": 180,
+          "opcode": "move",
+          "args": "v7, v3"
+        },
+        {
+          "offset": 182,
+          "opcode": "iput-boolean",
+          "args": "v7, v14, Lcom/conexant/genericfeature/FeatureConfigFM3;->mIsLPMAvailable Z"
+        },
+        {
+          "offset": 186,
+          "opcode": "shr-int/lit8",
+          "args": "v0, v0, 5"
+        },
+        {
+          "offset": 190,
+          "opcode": "and-int/2addr",
+          "args": "v0, v6"
+        },
+        {
+          "offset": 192,
+          "opcode": "if-ne",
+          "args": "v0, v6, +004h"
+        },
+        {
+          "offset": 196,
+          "opcode": "move",
+          "args": "v0, v6"
+        },
+        {
+          "offset": 198,
+          "opcode": "goto",
+          "args": "+2h"
+        },
+        {
+          "offset": 200,
+          "opcode": "move",
+          "args": "v0, v3"
+        },
+        {
+          "offset": 202,
+          "opcode": "iput-boolean",
+          "args": "v0, v14, Lcom/conexant/genericfeature/FeatureConfigFM3;->mIsEQInFWAvailable Z"
+        },
+        {
+          "offset": 206,
+          "opcode": "sget-object",
+          "args": "v0, Lcom/conexant/cnxtusbcheadset/FreemanCnxtUsbDevice;->TAG Ljava/lang/String;"
+        },
+        {
+          "offset": 210,
+          "opcode": "new-instance",
+          "args": "v7, Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 214,
+          "opcode": "const-string",
+          "args": "v8, \"getFWFeatureConfiguration: mIsFeatureCtrlEnabled:\""
+        },
+        {
+          "offset": 218,
+          "opcode": "invoke-direct",
+          "args": "v7, v8, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V"
+        },
+        {
+          "offset": 224,
+          "opcode": "iget-boolean",
+          "args": "v8, v14, Lcom/conexant/genericfeature/FeatureConfigFM3;->mIsFeatureCtrlEnabled Z"
+        },
+        {
+          "offset": 228,
+          "opcode": "invoke-virtual",
+          "args": "v7, v8, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 234,
+          "opcode": "const-string",
+          "args": "v8, \" & mIsDiagnoseEnabled: \""
+        },
+        {
+          "offset": 238,
+          "opcode": "invoke-virtual",
+          "args": "v7, v8, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 244,
+          "opcode": "iget-boolean",
+          "args": "v8, v14, Lcom/conexant/genericfeature/FeatureConfigFM3;->mIsDiagnoseAvailable Z"
+        },
+        {
+          "offset": 248,
+          "opcode": "invoke-virtual",
+          "args": "v7, v8, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 254,
+          "opcode": "const-string",
+          "args": "v8, \" & mIsHiFiFMEnabled: \""
+        },
+        {
+          "offset": 258,
+          "opcode": "invoke-virtual",
+          "args": "v7, v8, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 264,
+          "opcode": "iget-boolean",
+          "args": "v9, v14, Lcom/conexant/genericfeature/FeatureConfigFM3;->mIsHiFiFMAvailable Z"
+        },
+        {
+          "offset": 268,
+          "opcode": "invoke-virtual",
+          "args": "v7, v9, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 274,
+          "opcode": "const-string",
+          "args": "v9, \" & mIsDongleLRDetectEnabled: \""
+        },
+        {
+          "offset": 278,
+          "opcode": "invoke-virtual",
+          "args": "v7, v9, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 284,
+          "opcode": "iget-boolean",
+          "args": "v10, v14, Lcom/conexant/genericfeature/FeatureConfigFM3;->mIsDongleLRDetectAvailable Z"
+        },
+        {
+          "offset": 288,
+          "opcode": "invoke-virtual",
+          "args": "v7, v10, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 294,
+          "opcode": "const-string",
+          "args": "v10, \" & mIsLPMEnabled: \""
+        },
+        {
+          "offset": 298,
+          "opcode": "invoke-virtual",
+          "args": "v7, v10, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 304,
+          "opcode": "iget-boolean",
+          "args": "v11, v14, Lcom/conexant/genericfeature/FeatureConfigFM3;->mIsLPMAvailable Z"
+        },
+        {
+          "offset": 308,
+          "opcode": "invoke-virtual",
+          "args": "v7, v11, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 314,
+          "opcode": "const-string",
+          "args": "v11, \" & mIsEQInFWAvailable: \""
+        },
+        {
+          "offset": 318,
+          "opcode": "invoke-virtual",
+          "args": "v7, v11, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 324,
+          "opcode": "iget-boolean",
+          "args": "v11, v14, Lcom/conexant/genericfeature/FeatureConfigFM3;->mIsEQInFWAvailable Z"
+        },
+        {
+          "offset": 328,
+          "opcode": "invoke-virtual",
+          "args": "v7, v11, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 334,
+          "opcode": "invoke-virtual",
+          "args": "v7, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;"
+        },
+        {
+          "offset": 340,
+          "opcode": "move-result-object",
+          "args": "v7"
+        },
+        {
+          "offset": 342,
+          "opcode": "invoke-static",
+          "args": "v0, v7, Landroid/util/Log;->d(Ljava/lang/String; Ljava/lang/String;)I"
+        },
+        {
+          "offset": 348,
+          "opcode": "new-array",
+          "args": "v13, v13, [J"
+        },
+        {
+          "offset": 352,
+          "opcode": "const-wide/16",
+          "args": "v11, 64"
+        },
+        {
+          "offset": 356,
+          "opcode": "aput-wide",
+          "args": "v11, v13, v3"
+        },
+        {
+          "offset": 360,
+          "opcode": "invoke-static",
+          "args": "v1, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getCafId(Ljava/lang/String;)I"
+        },
+        {
+          "offset": 366,
+          "opcode": "move-result",
+          "args": "v1"
+        },
+        {
+          "offset": 368,
+          "opcode": "sget-object",
+          "args": "v7, Lcom/conexant/cnxtusbcheadset/CnxtUsbDeviceBase;->mConnection Landroid/hardware/usb/UsbDeviceConnection;"
+        },
+        {
+          "offset": 372,
+          "opcode": "invoke-static",
+          "args": "v5, v1, v13, v7, v6, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getMsgByCmd(I I [J Landroid/hardware/usb/UsbDeviceConnection; I)[B"
+        },
+        {
+          "offset": 378,
+          "opcode": "move-result-object",
+          "args": "v13"
+        },
+        {
+          "offset": 380,
+          "opcode": "invoke-static",
+          "args": "v13, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->isExecuteSuccess([B)Z"
+        },
+        {
+          "offset": 386,
+          "opcode": "move-result",
+          "args": "v1"
+        },
+        {
+          "offset": 388,
+          "opcode": "if-nez",
+          "args": "v1, +008h"
+        },
+        {
+          "offset": 392,
+          "opcode": "const-string",
+          "args": "v13, \"getFeatureConfigFM3: get feature's enable/disable status execute failure\""
+        },
+        {
+          "offset": 396,
+          "opcode": "invoke-static",
+          "args": "v0, v13, Landroid/util/Log;->e(Ljava/lang/String; Ljava/lang/String;)I"
+        },
+        {
+          "offset": 402,
+          "opcode": "return",
+          "args": "v4"
+        },
+        {
+          "offset": 404,
+          "opcode": "aget-byte",
+          "args": "v13, v13, v2"
+        },
+        {
+          "offset": 408,
+          "opcode": "shr-int/lit8",
+          "args": "v1, v13, 1"
+        },
+        {
+          "offset": 412,
+          "opcode": "and-int/2addr",
+          "args": "v1, v6"
+        },
+        {
+          "offset": 414,
+          "opcode": "if-ne",
+          "args": "v1, v6, +004h"
+        },
+        {
+          "offset": 418,
+          "opcode": "move",
+          "args": "v1, v6"
+        },
+        {
+          "offset": 420,
+          "opcode": "goto",
+          "args": "+2h"
+        },
+        {
+          "offset": 422,
+          "opcode": "move",
+          "args": "v1, v3"
+        },
+        {
+          "offset": 424,
+          "opcode": "iput-boolean",
+          "args": "v1, v14, Lcom/conexant/genericfeature/FeatureConfigFM3;->mIsDiagnoseEnabled Z"
+        },
+        {
+          "offset": 428,
+          "opcode": "shr-int/lit8",
+          "args": "v1, v13, 2"
+        },
+        {
+          "offset": 432,
+          "opcode": "and-int/2addr",
+          "args": "v1, v6"
+        },
+        {
+          "offset": 434,
+          "opcode": "if-ne",
+          "args": "v1, v6, +004h"
+        },
+        {
+          "offset": 438,
+          "opcode": "move",
+          "args": "v1, v6"
+        },
+        {
+          "offset": 440,
+          "opcode": "goto",
+          "args": "+2h"
+        },
+        {
+          "offset": 442,
+          "opcode": "move",
+          "args": "v1, v3"
+        },
+        {
+          "offset": 444,
+          "opcode": "iput-boolean",
+          "args": "v1, v14, Lcom/conexant/genericfeature/FeatureConfigFM3;->mIsHiFiFMEnabled Z"
+        },
+        {
+          "offset": 448,
+          "opcode": "shr-int/lit8",
+          "args": "v1, v13, 3"
+        },
+        {
+          "offset": 452,
+          "opcode": "and-int/2addr",
+          "args": "v1, v6"
+        },
+        {
+          "offset": 454,
+          "opcode": "if-ne",
+          "args": "v1, v6, +004h"
+        },
+        {
+          "offset": 458,
+          "opcode": "move",
+          "args": "v1, v6"
+        },
+        {
+          "offset": 460,
+          "opcode": "goto",
+          "args": "+2h"
+        },
+        {
+          "offset": 462,
+          "opcode": "move",
+          "args": "v1, v3"
+        },
+        {
+          "offset": 464,
+          "opcode": "iput-boolean",
+          "args": "v1, v14, Lcom/conexant/genericfeature/FeatureConfigFM3;->mIsDongleLRDetectEnabled Z"
+        },
+        {
+          "offset": 468,
+          "opcode": "shr-int/lit8",
+          "args": "v1, v13, 4"
+        },
+        {
+          "offset": 472,
+          "opcode": "and-int/2addr",
+          "args": "v1, v6"
+        },
+        {
+          "offset": 474,
+          "opcode": "if-ne",
+          "args": "v1, v6, +004h"
+        },
+        {
+          "offset": 478,
+          "opcode": "move",
+          "args": "v1, v6"
+        },
+        {
+          "offset": 480,
+          "opcode": "goto",
+          "args": "+2h"
+        },
+        {
+          "offset": 482,
+          "opcode": "move",
+          "args": "v1, v3"
+        },
+        {
+          "offset": 484,
+          "opcode": "iput-boolean",
+          "args": "v1, v14, Lcom/conexant/genericfeature/FeatureConfigFM3;->mIsLPMEnabled Z"
+        },
+        {
+          "offset": 488,
+          "opcode": "shr-int/lit8",
+          "args": "v13, v13, 5"
+        },
+        {
+          "offset": 492,
+          "opcode": "and-int/2addr",
+          "args": "v13, v6"
+        },
+        {
+          "offset": 494,
+          "opcode": "if-ne",
+          "args": "v13, v6, +003h"
+        },
+        {
+          "offset": 498,
+          "opcode": "goto",
+          "args": "+2h"
+        },
+        {
+          "offset": 500,
+          "opcode": "move",
+          "args": "v6, v3"
+        },
+        {
+          "offset": 502,
+          "opcode": "iput-boolean",
+          "args": "v6, v14, Lcom/conexant/genericfeature/FeatureConfigFM3;->mIsEQInFWEnabled Z"
+        },
+        {
+          "offset": 506,
+          "opcode": "new-instance",
+          "args": "v13, Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 510,
+          "opcode": "const-string",
+          "args": "v1, \"getFWFeatureConfiguration: mIsDiagnoseEnabled: \""
+        },
+        {
+          "offset": 514,
+          "opcode": "invoke-direct",
+          "args": "v13, v1, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V"
+        },
+        {
+          "offset": 520,
+          "opcode": "iget-boolean",
+          "args": "v1, v14, Lcom/conexant/genericfeature/FeatureConfigFM3;->mIsDiagnoseEnabled Z"
+        },
+        {
+          "offset": 524,
+          "opcode": "invoke-virtual",
+          "args": "v13, v1, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 530,
+          "opcode": "invoke-virtual",
+          "args": "v13, v8, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 536,
+          "opcode": "iget-boolean",
+          "args": "v1, v14, Lcom/conexant/genericfeature/FeatureConfigFM3;->mIsHiFiFMEnabled Z"
+        },
+        {
+          "offset": 540,
+          "opcode": "invoke-virtual",
+          "args": "v13, v1, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 546,
+          "opcode": "invoke-virtual",
+          "args": "v13, v9, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 552,
+          "opcode": "iget-boolean",
+          "args": "v1, v14, Lcom/conexant/genericfeature/FeatureConfigFM3;->mIsDongleLRDetectEnabled Z"
+        },
+        {
+          "offset": 556,
+          "opcode": "invoke-virtual",
+          "args": "v13, v1, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 562,
+          "opcode": "invoke-virtual",
+          "args": "v13, v10, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 568,
+          "opcode": "iget-boolean",
+          "args": "v1, v14, Lcom/conexant/genericfeature/FeatureConfigFM3;->mIsLPMEnabled Z"
+        },
+        {
+          "offset": 572,
+          "opcode": "invoke-virtual",
+          "args": "v13, v1, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 578,
+          "opcode": "const-string",
+          "args": "v1, \" & mIsEQInFWEnabled: \""
+        },
+        {
+          "offset": 582,
+          "opcode": "invoke-virtual",
+          "args": "v13, v1, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 588,
+          "opcode": "iget-boolean",
+          "args": "v14, v14, Lcom/conexant/genericfeature/FeatureConfigFM3;->mIsEQInFWEnabled Z"
+        },
+        {
+          "offset": 592,
+          "opcode": "invoke-virtual",
+          "args": "v13, v14, Ljava/lang/StringBuilder;->append(Z)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 598,
+          "opcode": "invoke-virtual",
+          "args": "v13, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;"
+        },
+        {
+          "offset": 604,
+          "opcode": "move-result-object",
+          "args": "v13"
+        },
+        {
+          "offset": 606,
+          "opcode": "invoke-static",
+          "args": "v0, v13, Landroid/util/Log;->d(Ljava/lang/String; Ljava/lang/String;)I"
+        },
+        {
+          "offset": 612,
+          "opcode": "return",
+          "args": "v3"
+        }
+      ]
+    },
+    {
+      "dex": "classes.dex",
+      "class": "Lcom/conexant/cnxtusbcheadset/FreemanCnxtUsbDevice;",
+      "method": "getFreeman3EQConfig",
+      "descriptor": "()V",
+      "instructions": [
+        {
+          "offset": 0,
+          "opcode": "const/16",
+          "args": "v0, 13"
+        },
+        {
+          "offset": 4,
+          "opcode": "new-array",
+          "args": "v0, v0, [J"
+        },
+        {
+          "offset": 8,
+          "opcode": "const-string",
+          "args": "v1, \"CTRL\""
+        },
+        {
+          "offset": 12,
+          "opcode": "invoke-static",
+          "args": "v1, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getCafId(Ljava/lang/String;)I"
+        },
+        {
+          "offset": 18,
+          "opcode": "move-result",
+          "args": "v1"
+        },
+        {
+          "offset": 20,
+          "opcode": "sget-object",
+          "args": "v2, Lcom/conexant/cnxtusbcheadset/CnxtUsbDeviceBase;->mConnection Landroid/hardware/usb/UsbDeviceConnection;"
+        },
+        {
+          "offset": 24,
+          "opcode": "const/16",
+          "args": "v3, 442"
+        },
+        {
+          "offset": 28,
+          "opcode": "const/4",
+          "args": "v4, 1"
+        },
+        {
+          "offset": 30,
+          "opcode": "invoke-static",
+          "args": "v3, v1, v0, v2, v4, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getMsgByCmd(I I [J Landroid/hardware/usb/UsbDeviceConnection; I)[B"
+        },
+        {
+          "offset": 36,
+          "opcode": "move-result-object",
+          "args": "v0"
+        },
+        {
+          "offset": 38,
+          "opcode": "invoke-static",
+          "args": "v0, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->isExecuteSuccess([B)Z"
+        },
+        {
+          "offset": 44,
+          "opcode": "move-result",
+          "args": "v1"
+        },
+        {
+          "offset": 46,
+          "opcode": "if-nez",
+          "args": "v1, +00ah"
+        },
+        {
+          "offset": 50,
+          "opcode": "sget-object",
+          "args": "v6, Lcom/conexant/cnxtusbcheadset/FreemanCnxtUsbDevice;->TAG Ljava/lang/String;"
+        },
+        {
+          "offset": 54,
+          "opcode": "const-string",
+          "args": "v0, \"getFreeman3EQConfig: execute failure\""
+        },
+        {
+          "offset": 58,
+          "opcode": "invoke-static",
+          "args": "v6, v0, Landroid/util/Log;->e(Ljava/lang/String; Ljava/lang/String;)I"
+        },
+        {
+          "offset": 64,
+          "opcode": "return-void",
+          "args": ""
+        },
+        {
+          "offset": 66,
+          "opcode": "const/16",
+          "args": "v1, 10"
+        },
+        {
+          "offset": 70,
+          "opcode": "invoke-static",
+          "args": "v0, v1, Lcom/conexant/universalfunction/CommonUtil;->formatByteToInt([B I)I"
+        },
+        {
+          "offset": 76,
+          "opcode": "move-result",
+          "args": "v0"
+        },
+        {
+          "offset": 78,
+          "opcode": "const/4",
+          "args": "v1, 0"
+        },
+        {
+          "offset": 80,
+          "opcode": "move",
+          "args": "v2, v1"
+        },
+        {
+          "offset": 82,
+          "opcode": "sget-object",
+          "args": "v3, Lcom/conexant/universalfunction/CnxtUsbConstants;->SAMPLE_RATE_ARRAY [[I"
+        },
+        {
+          "offset": 86,
+          "opcode": "array-length",
+          "args": "v5, v3"
+        },
+        {
+          "offset": 88,
+          "opcode": "if-ge",
+          "args": "v2, v5, +00fh"
+        },
+        {
+          "offset": 92,
+          "opcode": "aget-object",
+          "args": "v3, v3, v2"
+        },
+        {
+          "offset": 96,
+          "opcode": "aget",
+          "args": "v5, v3, v1"
+        },
+        {
+          "offset": 100,
+          "opcode": "if-ne",
+          "args": "v0, v5, +006h"
+        },
+        {
+          "offset": 104,
+          "opcode": "aget",
+          "args": "v3, v3, v4"
+        },
+        {
+          "offset": 108,
+          "opcode": "iput",
+          "args": "v3, v6, Lcom/conexant/cnxtusbcheadset/FreemanCnxtUsbDevice;->DEFAULT_FREEMAN3_SAMPLERATE I"
+        },
+        {
+          "offset": 112,
+          "opcode": "add-int/lit8",
+          "args": "v2, v2, 1"
+        },
+        {
+          "offset": 116,
+          "opcode": "goto",
+          "args": "-11h"
+        },
+        {
+          "offset": 118,
+          "opcode": "sget-object",
+          "args": "v1, Lcom/conexant/cnxtusbcheadset/FreemanCnxtUsbDevice;->TAG Ljava/lang/String;"
+        },
+        {
+          "offset": 122,
+          "opcode": "const-string",
+          "args": "v2, \"getFreeman3EQConfig: index= \""
+        },
+        {
+          "offset": 126,
+          "opcode": "const-string",
+          "args": "v3, \" & sampleRate = \""
+        },
+        {
+          "offset": 130,
+          "opcode": "invoke-static",
+          "args": "v0, v2, v3, Ln50;->o(I Ljava/lang/String; Ljava/lang/String;)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 136,
+          "opcode": "move-result-object",
+          "args": "v0"
+        },
+        {
+          "offset": 138,
+          "opcode": "iget",
+          "args": "v6, v6, Lcom/conexant/cnxtusbcheadset/FreemanCnxtUsbDevice;->DEFAULT_FREEMAN3_SAMPLERATE I"
+        },
+        {
+          "offset": 142,
+          "opcode": "invoke-virtual",
+          "args": "v0, v6, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 148,
+          "opcode": "invoke-virtual",
+          "args": "v0, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;"
+        },
+        {
+          "offset": 154,
+          "opcode": "move-result-object",
+          "args": "v6"
+        },
+        {
+          "offset": 156,
+          "opcode": "invoke-static",
+          "args": "v1, v6, Landroid/util/Log;->d(Ljava/lang/String; Ljava/lang/String;)I"
+        },
+        {
+          "offset": 162,
+          "opcode": "return-void",
+          "args": ""
+        }
+      ]
+    },
+    {
+      "dex": "classes.dex",
+      "class": "Lcom/conexant/conexantusbtypec/svcimpl/FreemanController;",
+      "method": "getFeatureConfigFM3",
+      "descriptor": "(Lcom/conexant/genericfeature/FeatureConfigFM3;)I",
+      "instructions": [
+        {
+          "offset": 0,
+          "opcode": "iget-object",
+          "args": "v0, v3, Lcom/conexant/conexantusbtypec/svcimpl/UsbControllerBase;->mUsbSession Lcom/conexant/libcnxtservice/service/UsbSessionDescriptor;"
+        },
+        {
+          "offset": 4,
+          "opcode": "invoke-virtual",
+          "args": "v0, Lcom/conexant/libcnxtservice/service/UsbSessionDescriptor;->getSessionId()I"
+        },
+        {
+          "offset": 10,
+          "opcode": "move-result",
+          "args": "v0"
+        },
+        {
+          "offset": 12,
+          "opcode": "invoke-static",
+          "args": "v0, v4, Lcom/conexant/libcnxtservice/service/FreemanSession;->bldCmdGetFeatureConfigFM3(I Lcom/conexant/genericfeature/FeatureConfigFM3;)Lcom/conexant/libcnxtservice/ServiceModuleCommand;"
+        },
+        {
+          "offset": 18,
+          "opcode": "move-result-object",
+          "args": "v4"
+        },
+        {
+          "offset": 20,
+          "opcode": "iget-object",
+          "args": "v3, v3, Lcom/conexant/conexantusbtypec/svcimpl/UsbControllerBase;->mModuleId Ljava/lang/String;"
+        },
+        {
+          "offset": 24,
+          "opcode": "invoke-static",
+          "args": "v3, v4, Lcom/conexant/libcnxtservice/ServiceUtils;->svcModuleCmd(Ljava/lang/String; Lcom/conexant/libcnxtservice/ServiceModuleCommand;)Z"
+        },
+        {
+          "offset": 30,
+          "opcode": "sget-object",
+          "args": "v3, Lcom/conexant/conexantusbtypec/svcimpl/FreemanController;->TAG Ljava/lang/String;"
+        },
+        {
+          "offset": 34,
+          "opcode": "new-instance",
+          "args": "v0, Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 38,
+          "opcode": "const-string",
+          "args": "v1, \"getFeatureConfigFM3: arg: \""
+        },
+        {
+          "offset": 42,
+          "opcode": "invoke-direct",
+          "args": "v0, v1, Ljava/lang/StringBuilder;-><init>(Ljava/lang/String;)V"
+        },
+        {
+          "offset": 48,
+          "opcode": "invoke-virtual",
+          "args": "v4, Lcom/conexant/libcnxtservice/ServiceModuleCommand;->getArg()J"
+        },
+        {
+          "offset": 54,
+          "opcode": "move-result-wide",
+          "args": "v1"
+        },
+        {
+          "offset": 56,
+          "opcode": "invoke-virtual",
+          "args": "v0, v1, v2, Ljava/lang/StringBuilder;->append(J)Ljava/lang/StringBuilder;"
+        },
+        {
+          "offset": 62,
+          "opcode": "invoke-virtual",
+          "args": "v0, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;"
+        },
+        {
+          "offset": 68,
+          "opcode": "move-result-object",
+          "args": "v0"
+        },
+        {
+          "offset": 70,
+          "opcode": "invoke-static",
+          "args": "v3, v0, Landroid/util/Log;->d(Ljava/lang/String; Ljava/lang/String;)I"
+        },
+        {
+          "offset": 76,
+          "opcode": "invoke-virtual",
+          "args": "v4, Lcom/conexant/libcnxtservice/ServiceModuleCommand;->getArg()J"
+        },
+        {
+          "offset": 82,
+          "opcode": "move-result-wide",
+          "args": "v3"
+        },
+        {
+          "offset": 84,
+          "opcode": "long-to-int",
+          "args": "v3, v3"
+        },
+        {
+          "offset": 86,
+          "opcode": "return",
+          "args": "v3"
+        }
+      ]
+    },
+    {
+      "dex": "classes.dex",
+      "class": "Lcom/conexant/conexantusbtypec/util/CommonUtil;",
+      "method": "convertIndexToDBGain",
+      "descriptor": "(I I)I",
+      "instructions": [
+        {
+          "offset": 0,
+          "opcode": "const/high16",
+          "args": "v0, 1115422720"
+        },
+        {
+          "offset": 4,
+          "opcode": "if-nez",
+          "args": "v3, +00ah"
+        },
+        {
+          "offset": 8,
+          "opcode": "add-int/lit8",
+          "args": "v2, v2, -63"
+        },
+        {
+          "offset": 12,
+          "opcode": "mul-int/lit8",
+          "args": "v2, v2, 30"
+        },
+        {
+          "offset": 16,
+          "opcode": "int-to-float",
+          "args": "v2, v2"
+        },
+        {
+          "offset": 18,
+          "opcode": "div-float/2addr",
+          "args": "v2, v0"
+        },
+        {
+          "offset": 20,
+          "opcode": "float-to-int",
+          "args": "v2, v2"
+        },
+        {
+          "offset": 22,
+          "opcode": "goto",
+          "args": "+fh"
+        },
+        {
+          "offset": 24,
+          "opcode": "const/4",
+          "args": "v1, 1"
+        },
+        {
+          "offset": 26,
+          "opcode": "if-ne",
+          "args": "v3, v1, +00ch"
+        },
+        {
+          "offset": 30,
+          "opcode": "add-int/lit8",
+          "args": "v2, v2, -63"
+        },
+        {
+          "offset": 34,
+          "opcode": "mul-int/lit8",
+          "args": "v2, v2, 80"
+        },
+        {
+          "offset": 38,
+          "opcode": "int-to-float",
+          "args": "v2, v2"
+        },
+        {
+          "offset": 40,
+          "opcode": "div-float/2addr",
+          "args": "v2, v0"
+        },
+        {
+          "offset": 42,
+          "opcode": "const/high16",
+          "args": "v3, 1109393408"
+        },
+        {
+          "offset": 46,
+          "opcode": "add-float/2addr",
+          "args": "v2, v3"
+        },
+        {
+          "offset": 48,
+          "opcode": "goto",
+          "args": "-eh"
+        },
+        {
+          "offset": 50,
+          "opcode": "const/4",
+          "args": "v2, 0"
+        },
+        {
+          "offset": 52,
+          "opcode": "int-to-float",
+          "args": "v2, v2"
+        },
+        {
+          "offset": 54,
+          "opcode": "invoke-static",
+          "args": "v2, Ljava/lang/Math;->round(F)I"
+        },
+        {
+          "offset": 60,
+          "opcode": "move-result",
+          "args": "v2"
+        },
+        {
+          "offset": 62,
+          "opcode": "return",
+          "args": "v2"
+        }
+      ]
+    },
+    {
+      "dex": "classes.dex",
+      "class": "Lcom/conexant/universalfunction/CommonUtil;",
+      "method": "convertGainIndex",
+      "descriptor": "(F I)I",
+      "instructions": [
+        {
+          "offset": 0,
+          "opcode": "invoke-static",
+          "args": "v0, v1, Lcom/conexant/universalfunction/CommonUtilNative;->convertGainIndex(F I)I"
+        },
+        {
+          "offset": 6,
+          "opcode": "move-result",
+          "args": "v0"
+        },
+        {
+          "offset": 8,
+          "opcode": "return",
+          "args": "v0"
+        }
+      ]
+    },
+    {
+      "dex": "classes.dex",
+      "class": "Lcom/conexant/universalfunction/CommonUtil;",
+      "method": "formatBandGainValue",
+      "descriptor": "(D)I",
+      "instructions": [
+        {
+          "offset": 0,
+          "opcode": "new-instance",
+          "args": "v0, Ljava/math/BigDecimal;"
+        },
+        {
+          "offset": 4,
+          "opcode": "invoke-direct",
+          "args": "v0, v7, v8, Ljava/math/BigDecimal;-><init>(D)V"
+        },
+        {
+          "offset": 10,
+          "opcode": "const/4",
+          "args": "v7, 2"
+        },
+        {
+          "offset": 12,
+          "opcode": "sget-object",
+          "args": "v8, Ljava/math/RoundingMode;->HALF_UP Ljava/math/RoundingMode;"
+        },
+        {
+          "offset": 16,
+          "opcode": "invoke-virtual",
+          "args": "v0, v7, v8, Ljava/math/BigDecimal;->setScale(I Ljava/math/RoundingMode;)Ljava/math/BigDecimal;"
+        },
+        {
+          "offset": 22,
+          "opcode": "move-result-object",
+          "args": "v7"
+        },
+        {
+          "offset": 24,
+          "opcode": "invoke-virtual",
+          "args": "v7, Ljava/math/BigDecimal;->doubleValue()D"
+        },
+        {
+          "offset": 30,
+          "opcode": "move-result-wide",
+          "args": "v7"
+        },
+        {
+          "offset": 32,
+          "opcode": "const-wide/high16",
+          "args": "v0, 4626322717216342016"
+        },
+        {
+          "offset": 36,
+          "opcode": "div-double/2addr",
+          "args": "v7, v0"
+        },
+        {
+          "offset": 38,
+          "opcode": "const-wide/high16",
+          "args": "v0, 4621819117588971520"
+        },
+        {
+          "offset": 42,
+          "opcode": "invoke-static",
+          "args": "v0, v1, v7, v8, Ljava/lang/Math;->pow(D D)D"
+        },
+        {
+          "offset": 48,
+          "opcode": "move-result-wide",
+          "args": "v7"
+        },
+        {
+          "offset": 50,
+          "opcode": "const-wide/16",
+          "args": "v0, 0"
+        },
+        {
+          "offset": 54,
+          "opcode": "cmpg-double",
+          "args": "v0, v7, v0"
+        },
+        {
+          "offset": 58,
+          "opcode": "const-wide/high16",
+          "args": "v1, 4618441417868443648"
+        },
+        {
+          "offset": 62,
+          "opcode": "const-wide/high16",
+          "args": "v3, 4611686018427387904"
+        },
+        {
+          "offset": 66,
+          "opcode": "if-gez",
+          "args": "v0, +013h"
+        },
+        {
+          "offset": 70,
+          "opcode": "invoke-static",
+          "args": "v3, v4, v1, v2, Ljava/lang/Math;->pow(D D)D"
+        },
+        {
+          "offset": 76,
+          "opcode": "move-result-wide",
+          "args": "v5"
+        },
+        {
+          "offset": 78,
+          "opcode": "mul-double/2addr",
+          "args": "v5, v3"
+        },
+        {
+          "offset": 80,
+          "opcode": "invoke-static",
+          "args": "v3, v4, v1, v2, Ljava/lang/Math;->pow(D D)D"
+        },
+        {
+          "offset": 86,
+          "opcode": "move-result-wide",
+          "args": "v0"
+        },
+        {
+          "offset": 88,
+          "opcode": "mul-double/2addr",
+          "args": "v0, v7"
+        },
+        {
+          "offset": 90,
+          "opcode": "invoke-static",
+          "args": "v0, v1, Ljava/lang/Math;->floor(D)D"
+        },
+        {
+          "offset": 96,
+          "opcode": "move-result-wide",
+          "args": "v7"
+        },
+        {
+          "offset": 98,
+          "opcode": "add-double/2addr",
+          "args": "v7, v5"
+        },
+        {
+          "offset": 100,
+          "opcode": "double-to-int",
+          "args": "v7, v7"
+        },
+        {
+          "offset": 102,
+          "opcode": "return",
+          "args": "v7"
+        },
+        {
+          "offset": 104,
+          "opcode": "invoke-static",
+          "args": "v3, v4, v1, v2, Ljava/lang/Math;->pow(D D)D"
+        },
+        {
+          "offset": 110,
+          "opcode": "move-result-wide",
+          "args": "v0"
+        },
+        {
+          "offset": 112,
+          "opcode": "mul-double/2addr",
+          "args": "v0, v7"
+        },
+        {
+          "offset": 114,
+          "opcode": "invoke-static",
+          "args": "v0, v1, Ljava/lang/Math;->floor(D)D"
+        },
+        {
+          "offset": 120,
+          "opcode": "move-result-wide",
+          "args": "v7"
+        },
+        {
+          "offset": 122,
+          "opcode": "goto",
+          "args": "-bh"
+        }
+      ]
+    },
+    {
+      "dex": "classes.dex",
+      "class": "Lcom/conexant/universalfunction/CommonUtil;",
+      "method": "getOriginalGainValue",
+      "descriptor": "(I)D",
+      "instructions": [
+        {
+          "offset": 0,
+          "opcode": "int-to-double",
+          "args": "v0, v6"
+        },
+        {
+          "offset": 2,
+          "opcode": "const-wide/high16",
+          "args": "v2, 4611686018427387904"
+        },
+        {
+          "offset": 6,
+          "opcode": "const-wide/high16",
+          "args": "v4, 4618441417868443648"
+        },
+        {
+          "offset": 10,
+          "opcode": "invoke-static",
+          "args": "v2, v3, v4, v5, Ljava/lang/Math;->pow(D D)D"
+        },
+        {
+          "offset": 16,
+          "opcode": "move-result-wide",
+          "args": "v2"
+        },
+        {
+          "offset": 18,
+          "opcode": "div-double/2addr",
+          "args": "v0, v2"
+        },
+        {
+          "offset": 20,
+          "opcode": "const-wide/high16",
+          "args": "v2, 4626322717216342016"
+        },
+        {
+          "offset": 24,
+          "opcode": "invoke-static",
+          "args": "v0, v1, Ljava/lang/Math;->log10(D)D"
+        },
+        {
+          "offset": 30,
+          "opcode": "move-result-wide",
+          "args": "v0"
+        },
+        {
+          "offset": 32,
+          "opcode": "mul-double/2addr",
+          "args": "v0, v2"
+        },
+        {
+          "offset": 34,
+          "opcode": "return-wide",
+          "args": "v0"
+        }
+      ]
+    }
+  ],
+  "gainConversionCallers": [
+    {
+      "class": "Lcom/conexant/universalfunction/CommonUtil;",
+      "method": "convertGainIndex",
+      "offset": 0,
+      "call": "v0, v1, Lcom/conexant/universalfunction/CommonUtilNative;->convertGainIndex(F I)I"
+    }
+  ],
+  "nativeLibraries": [
+    {
+      "file": "lib/arm64-v8a/libCxAudioHidLib.so",
+      "sha256": "e3b58275c7421029be587218c35d8b997a9616a98c8e9795fc4c7db88d6e22cd",
+      "controlNameSymbols": [
+        "_Z44ICxAudioHidDev_StopMonitorButtonReportThreadP14ICxAudioHidDev",
+        "_Z45ICxAudioHidDev_StartMonitorButtonReportThreadP14ICxAudioHidDevPFvhPhjE",
+        "_ZN16CxAudioHidDevice29StopMonitorButtonReportThreadEv",
+        "_ZN16CxAudioHidDevice30StartMonitorButtonReportThreadEPFvhPhjE",
+        "_ZN18CxAudioHidDev2080529StopMonitorButtonReportThreadEv",
+        "_ZN18CxAudioHidDev2080530StartMonitorButtonReportThreadEPFvhPhjE",
+        "_ZN18CxAudioHidDev2098x29StopMonitorButtonReportThreadEv",
+        "_ZN18CxAudioHidDev2098x30StartMonitorButtonReportThreadEPFvhPhjE"
+      ],
+      "gainConversionFunctions": []
+    },
+    {
+      "file": "lib/arm64-v8a/libCxAudioHidLib_EMBCB_jni.so",
+      "sha256": "9838ad94ad736faec9caf3fb3442ee871eda30ede47b2b70e48ae78dc44961f9",
+      "controlNameSymbols": [],
+      "gainConversionFunctions": []
+    },
+    {
+      "file": "lib/arm64-v8a/libcxaudiodsplib_embca_jni.so",
+      "sha256": "702b5facf4f741b34cc4acee4e9ab5f5b7d803fcd13a0ed6717949b4d9a5f277",
+      "controlNameSymbols": [
+        "Java_com_conexant_universalfunction_CommonUtilNative_convertGainIndex",
+        "_Z36CxAudioConvertCoeffs2MicBiquadParamsjP26_CX2077x_MIC_BIQUAD_COEFFSP17EQ_BAND_PARAM_TAG",
+        "_Z36CxAudioConvertMicBiquadParams2CoeffsjP17EQ_BAND_PARAM_TAGP26_CX2077x_MIC_BIQUAD_COEFFS",
+        "_Z36CxAudioConvertMicBiquadParams2CoeffsjP17EQ_BAND_PARAM_TAGP26_CX2077x_MIC_BIQUAD_COEFFSj"
+      ],
+      "gainConversionFunctions": [
+        {
+          "name": "Java_com_conexant_universalfunction_CommonUtilNative_convertGainIndex",
+          "address": 9904,
+          "size": 100,
+          "instructions": [
+            "26b0: cmp w2, #1",
+            "26b4: b.eq #0x26cc",
+            "26b8: cbnz w2, #0x26fc",
+            "26bc: mov w8, #0x427c0000",
+            "26c0: fmov s2, #30.00000000",
+            "26c4: fmov s1, w8",
+            "26c8: b #0x26e8",
+            "26cc: mov w8, #-0x3de00000",
+            "26d0: fmov s1, w8",
+            "26d4: mov w8, #0x427c0000",
+            "26d8: fadd s0, s0, s1",
+            "26dc: fmov s1, w8",
+            "26e0: mov w8, #0x42a00000",
+            "26e4: fmov s2, w8",
+            "26e8: fmul s0, s0, s1",
+            "26ec: fdiv s0, s0, s2",
+            "26f0: fadd s0, s0, s1",
+            "26f4: fcvtzs w8, s0",
+            "26f8: b #0x2700",
+            "26fc: mov w8, wzr",
+            "2700: scvtf s0, w8",
+            "2704: fmov s1, #0.50000000",
+            "2708: fadd s0, s0, s1",
+            "270c: fcvtms w0, s0",
+            "2710: ret "
+          ]
+        }
+      ]
+    }
+  ]
+}

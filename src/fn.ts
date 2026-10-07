@@ -14,6 +14,7 @@ import {
 } from "./constants.ts";
 import { readDeviceParams, setupListener, syncToDevice, queueRealtimeBandWrite, getProtocol, getActiveProtocol } from "./dsp.ts";
 import { enableControls, log, updateGlobalGainUI, refreshStripUI, updateGlobalGain, configurePreampUI, createRatingElement, createNotesElement } from "./helpers.ts";
+import {configureFreeDspControlNotes} from './freedsp/controls.ts';
 import type { Band, EQ } from "./main.ts";
 import { renderPEQ, resizeCanvas } from "./peq.ts";
 import { t } from "./i18n.ts";
@@ -1616,6 +1617,13 @@ export async function recalculateAutoPreamp(skipWrite = false) {
 }
 
 export async function toggleAutoPreamp(enabled: boolean, skipWrite = false) {
+	if (isFreeDsp(device)) {
+		autoPreampEnabled = false;
+		const checkbox = document.getElementById('checkAutoPreamp') as HTMLInputElement | null;
+		if (checkbox) checkbox.checked = false;
+		log('FreeDSP Auto Preamp 停用：全域增益命令尚未確認；沒有送出。');
+		return;
+	}
 	autoPreampEnabled = enabled;
 	localStorage.setItem("aura_auto_preamp_enabled", enabled ? "true" : "false");
 	if (autoPreampEnabled) {
@@ -1747,13 +1755,15 @@ export function resetTiltState() {
 
 
 export function configureFreeDspUI(active:boolean){
+ configureFreeDspControlNotes(active);
  if(!active){
    for(const id of ['freeDspStorageNote','freeDspRamStatus','btnFreeDspRestore']){const e=document.getElementById(id);if(e){e.hidden=true;if(id==='btnFreeDspRestore')e.style.display='none';}}
    const actions=document.getElementById('hardwareMemoryActions');if(actions)actions.style.flexWrap='';
    const send=document.getElementById('btnSendToDevice') as HTMLButtonElement|null;if(send){send.disabled=true;send.removeAttribute('title');}
    const flash=document.getElementById('btnFlash');if(flash){flash.setAttribute('data-i18n','btn_save_flash');flash.textContent=t('btn_save_flash');}return;
  }
- setAutoPreampEnabled(false);setGlobalGainState(0);setBassTiltState(0);setTrebleTiltState(0);
+ setAutoPreampEnabled(false);setGlobalGainState(0);resetTiltState();updateGlobalGainUI(0);
+ (window as any).stopFreeDspMicDisplay?.();
  for(const id of ['globalGainSlider','checkAutoPreamp','slideBassTilt','slideTrebleTilt','btnFlash']){const e=document.getElementById(id) as HTMLInputElement|null;if(e)e.disabled=true;}
  document.querySelectorAll<HTMLInputElement|HTMLButtonElement|HTMLSelectElement>('.utility-card-full input, .utility-card-full select, .utility-card-full button').forEach(e=>e.disabled=true);
  const send=document.getElementById('btnSendToDevice') as HTMLButtonElement|null;if(send){send.disabled=true;send.title='FreeDSP 此通用操作尚未驗證；請用SYNC TO RAM。';}

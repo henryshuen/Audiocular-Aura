@@ -444,3 +444,13 @@ Henry reports approximately18 quiet repeatable/non-blocking pops for full9x2 App
 ### PEQ UX cleanup implemented / offline PASS
 Removed temporary M2R sum6/peak6.1 hard caps in normal/historical diagnostic paths; kept±12 PK validity/finite/stability/signed24 preflight and main warning/confirmation. Main FreeDSP edits clamp visibly/logged(+14→+12,−15→−12), direct nonfinite edits reject; imports/render/history/Slots/saved state normalize nine. Restore Default Bands uses31/62/125/250/500/1000/2000/4000/8000Hz/Q.7/PK/gain0/enabled; Flat preserves frequency/Q/type/enabled and zeros enabled gains. Both local-only. Main AUTO REDUCE local gains only/no preamp/no autoSync. Vite/dev clickable hostname localhost matches helper Origin without widening CORS.
 Verification PASS: focused90 frontend tests;69 native synthetic tests/parity; lifecycle mocks and PS parser; isolated localhost Vite HTTP200; final verify.ps1 build+227tests/23files; git diff --check. No Codex hardware access. Non-FreeDSP protocol code unchanged. Next milestone Preamp; not started.
+
+## M2T research checkpoint — verified source facts
+Henry reports FreeDSP nine-band defaults and structure-preserving Reset to Flat hardware/UX PASS. Source inspection verified independent generic Tone Tilt state with band-center gain serialization; generic mic levels are random animation and its toggle has no actual capture/loopback call. No hardware action performed by Codex.
+
+## M2T completed software research / controls classification
+- Added pinned static APK control inspector and fixture: both DEX inventories, Freeman config/conversion instructions, gain conversion callers and three arm64 libraries including JNI arithmetic disassembly. No app/native code executed by the inspector.
+- Verified original Tone Tilt independent host state and band-center gain serialization; original mic monitor uses random animation without actual audio capture/loopback; Auto Preamp depends on device gain setter.
+- Added FreeDSP-only main-page unavailable-control note/titles, reset visible Tilt/preamp on connect, prevent delayed Auto Preamp enabling and stop simulated mic meters. Other DAC controls retained; no new hardware commands.
+- Recorded Henry's FreeDSP default9/structure-preserving Flat hardware/UX PASS, and original generic reset source/history evidence. No new control hardware validation claimed. Codex performed no hardware operations.
+- Final offline verification: focused51 frontend tests PASS; final verify.ps1 build+235tests/24files PASS; native69 synthetic tests PASS. Existing VM test dependencies updated for new UI functions. Native loopback used FAKE child only, no hardware. Non-FreeDSP protocol changes: NO.
