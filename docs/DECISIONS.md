@@ -81,3 +81,30 @@ Henry 回報的61-byte output不能容納62-byte M2A候選；不得用截斷、�
 M2B hypotheses保留在src/freedsp/離線純函式與測試，不匯入正常runtime或診斷傳輸。
 欄位寬度、native words與prefix意義須由native serialization或已知正常USB bytes確認後，
 才在另輪授權範圍內修正；本輪不把任何一種假說定為正確protocol。
+
+## D016 — Preserve provenance and transport boundaries
+以原始附件/固定commit/hash保存來源。helper byte dump、native struct、host USB transfer與mock fixture
+分開標示；未取得hook與transfer參數就不把buffer長度或首位byte當成WebHID邊界。
+實際dump的byte值可驗證JS序列化差異，但不能因完全吻合就越過實機descriptor容量限制。
+同源repo/論壇重述不是獨立佐證；各command的payload長度與語意不得跨命令無證據泛化。
+沒有權威serializer時，下一輪先取得官方app的完整host transfer證據，再決定離線fixture與修正；
+不把不確定欄位變成候選RAM寫入實驗。
+
+## D017 — Long research checkpoints
+長時間來源研究在每個主要階段將已查來源、verified facts、hypotheses、排除項、未解欄位及下一目標
+保存於ROADMAP；DONE只收已執行的調查／驗證，DECISIONS只收持續有效的規則。
+官方APK只作靜態資料，原始APK與工具置於暫存目錄；不執行、安裝或提交大型binary。
+
+## D018 — Official Java buffer versus WebHID data
+M2D官方APK的CnxtUsbCommand.getUSBMessage與UsbHelper.controlTransfer建立可追溯邊界：
+13word命令傳入62-byte完整buffer，HID reportID1在首位；WebHID以外部reportId1與其餘61bytes表示。
+不得再保留額外的embedded ID或刪除第二byte/count後zero來湊長度；第二byte固定00，其vendor語意不命名為transaction。
+command190須依setFreeman3EQ獨立來源；commit須依官方long常數255，不以-1代替。
+此次只建立離線證據，不變更runtime、不驗證硬體效果；短命令容量另行處理，不能一律推廣13words。
+
+## D019 — Shared serialization does not imply shared command semantics
+官方source的90/190/220/259共用getUSBMessage，但各command資料來源分開保存。
+190的band+5、220的rateIndex/band、commit255與metadata Q×256/gain截整數不得互相替代。
+Native Gain是signed byte、coeff fields是signed int，轉Java long後統一寫低32bits；不是mixed-width wire fields。
+precision24這個JNI參數不單獨證明Q24或Q22；未確認native數學前不改共享係數公式。
+187只有1word、188有13words，對短187不能憑容量補zero後宣稱WebHID已支持。

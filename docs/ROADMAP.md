@@ -19,7 +19,9 @@ Round 0.5：Henry 已建立 fork；git ls-remote origin refs/heads/fix/freedsp-c
 此提交包含 Round 0 四份文件及三支 PowerShell 腳本。
 本機追蹤 origin/fix/freedsp-conexant，ahead/behind 為 0/0；Round 0.5 開始時工作目錄乾淨。
 npm ci 回報 5 vulnerabilities（1 moderate、4 high）；未執行 audit fix 或升級依賴。
-M0 與 M1 已完成；M2A descriptor 已由 Henry 檢查，未送 RAM。M2B 完成離線重建調查；正確格式仍未證明。
+M0 與 M1 已完成；M2A descriptor 已由 Henry 檢查，未送 RAM。M2B 已提交；
+M2C-Research 找到官方 app helper TX/RX dump；M2D-Deep已恢復官方Java serializer，62-byte HID buffer／61-byte WebHID data邊界HIGH confidence。
+M2D只完成離線格式研究；runtime尚未修改，M2 RAM proof仍NOT PROVEN。
 Round 0 結束時 dev server 正在執行，僅監聽 127.0.0.1:5173。
 HTTP 以 curl.exe --noproxy '*' 驗證；一般 Invoke-WebRequest 曾回傳 404，
 直接請求已確認 Vite 頁面正確，未改動系統代理設定。
@@ -55,6 +57,18 @@ Success: Henry can clearly hear the difference while all other variables remain 
 - [x] 61-byte descriptor fixture、63/62-byte 矛盾與兩個 61-byte 離線假說測試。
 - [ ] 最終正確封包格式；尚缺已知正常的完整 USB bytes 或 native serialization 結構。
 - 不送任何候選，不更換 runtime builder，不開始硬體 RAM 測試。
+
+### M2C-Research — serializer provenance / protocol evidence — research COMPLETE
+- [x] builder來源、Issue #3完整時間軸、ASR及其原始碼連結調查。
+- [x] 找到並原樣保存官方app helper dump，離線證據測試。
+- [ ] 權威native serializer／確定reportId與USB transfer邊界；不啟動RAM測試。
+
+### M2D-Deep — serializer convergence — research COMPLETE
+- [x] 全57TX/RX pairs逐offset分析，命令家族、entropy、count、echo與signedness可重現。
+- [x] 官方APK hash/version/device mapping、Java serializer及USB controlTransfer完整邊界。
+- [x] HIGH model精確重播114buffers；190有獨立來源，commit明確255；舊尺寸模型排除。
+- [ ] 官方host實際completion capture、native係數數學、短187的WebHID適配及RAM/audio proof。
+- 本輪不改runtime、不送硬體，停止於M2D-Deep。舊M2B/M2C條目保留歷史狀態，已被本輪來源證據更新。
 
 ## M3 - Full 9-band real-time PEQ — PENDING
 - all 9 bands
@@ -388,8 +402,21 @@ Possible fix direction:
 - Current: 11+13×4=63塞進61，末word丟失bytes61..62；移除embeddedID仍62。
 - Tested: 純軟體descriptor fixture、截斷sentinel、兩種9+52=61離線假說及原有軟體回歸。
 - NOT tested: 62-byte候選未送，沒有RAM/Flash/聽感/preamp/readback或新candidate硬體操作。
-- Hypotheses: header widths/reserved、implicit/packed字段或JNI/native邊界重建錯誤；均未證實。
-- Needed: 作者的native serialize code／精確APK與完整known-good USB bytes，而非目前Aura生成的TX日誌。
+- Defect: JS前置額外ID並把完整U16 prefix保留，造成欄位偏移與截尾；不能只改allocation或刪count後00。
+- M2C correction: Issue #3另有[官方app helper dump](https://github.com/user-attachments/files/29558901/freedsp_usb_raw_log.txt)，
+  在[4857176508](https://github.com/mandy321/Audiocular-Aura/issues/3#issuecomment-4857176508)發布；M2B漏讀此附件。
+  已保存114筆62-byte TX/RX arrays：90×1、220×55、259×1，各有RX，沒有190。
+- Authoritative source recovered in M2D: [official APK](https://download.moondroplab.com/moondroplink/android-release.apk), version2.25.0c-260813ai,
+  SHA25604756b49acfea523758d86101c96c1824b7b209ae3a8836c07837088e795d2d5，res/qc.xml映射35D8/1496到Freeman3。
+- CnxtUsbCommand.getUSBMessage: 10+4N bytes，U16 prefix=1，packed=(N&255)|(cmd<<16)|(reply<<31)，CTRL LE32，long[]低32bits LE。
+  CafCmdHelper直接SET_REPORT(0x21,9,0x0201,index3)，UsbHelper傳整個buffer及buffer.length；非JNI後續serializer。
+- Best model HIGH: helper62包含首位HID ID1，WebHID外部ID1/data61=helper[1..61]；data0=00、packed1..4、module5..8、words9..60。
+  [HID1.11 §6.2.2.7](https://www.usb.org/sites/default/files/hid1_11.pdf)與[Android controlTransfer](https://developer.android.com/reference/android/hardware/usb/UsbDeviceConnection)支持此API邊界。
+- All114 buffers exact replay；Flash commit在DEX是long常數255（FF000000），不是-1；190來自setFreeman3EQ，word1=band+5。
+  同一serializer不代表同一payload：220分metadata/coefficients/commit，259讀firmware，187只有1word，188有13words。
+- Remaining limits: 未取得July APK精確版本/hook，沒有actual completion capture；native係數/Gain數學與短187 WebHID適配未證實。
+- ONE optional future capture: 官方app切EQ mode一次，只抓command90的SET_REPORT提交/完成與完整payload62；
+  確认wValue0x0201/interface3、首01、61data邊界及實際長度。此輪不要求Henry執行，不送Aura候選。
 - 本輪沒有發表GitHub留言。
 
 ### M2B Scope / regression check
@@ -406,3 +433,342 @@ git diff --check 通過；本輪產生的dist建置差異還原，原runtime/pac
 交付前確認既有AuraPEQ Vite程序PID8048監聽127.0.0.1:5173，localhost純HTTP GET=200；
 本輪沒有啟動新server、開瀏覽器或執行browser JavaScript。這是當下狀態快照。
 固定網址 http://localhost:5173/；啟動命令 .\scripts\dev.ps1（已在執行時不要重複啟動）。
+
+## M2C-Research — serializer provenance / protocol evidence — 2026-10-07
+基準HEAD=2dfe0db1735da511275cd7c3e188b64bdc8b6368，branch=fix/freedsp-conexant；起始工作目錄乾淨。
+git status、branch、log -5已核對；基準verify.ps1 exit0，6files/47tests。未改runtime或新增候選。
+
+### Source trail and correction to M2B
+已執行git log --all -- src/dsp.ts及-S buildConexantPacket/CafId/CTRL/command 190/Q22，
+核對原始builder blame、前後提交、README與本機fixtures。完整builder各欄位第一次都在e7da5b5出現，
+沒有更早的本機native struct或source citation。原始碼是JS重建；是否直接複製native signature無法確定。
+
+| Commit | Direct source observation | Provenance limit |
+| --- | --- | --- |
+| 62054e4 / 7f692ab | 初期Moondrop容量與feature fallback嘗試 | 非Conexant serializer來源 |
+| 4a77f8e | CT7601各取樣率UPDATE_EQ | 使用了後來被修正的裝置假設 |
+| dc76a3b | FreeDSP reportId1/count61，但仍走Moondrop | descriptor證據不提供vendor結構 |
+| e7da5b5, 2026-07-01T15:57:55Z | 增加txn2、packed field4、CTRL4、13words、Q22、190/220/90；allocation62 | 註解稱CafId，沒有實作或APK/native來源位置 |
+| 152c012 / eb0a338 | README與發布分支重述上述協定 | 同源宣稱，不是獨立驗證 |
+| 60d32e8 | 改用output失敗後feature fallback | 未補serializer證據，不能證明OS政策是原因 |
+| c7c95fa, 2026-07-02T15:17:32Z | allocation62→61，唯一協定修改為此一行 | 仍11+52=63，沒有修正結構 |
+
+M2B漏讀Issue #3第二個Android附件freedsp_usb_raw_log.txt，也未取得ASR指定文章；
+以下新證據取代「所有已知Android附件都沒有bytes」的過度概括，但不推翻61-byte descriptor或63/62容量算術。
+
+### Issue #3 chronological audit
+來源：[Issue #3](https://github.com/mandy321/Audiocular-Aura/issues/3)及全部31則comments，時間為UTC。
+分類標籤表示證據來源，不表示作者的因果推論已成立。
+
+| Time / comment | Relevant evidence | Classification |
+| --- | --- | --- |
+| 2026-06-29, issue body | FreeDSP被判為MOONDROP，0x4B傳輸失敗 | TESTER LOG |
+| 06-30, 4840743255 / 4840949211 | 以endpoint wMaxPacketSize64推論report需64，保留0x4B | AUTHOR INTERPRETATION；endpoint最大值不能取代report descriptor |
+| 06-30, 4841065735 / 4845498373 | tester仍失敗；作者稱64 worked、轉查ID且表示沒有硬體 | TESTER LOG / AUTHOR INTERPRETATION，成功結論與tester結果不一致 |
+| 07-01 13:03, [4855191555](https://github.com/mandy321/Audiocular-Aura/issues/3#issuecomment-4855191555) | 官方Moondrop app logcat：Eq2Coeff/Freeman/Flash操作 | TESTER LOG；不是USB capture |
+| 07-01 14:28, 4856265847 | 作者仍稱CT7601，改各rate UPDATE_EQ，認為384k係數失敗 | AUTHOR INTERPRETATION；不是Conexant190/220原始定義 |
+| 07-01 14:31–14:54, 4856317118 / [4856465603](https://github.com/mandy321/Audiocular-Aura/issues/3#issuecomment-4856465603) / 4856588938 | 索取parsed descriptor，tester回報outputid1/size8/count61；作者改ID/容量 | VERIFIED BY DEVICE（tester回報） / VERIFIED BY SOURCE CODE；OS因果說明仍為interpretation |
+| 07-01 15:01, 4856662416 | MOONDROP TX可執行但tester沒有聽感差異 | TESTER LOG；不是正確EQ效果證據 |
+| 07-01 15:09–15:19, 4856738224 / 4856849006 | 作者要求官方USB capture，附ASR連結 | AUTHOR INTERPRETATION／研究線索 |
+| 07-01 15:45, [4857176508](https://github.com/mandy321/Audiocular-Aura/issues/3#issuecomment-4857176508) | 提供freedsp_usb_raw_log.txt，UsbHelperDump有TX/RX陣列 | TESTER LOG；hook層級/版本/USB setup不明 |
+| 07-01 16:01, [4857382348](https://github.com/mandy321/Audiocular-Aura/issues/3#issuecomment-4857382348) | Conexant/Freeman、JNI、Caf/CTRL、Q22、190/220宣稱 | AUTHOR INTERPRETATION；native簽名與CafId實作UNSUPPORTED / UNCLEAR；dump可核對CTRL bytes與220/90，不能核對190 |
+| 07-02, 4861632425 / 4862948457 / 4865770254 | Aura自己的Conexant TX失敗；feature fallback仍失敗 | TESTER LOG；不是官方app的正常封包 |
+| 07-02 15:18, [4867348708](https://github.com/mandy321/Audiocular-Aura/issues/3#issuecomment-4867348708) | 把61解讀為ID1+payload60，buffer-only patch | AUTHOR INTERPRETATION（與WebHID定義不符） / VERIFIED BY SOURCE CODE |
+| 10-06 11:57, [6015725221](https://github.com/mandy321/Audiocular-Aura/issues/3#issuecomment-6015725221) | Henry：Windows11/APO停用，同來源音量，Slot A/B Sync Complete但無聽感差異 | VERIFIED BY DEVICE（Henry結果） / TESTER LOG；不能只歸因preamp，程式本來無該傳輸 |
+
+### Closest original evidence: official-app UsbHelperDump
+來源：[公開附件](https://github.com/user-attachments/files/29558901/freedsp_usb_raw_log.txt)，
+已原樣保存tests/freedsp/fixtures/officialAppUsbHelperDump.txt（60,438bytes）。
+SHA256=f726e1a440d82ad495cf5d9ffeaa0db17f9bbfdc27f9334a8895517f4df6c4cf。
+測試只容許Git checkout的CRLF→LF正規化；保留signed byte字面值，-77轉成0xB3，不重新生成附件。
+
+- 57TX、57RX，每個dump都是62entries：TX90×1、220×55、259×1，沒有190。
+- Dump offsets：0..1=01 00；2..3=0d 00；4..5=command LE16；6..9=00 23 2d b3；10..61可讀成13LE32。
+  這是observed byte grouping，不是已確認native struct。
+- 220包括9組metadata、45組5rates×9bands係數及1組commit。90是mode，259是firmware query。
+- RX90/220在2..3為00 00；RX259為04 00，payload為9/7/14/1（旁邊app log稱FW9.7.14.1）；
+  dump仍62entries。因此logical count和buffer capacity可以不同，不能由固定容量推論有效序列化長度。
+- 係數dump與同一log印出的B0/B1/B2/A0/A1 hex完全對應，例如band1/rate4在offset22起：
+  0x003fa528、0xff813643、0x003f25c5、0x007ec9bc、0xffc13513。
+- Flash commit首payload四bytes=FF 00 00 00，當作LE32是255；目前JS的-1是FF FF FF FF。
+  Metadata某些gain word為-7等整數，並非目前gain*256；不能在本輪推定單位或修改Flash。
+- 原始source說pEQCoeff.Gain always3，但dump band9的係數marker為2；硬編碼3不可推廣成協定事實。
+- 114筆dump沒有hook source、APK版本/hash、native type、UsbRequest/bulkTransfer/controlTransfer參數、
+  requested/actual length、endpoint/setup或USBPcap/usbmon記錄。
+- M2A no-ID builder與57筆TX的bytes全部吻合；CURRENT是它前面再加1並截尾。
+  此比對只定位JS重建與helper表示的差異，不能授權把62 bytes送入WebHID61data bytes。
+- 最接近的原始來源是這個tester提供的官方app buffer dump。提交時序與值相符支持「依它重建」的推論，
+  但作者未提供工作紀錄，無法證實直接複製來源或native signature。沒有找到權威serializer。
+
+### Linked source audit / circular evidence
+- ASR目標[post2038285](https://www.audiosciencereview.com/forum/index.php?posts/2038285/)是2024年MAY辨識故障，非FreeDSP serializer。
+  2024年[Tommy-Geenexus post1859388](https://www.audiosciencereview.com/forum/index.php?posts/1859388/)建議jadx逆向Link2.0，
+  其連結是Dawn控制source，不是FreeDSP。
+- 2026年[ASR post2629829](https://www.audiosciencereview.com/forum/index.php?posts/2629829/)由Mandy007介紹AuraPEQ，
+  宣稱61不含ID但結尾表示未測試，連回同一Aura repo，沒有native/capture附件；屬同源重述，非獨立佐證。
+- Tommy-Geenexus/usb-dongle-control目前tree的相關路徑是Dawn/Moonriver控制，未找到Freeman/Caf/FreeDSP serializer。
+- ASR另一連結[devicePEQ](https://github.com/jeromeof/devicePEQ)現在有Conexant handler，
+  核對固定HEAD0617f382e76629792a5933e6933e4b396a756a93；a1dfcdcf在2026-07-21新增。
+  其[module](https://github.com/jeromeof/devicePEQ/blob/0617f382e76629792a5933e6933e4b396a756a93/devicePEQ/conexantUsbHidHandler.js)
+  使用11byte header、0xB307B0、2^30、不同logical array counts，不附native來源。
+  [FreeDSP capture JSON](https://github.com/jeromeof/devicePEQ/blob/0617f382e76629792a5933e6933e4b396a756a93/tests/captures/moondrop_freedsp_conexant.json)
+  有896、1073741824、-2147483648等值且部分array62entries，不可能是原樣byte dump。
+  無官方app捕捉來源／hook證據，不能用其mock tests提升協定信心；未複製此fixture。
+- [官方Link下載頁](https://moondroplab.com/en/moondrop-link)提供APK/AppStore/GooglePlay，
+  本輪未取得作者2026-07-01使用的精確APK/native source；未下載/安裝APK、jadx或capture driver。
+
+### Field evidence matrix
+Confidence指硬體欄位定義的可信度，source/dump字面bytes另外明確標示，不混用。
+
+| Field | Current implementation | Evidence for width/value | Confidence | Missing evidence |
+| --- | --- | --- | --- | --- |
+| transaction | 固定U16=1，在CURRENT1..2 | helper0..1=01 00；可能含ReportID或vendor欄位 | UNKNOWN | native type、prefix/reportId邊界與動態transaction |
+| packed command/count | U32=(N&ff)\|((cmd&fff)<<16) | helper2..5對應0d 00 DC/5A 00，259=03 01；RXcount0/4且high byte有80 | MEDIUM（grouping）；UNKNOWN（ABI/bit widths） | count8/16、reserved、12-bitmask、response flags的定義 |
+| module ID | U32=0xB32D2300；source稱CafId(CTRL) | helper6..9值完全一致，所有TX/RX皆同值 | MEDIUM（value）；UNKNOWN（hash/handle定義） | CafId實作、module名對照、USB實際位置 |
+| payload word count | 90/190/220一律13，零尾5words | helper90/220/259可分13LE32；RXlogical count不同；190未見 | MEDIUM（observed buffer）；UNKNOWN（native requirement） | per-command native length及實際submitted/completed長度 |
+| report data length | 61 | Henry實體descriptor61×8=488bits，ID不含於data | HIGH | 容量無缺項；helper62與transfer boundary關係待確認 |
+| reportId | 外部1，CURRENT另塞首位1 | Henrydescriptor，WebHID規範 | HIGH | ID值無缺項；helper首位1是否該ID未知 |
+
+### 13 words / p1 / transaction / module conclusions
+- 13不是僅JS憑空容量：此official-app dump也有count13與52bytes，但只有90/220/259，不能替190背書。
+  它是SDK定長struct、JNI容量、padding或有效wire payload仍UNKNOWN；不能刪零或假設12words。
+- Packed field中count後的0實際存在於dump；COUNT_U8刪除此byte的假說被削弱。
+  259需要超過8bits的command值，但仍不能證明12bits而非16bits。
+- txn=1無法判斷U8/U16/U32/padding/implicit；62-byte dump的首01可能是report prefix，不能用常數判寬度。
+  TRANSACTION_U8也沒有新增native支持；本輪不改M2B候選或runtime。
+- module四bytes與source匹配，但沒有CafId計算／enum定義，不能證明32-bit hash或native handle。
+- Q22是upstream來源與作者解釋；dump提供固定係數值，不單獨證明普遍scale、Gain marker或全部filter規則。
+
+### Problem / hypothesis / next action
+Observed problem:
+- CURRENT額外前置1/截尾；descriptordata61與official-app helper62之間的邊界仍不明。
+Verified facts:
+- 官方app來源由tester回報；57組TX/RX、modulebytes、count/command位置可核對，沒有RAM190。
+- 原始JS在e7da5b5一次加入所有欄位；c7c95fa只改allocation；沒有native serializer/source citation。
+- ReportID1/data61已由Henrydescriptor支持；M2B尺寸假說仍未被硬體證實。
+Possible causes (ranked hypotheses):
+1. JS把helper/native buffer與WebHID reportID/data邊界混淆，額外前置byte造成偏移。
+2. helper62包含ReportID或未實際送出的容量，未見transfer參數而誤重建transaction/count。
+3. command190長度/內容從220泛化，或metadata/commit/marker等值被誤轉；現有dump不支持全部runtime語意。
+Ruled out / weakened:
+- 「沒有任何官方app byte資料」被第二附件推翻；但未找到權威native serializer或獨立USB transfer capture。
+- COUNT_U8的刪零缺乏支持，dump有該byte；所有commands一律13也不能由此確定。
+- 另一repo的capture名稱、ASR自述、Sync Complete都不能取代正常USB擷取或DSP結果。
+Next validation — ONE action:
+- 另輪由Henry手動擷取官方app一次單段EQ衰減的完整host USB transfers，確認reportID與實際長度／bytes邊界。
+Possible fix direction:
+- 只在邊界證據確認後，以原始bytes建立精確離線fixture，再另輪決定FreeDSP serializer修正；本輪不湊61或送候選。
+
+### Future manual capture plan — prepared only, NOT requested now
+目標只有一個官方app動作：一段既定PEQ由0改為-3dB（例如1000Hz/Q0.7），不掃描bands/rates或另加Flash操作。
+記錄app版本/hash、裝置/descriptor、band/frequency/gain/Q、時間；capture包含動作前後短區段及裝置enumeration。
+保持不播放音訊可減少等時資料量；不依賴可聽差異作此capture成功條件。
+
+1. 先確認「官方app實際USB host」。本輪原始來源為Android。PC只透過ADB連手機時，
+   Windows USBPcap看不到手機OTG bus上的FreeDSP；不能擷取Windows Aura再稱為官方app。
+2. 只有官方app已能在Windows同一USB host控制FreeDSP時，才使用既有USBPcap+Wireshark，
+   選FreeDSP所在root hub，capture後按裝置address及HID interrupt/control transfer篩選，保存pcapng。
+   本輪未證實這個Windows app路徑，不建議為此安裝模擬器或改USB driver。
+3. Android host若已具備可讀取的usbmon binary interface與相容libpcap/tcpdump，可在該host擷取；
+   先列capture interfaces（tcpdump -D），選實際usbmon bus，再使用tcpdump -i usbmonN -s 0 -w <output.pcap>。
+   這是條件式命令模板，不是所有Android都能執行；本輪不執行、不root/unlock、不裝工具。
+   若現有環境不具備這些條件，停止準備，不改手機，需先另輪選定可行host capture環境。
+4. 手動只改上述一段一次，立即停止capture，保存完整URB提交/完成記錄；不再次送Aura的candidate。
+5. Wireshark依VID35D8/PID1496的enumeration確定bus/address/interface；查看endpoint或control setup，
+   記錄reportID、requested/actual lengths、完整payload、重複封包次序與回應。禁止把truncated preview當完整bytes。
+   Software capture取得URB/host transfer，不是逐個物理USB packet；仍足以核對此序列化邊界。
+依據：[Wireshark USB capture](https://wiki.wireshark.org/CaptureSetup/USB)、[Linux usbmon](https://www.kernel.org/doc/html/latest/usb/usbmon.html)。
+未請Henry現在執行；不存在已排程的capture或RAM測試。
+
+### M2C automated verification / scope
+最終verify.ps1 exit0：TypeScript、Vite4.5.14 build、測試型別檢查，7files/52tests；原有47tests保留。
+新增5個證據測試只讀public fixture並操作bytes；首次因node:fs/crypto型別未安裝而失敗，
+改用既有Vite raw import與Node24提供的Web Crypto後通過，沒有新增依賴或修改test config。
+- FreeDSP-specific files changed: tests/freedsp/officialAppEvidence.test.ts、fixtures/officialAppUsbHelperDump.txt、officialAppEvidence.md。
+- Shared files changed: GENERAL、ROADMAP、DECISIONS、DONE、.gitattributes（只限定原始dump，停用換行轉換並保留原有兩處尾空格）；共享runtime無修改。
+- Non-FreeDSP protocol code changed: NO。
+沒有硬體寫入、browser/GUI操作、APK/driver安裝、GitHub留言、commit或push；停止於M2C-Research。
+git diff --check與新增檔案差異檢查通過；原始dump的兩處尾空格依限定attributes原樣保留。
+本輪verify產生的dist差異已還原，src/package/scripts/config差異為空。
+交付前5173無監聽程序，server目前未執行；本輪未啟動它。
+固定網址http://localhost:5173/；手動啟動命令.\scripts\dev.ps1。
+
+## M2D-Deep — 2026-10-07
+起始HEAD=2dfe0db；M2C八個檔案仍未提交，均為上一輪本對話已產生的docs/fixture/test，
+完整保留並納入本輪自動Git交付。基準verify exit0，7files/52tests；branch與remotes正確。
+Henry離開電腦，本輪不需要手動測試或Git動作。只使用一名helper處理dump，main負責APK與證據整合。
+
+### Research checkpoint — phase 1 inventory / concrete APK lead
+- Examined: 既有M2B/M2C證據、目前status/log、官方Link頁的直接APK連結、現有靜態工具。
+- Verified facts: 官方頁直接指向https://download.moondroplab.com/moondroplink/app-release.apk；repo無APK/native材料。
+  M2C工作尚未commit，未遺失；baseline52tests通過。原始dump已固定hash。
+- Hypotheses: 此官方APK可能保留CafCmdHelper與UsbHelper，可直接解出report prefix、packed欄位與commit產生路徑。
+- Discarded hypotheses: 不再把尺寸符合61的M2B候選當成可操作的格式證據。
+- Unresolved fields: helper62/WebHID61邊界、transaction、packed count/command、190、commit FF000000。
+- Next search target: 官方APK的DEX/native symbols及Java到USB呼叫鏈；helper平行逐對分析114arrays。
+
+### Research checkpoint — phase 2 exhaustive dump / official APK recovered
+- Examined: 全57pairs，以deterministic script逐offset unique values/entropy、TX/RX diff、payload分類及45筆係數log對照。
+- Verified facts: 90×1、220=metadata9+coefficients45+commit1、259×1；114arrays長度62，prefix01 00、module固定。
+  前56pairs只差offset2/5；最後firmware另差10/14/18/22。RX command=TX|8000，counts0/4。
+  96個負TX words確實sign-extend；commit是255，不是numeric int32 -1。全部45coefficients逐字對上log。
+- Hypotheses: reportID/internal prefix仍均可解釋首01；RX可能echo或buffer reuse，不能等同DSP state。
+- Discarded hypotheses: 固定U32 transaction涵蓋0..3會跨入可變count；signed-byte日誌不能解釋commit anomaly；Gain always3錯誤。
+- Unresolved fields: bytes0..1與report boundary、native count width與13容量、190；commit255的具體型別。
+- Next search target: 英文頁APK HTTP500，但官方中文頁https://moondroplab.com/cn/moondrop-link指向android-release.apk，下載成功。
+  110,710,316bytes，SHA25604756b49acfea523758d86101c96c1824b7b209ae3a8836c07837088e795d2d5。
+  只靜態解析，未安裝/執行；APK與parser依賴在TEMP，不納入Git。追查CafCmdHelper/UsbHelper call chain。
+
+### Research checkpoint — phase 3 authoritative Java serializer
+- Examined: 官方APK 2.25.0c-260813ai / versionCode102034的DEX，CnxtUsbCommand、CafCmdHelper、UsbHelper、FreemanCnxtUsbDevice。
+- Verified facts: getUSBMessage配置10+4N bytes，prefix參數以U16 LE寫0..1，所有相關call site傳1；packed欄位2..5、CTRL6..9、long[]的低32bits LE由10起。
+  sendCmd直接SET_REPORT(0x21,9,0x0201,3)，UsbHelper以buffer.length傳controlTransfer，沒有JNI重新序列化。
+  report ID1之外仍有一個00 byte；WebHID正確data應為完整62-byte buffer去掉首位ID，得到61bytes。
+  count encoder僅取低8bits，decoder讀U16；command decoder15bits、reply bit31，不是12-bit command mask。
+  commit源碼明確const-wide/16 255，放long[13]的word0，FF000000不是byte logger或sign extension特例。
+  setFreeman3EQ明確command190，13words：[0, band+5, signed-byte Gain promoted to long, B0,B1,B2,A0,A1,0×5]。
+  native Eq2Coeff被要求precision24；native係數數學仍須獨立檢視，不能直接把24解釋成Q24。
+  Flash220的metadata與coefficient分支不同；187只有1word，188有13words，推翻所有commands永遠13words。
+- Hypotheses: 首位ID由HID規範、wValueID1、descriptor61與全部helper62共同支持；第二byte語意尚無名稱，只能確定是prefix高byte=0。
+- Discarded hypotheses: helper前置非傳輸metadata、JNI之後才序列化、U8 transaction刪第二byte、COUNT_U8刪count後00、commit數值-1。
+- Unresolved fields: July APK精確版本、USB actual completion lengths、native Gain/係數量化；不影響已恢復Java序列化邊界。
+- Next search target: 保存可重現DEX抽取與精確offset evidence；用獨立離線模型replay全部114buffers；核對FreeDSP device dispatch與native precision。
+
+### Research checkpoint — phase 4 convergence / reproducible evidence
+- Examined: res/qc.xml、Freeman3 dispatch、Eq2Coeff JNI wrapper、HID1.11/Android API、upstream HEAD及Issue全部31comments/所有直接附件連結。
+- Verified facts: APK將VID13784/PID5270映射Freeman3；190不是legacy Freeman的16byte/reportID4路徑。
+  Java Gain是signed byte，但提升為long後仍寫32bits；所有payload words一律低32bits，commit是long255。
+  官方USB helperRX使用fresh buffer；前56pairs的echo不能用同一TX array直接reuse解釋，但hook是否自改仍未知。
+  模型對114buffers全部逐byte一致；13個forensics/layout tests及測試型別檢查通過。
+  upstream HEAD仍af0bcf7；Issue仍31comments。log.txt/COPY.MSG.LOG.txt重新下載404，既有helper原樣fixture可重現。
+- Hypotheses: 不再保留其他61-byte格式作候選；native coefficient precision24與Gain對數學scale的關係另立研究問題。
+- Discarded hypotheses: 額外embeddedID、刪count zero、刪第二prefix byte、固定U32 transaction、12bit command mask、commit-1、所有commands定長13。
+- Unresolved fields: vendor第二byte語意、July hook版本、實際USB completion長度、native係數數學、短187 WebHID容量策略。
+- Next search target: 本輪完成驗證與自動Git保存；另輪授權後只修改FreeDSP-specific serializer，短命令與係數問題先保留gate。
+
+### Comprehensive evidence inventory
+Primary表示最接近其所述層級的原始資料，不代表實機效果。下表與前述M2C完整31comment時間軸共同構成來源清單。
+
+| Source / date or commit | Level | Proves | Does NOT prove | Confidence |
+| --- | --- | --- | --- | --- |
+| Henry M2A descriptor / 2026-10-07 / henryM2ADescriptor.ts | Primary device report, copied fixture | ID1、61×8data、VID35D8/PID1496 | vendor layout/audio effect | HIGH capacity |
+| Current src/freedsp/conexantPacket.ts / HEAD2dfe0db | Primary local source | 11byte header、61allocation、截尾與commit-1 | device接受或正確協定 | HIGH source |
+| M1 fixtures/conexantPacket tests /6665470 | Derived characterization | currentJS固定輸出/Q22數學/mock fallback | known-good USB packet | HIGH software only |
+| M2A/M2B candidates/tests /652099e/2dfe0db | Derived hypotheses | 62gate及兩種61byte算術 | 正確native格式；M2D已排除兩種刪byte假說 | HIGH characterization, rejected layout |
+| Upstream history e7da5b5/c7c95fa /2026-07-01/02 | Primary commits | 欄位加入來源、62→61只改allocation | serializer native來源或實機成功 | HIGH source |
+| Upstream HEADaf0bcf7 /2026-09-29, live refs2026-10-07 | Primary repository | 沒有較新upstream serializer修正 | firmware格式版本 | HIGH |
+| README/comments/152c012/eb0a338 | Derived same-author claims | 190/220/90/Q22宣稱來源 | 獨立驗證 | LOW protocol authority |
+| Issue #3 body/comments31 /2026-06-29–10-06 | Primary tester logs + derived interpretations | 時序、錯誤、descriptor回報、作者無硬體 | Sync Complete=EQ生效 | HIGH chronology |
+| log.txt /29552424/4855191555 /2026-07-01 | Primary official app UI/helper logcat; M2B/M2C已讀 | rate/band/係數/Flash結果文字 | USB bytes/ABI；M2D重新下載404 | MEDIUM semantic log |
+| freedsp_usb_raw_log.txt /29558901/4857176508 /2026-07-01 | Primary signed helper byte arrays | 114arrays/57pairs/90,220,259/係數與255 | exactJuly version、hook/source、actualcompletion/audio | HIGH observed bytes |
+| COPY.MSG.LOG.txt /33104041/6015725221 /2026-10-06 | Primary Henry Aura console; direct link inventoried, fetch404 | 附件存在於comment；comment記錄Sync Complete無聽感差異 | 未重新取得內容，不把它當officialUSB資料 | LIMITED retrieval |
+| Issue body images bbcae7a7…/dc24bee2…及Henry70262ffd… | Primary UI screenshots; direct links inventoried, current fetch unavailable | 螢幕證據連結存在 | 非rawUSB/struct；沒有用未讀圖片推論欄位 | LIMITED retrieval |
+| Official APK /2.25.0c-260813ai/102034/HTTPmodified2026-09-16 | Primary static implementation | serializer/USBcall chain/190/commit/device mapping | July版本一致或實機效果 | HIGH source |
+| DEXSHA532514c9… / officialApkStaticEvidence.json | Derived reproducible excerpts of pinned primary | 精確DEX byte offsets、types、method signatures | app執行或所有native數學 | HIGH traceability |
+| Eq2Coeff JNI wrapper /official APK | Primary static source | native(I,Object,Object,I)只轉coeff；precision24；Gain B/coeff I | Q22/Q24完整公式、CAF native struct | HIGH signature, UNKNOWN math |
+| HID1.11 §6.2.2.7/§7.2.2 & Android controlTransfer | Primary specifications | ID增加1byte；controlbuffer從0傳指定length | vendor第二byte語意/實際completion | HIGH API boundary |
+| ASR posts2038285/1859388/2629829 | Derived external discussions | 偵測失敗、jadx研究建議、Aura作者同源介紹 | 獨立CAF serializer | LOW format evidence |
+| devicePEQ0617f382… handler/captureJSON | Derived reverse-engineering claims | 另repo不同schema且capture含非法byte | authoritative rawcapture | REJECTED capture authority |
+| MegaSuite/moondrop-link-desktop tree | External code lead | GAIA/Bluetooth研究方向，未找到本輪CAF byte source | FreeDSP Conexant serializer | LOW relevance |
+
+附件完整連結：上述三個text URLs見M2C source table與Issue comments；圖片為
+https://github.com/user-attachments/assets/bbcae7a7-139e-4c41-aad9-5fa33d063e5a、
+https://github.com/user-attachments/assets/dc24bee2-7274-43f3-a816-3cc155b134d8、
+https://github.com/user-attachments/assets/70262ffd-374d-4b18-a136-11e0d6fcf3f6。
+無APK/pcap附件；本輪APK來自官方中文頁直接來源。失效附件沒有阻止HIGH serializer收斂，但不得稱已完整重讀。
+
+### Every-packet structure / command findings
+
+| Family | Pairs | TX physical capacity / logical count | RX logical count | Payload / variability |
+| --- | --- | --- | --- | --- |
+| 90 mode | 1 | 62 /13 | 0 | [90,mode,0×11]；此sample mode0 |
+| 220 metadata | 9 | 62 /13 | 0 | [0,band,freq,Q×256 truncated,filter,gain truncated,0×7] |
+| 220 coefficients | 45 | 62 /13 | 0 | [rateIndex4..8,band1..9,Gain2/3,B0,B1,B2,A0,A1,0×5] |
+| 220 commit | 1 | 62 /13 | 0 | [255,0×12] |
+| 259 firmware query | 1 | 62 /13 | 4 | TXallzero；RX[9,7,14,1]後zero |
+
+114arrays首0..1=01 00、module6..9=00 23 2D B3，尾42..61全zero。
+count offset2為TX13/RX0或4；offset3zero；command4..5含reply highbit。
+前56pairs只差offset2/5；firmware另差10/14/18/22。fresh RX buffer並不把echo變成DSP readback。
+全部45coefficients逐字吻合旁邊log；96negativeTX words保留二補數。每offset unique/entropy、nonzero range、word值與pairdiff見officialAppDumpAnalysis.json。
+
+190在July dump缺席，但現在有獨立setFreeman3EQ來源：
+[0, CommonUtil.shiftEQBandForFreeman3(band)=band+5, Gain, B0,B1,B2,A0,A1,0×5]，13words。
+Gain原始Java signed-byte、coeff fields signed-int，轉long後寫低32bits，不能把marker常數3寫死。
+legacy setFreemanEQ是另一16byte/reportID4路徑，不是本FreeDSP；沒有修改其他Freeman裝置。
+187=[0]只有1word、188=[1,0×12]13words，是RAM首次enable前置操作；短187的WebHID適配尚未確認，本輪不做runtime候選。
+CAF module由四字元ASCII減32後，各shift8/14/20/26 OR，CTRL=0xB32D2300，不是未明hash。
+
+### Structural hypothesis scoring against all packets and source
+
+| Hypothesis | Explains | Contradicts | Confidence / why |
+| --- | --- | --- | --- |
+| HIDID1 + remaining61data | 114buffers、descriptor、SETREPORTvalueID1、HIDspec、fullbuffertransfer | 無已知矛盾；actualcompletedbytes未捕捉 | HIGH, sole surviving serializer boundary |
+| prefix是U16欄位且需全部放WebHIDdata | rawprefix01 00 | source整buffer已有HIDID、descriptor僅61；會重複ID | REJECTED as WebHID model；U16 source寫法本身是fact |
+| 第一byte是internal metadata由下一層移除 | 靜態constant1 | helper直接controlTransferlength62，無strip/JNI中介 | REJECTED on recovered path |
+| buffer只是nativeABI結構，USB另轉換 | olddump單獨可能 | Java byte[] builder與整buffercontrolTransfer | REJECTED |
+| TRANSACTION_U8刪buffer第二byte | 61byte容量 | 丟掉WebHIDdata的00，仍含ID；全57TX不符正確data | REJECTED |
+| COUNT_U8刪buffer第三offsetzero | 61byte容量 | 官方packedfield保留zero；全57TX不符 | REJECTED |
+| 固定U32 transaction at0 | TXprefix可常數 | RXcount變0/4且source已分prefix/packed | REJECTED |
+| 12bit command mask | 90/190/220/259可容納 | decoder明確15bits且replybit31 | WEAKENED；本round無高cmd硬體，但source不支持12bit |
+| 所有命令13有效words | observed3families | RXcount0/4、1871word、generic10+4N | REJECTED universal rule |
+| 末zero可刪成任意61bytes | dump tailzero | source以long[13]配置62，descriptordata61只扣ID，不刪word | REJECTED |
+| commit=-1/signbyte logger | 首byteFF | 另外3bytes00 vsFF且sourceconstlong255 | REJECTED |
+| command190由220直接泛化 | 大部分coeffpositions相似 | 190word0=0/word1=band+5，220rateIndex/band | REJECTED；共享serializer成立，payload不同 |
+
+### Confidence-ranked surviving serializer model
+1. **HIGH — Official CAF Java report buffer / external WebHID ID boundary.**
+   Full13wordcontrolbuffer62：ID1at0、prefix高byte0at1、packedLE32at2、CTRLLE32at6、13low32LEwordsat10。
+   WebHID externalID1/data61：0at0、packedat1、moduleat5、wordsat9。
+   packed=(N&0xFF)|(cmd<<16)|(reply&1)<<31；bits8..15zero，decodercountU16/command15bits。
+   TXN13來自long[13]callsite，不是serializer固定；module由CafId字元packing；word types依命令語意，傳輸統一32bits。
+   Supports：官方hash/source/mapping、HIDspec、Henrydescriptor、114byte-for-bytereplays。
+   Against/limits：沒有實測USBcompletion或DSP/audio；未知JulyAPK，不把當前source當舊hooksource。
+   第二00的vendor名稱未知不影響layout，不能保留另一個無來源U8/U16 transaction候選。
+
+### Signedness / Flash commit conclusion
+確定是long常數255→low32bitsLE FF000000。不是8bit field專用serializer，不是unsigned logger轉換，不是-1 signextension錯誤。
+Native Gain原始型別B但仍提升寫32bits；正常負coeff/metadata也用同一long[] serializer。
+Flash word0的語意值與JS -1不同，是獨立於framing的confirmed implementation defect；本輪不修Flash路徑。
+
+### Final serializer conclusion / one future experiment
+**YES — serialization layout recovered with HIGH confidence for the target source path.**
+這不表示整條RAM操作或DSP數學已完成。Missing artifacts不是layout收斂阻礙：July exact APK/hook與one hostcapture未取得；
+native math/short187屬下一實作問題，不再為header提供額外LOW候選。
+One optional future test：官方app只切mode一次，取command90SET_REPORT完整submitted/completedURB，
+記錄0x21/9/0x0201/index3、requested/actual62與payload首01 00 0D 00 5A 00 00 23 2D B3。
+剝ID後恰61；此一封包即可檢查actualboundary及舊hook/currentAPK一致性，無需Flash或EQ參數系列測試。
+Android是officialUSBhost；只把PC透過ADB接手機不能讓USBPcap看到OTGbus。當輪無要求Henry手動操作。
+下一coding輪可在src/freedsp/重建正確61data，不對舊截斷buffer直接slice；保持descriptor gate、先用fixture驗證。
+RAM190 bandshift/Gain與187/188前置命令先明列依賴，native數學不憑precision24改成Q24。
+
+### Problem / hypothesis / next action
+Observed problem:
+- CurrentJS重複ID/偏移/截尾，commit-1與官方255不同；尚無RAM/audio proof。
+Verified facts:
+- 官方Java buffer62包含ID1，WebHIDdata61；精確command190、CTRLpacking、255常數及114replays。
+Possible causes:
+- source已直接支持framing/commit缺陷；實機無EQ的其餘原因可能含band+5、Gain/native math、187/188前置操作，未做因果硬體隔離。
+Ruled out / weakened:
+- 刪countzero/第二prefixbyte、nontransmittedmetadata、JNI之後轉buffer、commit-1、所有commands13word、12bit command權威。
+Next validation:
+- 本輪verify與Git交付；未來唯一capture如上。先另輪授權實作FreeDSP-only serializer與fixture，不能當輪送RAM。
+Possible fix direction:
+- 完整重建9byteWebHIDdataheader+52payload，外部ID1；commit255、190獨立payload；短命令/係數另外解決，不擴張共享runtime。
+
+### Automated verification / final checkpoint
+- verify.ps1 exit0：TypeScript、Vite4.5.14 build、測試型別檢查、9files/65tests；原52tests+新增13。
+- APK extraction reproducibility：相同pinned artifact再次抽取，22methods及全部metadata JSON結構完全一致。
+- Analysis output determinism：all-pair JSON由測試重新生成並與保存artifact比較；源dump hash維持M2C原樣。
+- 研究格式已收斂；runtime實作、native數學與短187適配未執行，M2 RAM proof仍NOT PROVEN。
+- 只還原verify產生的三個tracked dist檔案；不還原既有M2C或本輪研究文件。
+- Git自動交付依本輪remote-mode授權：stage intended files、review cached stat/check、commit、push、final clean status。
+
+### Scope / regression check
+- FreeDSP-specific files changed: 本輪scripts/freedsp/與tests/freedsp/離線研究檔案；保留前輪M2C fixture/test。
+- Analysis/test files changed: analyze-dump.mjs/.d.mts、inspect-apk.py、official-layout.mjs/.d.mts；forensics.test.ts、officialLayout.test.ts；dump/APK JSON及來源說明。
+- Shared runtime files changed: NONE。共享文件僅四份docs；.gitattributes只限定保留原樣dump。
+- Non-FreeDSP protocol code changed: NO。
+- 本輪不修改src、sync、RAM sender、Flash、preamp、readback、package/test config；不操作硬體。
+- Current milestone: M2D-Deep — serializer convergence COMPLETE；M2 hardware RAM proof NOT PROVEN。
+- 固定localhost URL：http://localhost:5173/；啟動命令.\scripts\dev.ps1。本輪不啟動server、不開browser。

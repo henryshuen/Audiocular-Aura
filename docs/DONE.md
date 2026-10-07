@@ -117,3 +117,41 @@
 - git diff --check通過；還原本輪verify產生的dist，runtime/package/scripts差異為空。
 - 既有Vite程序PID8048監聽127.0.0.1:5173；純HTTP GET回傳200，本輪未啟動新server或開瀏覽器。
   網址http://localhost:5173/，啟動命令.\scripts\dev.ps1。狀態僅代表交付前快照。
+
+## 2026-10-07 — M2C-Research source recovery
+- 起始HEAD2dfe0db1735da511275cd7c3e188b64bdc8b6368，工作目錄乾淨，分支fix/freedsp-conexant。
+  基準verify通過6files/47tests；核對git status、branch與log -5。
+- 追查指定-S searches、原始builder blame、e7da5b5及c7c95fa前後相關提交、README與所有31則Issue #3 comments。
+  builder欄位一次在e7da5b5加入；c7c95fa只改buffer；沒有取得native serializer來源或CafId實作。
+- 找到M2B漏讀的freedsp_usb_raw_log.txt，原樣保存60,438bytes與SHA256、來源URL及限制。
+  57組TX/RX arrays均62entries，TX90×1/220×55/259×1，未見190。
+- 證據測試確認modulebytes、count後zero、係數LE32、firmware response、及舊62-byte builder對所有57筆TX一致。
+  保存Flash commit FF000000的觀察；沒有把helper表示或app success宣稱成正確on-wire transfer。
+- 讀取ASR原帖與linked repos；指定舊帖非serializer，Aura介紹帖是未實測同源自述。
+  devicePEQ固定HEAD的capture JSON含非法byte值，未採納為權威擷取；未複製、執行其程式。
+- 更新四份docs：來源時間軸、六欄matrix、六欄problem/hypothesis、Issue #3摘要及條件式未來manual capture plan。
+  沒有要求Henry當輪capture或送RAM；沒有找到authoritative serializer。
+- 新增5個保留來源證據的測試，最終verify.ps1 exit0：build/typecheck、7files/52tests。
+  首次node module型別檢查失敗已修正為既有raw import/Web Crypto；未加套件或改harness。
+- FreeDSP-specific：一份test及兩份fixture/provenance檔；shared為四份docs與.gitattributes。
+  attributes僅限定原樣dump，停用換行轉換並保留來源原有兩處尾空格；使用.txt避免.log忽略規則遺漏證據。
+  Non-FreeDSP protocol code changed: NO；runtime framing/sync/mode/RAM/Flash/preamp/readback均未修改。
+- 未操作GUI/browser或硬體、未下載安裝APK/driver、未發布Issue留言、未commit/push；停止於M2C-Research。
+- git diff --check與新增檔案check通過，原樣dump的尾空格依限定attributes保留。
+  verify產生的dist已還原；src/runtime、package、scripts與test config無差異。
+- 交付前5173沒有監聽程序，server未執行，也未自動啟動；網址http://localhost:5173/，命令.\scripts\dev.ps1。
+
+## 2026-10-07 — M2D research checkpoints
+- Phase1：核對並保留未提交的M2C檔案；baseline verify通過52tests；確認官方APK直接來源連結與repo無APK。
+- Phase2：完成57pairs deterministic分析、45組coeff/log一致性、96個sign-extended負words及commit255觀察。
+  7個forensics tests/typecheck通過；官方中文頁直接APK已下載到TEMP並保存hash，未執行APK。
+- Phase3：靜態恢復Java getUSBMessage與controlTransfer完整呼叫鏈、190的獨立payload、commit的255常數及187/188的不同容量。
+  官方APK版本與SHA已記錄；USB transfer成功長度與硬體效果尚未測量，未執行APK或任何硬體操作。
+- Phase4：核對官方APK res/qc.xml的VID35D8/PID1496→Freeman3、JNI coefficient wrapper與HID/Android規範。
+  新增inspect-apk.py靜態抽取、official-layout離線模型、兩份machine-readable分析與來源說明。
+  57pairs/114buffers逐byte重播一致；再次APK抽取22methods與保存JSON結構完全相同。
+  upstream live HEAD仍af0bcf7，Issue仍31comments；完整列出所有直接附件，兩個text附件重新下載404，未假裝已重新取得。
+- M2D-Deep研究收斂為一個HIGH serializer model；官方Java layout與ID邊界已恢復，runtime/硬體效果未修改或測試。
+  最終verify.ps1 exit0：TypeScript、Vite4.5.14 build、測試型別檢查、9files/65tests；原52tests保留，新增13tests。
+  GENERAL/ROADMAP/DECISIONS/DONE已更新，來源inventory、命令差異、排除模型與Issue evidence pack已保存。
+  本輪無硬體access/RAM/Flash寫入、GUI、自動同步、GitHub留言或非FreeDSP protocol修改。

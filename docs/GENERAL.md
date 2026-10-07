@@ -133,6 +133,20 @@ WebHID reportId 是獨立參數；descriptor 的 data 容量不包含它。
 Henry 已確認 output data=61 bytes，因此 M2A 的 62-byte 候選不得傳送。
 後續硬體輪次須另獲 Henry 指示；M2B 不執行 RAM、Flash、preamp、readback 或聽感測試。
 
+M2C 起的來源研究必須區分原始 serializer、app/helper buffer dump、host USB transfer capture、
+以及程式自行生成的 TX 日誌／mock fixture。Signed byte dump 只可按二補數轉換，不刪 byte 或補欄位。
+未取得 hook/transfer boundary 時，不能把 dump 長度或首位1定義為 WebHID data 長度或 Report ID。
+每個來源記錄 URL、版本/commit/hash、取得日期與限制；同源重述不能當成獨立佐證。
+不得因檔名叫 raw/capture 就認定為實機擷取；需檢查 byte 範圍、dump 層級及來源。
+各 command 的 payload/count 語意分開驗證，不把90/220或固定buffer容量推廣到190。
+研究輪次只保存證據，不以尺寸吻合提升候選信心，也不把不足的證據轉成硬體寫入測試。
+
+長時間研究每個主要階段必須checkpoint到ROADMAP、DECISIONS與DONE，保存已查來源、facts、
+hypotheses、排除項、未解欄位與下一目標；context compaction後從文件接續，不重新猜測先前結果。
+APK只可從既有證據或官方直接來源取得並作靜態資料解析，固定hash/version，不安裝或執行。
+來源證據恢復的serializer仍須與硬體效果分開報告；當輪禁止runtime變更時只新增離線分析／測試。
+Henry明確指定remote Git交付的研究輪次，通過verify、scope與文件檢查後，由Codex自行stage intended files、commit、push並確認乾淨工作目錄。
+
 Round 0 僅 bootstrap；不改 Conexant 協定、不操作硬體、不寫 Flash、不建立 PR。
 結束後等待 Henry 核准，再開始 M1。
 
