@@ -14,15 +14,26 @@ function Read-FreeDspChoice {
 }
 
 function Get-FreeDspSummary {
-    param($Results, [string]$LogPath, [string]$StopReason, [int]$ActiveBand)
+    param($Results, [string]$LogPath, [string]$StopReason, [int]$ActiveBand, [ValidateRange(1,4)][int]$StartSdkBand = 1)
     $lines = [System.Collections.Generic.List[string]]::new()
     $lines.Add('==================================================')
     $lines.Add('M2L BAND MAP SUMMARY')
     $lines.Add('Filter: PK400Hz / -12dB / Q1.0; selector0; current rate from matching346')
     $lines.Add('SDK0 -> wire5: PREVIOUSLY VERIFIED (M2K), not retested')
+    $lines.Add("Run selection: StartSdkBand=$StartSdkBand; SDK$StartSdkBand through SDK4")
     foreach ($r in $Results) {
         $lines.Add('')
         $lines.Add(('SDK{0} -> wire{1}:' -f $r.SdkBand, $r.Wire))
+        if ($r.SdkBand -eq 1) { $lines.Add('Prior evidence: PREVIOUSLY VERIFIED (M2L prior run)') }
+        if ($r.SdkBand -eq 2) { $lines.Add('Prior evidence: PROTOCOL VERIFIED / AUDIBLE RESTORE UNCONFIRMED; Apply audible YES (M2L prior run)') }
+        if ($r.SdkBand -lt $StartSdkBand) {
+            $lines.Add('This run: SKIPPED because StartSdkBand was used')
+            $lines.Add($(if ($r.SdkBand -eq 1) { 'RESULT wire6: PREVIOUSLY VERIFIED (M2L prior run)' }
+                elseif ($r.SdkBand -eq 2) { 'RESULT wire7: PROTOCOL VERIFIED / AUDIBLE RESTORE UNCONFIRMED (prior run); STILL PENDING' }
+                else { "RESULT wire$($r.Wire): SKIPPED / STILL PENDING" }))
+            continue
+        }
+        $lines.Add($(if ($r.ProtocolApply -eq 'NOT RUN') { 'This run: SELECTED BUT NOT RUN / PENDING' } else { 'This run: TESTED' }))
         $lines.Add('Protocol Apply: ' + $r.ProtocolApply)
         $lines.Add('Audible Apply: ' + $r.AudibleApply)
         $lines.Add('Protocol Restore: ' + $r.ProtocolRestore)
@@ -40,10 +51,11 @@ function Get-FreeDspSummary {
     $lines.Add('')
     $lines.Add('RESULT: ' + $(if ($StopReason) { 'STOPPED FOR REVIEW: ' + $StopReason } else { 'COMPLETED' }))
     if ($ActiveBand -gt 0) { $lines.Add("WARNING: wire$ActiveBand may still have the test filter; no automatic restore or retry was sent.") }
-    $allClear = @($Results | Where-Object {
+    $selected = @($Results | Where-Object { $_.SdkBand -ge $StartSdkBand })
+    $allClear = @($selected | Where-Object {
         $_.ProtocolApply -ne 'PASS' -or $_.ProtocolRestore -ne 'PASS' -or $_.AudibleApply -ne 'YES' -or $_.AudibleRestore -ne 'YES'
     }).Count -eq 0
-    $lines.Add($(if ($allClear) { 'Paste only this summary; all four bands passed protocol and audible reversal.' }
+    $lines.Add($(if ($allClear) { 'Paste only this summary; selected bands passed protocol and audible reversal. Skipped/pending bands retain prior status.' }
         else { 'Paste this summary plus relevant SDK/wire APPLY/RESTORE log sections for failed, uncertain, contradictory or differing results.' }))
     $lines.Add('Full log saved to:')
     $lines.Add($LogPath)
@@ -53,7 +65,9 @@ function Get-FreeDspSummary {
 
 # RunProtocol and ReadAnswer are dependency seams for offline mocks, not script/CLI parameters.
 function Invoke-FreeDspBandValidation {
-    param([scriptblock]$RunProtocol, [scriptblock]$ReadAnswer, [scriptblock]$Emit, [string]$LogPath)
+    param([scriptblock]$RunProtocol, [scriptblock]$ReadAnswer, [scriptblock]$Emit, [string]$LogPath,
+        [ValidateSet('1','2','3','4')][string]$StartSdkBand = '1')
+    $firstBand = [int]$StartSdkBand
     $results = @(1..4 | ForEach-Object { [pscustomobject]@{
         SdkBand = $_; Wire = $_ + 5; ProtocolApply = 'NOT RUN'; AudibleApply = 'NOT TESTED';
         ProtocolRestore = 'NOT RUN'; AudibleRestore = 'NOT TESTED'
@@ -61,13 +75,14 @@ function Invoke-FreeDspBandValidation {
     $stopReason = ''; $activeBand = 0
     try {
         & $Emit 'FreeDSP M2L Remaining Band Validation; SDK0/wire5 VERIFIED in M2K, not retested.'
-        & $Emit 'Testing SDK1/wire6, SDK2/wire7, SDK3/wire8, SDK4/wire9, one at a time.'
+        & $Emit "StartSdkBand=$firstBand; testing SDK$firstBand/wire$($firstBand+5) through SDK4/wire9, one at a time."
+        & $Emit 'Prior evidence: SDK1/wire6 VERIFIED; SDK2/wire7 protocol passed, audible Restore unconfirmed. Skipped bands are not retested.'
         & $Emit 'Safety: APO OFF; Windows output=FreeDSP; initial volume1-2/100; FIRST APPLY with IEM OUT OF EARS.'
         & $Emit 'Familiar music, no tone; SAME song and SAME comparison volume; no Flash/90/220.'
         & $Emit 'Sudden loudness/noise/distortion/imbalance/disconnect: STOP immediately. Q at prompts; Ctrl+C during a command.'
         & $Emit 'Q never auto-restores; if already applied, the test band may remain active. Do not retry or test later bands.'
-        foreach ($r in $results) {
-            & $Emit ("=== Test {0}/4: SDK{0} -> wire{1} ===" -f $r.SdkBand, $r.Wire)
+        foreach ($r in ($results | Where-Object { $_.SdkBand -ge $firstBand })) {
+            & $Emit ("=== Test {0}/{1}: SDK{2} -> wire{3} ===" -f ($r.SdkBand-$firstBand+1), (5-$firstBand), $r.SdkBand, $r.Wire)
             $answer = Read-FreeDspChoice $ReadAnswer $Emit 'Press ENTER to APPLY (Q to abort).' @('', 'Q')
             if ($answer -eq 'Q') { $stopReason = "Aborted before SDK$($r.SdkBand) Apply"; break }
             $activeBand = $r.Wire # A partial/failed write cannot be assumed harmless.
@@ -80,7 +95,7 @@ function Invoke-FreeDspBandValidation {
             } catch { $r.ProtocolApply = 'FAIL'; & $Emit ('ERROR: ' + $_.Exception.Message) }
             finally { & $Emit "===== $marker END =====" }
             if ($r.ProtocolApply -ne 'PASS') { $stopReason = "Apply protocol failure: $marker; do not listen, restore or continue"; break }
-            if ($r.SdkBand -eq 1) { & $Emit 'Protocol success: only if no abnormal output, wear IEM and listen at low volume; adjust slightly if needed, then keep comparison volume fixed.' }
+            if ($r.SdkBand -eq $firstBand) { & $Emit 'Protocol success: only if no abnormal output, wear IEM and listen at low volume; adjust slightly if needed, then keep comparison volume fixed.' }
             $answer = Read-FreeDspChoice $ReadAnswer $Emit 'Listen: did sound clearly change? ENTER=yes; N=no; S=subtle/uncertain; Q=abort.' @('', 'N', 'S', 'Q')
             $r.AudibleApply = switch ($answer) { '' { 'YES' } 'N' { 'NO' } 'S' { 'UNCERTAIN' } 'Q' { 'ABORTED' } }
             if ($answer -eq 'Q') { $stopReason = "Aborted after wire$($r.Wire) Apply; include both log sections, especially for abnormal audio"; break }
@@ -102,7 +117,7 @@ function Invoke-FreeDspBandValidation {
         }
     } catch { $stopReason = 'Interrupted/error: ' + $_.Exception.Message }
     finally {
-        foreach ($line in (Get-FreeDspSummary $results $LogPath $stopReason $activeBand)) { & $Emit $line }
+        foreach ($line in (Get-FreeDspSummary $results $LogPath $stopReason $activeBand $firstBand)) { & $Emit $line }
     }
     return [pscustomobject]@{ Results = $results; StopReason = $stopReason; ActiveBand = $activeBand }
 }
