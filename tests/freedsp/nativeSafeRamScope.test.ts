@@ -28,7 +28,7 @@ describe('M2K fixed native RAM diagnostic, offline only', () => {
     expect(method('setFreeman3EQ').instructions.find((i: { offset: number }) => i.offset === 58).args).toContain('getCurSampleRate');
     expect(method('setEQCFGIsBypass').instructions.find((i: { offset: number }) => i.offset === 28).args).toContain('187');
     expect(safe).toContain('Encode(187, [0])');
-    expect(safe).toContain('Firmware equivalence UNPROVEN');
+    expect(safe).toContain('accepted in M2K');
   });
   it('both scripts expose a single fixed operation with one child and a watchdog', () => {
     for (const [text, operation] of [[apply, 'ApplySafeRamTest'], [restore, 'RestoreSafeRamTest']]) {
@@ -38,7 +38,7 @@ describe('M2K fixed native RAM diagnostic, offline only', () => {
       expect(text).toContain('ElapsedMilliseconds -ge 30000');
       expect(text).not.toMatch(/RunAs|query220|query90|Invoke-Expression/);
     }
-    expect(safe).toContain('args[0] is "query346" or "ApplySafeRamTest" or "RestoreSafeRamTest"');
+    expect(safe).toContain('TryRemainingOperation(args[0], out _, out _)');
     expect(safe).not.toMatch(/Encode\((?:90|220|259),/);
   });
 });

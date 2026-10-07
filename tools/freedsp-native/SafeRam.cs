@@ -6,14 +6,27 @@ namespace FreeDspNative;
 // Fixed offline model only. M2E native final candidate selection remains uncertain by 1 LSB.
 public sealed record SafeCoefficients(int SampleHz, float[] Floats, int Exponent, int Gain, int Scale, int[] Words)
 {
-    public int[] Payload => [0, 5, Gain, .. Words, 0, 0, 0, 0, 0];
+    public int[] Payload(int sdkBand) => [0, SafeRam.WireBand(sdkBand), Gain, .. Words, 0, 0, 0, 0, 0];
 }
 
 public static class SafeRam
 {
     public static IReadOnlyList<int> Rates { get; } = Array.AsReadOnly(new[] {44100, 48000, 96000, 192000, 384000});
     public static bool IsOperation(string[] args) => args.Length == 1 &&
-        args[0] is "query346" or "ApplySafeRamTest" or "RestoreSafeRamTest";
+        (args[0] == "query346" || TryRemainingOperation(args[0], out _, out _));
+    public static bool TryRemainingOperation(string operation, out int sdkBand, out bool restore)
+    {
+        (sdkBand, restore) = operation switch {
+            "ApplyRemainingBand1" => (1, false), "RestoreRemainingBand1" => (1, true),
+            "ApplyRemainingBand2" => (2, false), "RestoreRemainingBand2" => (2, true),
+            "ApplyRemainingBand3" => (3, false), "RestoreRemainingBand3" => (3, true),
+            "ApplyRemainingBand4" => (4, false), "RestoreRemainingBand4" => (4, true),
+            _ => (0, false)
+        };
+        return sdkBand is >= 1 and <= 4;
+    }
+    public static int WireBand(int sdkBand) => sdkBand is >= 1 and <= 4 ? sdkBand + 5 :
+        throw new InvalidOperationException("M2L permits SDK1..4 / wire6..9 only; no arbitrary band or wire5 retest");
 
     public static SafeCoefficients Calculate(int sampleHz, bool restore)
     {
@@ -56,20 +69,22 @@ public static class SafeRam
     // Official logical14 bytes preserved; Windows caps-length adapter adds48 zero bytes, count stays1.
     // Microsoft HidD_SetOutputReport contract + hidapi/windows/hid.c hid_send_output_report.
     public static byte[] Bypass() => Encode(187, [0]);
-    public static byte[] Ram(int sampleHz, bool restore) => Encode(190, Calculate(sampleHz, restore).Payload);
+    public static byte[] Ram(int sampleHz, bool restore, int sdkBand = 1) => Encode(190, Calculate(sampleHz, restore).Payload(sdkBand));
     public static bool IsAllowedReport(byte[] b) => b.AsSpan().SequenceEqual(Caf346.CreateQuery()) ||
         b.AsSpan().SequenceEqual(Enable()) || b.AsSpan().SequenceEqual(Bypass()) ||
-        Rates.Any(rate => b.AsSpan().SequenceEqual(Ram(rate, false)) || b.AsSpan().SequenceEqual(Ram(rate, true)));
+        Enumerable.Range(1, 4).Any(band => Rates.Any(rate =>
+            b.AsSpan().SequenceEqual(Ram(rate, false, band)) || b.AsSpan().SequenceEqual(Ram(rate, true, band))));
 
-    public static int Run(IQueryHid hid, bool restore, TextWriter log, Func<IPollClock>? clocks = null)
+    public static int Run(IQueryHid hid, bool restore, TextWriter log, Func<IPollClock>? clocks = null, int sdkBand = 1)
     {
+        int wire = WireBand(sdkBand); // Validate before any SET, even for internal callers.
         clocks ??= () => new PollClock();
-        log.WriteLine(restore ? "RESTORE: flat/unity on SDK band0 / wire5 only; NOT a backup of previous EQ" :
-            "TEST: PK 400 Hz / -12 dB / Q1.0 / single SDK band0 / wire5; NOT global preamp");
+        log.WriteLine(restore ? $"RESTORE: flat/unity on SDK band{sdkBand} / wire{wire} only; NOT a backup of previous EQ" :
+            $"TEST: PK 400 Hz / -12 dB / Q1.0 / single SDK band{sdkBand} / wire{wire}; NOT global preamp");
         log.WriteLine("No Flash, no220, no automatic90. Protocol failure: STOP; do not listen or retry.");
         log.WriteLine(restore ? "Expected: body/warmth returns at SAME song/volume; only tested band is made flat." :
             "Expected: less low-mid/body/warmth around400Hz; NOT an overall12dB volume reduction.");
-        log.WriteLine("187: official14-byte logical report; Windows requires62 API bytes,48 zero padding. Firmware equivalence UNPROVEN; matching187 is mandatory.");
+        log.WriteLine("187: official14-byte logical report; Windows62 API bytes with48 zero padding accepted in M2K. Exact Android USB length equivalence not claimed; matching187 mandatory.");
         foreach (var (command, tx) in new[] { (188, Enable()), (187, Bypass()) })
         {
             if (Exchange(hid, command, tx, log, clocks(), false) is null) return Failed(log, command);
@@ -84,8 +99,8 @@ public static class SafeRam
         log.WriteLine($"Verified rate source: matching346 word1={rateReply.SampleIndex}; sampleHz={hz}");
         log.WriteLine("Floats [B0,B1,B2,A0,A1]=[" + string.Join(",", coefficients.Floats.Select(v => v.ToString("R", CultureInfo.InvariantCulture))) + "]");
         log.WriteLine($"exponent={coefficients.Exponent} Gain={coefficients.Gain} scale={coefficients.Scale}; integers=[{string.Join(",", coefficients.Words)}]");
-        log.WriteLine($"RAM190 count13 payload=[{string.Join(",", coefficients.Payload)}]; native final quantizer uncertainty1LSB, not bit-exact");
-        if (Exchange(hid, 190, Ram(hz, restore), log, clocks(), false) is null) return Failed(log, 190);
+        log.WriteLine($"RAM190 count13 payload=[{string.Join(",", coefficients.Payload(sdkBand))}]; native final quantizer uncertainty1LSB, not bit-exact");
+        if (Exchange(hid, 190, Ram(hz, restore, sdkBand), log, clocks(), false) is null) return Failed(log, 190);
         log.WriteLine(restore ? "RESULT: PROTOCOL RESTORE VERIFIED / LISTENING PENDING" : "RESULT: PROTOCOL APPLY VERIFIED / LISTENING PENDING");
         log.WriteLine("Matching CAF replies do not prove audible EQ; restore covers this band only.");
         log.Flush(); return 0;
