@@ -18,4 +18,21 @@ body{font:16px/1.6 system-ui,sans-serif;max-width:1060px;margin:24px auto;paddin
 <button id="sync">Sync完整九段RAM（確認三段後）</button><button id="flat">Restore全部九段unity</button>
 <p>disabled送同slot unity；LSQ／HSQ／NOTCH與正增益未支持。全九段只逐slot送一次，遇錯立即停止；部分完成時不自動rollback。重新連線不代表Flash保存或狀態讀回。</p>
 <button id="copy">複製完整log</button><textarea id="log" readonly aria-label="完整native log"></textarea>
-<script type="module" src="/src/freedsp/ramDebugPage.ts"></script></body></html>
+<script type="module">
+// Vite prints127.0.0.1; canonical localhost is required by the existing bridge Origin gate.
+const startupError = (error) => {
+  const message = 'M2N UI STARTUP ERROR: ' + (error instanceof Error ? error.message : String(error));
+  document.getElementById('status').textContent = message;
+  document.getElementById('log').value += message + '\n';
+  document.querySelectorAll('button:not(#copy)').forEach(button => { button.disabled = true; });
+  console.error(message, error);
+};
+window.addEventListener('error', event => startupError(event.error || event.message || 'Module load failed'));
+window.addEventListener('unhandledrejection', event => startupError(event.reason));
+if (location.hostname === '127.0.0.1' && location.port === '5173') {
+  document.getElementById('status').textContent = '正在轉至 http://localhost:5173/，以符合 bridge Origin。';
+  location.replace('http://localhost:5173' + location.pathname + location.search + location.hash);
+} else {
+  import('/src/freedsp/ramDebugPage.ts').catch(startupError);
+}
+</script></body></html>
