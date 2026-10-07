@@ -1,5 +1,5 @@
 import {describe,it,expect} from 'vitest';
-import {uiToWire,validateBands,modelWebBand,RamBridge,fullNinePreset} from '../../src/freedsp/webRam.ts';
+import {uiToWire,validateBands,modelWebBand,RamBridge,fullNinePreset,positiveBandPreset,positiveMultiPreset,analyzeSafety} from '../../src/freedsp/webRam.ts';
 import type {Band} from '../../src/main.ts';
 import nativeDebug from '../../tools/freedsp-native/RamDebug.cs?raw';
 import page from '../../src/freedsp/ramDebugPage.ts?raw';
@@ -20,6 +20,21 @@ function fakeBridge(){
  return {bridge:new RamBridge(fetcher),calls,setFail:()=>{fail=true;},setHold:(p:Promise<Response>)=>{hold=p;}};
 }
 describe('M2N Web/native RAM contract; no physical HID',()=>{
+ it('positive coefficients remain finite/stable/representable and identical for both paths',()=>{
+   for(const gain of [1,3,6,12])for(const freq of [400,1000,6000])for(const q of [.3,1,4])for(const rate of [4,5,6,7,8]){
+     const b={...bands()[4],gain,freq,q};const left=modelWebBand(b,rate,false,0),right=modelWebBand(b,rate,false,1);
+     expect(left.payload.slice(1)).toEqual(right.payload.slice(1));
+     expect(left.payload.slice(3,8).every(v=>Number.isInteger(v) && v>=-8388608 && v<=8388607)).toBe(true);
+   }
+ });
+ it('P1 and P2 budgets pass; overlapping boost is blocked before any RAM request with no bypass',async()=>{
+   expect(analyzeSafety(positiveBandPreset()).allowed).toBe(true);
+   const p2=analyzeSafety(positiveMultiPreset());expect(p2.allowed).toBe(true);expect(p2.positiveSumDb).toBe(3);expect(p2.peakDb).toBeLessThan(3.1);
+   const unsafe=fullNinePreset().map(b=>({...b,freq:1000,gain:6}));const safety=analyzeSafety(unsafe);
+   expect(safety.allowed).toBe(false);expect(safety.peakDb).toBeGreaterThan(50);
+   const f=fakeBridge();await f.bridge.connect();await expect(f.bridge.run('syncNine',0,unsafe)).rejects.toThrow('SAFETY BLOCK');expect(f.calls).toHaveLength(2);
+   await f.bridge.run('restoreNine',0,unsafe);expect(f.calls).toHaveLength(3);
+ });
  it('explicit Restore ignores invalid editor values and sends only a valid unity snapshot',async()=>{
    const f=fakeBridge();await f.bridge.connect();const b=bands();b[0].gain=-13;b[1].freq=NaN;b[2].q=0;
    for(const action of ['applyBand','syncNine'] as const)await expect(f.bridge.run(action,4,b)).rejects.toThrow();
@@ -62,7 +77,7 @@ describe('M2N Web/native RAM contract; no physical HID',()=>{
  it('validates exactly nine rows with matching indices and explicit PK/enabled',()=>{
    expect(validateBands(bands())).toEqual(bands());
    expect(()=>validateBands(bands().slice(1))).toThrow();expect(()=>validateBands([...bands(),bands()[0]])).toThrow();
-   for(const b of [{index:1},{type:'LSQ'},{type:'NOTCH'},{enabled:undefined},{freq:NaN},{gain:1},{q:0},{freq:65536}]){
+   for(const b of [{index:1},{type:'LSQ'},{type:'NOTCH'},{enabled:undefined},{freq:NaN},{gain:13},{q:0},{freq:65536}]){
      const state=bands();Object.assign(state[0],b);expect(()=>validateBands(state)).toThrow();
    }
  });
@@ -98,7 +113,7 @@ describe('M2N Web/native RAM contract; no physical HID',()=>{
    expect(bodies.slice(0,6).map(b=>b.uiIndex)).toEqual([0,0,4,4,8,8]);expect(bodies.every(b=>b.bands.length===9)).toBe(true);
  });
  it('invalid data never reaches bridge and a failed write is never retried',async()=>{
-   const f=fakeBridge();await f.bridge.connect();const b=bands();b[0].gain=3;
+   const f=fakeBridge();await f.bridge.connect();const b=bands();b[0].gain=13;
    await expect(f.bridge.run('applyBand',0,b)).rejects.toThrow();expect(f.calls).toHaveLength(2);
    f.setFail();await expect(f.bridge.run('applyBand',0,bands())).rejects.toThrow('STOP partial190');expect(f.calls).toHaveLength(3);
  });

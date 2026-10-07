@@ -1,29 +1,28 @@
 <!doctype html>
 <html lang="zh-Hant"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>FreeDSP M2Q stereo RAM debug</title><style>
+<title>FreeDSP M2R RAM debug</title><style>
 body{font:16px/1.6 system-ui,sans-serif;max-width:1060px;margin:24px auto;padding:0 16px;background:#10141d;color:#e6eaf2}button,input,select{font:inherit;padding:6px;margin:4px;background:#202a3d;color:inherit;border:1px solid #70809b;border-radius:5px}button:disabled{opacity:.4}table{width:100%;border-collapse:collapse}td,th{padding:6px;border-bottom:1px solid #394459;text-align:left}input[type=number]{width:100px}textarea{box-sizing:border-box;width:100%;height:270px;background:#0b0f17;color:#d5e1ef;padding:12px}p{margin:12px 0}#status{padding:12px;background:#202a3d}.scroll{overflow-x:auto}
 </style></head><body>
-<h1>FreeDSP M2Q：雙聲道 Web RAM 驗證</h1>
-<p>每個 wire 依序寫 path0 LEFT、path1 RIGHT，相同係數；LEFT／RIGHT 是 M2P 硬體驗證命名，非官方 SDK 欄位名稱。完整九段為 18 次 command190。</p>
-<p>僅 Moondrop FreeDSP35D8:1496／Windows native bridge。RAM only；無Flash、Preamp、90。PK負增益。正式頁面的Sync不使用此路徑。</p>
-<p>APO OFF、Windows輸出FreeDSP、初始音量1–2/100；首次Apply耳機離耳。協定成功且無異常後才低音量聽；同曲、同比較音量。異常立即停止。Restore是unity，不是原EQ備份。</p>
-<p>此頁是獨立九段編輯器；初值未讀回裝置，沒有自動Apply。可手動載入正式UI儲存狀態，但不載入tilt／Preamp。</p>
-<p>PK／20–20000Hz／−12..0dB／Q0.1..10 是 debug 安全範圍，並非已確認的硬體限制。無效編輯值只阻擋 Apply；Restore 使用固定 unity，不依賴編輯值。傳輸失敗仍 STOP，不自動重試或還原。</p>
-<button id="connect">連線 FreeDSP（僅metadata）</button><button id="load">載入正式UI儲存的九段</button>
-<p id="status">請使用 .\scripts\dev.ps1，然後連線。尚未送任何命令。</p>
-<div class="scroll"><table><thead><tr><th>UI band → raw slot</th><th>Hz</th><th>dB（負值）</th><th>Q</th><th>Enabled</th><th>Type</th></tr></thead><tbody id="bands"></tbody></table></div>
+<h1>FreeDSP M2R：一次完成正增益／雙聲道／click觀察</h1>
+<p>手動驗證#1：Connect → 緊急Restore全九段unity → P1填入 → Apply選定Band5 → 聽並記錄 → Restore本段 → 記錄恢復 → P2填入 → Apply完整九段 → 聽並記錄 → Restore全部 → 記錄 → NEG填入 → Apply完整九段 → 記錄 → Restore全部 → 記錄。</p>
+<p>APO OFF、Windows輸出FreeDSP、初始音量1–2/100、首次正增益Apply IEM離耳、只用音樂不用測試音；異常音量／噪音／失真立即停止。正增益可能削波；此輪預算不是硬體headroom保證。</p>
+<p>僅35D8:1496／PK／20–20000Hz／每段−12..+12dB／Q0.1..10。每段±12不代表合成±12。Apply硬檢查五速率量化模型：正增益總預算≤6dB、取樣合成峰值≤6.1dB（0.1dB數值容差）；無Proceed Anyway、preamp、Flash、220、90、其他filter或utility命令。+12係數支援不等於本輪允許+12 Apply。</p>
+<p>wire1path0 LEFT→wire1path1 RIGHT→…→wire9path1，相同係數；LEFT/RIGHT為硬體驗證命名。完整九段18次190；首敗STOP、無自動retry/rollback。Restore不依賴editor或觀察；錯誤後可明確選緊急Restore，是新unity操作不是重試。無readback／原EQ備份／persistence。</p>
+<button id="connect">連線 FreeDSP（僅metadata）</button><button id="load">載入正式UI儲存九段（本地）</button>
+<p id="status">請使用 .\scripts\dev.ps1，尚未送任何命令。</p>
+<div class="scroll"><table><thead><tr><th>UI→wire</th><th>Hz</th><th>dB</th><th>Q</th><th>Enabled</th><th>Type</th></tr></thead><tbody id="bands"></tbody></table></div>
 <label>操作band <select id="selection"></select></label>
-<button id="safe">填入安全測試值400Hz／−12dB／Q1（不送出）</button>
-<button id="gatePreset">填入 Band5 雙聲道關卡：400Hz／−12dB／Q1（不送出）</button>
-<button id="apply">Apply選定band 雙聲道RAM</button><button id="restore">Restore選定band 雙聲道unity</button>
-<button id="confirm">確認本band雙耳等量變化／置中＋雙耳恢復</button>
-<p id="gate">先完成 Band5 雙聲道 Apply／Restore，確認雙耳等量變化、中心不偏、雙耳恢復，再做完整九段。</p>
-<button id="preset">填入 M2Q 九段負增益 PK 預設（不送出）</button>
-<button id="sync">Apply完整九段雙聲道RAM</button><button id="flat">Restore全部九段雙聲道unity</button>
-<p>首次全九段 Apply 時 IEM 離耳；成功後低音量聽，再明確確認。Restore 後再聽並確認恢復；無明顯變化或異常請停止並保留 log，不按 YES。</p>
-<button id="heardApply">確認全九段雙耳等量變化＋置中 YES（僅紀錄）</button>
-<button id="heardRestore">確認全九段雙耳恢復＋置中 YES（僅紀錄）</button>
-<p>disabled送同slot兩側unity；LSQ／HSQ／NOTCH與正增益未支持。預算驗證完成才送；依wire1path0→wire1path1→…→wire9path1，各一次，遇錯立即停止；部分完成時可能左右不等，不自動rollback。重新連線不代表持久保存或狀態讀回。</p>
+<button id="safe">P1填入 Band5 1000Hz/+6dB/Q1（不送出）</button><button id="gatePreset" hidden>P1</button>
+<button id="apply">Apply選定band雙聲道RAM</button><button id="restore">Restore選定band雙聲道unity</button>
+<button id="positiveMulti">P2填入三段各+1dB（不送出）</button><button id="preset">NEG填入九段負增益（不送出）</button>
+<button id="sync">Apply完整九段雙聲道RAM</button><button id="flat">緊急Restore全部九段雙聲道unity</button>
+<p>每次操作後可選觀察並按紀錄。Apply填Audible，Restore填Recovery；Stereo每次填。紀錄選項不會阻擋Restore。</p>
+<label>Click/pop <select id="obsPop"><option value="U">U 不確定</option><option value="N">N 無</option><option value="1">1 一次</option><option value="B">B 約每band一次</option><option value="M">M 多次／其他</option></select></label>
+<label>Stereo <select id="obsStereo"><option value="U">U 不確定</option><option value="C">C 置中</option><option value="L">L 偏左</option><option value="R">R 偏右</option></select></label>
+<label>Audible EQ <select id="obsAudible"><option value="U">U 不確定</option><option value="Y">Y 有變化</option><option value="N">N 無變化</option></select></label>
+<label>Restore recovery <select id="obsRecovery"><option value="U">U 不確定</option><option value="Y">Y 恢復</option><option value="N">N 未恢復</option></select></label>
+<button id="record">紀錄最近一次操作的聽感觀察（不送出）</button><button id="confirm" hidden>紀錄</button><button id="heardApply" hidden>紀錄</button><button id="heardRestore" hidden>紀錄</button>
+<p id="gate">P1／P2／NEG的Apply與Restore聽感紀錄完成後開放主圖形測試。沒有自動聽感判定。</p>
 <button id="copy">複製完整log</button><textarea id="log" readonly aria-label="完整native log"></textarea>
 <script type="module">
 // Vite prints127.0.0.1; canonical localhost is required by the existing bridge Origin gate.
@@ -31,7 +30,7 @@ const startupError = (error) => {
   const message = 'M2N UI STARTUP ERROR: ' + (error instanceof Error ? error.message : String(error));
   document.getElementById('status').textContent = message;
   document.getElementById('log').value += message + '\n';
-  document.querySelectorAll('button:not(#copy)').forEach(button => { button.disabled = true; });
+  // Runtime errors are visible; do not blanket-disable an already initialized emergency Restore.
   console.error(message, error);
 };
 window.addEventListener('error', event => startupError(event.error || event.message || 'Module load failed'));

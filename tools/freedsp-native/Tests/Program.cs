@@ -332,7 +332,7 @@ Test("M2N invalid full-state/action data rejected before HID",()=>{
     foreach(string action in new[]{"220","90","readback","flash","preamp"})Throws(()=>new RamDebugRequest(action,0,Nine()).Validate());
     foreach(int index in new[]{-1,9})Throws(()=>new RamDebugRequest("applyBand",index,Nine()).Validate());
     Throws(()=>new RamDebugRequest("syncNine",0,Nine().Take(8).ToArray()).Validate());
-    foreach(var b in new[]{Nine()[0] with {Index=1},Nine()[0] with {Freq=double.NaN},Nine()[0] with {Gain=1},Nine()[0] with {Q=0},Nine()[0] with {Type="LSQ"}}) {
+    foreach(var b in new[]{Nine()[0] with {Index=1},Nine()[0] with {Freq=double.NaN},Nine()[0] with {Gain=13},Nine()[0] with {Q=0},Nine()[0] with {Type="LSQ"}}) {
         var r=new RamDebugRequest("applyBand",0,Nine());r.Bands[0]=b;Throws(r.Validate);
         using var hid=new MockHid(Reply());using var log=new StringWriter();Throws(()=>RamDebug.Run(hid,r,log,[]));Check(hid.Calls.Count==0,"No SET");
     }
@@ -340,6 +340,35 @@ Test("M2N invalid full-state/action data rejected before HID",()=>{
     string json=System.Text.Json.JsonSerializer.Serialize(new RamDebugRequest("applyBand",0,Nine()));
     Check(RamDebugRequest.Parse(json).Bands.Length==9,"Exact schema");
     string camel=System.Text.Json.JsonSerializer.Serialize(new RamDebugRequest("applyBand",0,Nine()),new System.Text.Json.JsonSerializerOptions {PropertyNamingPolicy=System.Text.Json.JsonNamingPolicy.CamelCase}); Check(RamDebugRequest.Parse(camel).Bands[0].Enabled,"Browser camelCase required fields");var missing=System.Text.Json.Nodes.JsonNode.Parse(json)!; missing["Bands"]![0]!.AsObject().Remove("Enabled"); Throws(()=>RamDebugRequest.Parse(missing.ToJsonString()));
+});
+Test("M2R positive PK preflight and conservative composite cap; Restore always unity",()=>{
+    foreach(int hz in SafeRam.Rates) foreach(double gain in new[]{1.0,3.0,6.0,12.0}) foreach(double freq in new[]{400.0,1000.0,6000.0}) foreach(double q in new[]{.3,1,4}) {
+        var b=Nine()[0] with {Freq=freq,Gain=gain,Q=q};var c=RamDebug.Calculate(hz,b,false);
+        Check(c.Words.Length==5 && c.Floats.All(float.IsFinite) && c.Words.All(v=>v>=-8388608 && v<=8388607),"Finite signed24 positive coefficients");
+        Check(RamDebug.Packet(0,c,0).Skip(14).SequenceEqual(RamDebug.Packet(0,c,1).Skip(14)),"Same coefficients");
+    }
+    foreach(double gain in new[]{3.0,6.0}) {
+        var r=new RamDebugRequest("applyBand",0,Nine());r.Bands[0]=r.Bands[0] with {Freq=1000,Gain=gain};
+        var safe=RamDebug.Safety([r.Bands[0]]);Check(safe.PositiveSumDb==gain && safe.PeakDb<=6.1,"Safe selected positive");
+        using var hid=new MockHid(NonMatch(190));foreach(var b in new[]{NonMatch(188),NonMatch(187),Reply()})hid.Responses.Enqueue(b);
+        using var log=new StringWriter();Check(RamDebug.Run(hid,r,log,[],()=>new FakeClock())==0&&hid.Transmissions.Count==5,"Selected only, not unrelated state");
+        Check(log.ToString().Contains("SET start_ms=")&&log.ToString().Contains("GET start_ms=")&&log.ToString().Contains("exchange_end_ms="),"Per API call and matching timing");
+    }
+    var unsafeR=new RamDebugRequest("syncNine",0,Nine().Select(b=>b with {Freq=1000,Gain=3}).ToArray());
+    using(var hid=new MockHid(NonMatch(190)))using(var log=new StringWriter()) {Throws(()=>RamDebug.Run(hid,unsafeR,log,[],()=>new FakeClock()));Check(hid.Calls.Count==0,"Over budget before any SET");}
+    var highSingle=new RamDebugRequest("applyBand",0,Nine());highSingle.Bands[0]=highSingle.Bands[0] with {Gain=12};
+    using(var hid=new MockHid(NonMatch(190)))using(var log=new StringWriter()) {Throws(()=>RamDebug.Run(hid,highSingle,log,[],()=>new FakeClock()));Check(hid.Calls.Count==0,"Individual+12 coefficient range is not authorization to Apply");}
+    var restoreR=unsafeR with {Action="restoreNine"};
+    using(var hid=new MockHid(NonMatch(190)))using(var log=new StringWriter()) {
+        foreach(var b in new[]{NonMatch(188),NonMatch(187),Reply()})hid.Responses.Enqueue(b);
+        Check(RamDebug.Run(hid,restoreR,log,[],()=>new FakeClock())==0,"Unsafe positive state can Restore");
+        Check(hid.Transmissions.Skip(3).All(b=>BinaryPrimitives.ReadInt32LittleEndian(b.AsSpan(22))==4194304),"Unity both paths");
+    }
+    var separated=new[]{250.0,1000.0,4000.0}.Select((f,i)=>new DebugBand(i,f,1,1,"PK",true)).ToArray();
+    var separatedSafety=RamDebug.Safety(separated);
+    Check(separatedSafety.PeakDb<=6.1 && separatedSafety.PositiveSumDb==3,"Three separated low boosts");
+    var disabledSafety=RamDebug.Safety([Nine()[0] with {Gain=12,Enabled=false}]);
+    Check(disabledSafety.PositiveSumDb==0 && disabledSafety.PeakDb==0,"Disabled positive band is unity");
 });
 Test("M2Q single-band48k uses matched346 and paired190; no90/220",()=>{
     foreach(int index in new[]{0,4,8}) foreach(string action in new[]{"applyBand","restoreBand"}) {
