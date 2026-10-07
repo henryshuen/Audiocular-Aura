@@ -30,7 +30,8 @@ M2H：M2G346實測rawTotal=0/newEvents=0已回報；正常Windows Chrome的官�
 M2I：Henry實測SET346/GET成功、有效CAF188回應，Level1 native transport VERIFIED；matchingCAF346 NOT YET VERIFIED。
 M2J：Henry實測GET#1取得matching346，Level2 VERIFIED；當時index5=48k，不證明多GET必要或queue來源。
 M2K：Henry實測 padded187 accepted，wire5 RAM190 Apply有明顯可聽變化、unity Restore清楚恢復；single-band RAM effect VERIFIED。
-M2L：相同濾波器只改wire6–9，互動逐段Apply/Restore；IMPLEMENTATION READY / HARDWARE VALIDATION PENDING。
+M2L：wire6由Henry完整驗證；wire7 protocol Apply/Restore PASS、Apply audibleYES，但Restore聽感未確認；wire8/9未測。
+M2L-Resume：手動工具加入StartSdkBand1..4，預定從SDK2/wire7恢復，再測wire8/9；nativeprotocol不改。
 Round 0 結束時 dev server 正在執行，僅監聽 127.0.0.1:5173。
 HTTP 以 curl.exe --noproxy '*' 驗證；一般 Invoke-WebRequest 曾回傳 404，
 直接請求已確認 Vite 頁面正確，未改動系統代理設定。
@@ -1723,3 +1724,59 @@ M2Lwire6..9→PENDING HENRY，ImplementationREADY。
 - Shared runtime changed: NONE；Production runtime changed: NO；Non-FreeDSP protocol changed: NO。
 - Documentation changed: GENERAL/ROADMAP/DECISIONS/DONE ONLY；New documentation files: NO；Runtime log files committed: NO。
 - M2Kwire5 VERIFIED；M2LimplementationREADY，wire6–9 PENDING HENRY；no unknown9band/preamp/Flash work。
+
+## 2026-10-07 — latest M2L hardware result (Henry report)
+SDK0/wire5 previously VERIFIED M2K，未重測。
+SDK1/wire6：Protocol Apply PASS、Audible Apply YES、Protocol Restore PASS、Audible Restore YES，fully VERIFIED。
+SDK2/wire7：Protocol Apply/Restore PASS、Audible Apply YES；Henry分心，Restore聽感PARTIAL/UNCERTAIN。
+wire7分類：PROTOCOL VERIFIED / AUDIBLE RESTORE UNCONFIRMED，不是failed。腳本正確在P後停止；SDK3/wire8、SDK4/wire9 NOT RUN / PENDING。
+M2L Windows native evidence：input/output report bytes62、feature0，HidP_InitializeReportForID確認Input/Output ID1，SET成功並取得matchingCAF回應。
+這與1byte reportID＋61byte reportdata一致；preparsed-data驗證/caps/hostAPI回應不是rawUSB transfer擷取，不能聲稱已證實rawUSB長度。
+
+## M2L-Resume — targeted validation READY
+|SDK / wire|Current evidence|Next action|
+|---|---|---|
+|SDK0/wire5|VERIFIED M2K|不重測|
+|SDK1/wire6|VERIFIED M2L，Apply/Restore protocol＋audibleYES|Start2跳過，保留priorverifiedstatus|
+|SDK2/wire7|PROTOCOL VERIFIED / AUDIBLE RESTORE UNCONFIRMED；Apply可聽|本次從此重驗|
+|SDK3/wire8|NOT RUN / PENDING|wire7確認恢復後才繼續|
+|SDK4/wire9|NOT RUN / PENDING|前一段確認恢復後才繼續|
+手動入口-StartSdkBand 1..4（default1）；Start2→SDK2..4，Start3→SDK3..4，Start4→SDK4only。
+無OnlySdkBand額外模式；既有nativeallowedoperation呼叫不變。只改manualselection、progress/summary、firstselectedApply安全提示。
+本次runtime/math/protocol不變；wire7目前不是knownimplementationdefect。
+
+### Research checkpoint — M2L-Resume implementation
+- Examined: Henrywire6/7實測摘要、既有manualPSselection/summary/safety、WindowsHIDcaps/ID證據。
+- Verified facts: wire6 fullyverified；wire7protocol雙PASS且ApplyaudibleYES、Restoreuncertain；wire8/9未送；原script正確停止。
+- Verified facts: 16WindowsPowerShellmocktests通過，包括default1、Start2/3/4、invalidbinding、priorstatus、resumefail/uncertainstop。
+- Hypotheses: attention/listening uncertainty是目前主要解釋，不據此判device缺陷；新的wire7恢復聽感仍待Henry。
+- Discarded hypotheses: wire7Applyfailed、wire7Restoreprotocolfailed、P必等於firmware故障、resume需要改serializer/payload。
+- Unresolved fields: wire7 audibleRestore、wire8/9可逆audioeffect。
+- Next search target: verify/scope/Git後STOP；Henry低volumeStart2一次，逐段confirm，不由Codex測硬體。
+
+## Evidence for upstream / Issue #3
+M2L actualrun：SDK1/wire6 protocolApply/RestorePASS、audibleApply/RestoreYES→VERIFIED。
+SDK2/wire7 protocolApply/RestorePASS、ApplyaudibleYES、Restore因Henry分心未確認→PROTOCOL VERIFIED / AUDIBLE RESTORE UNCONFIRMED，非failed。
+P後controller正確停止，SDK3/wire8與SDK4/wire9未測；需targetedresume，不能用未測band宣稱支持或失敗。
+Native HID Input/OutputReportByteLength62、Feature0，HidP_InitializeReportForID確認ID1路徑（preparsedmetadata）；HidD_SetOutputReportsuccess及matchingCAFreceived。
+與ReportID1byte+61data bytes一致；未capture USB setup/data completion，不聲稱rawUSBtransferlayout/length已被實測證明。
+
+### Problem / hypothesis / next action
+Observed problem:
+- wire7 Restore audible confirmation因Henry分心未取得；重跑全流程會不必要地重測已VERIFIED wire6。
+Verified facts:
+- wire6 fullyverified；wire7 Apply audible、Apply/Restore protocol bothPASS；wire7 audibleRestoreunconfirmed；wire8/9pending。
+Possible causes:
+- humanattention/listeninguncertainty目前為主要解釋；不能由此推導protocolfailure。
+Ruled out / weakened:
+- wire7Applyfailure、wire7Restoreprotocolfailure；既有腳本未停止或自動累積filters。
+Next validation:
+- Henry用-StartSdkBand 2從SDK2/wire7重驗；只有同段Restore聽感YES才繼續wire8/wire9。
+Possible fix direction:
+- none yet；這是validationstate，不是已知implementationdefect，不改CAF/native/coefficients/payload。
+
+### Scope / regression check
+- Manual tools changed: test-freedsp-native-band-map.ps1、BandValidation.psm1；offline tests兩份更新。
+- Native protocol/serializer/190/bandmapping/coefficients/payload changed: NO。
+- Shared/production runtime changed: NONE；Non-FreeDSP protocol changed: NO；Flash/90/220 changes: NO。
+- Documentation changed: GENERAL/ROADMAP/DECISIONS/DONE ONLY；New documentation/runtime-log files committed: NO。

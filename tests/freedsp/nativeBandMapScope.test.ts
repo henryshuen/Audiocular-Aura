@@ -24,6 +24,8 @@ describe('M2L remaining-band diagnostic boundary', () => {
   });
   it('single entry script owns prompts, temp logs, safety gates and no wire5 default', () => {
     expect(wrapper).toContain('$args.Count -ne 0');
+    expect(wrapper).toContain("[ValidateSet('1','2','3','4')][string]$StartSdkBand = '1'");
+    expect(wrapper).toContain('-StartSdkBand $StartSdkBand');
     expect(wrapper).toContain('[System.IO.Path]::GetTempPath()');
     expect(wrapper).toContain('[System.IO.FileMode]::CreateNew');
     expect(wrapper).toContain('TEMP resolves inside repository');

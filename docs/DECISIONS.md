@@ -264,3 +264,21 @@ Q只停止，不自動write；這避免abort/disconnect/abnormal狀態追加未�
 Logs用GetTempPath/AuraPEQ unique CreateNew＋AutoFlush，拒絕repo內TEMP；每bandmarkers/fullraw保留，摘要成功僅pass＋YES/YES才VERIFIED。
 互動state machine用dependency-injected protocol/answers做offline tests；真實launcher只接受八個fixed names、onechild、30s watchdog、finallycleanup。
 PS module屬隔離診斷helper，沒有新增projectdocs或production連接。GlobalPreamp/MasterGain另輪，禁止逐biquadscale模擬，不在M2L研究。
+
+## 2026-10-07 — latest M2L hardware result (Henry report)
+SDK0/wire5 previously VERIFIED M2K，未重測。
+SDK1/wire6：Protocol Apply PASS、Audible Apply YES、Protocol Restore PASS、Audible Restore YES，fully VERIFIED。
+SDK2/wire7：Protocol Apply/Restore PASS、Audible Apply YES；Henry分心，Restore聽感PARTIAL/UNCERTAIN。
+wire7分類：PROTOCOL VERIFIED / AUDIBLE RESTORE UNCONFIRMED，不是failed。腳本正確在P後停止；SDK3/wire8、SDK4/wire9 NOT RUN / PENDING。
+M2L Windows native evidence：input/output report bytes62、feature0，HidP_InitializeReportForID確認Input/Output ID1，SET成功並取得matchingCAF回應。
+這與1byte reportID＋61byte reportdata一致；preparsed-data驗證/caps/hostAPI回應不是rawUSB transfer擷取，不能聲稱已證實rawUSB長度。
+
+## D032 — targeted M2L resume is validation state, not protocol repair
+Henry新證據將wire6升為fullyVERIFIED；wire7Apply可聽及Apply/Restore protocol都PASS，Restore聽感因分心未確認。
+保留wire7 PROTOCOL VERIFIED / AUDIBLE RESTORE UNCONFIRMED；不標failed、不修改packet/native/coefficient去「修」未證實問題。
+手動StartSdkBand只選既有controller中的後綴SDK1..4；預設1、nextStart2，validateset拒絕0/5/decimal/unknown。無OnlySdkBand複雜化。
+Summary保留priorverifiedwire6及priorunconfirmedwire7，不把skippedverifiedband標not tested，也不把skip當證據。
+Safety firstApply判斷從SDK1改為selectedfirstSDK；每次新run從指定band開始仍要求離耳及低volume。
+Nativechildlauncher、operationnames、CAFflow/serializer/bandmapping/coefficient/math/payload及failurepolicy完全不變；僅manualtoolselection/summary/tests/doc變更。
+Windowsinput/output62、feature0、preparsed-ID1、SETsuccess/matchingCAF支持1ID+61data interpretation，不能當rawUSB捕捉；此證據在ROADMAP保存。
+GlobalPreamp仍另輪NOTVERIFIED；no Flash/90/220/production/nonFreeDSP changes。

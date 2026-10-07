@@ -3,7 +3,7 @@ Import-Module (Join-Path $PSScriptRoot '..\..\scripts\freedsp\BandValidation.psm
 $passed = 0
 function Assert($condition, [string]$message) { if (-not $condition) { throw $message } }
 function Test([string]$name, [scriptblock]$body) { & $body; $script:passed++; Write-Host ('PASS ' + $name) }
-function Mock-Session([string[]]$Answers, [int[]]$Codes = @(0,0,0,0,0,0,0,0)) {
+function Mock-Session([string[]]$Answers, [int[]]$Codes = @(0,0,0,0,0,0,0,0), [string]$StartSdkBand = '1') {
     $state = @{ Answers = [System.Collections.Generic.Queue[string]]::new(); Codes = [System.Collections.Generic.Queue[int]]::new();
         Calls = [System.Collections.Generic.List[string]]::new(); Lines = [System.Collections.Generic.List[string]]::new() }
     foreach($a in $Answers) { $state.Answers.Enqueue($a) }; foreach($c in $Codes) { $state.Codes.Enqueue($c) }
@@ -14,7 +14,7 @@ function Mock-Session([string[]]$Answers, [int[]]$Codes = @(0,0,0,0,0,0,0,0)) {
         return $state.Codes.Dequeue()
     }.GetNewClosure()
     $emit = { param($line) $state.Lines.Add([string]$line) }.GetNewClosure()
-    $result = Invoke-FreeDspBandValidation $run $read $emit (Join-Path ([IO.Path]::GetTempPath()) 'AuraPEQ\synthetic-not-written.log')
+    $result = Invoke-FreeDspBandValidation $run $read $emit (Join-Path ([IO.Path]::GetTempPath()) 'AuraPEQ\synthetic-not-written.log') -StartSdkBand $StartSdkBand
     return @{ State = $state; Result = $result; Text = $state.Lines -join "`n" }
 }
 Test 'all ENTER: four bands, exact Apply/Restore pairs, no wire5, compact summary' {
@@ -86,12 +86,57 @@ Test 'real wrapper syntax/log/argument contract, without running wrapper or hard
     $wrapper=Get-Content $wrapperPath -Raw
     Assert ($wrapper.Contains('[System.IO.Path]::GetTempPath()') -and $wrapper.Contains('[System.IO.FileMode]::CreateNew')) 'Outside repo unique log'
     Assert ($wrapper.Contains('$writer.AutoFlush = $true') -and $wrapper.Contains('$writer.WriteLine($line)')) 'Complete flushed log'
-    Assert ($wrapper.Contains('$args.Count -ne 0')) 'No public params'
+    Assert ($wrapper.Contains('$args.Count -ne 0') -and $wrapper.Contains("[ValidateSet('1','2','3','4')]")) 'Only allowlisted resume parameter'
     $errors=$null; $tokens=$null
     $null=[System.Management.Automation.Language.Parser]::ParseFile($wrapperPath,[ref]$tokens,[ref]$errors)
     Assert ($errors.Count -eq 0) 'Wrapper syntax'
     $module=Get-Content (Join-Path $PSScriptRoot '..\..\scripts\freedsp\BandValidation.psm1') -Raw
     Assert ($module.Contains('ElapsedMilliseconds -ge 30000') -and $module.Contains('finally {')) 'Native watchdog/cleanup'
     Assert (@([regex]::Matches($module,'\$child\.Start\(\)')).Count -eq 1) 'One child per operation'
+}
+Test 'StartSdkBand2/3/4 selects exact suffix, paired writes and first-Apply safety' {
+    foreach($start in 2..4) {
+        $m=Mock-Session -Answers (@('') * (4*(5-$start))) -StartSdkBand $start
+        $expected=@($start..4 | ForEach-Object { "$_/False"; "$_/True" }) -join ','
+        Assert (($m.State.Calls -join ',') -eq $expected) 'No earlier bands sent'
+        Assert ($m.Text.Contains("=== Test 1/$((5-$start)): SDK$start -> wire$($start+5) ===")) 'Progress reflects selected count'
+        Assert (@($m.State.Lines | Where-Object { $_ -like 'Protocol success: only if no abnormal*' }).Count -eq 1) 'First resumed Apply safety'
+        Assert ($m.Result.StopReason -eq '' -and $m.Text.Contains('Run selection: StartSdkBand='+$start)) 'Resume logged/summarized'
+    }
+}
+Test 'resume summary preserves wire6 verified and skipped-unconfirmed wire7 pending' {
+    $m=Mock-Session -Answers (@('') * 12) -StartSdkBand 2
+    $summary=$m.Text.Substring($m.Text.LastIndexOf('M2L BAND MAP SUMMARY'))
+    $wire6=$summary.Substring($summary.IndexOf('SDK1 -> wire6:'),$summary.IndexOf('SDK2 -> wire7:')-$summary.IndexOf('SDK1 -> wire6:'))
+    Assert ($wire6.Contains('PREVIOUSLY VERIFIED (M2L prior run)') -and $wire6.Contains('SKIPPED because StartSdkBand')) 'Previous verified skip'
+    Assert (-not $wire6.Contains('NOT TESTED') -and -not $wire6.Contains('NOT RUN')) 'No misleading untested verified band'
+    $later=Mock-Session -Answers (@('') * 8) -StartSdkBand 3
+    Assert ($later.Text.Contains('PROTOCOL VERIFIED / AUDIBLE RESTORE UNCONFIRMED (prior run); STILL PENDING')) 'Skipped wire7 not promoted'
+    Assert ($later.Text.Contains('RESULT wire8: VERIFIED') -and $later.Text.Contains('RESULT wire9: VERIFIED')) 'This run results'
+}
+Test 'resumed protocol Apply/Restore failures stop all later rounds' {
+    foreach($case in @(@(''),@('','',''))) {
+        $codes=$(if($case.Count -eq 1){@(7)}else{@(0,7)})
+        $m=Mock-Session -Answers $case -Codes $codes -StartSdkBand 2
+        Assert ($m.State.Calls.Count -eq $codes.Count -and $m.Result.Results[2].ProtocolApply -eq 'NOT RUN') 'No wire8 after failure'
+        Assert ($m.Text.Contains('STOPPED FOR REVIEW')) 'Fail review'
+    }
+}
+Test 'resumed uncertain Restore stops; selected remaining bands stay pending' {
+    $m=Mock-Session -Answers @('','','','P') -StartSdkBand 2
+    Assert (($m.State.Calls -join ',') -eq '2/False,2/True') 'Wire7 only'
+    Assert ($m.Result.Results[1].ProtocolRestore -eq 'PASS' -and $m.Result.Results[1].AudibleRestore -eq 'PARTIAL/UNCERTAIN') 'Not protocol failure'
+    Assert ($m.Text.Contains('SELECTED BUT NOT RUN / PENDING') -and $m.Text.Contains('STOPPED FOR REVIEW')) 'Wire8/9 pending'
+}
+Test 'invalid resume values fail parameter binding before prompt, log creation or hardware' {
+    $wrapperPath=Join-Path $PSScriptRoot '..\..\scripts\test-freedsp-native-band-map.ps1'
+    foreach($bad in @('0','5','-1','1.5','abc','')) {
+        $caught=$false
+        try { $null=Mock-Session -Answers @('Q') -StartSdkBand $bad } catch { $caught=$true }
+        Assert $caught 'Internal resume validation'
+        $caught=$false
+        try { & $wrapperPath -StartSdkBand $bad } catch { $caught=$true }
+        Assert $caught 'Public wrapper rejects before body runs'
+    }
 }
 Write-Host "PowerShell band-validation offline tests: $passed passed; MOCK ONLY, no hardware access."

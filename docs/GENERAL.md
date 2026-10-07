@@ -269,7 +269,7 @@ Henry描述air/ambience/reverberation減少，但未能定位400Hz；不聲稱to
 M2K SINGLE-BAND RAM AUDIO EFFECT / WIRE5 APPLY-RESTORE VERIFIED。
 M2L開始：wire6–9 HARDWARE VALIDATION PENDING；Codex僅離線實作，不做實體測試。
 
-## Current M2L diagnostic policy — remaining official live bands
+## Historical M2L diagnostic policy — remaining official live bands
 M2K wire5已由Henry證實可逆可聽作用；M2L僅SDK1/wire6、SDK2/wire7、SDK3/wire8、SDK4/wire9，硬體結果仍PENDING。
 唯一手動入口scripts/test-freedsp-native-band-map.ps1，無CLI參數；不重測wire5，不接受任意numeric band/opcode/frequency/gain/Q。
 Native只接受query346及固定ApplyRemainingBand1..4/RestoreRemainingBand1..4；舊M2K ApplySafeRamTest/RestoreSafeRamTest已在探索前拒絕。
@@ -285,3 +285,23 @@ console顯示protocol進度，完整hex/header/math保留在log；SDK/wire APPLY
 NativeoneSET/boundedGET/30schildwatchdog/failurestop不變；188/187 enable/bypass副作用及unity僅testedband說明保留。
 No Flash/220/90/production integration/non-FreeDSP changes；no unknown SDK5..8/九band研究；no preamp研究或實作。
 Global Preamp/Master Gain屬另輪UNRESOLVED/NOT VERIFIED；禁止以每個biquad乘gain模擬preamp。
+
+## 2026-10-07 — latest M2L hardware result (Henry report)
+SDK0/wire5 previously VERIFIED M2K，未重測。
+SDK1/wire6：Protocol Apply PASS、Audible Apply YES、Protocol Restore PASS、Audible Restore YES，fully VERIFIED。
+SDK2/wire7：Protocol Apply/Restore PASS、Audible Apply YES；Henry分心，Restore聽感PARTIAL/UNCERTAIN。
+wire7分類：PROTOCOL VERIFIED / AUDIBLE RESTORE UNCONFIRMED，不是failed。腳本正確在P後停止；SDK3/wire8、SDK4/wire9 NOT RUN / PENDING。
+M2L Windows native evidence：input/output report bytes62、feature0，HidP_InitializeReportForID確認Input/Output ID1，SET成功並取得matchingCAF回應。
+這與1byte reportID＋61byte reportdata一致；preparsed-data驗證/caps/hostAPI回應不是rawUSB transfer擷取，不能聲稱已證實rawUSB長度。
+
+## Current M2L-Resume manual validation policy
+唯一手動入口scripts/test-freedsp-native-band-map.ps1，新增-StartSdkBand 1..4，預設1；其他值在parameter binding拒絕。
+Start2依序SDK2/wire7→SDK3/wire8→SDK4/wire9；Start3為wire8→wire9；Start4只有wire9；SDK0/wire5永遠不進此工具。
+wire6是priorVERIFIED；以Start2跳過時summary列PREVIOUSLY VERIFIED (M2L prior run)，不是NOTTESTED。
+wire7是PROTOCOL VERIFIED / AUDIBLE RESTORE UNCONFIRMED，不是failed；Henry分心是已提供的背景，不推導firmware缺陷。
+摘要分prior evidence／skipped by Start／this-run tested／selectednotrun pending；跳過未完整驗證wire7不能將它升級VERIFIED。
+恢復後的首段Apply仍IEM離耳，matchingprotocol成功且無異常後才低音量聽；同曲同volume，無tone/Flash。
+依序同bandApply→listen→Restore→confirm；protocolfail或RestoreN/P/Q立即停止，不進下一band；S/N/Q含義及boundedGET不變。
+OnlySdkBand不新增；保持單一resume參數與既有nativefixedoperation calls，沒有CAF/serializer/190/mapping/coefficients/payload變更。
+Logs仍TEMP/AuraPEQ、unique/raw完整保存、markers與compactsummary；runtime logs不commit；nohardware由Codex執行。
+文件仍僅GENERAL/ROADMAP/DECISIONS/DONE；此輪停在M2L-Resume ready，未知九band/preamp/production全部不開始。

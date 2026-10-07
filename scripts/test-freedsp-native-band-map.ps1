@@ -1,5 +1,7 @@
+[CmdletBinding()]
+param([ValidateSet('1','2','3','4')][string]$StartSdkBand = '1')
 $ErrorActionPreference = 'Stop'
-if ($args.Count -ne 0) { throw 'No parameters allowed. Interactive M2L tests only SDK1..4 / wire6..9.' }
+if ($args.Count -ne 0) { throw 'Only -StartSdkBand 1..4 is supported; no other test parameters.' }
 $projectRoot = Split-Path -Parent $PSScriptRoot
 Import-Module (Join-Path $PSScriptRoot 'freedsp\BandValidation.psm1') -Force
 # Runtime logs are outside the repository; unique CreateNew never overwrites an earlier test.
@@ -36,7 +38,7 @@ try {
     }.GetNewClosure()
     $read = { param($prompt) Read-Host $prompt }
     $validationStarted = $true
-    $null = Invoke-FreeDspBandValidation -RunProtocol $run -ReadAnswer $read -Emit $emit -LogPath $logPath
+    $null = Invoke-FreeDspBandValidation -RunProtocol $run -ReadAnswer $read -Emit $emit -LogPath $logPath -StartSdkBand $StartSdkBand
 } catch {
     if ($validationStarted) {
         Write-Host ('STOPPED FOR REVIEW: interrupted/logging error; hardware completion may be UNKNOWN: ' + $_.Exception.Message)
@@ -45,6 +47,6 @@ try {
         $notRun = @(1..4 | ForEach-Object { [pscustomobject]@{
             SdkBand=$_; Wire=$_+5; ProtocolApply='NOT RUN'; AudibleApply='NOT TESTED'; ProtocolRestore='NOT RUN'; AudibleRestore='NOT TESTED'
         } })
-        foreach($line in (Get-FreeDspSummary $notRun $logPath ('Startup/build error: ' + $_.Exception.Message) 0)) { & $emit $line }
+        foreach($line in (Get-FreeDspSummary $notRun $logPath ('Startup/build error: ' + $_.Exception.Message) 0 ([int]$StartSdkBand))) { & $emit $line }
     }
 } finally { $writer.Dispose() }

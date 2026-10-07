@@ -268,3 +268,21 @@ M2L開始：wire6–9 HARDWARE VALIDATION PENDING；Codex僅離線實作，不�
 - 以OFFLINE nativeTests assembly測試真實childstdoutpump，捕捉完整42test結果；未執行hardware helper。
 - Codex無device/HID操作；src/production/non-FreeDSP code沒有變更。M2Lwire6..9 hardware全部PENDING HENRY。
 - GENERAL/ROADMAP/DECISIONS/DONE四文件已更新；未新增.md，preamp另輪NOTVERIFIED milestone已保留。
+
+## 2026-10-07 — latest M2L hardware result (Henry report)
+SDK0/wire5 previously VERIFIED M2K，未重測。
+SDK1/wire6：Protocol Apply PASS、Audible Apply YES、Protocol Restore PASS、Audible Restore YES，fully VERIFIED。
+SDK2/wire7：Protocol Apply/Restore PASS、Audible Apply YES；Henry分心，Restore聽感PARTIAL/UNCERTAIN。
+wire7分類：PROTOCOL VERIFIED / AUDIBLE RESTORE UNCONFIRMED，不是failed。腳本正確在P後停止；SDK3/wire8、SDK4/wire9 NOT RUN / PENDING。
+M2L Windows native evidence：input/output report bytes62、feature0，HidP_InitializeReportForID確認Input/Output ID1，SET成功並取得matchingCAF回應。
+這與1byte reportID＋61byte reportdata一致；preparsed-data驗證/caps/hostAPI回應不是rawUSB transfer擷取，不能聲稱已證實rawUSB長度。
+
+## 2026-10-07 — M2L-Resume targeted manual tooling
+- 新增StartSdkBand1..4（default1），Start2只測SDK2..4、Start3只測SDK3..4、Start4只測SDK4；參數binding拒絕invalidvalue。
+- 摘要保留wire5/wire6priorverified、wire7priorprotocolverified/restoreunconfirmed，區分selectedtested、skipped與pending。
+- 首次Apply離耳提示改為本run的firstselectedSDK，Apply/Restorepairing及failure/uncertainstop不變。
+- 16WindowsPowerShelloffline mocktests通過，含default1/Start2/3/4、invalid0/5/negative/decimal/text/empty、priorstatus、resumefailure/uncertainrestore。
+- verify.ps1 exit0：15files/125tests、TypeScript/Vite build及testtypecheck通過。
+- 沒有改nativeC#、CAFserializer/190/bandmapping/coefficient/payload、Flash/90/220、production或nonFreeDSPprotocol。
+- 四份文件記錄Henry的新wire6/7hardware證據及Windowscaps/metadata的解讀限制；沒有新增.md或commit runtime log。
+- Codex本輪沒有實體HID探索或寫入；wire7 audibleRestore、wire8/9仍待Henry測試。
