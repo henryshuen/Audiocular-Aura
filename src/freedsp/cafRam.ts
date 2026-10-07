@@ -13,7 +13,7 @@ export class CafRamSession {
  async sync(value:Band[],restore=false){
    if(this.busy || this.disposed || (this.stopped && !restore))throw new Error('FreeDSP BUSY／STOP；明確Restore或重新連線，不自動重試。');
    const bands=restore?unityPreset():validateBands(value);
-   if(!restore){const s=analyzeSafety(bands);this.log(`FreeDSP每段±12dB；合成峰值估計=${s.peakDb.toFixed(3)}dB 正增益預算=${s.positiveSumDb.toFixed(3)}dB`);if(!s.allowed)throw new Error('FreeDSP硬性阻擋：正增益預算6dB／取樣峰值6.1dB；無Proceed Anyway。');}
+   if(!restore){const s=analyzeSafety(bands);this.log(`FreeDSP每段±12dB；合成峰值估計=${s.peakDb.toFixed(3)}dB 正增益預算=${s.positiveSumDb.toFixed(3)}dB`);}
    // Snapshot and precompute ALL packets for every known rate before initialization SET.
    const plans=new Map(rates.map(rate=>[rate,bands.flatMap(b=>[0,1].map(path=>({wire:b.index+1,path,report:modelWebBand(b,rate,restore,path).bytes.slice(1)})))]));
    this.busy=true;

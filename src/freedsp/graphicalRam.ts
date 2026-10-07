@@ -20,7 +20,7 @@ export class GraphicalRam {
   async sync(bands:Band[]){
     if(!hasM2RGate(this.storage))throw new Error('M2R gate missing');
     if(!this.connected || this.busy || this.faulted)throw new Error('未連線／BUSY／STOP');
-    const s=analyzeSafety(bands);if(!s.allowed)throw new Error(`硬性阻擋：合成峰值估計 ${s.peakDb.toFixed(2)}dB／正增益預算 ${s.positiveSumDb.toFixed(2)}dB；上限6dB，無 Proceed Anyway。`);
+    analyzeSafety(bands); // Validity only; retired development +6dB gate removed.
     this.busy=true;
     try{return await this.bridge.run('syncNine',0,bands);}catch(e){this.faulted=true;throw e;}finally{this.busy=false;}
   }
@@ -36,8 +36,8 @@ export function mountGraphicalRam(options:{getBands:()=>Band[];setBands:(bands:B
   panel.innerHTML=`<h2>FreeDSP M2R 實驗圖形 RAM PEQ</h2>
   <p>先在隔離頁完成手動驗證 #1，再於此明確連線。拖曳／編輯只改本地；只有此處 Sync 或主頁 SYNC 才寫入18個190。PK／每段−12..+12dB，合成響應另行硬性檢查。圖形為48kHz原生float模型示意，安全分析使用五種速率的量化係數，實際寫入只用matching346當前速率。無 preamp／tilt／Flash／utility／readback。</p>
   <p>曲線是編輯值，不是裝置讀回。Restore 不修改編輯器，只將兩側九段寫 unity；之後明確 Sync 會重新套用目前編輯值。全九段有18次寫入，失敗立即STOP、無自動重試／rollback；緊急Restore是另一個明確操作。</p>
-  <p>正增益仍可能使接近滿刻度的訊號削波（clipping）；6dB 是此輪保守測試預算，不是無削波保證。APO OFF、音量1–2/100、首次正增益Apply耳機離耳、只用音樂不用測試音；異常立即停止。</p>
-  <p>每段±12dB不代表合成曲線也在±12dB內；重疊正增益可超過+12dB。送出前會硬性檢查正增益總預算≤6dB及取樣峰值≤6.1dB（0.1dB數值容差），沒有「仍要送出」。</p>
+  <p>正增益仍可能使接近滿刻度的訊號削波（clipping）；原6dB開發預算不是硬體限制，也不是無削波保證，現已移除。APO OFF、音量1–2/100、首次正增益Apply耳機離耳、只用音樂不用測試音；異常立即停止。</p>
+  <p>每段±12dB不代表合成曲線也在±12dB內；重疊正增益可超過+12dB。暫時+6dB開發門檻已移除；本頁為歷史診斷入口，正常主頁使用既有警告／確認。</p>
   <button class="btn btn-secondary" id="freeConnect">連線 FreeDSP metadata（需 M2R gate）</button>
   <button class="btn btn-secondary" id="freeMixed">填入保守正負混合預設（只改編輯器）</button>
   <button class="btn btn-secondary" id="freePreview">檢查合成響應（不送出）</button>
@@ -71,7 +71,7 @@ export function mountGraphicalRam(options:{getBands:()=>Band[];setBands:(bands:B
     const r=await c.connect();options.resetUnsupported();options.setBands(unityPreset());return r;
   }));
   button('freeMixed').addEventListener('click',()=>{if(!c.connected || c.busy || c.faulted)return;options.setBands(mixedPreset());options.log('混合預設填入：本地編輯，尚未送出。');update();});
-  button('freePreview').addEventListener('click',()=>{try{const s=analyzeSafety(options.getBands());status.textContent=`每段±12dB；五個已知 sample rates 合成峰值估計 ${s.peakDb.toFixed(2)}dB，正增益預算 ${s.positiveSumDb.toFixed(2)}dB；${s.allowed?'允許明確Sync':'硬性阻擋'}。估計非響應量測，不含preamp/tilt。`;}catch(e){status.textContent=String(e);}});
+  button('freePreview').addEventListener('click',()=>{try{const s=analyzeSafety(options.getBands());status.textContent=`每段±12dB；五個已知 sample rates 合成峰值估計 ${s.peakDb.toFixed(2)}dB，正增益預算 ${s.positiveSumDb.toFixed(2)}dB；模型驗證通過；不代表聽力安全或硬體headroom。估計非響應量測，不含preamp/tilt。`;}catch(e){status.textContent=String(e);}});
   button('freeSync').addEventListener('click',sync);
   button('freeRestore').addEventListener('click',()=>perform(()=>c.restore()));
   button('freeDisconnect').addEventListener('click',()=>{c.disconnect();location.reload();});

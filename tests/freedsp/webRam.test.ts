@@ -27,13 +27,13 @@ describe('M2N Web/native RAM contract; no physical HID',()=>{
      expect(left.payload.slice(3,8).every(v=>Number.isInteger(v) && v>=-8388608 && v<=8388607)).toBe(true);
    }
  });
- it('P1 and P2 budgets pass; overlapping boost is blocked before any RAM request with no bypass',async()=>{
+ it('composite metrics retain overlap estimate but temporary development cap is removed',async()=>{
    expect(analyzeSafety(positiveBandPreset()).allowed).toBe(true);
    const p2=analyzeSafety(positiveMultiPreset());expect(p2.allowed).toBe(true);expect(p2.positiveSumDb).toBe(3);expect(p2.peakDb).toBeLessThan(3.1);
    const unsafe=fullNinePreset().map(b=>({...b,freq:1000,gain:6}));const safety=analyzeSafety(unsafe);
-   expect(safety.allowed).toBe(false);expect(safety.peakDb).toBeGreaterThan(50);
-   const f=fakeBridge();await f.bridge.connect();await expect(f.bridge.run('syncNine',0,unsafe)).rejects.toThrow('SAFETY BLOCK');expect(f.calls).toHaveLength(2);
-   await f.bridge.run('restoreNine',0,unsafe);expect(f.calls).toHaveLength(3);
+   expect(safety.allowed).toBe(true);expect(safety.peakDb).toBeGreaterThan(50);
+   const f=fakeBridge();await f.bridge.connect();await f.bridge.run('syncNine',0,unsafe);expect(f.calls).toHaveLength(3);
+   await f.bridge.run('restoreNine',0,unsafe);expect(f.calls).toHaveLength(4);
  });
  it('explicit Restore ignores invalid editor values and sends only a valid unity snapshot',async()=>{
    const f=fakeBridge();await f.bridge.connect();const b=bands();b[0].gain=-13;b[1].freq=NaN;b[2].q=0;

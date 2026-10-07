@@ -1,4 +1,4 @@
-import {unityPreset} from './freedsp/webRam.ts';
+import {freeDspDefaultBands,freeDspEditorGain,normalizeFreeDspEditor} from './freedsp/editor.ts';
 import {selectCafDevice,isFreeDsp} from './freedsp/webHid.ts';
 import {connectFreeDsp,disconnectFreeDsp} from './freedsp/session.ts';
 import {
@@ -277,7 +277,7 @@ export function getEqState() {
 }
 
 export function setEqState(eq: EQ) {
-	eqState = eq;
+	eqState = isFreeDsp(device)?normalizeFreeDspEditor(eq,log):eq;
 }
 
 export function setEQ(
@@ -285,6 +285,7 @@ export function setEQ(
 	key: keyof Band,
 	value: number | boolean | string,
 ) {
+	if(isFreeDsp(device) && key==="gain"){try{value=freeDspEditorGain(Number(value),index,log);}catch(e){log(String(e));return;}}
 	// @ts-expect-error - Dynamic key assignment
 	eqState[index][key] = value;
 }
@@ -327,7 +328,7 @@ export async function undo() {
 	redoStack.push(current);
 
 	const previous = undoStack[undoStack.length - 1];
-	eqState = JSON.parse(JSON.stringify(previous.eqState)) as EQ;
+	setEqState(JSON.parse(JSON.stringify(previous.eqState)) as EQ);
 	setGlobalGain(previous.globalGainState);
 
 	renderUI(eqState);
@@ -344,7 +345,7 @@ export async function redo() {
 	const next = redoStack.pop()!;
 	undoStack.push(next);
 
-	eqState = JSON.parse(JSON.stringify(next.eqState)) as EQ;
+	setEqState(JSON.parse(JSON.stringify(next.eqState)) as EQ);
 	setGlobalGain(next.globalGainState);
 
 	renderUI(eqState);
@@ -395,7 +396,7 @@ export async function setABCompareState(state: "Off" | "A" | "B") {
 
 		// Always restore Slot A's settings (the main baseline preset) when turning OFF comparison
 		if (slotA) {
-			eqState = JSON.parse(JSON.stringify(slotA.eqState)) as EQ;
+			setEqState(JSON.parse(JSON.stringify(slotA.eqState)) as EQ);
 			globalGainState = slotA.globalGainState;
 			lastAppliedEqName = slotA.eqName;
 			localStorage.setItem("last_applied_eq", lastAppliedEqName);
@@ -414,7 +415,7 @@ export async function setABCompareState(state: "Off" | "A" | "B") {
 				eqName: lastAppliedEqName
 			};
 			slotB = {
-				eqState: isFreeDsp(device)?unityPreset():defaultEqState(),
+				eqState: isFreeDsp(device)?freeDspDefaultBands():defaultEqState(),
 				globalGainState: 0,
 				eqName: t("flat_profile_default") || "Flat Profile (Default)"
 			};
@@ -426,7 +427,7 @@ export async function setABCompareState(state: "Off" | "A" | "B") {
 				eqName: lastAppliedEqName
 			};
 			activeSlot = "A";
-			eqState = JSON.parse(JSON.stringify(slotA!.eqState)) as EQ;
+			setEqState(JSON.parse(JSON.stringify(slotA!.eqState)) as EQ);
 			globalGainState = slotA!.globalGainState;
 			lastAppliedEqName = slotA!.eqName;
 		}
@@ -440,12 +441,12 @@ export async function setABCompareState(state: "Off" | "A" | "B") {
 				eqName: lastAppliedEqName
 			};
 			slotB = {
-				eqState: isFreeDsp(device)?unityPreset():defaultEqState(),
+				eqState: isFreeDsp(device)?freeDspDefaultBands():defaultEqState(),
 				globalGainState: 0,
 				eqName: t("flat_profile_default") || "Flat Profile (Default)"
 			};
 			activeSlot = "B";
-			eqState = JSON.parse(JSON.stringify(slotB.eqState)) as EQ;
+			setEqState(JSON.parse(JSON.stringify(slotB.eqState)) as EQ);
 			globalGainState = slotB.globalGainState;
 			lastAppliedEqName = slotB.eqName;
 		} else {
@@ -455,7 +456,7 @@ export async function setABCompareState(state: "Off" | "A" | "B") {
 				eqName: lastAppliedEqName
 			};
 			activeSlot = "B";
-			eqState = JSON.parse(JSON.stringify(slotB!.eqState)) as EQ;
+			setEqState(JSON.parse(JSON.stringify(slotB!.eqState)) as EQ);
 			globalGainState = slotB!.globalGainState;
 			lastAppliedEqName = slotB!.eqName;
 		}
@@ -607,6 +608,7 @@ export function defaultEqState(): EQ {
  * Trigger UI updates and EQ graph re-render
  */
 export function renderUI(eqState: EQ) {
+	if(isFreeDsp(device)){setEqState(eqState);eqState=getEqState();}
 	// Save current active state to localStorage
 	localStorage.setItem("aura_active_eq_state", JSON.stringify(eqState));
 	localStorage.setItem("aura_active_preamp_gain", globalGainState.toString());
@@ -917,7 +919,16 @@ export async function disconnectDevice() {
 /**
  * Reset all bands and gain to flat values and sync
  */
+function finishFreeDspLocalReset(bands:EQ,name:string){
+ setEqState(bands);const strips=document.getElementById('eqStrips');if(strips)strips.innerHTML='';
+ renderUI(eqState);setLastAppliedEqName(name);initSlots();pushHistory();
+ log('FreeDSP LOCAL EDITOR已重設；沒有hardware TX。RAM還原請用RESTORE FREEDSP RAM TO UNITY。');
+}
 export async function resetToDefaults() {
+ if(isFreeDsp(device)){
+  if(!confirm('恢復FreeDSP本地9段預設（31–8000Hz、0dB、Q0.7、PK、全部啟用）？不寫入RAM。'))return;
+  finishFreeDspLocalReset(freeDspDefaultBands(),'Flat Profile (Default)');return;
+ }
 	if (
 		!confirm(
 			"Reset all bands to flat Defaults (0dB, Q=0.75) and optimal frequencies?",
@@ -966,6 +977,9 @@ export async function resetToDefaults() {
  * Reset all bands and gain to a flat neutral state (0dB, Freq=1000Hz, Q=1.0) and sync
  */
 export async function resetToFlat() {
+ if(isFreeDsp(device)){
+  finishFreeDspLocalReset(normalizeFreeDspEditor(eqState,log).map(b=>({...b,gain:b.enabled?0:b.gain})),'Flat Profile (Neutral)');return;
+ }
 	log("[System] Resetting all bands to flat neutral values...");
 
 	eqState = eqState.map((_, i) => ({
@@ -1154,6 +1168,11 @@ export function adjustBandsForDevice(dev: HIDDevice | null) {
 	}
 
 	const protocol = getProtocol(dev);
+ if(isFreeDsp(dev)){
+  setEqState(eqState.length===9?eqState:freeDspDefaultBands());
+  if(stripsContainer){stripsContainer.innerHTML='';stripsContainer.style.setProperty('--bands-count','9');stripsContainer.style.setProperty('--bands-count-tablet','9');stripsContainer.style.setProperty('--bands-count-mobile','3');}
+  return;
+ }
 	if (protocol === "FIIO_JA11") {
 		if (eqState.length !== 5) {
 			eqState = [
@@ -1324,7 +1343,7 @@ export async function loadCustomProfile(name: string) {
 		stripsContainer.innerHTML = "";
 	}
 
-	eqState = importedBands;
+	setEqState(importedBands);
 	resetTiltState();
 	if (autoPreampEnabled) {
 		manualPreampState = profile.globalGain;
@@ -1652,6 +1671,12 @@ export function isConfigurationUnsafe(): boolean {
 }
 
 export async function reduceGainsSafely() {
+ if(isFreeDsp(device)){
+  const bands=normalizeFreeDspEditor(eqState,log).map(b=>({...b,gain:b.enabled?Math.min(10,b.gain):b.gain}));
+  const sum=bands.reduce((n,b)=>n+(b.enabled?Math.max(0,b.gain):0),0);
+  if(sum>12)for(const b of bands)if(b.enabled && b.gain>0)b.gain*=12/sum;
+  setEqState(bands);renderUI(eqState);pushHistory();log('FreeDSP AUTO REDUCE只調整LOCAL EDITOR正gain；不寫RAM、不使用preamp。請重新Sync確認。');return;
+ }
 	let changed = false;
 
 	if (globalGainState > 0) {

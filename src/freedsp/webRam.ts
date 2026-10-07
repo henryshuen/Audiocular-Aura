@@ -32,6 +32,7 @@ export function modelWebBand(b:Band,sampleIndex:number,restore=false,path=0) {
   const hz=officialRateHz[sampleIndex];
   if (b.freq>=hz/2) throw new Error('Nyquist violation');
   const f=restore || !b.enabled ? [1,0,0,0,0] : nativePeakFloat({frequency:b.freq,gainDb:b.gain,q:b.q,sampleHz:hz}).coefficients;
+  if(!f.every(Number.isFinite))throw new Error('Nonfinite coefficients');
   const scale=nativeScaling(f), words=f.map(c=>Math.round(Math.fround(c*scale.scale)));
   if(words.some(w=>w<-8388608 || w>8388607))throw new Error('signed24 overflow');
   const a1=-words[3]/scale.scale,a2=-words[4]/scale.scale;
@@ -63,7 +64,8 @@ export function analyzeSafety(value:Band[]){
       peakDb=Math.max(peakDb,db);
     }
   }
-  return {peakDb,positiveSumDb,allowed:positiveSumDb<=6 && peakDb<=6.1};
+  return {peakDb,positiveSumDb,allowed:true // Validated model only, NOT a hardware headroom/safe-listening guarantee.
+  };
 }
 export class RamBridge {
   private token=''; private busy=false;
@@ -89,7 +91,7 @@ export class RamBridge {
     if(action==='applyBand' || action==='syncNine'){
       const selected=action==='applyBand'?snapshot.map(b=>b.index===uiIndex?b:{...b,gain:0}):snapshot;
       const safety=analyzeSafety(selected);
-      if(!safety.allowed)throw new Error(`SAFETY BLOCK: predicted peak ${safety.peakDb.toFixed(2)}dB; positive budget ${safety.positiveSumDb.toFixed(2)}dB exceeds6dB (grid numerical allowance0.1dB); no SET`);
+      void safety; // Diagnostic metrics only; normal main UI owns warning/confirmation.
     }
     this.busy=true;try{return await this.post('/ram',{action,uiIndex,bands:snapshot});}finally{this.busy=false;}
   }

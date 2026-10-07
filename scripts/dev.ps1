@@ -27,7 +27,7 @@ try {
     }
     Write-Host 'AuraPEQ: http://localhost:5173/ (Ctrl+C to stop; owned FreeDSP helper stops too; -WebHidOnly skips helper)'
     Write-Host 'Normal CONNECT DAC: FreeDSP uses native CAF adapter; other DACs use WebHID. -NativeDebug is diagnostic mode.'
-    & $npmCommand.Source run dev -- --host 127.0.0.1 --port 5173 --strictPort
+    & $npmCommand.Source run dev -- --host localhost --port 5173 --strictPort
     if ($LASTEXITCODE -ne 0) { throw "Dev server failed (exit $LASTEXITCODE)." }
 } catch {
     [Console]::Error.WriteLine("[FAIL] Dev server: $($_.Exception.Message)")
