@@ -1,0 +1,1286 @@
+{
+  "apkSha256": "04756b49acfea523758d86101c96c1824b7b209ae3a8836c07837088e795d2d5",
+  "cacheSha256": "d85fc90bd42e0618b8107c16c9958625e6dcb16d2f0524f395da4d5a58b6b5f3",
+  "limitations": "Cached M2D extraction; nearest textual constant only, not branch-aware dataflow or exhaustive firmware command map.",
+  "calls": [
+    {
+      "method": "setDefaultAvailable",
+      "offset": 150,
+      "commandConstant": "v4, 190",
+      "call": "v4, v0, v3, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getCmd(I I [J)Lcom/conexant/universalfunction/CnxtUsbCommand;",
+      "context": [
+        {
+          "offset": 114,
+          "op": "aput-wide",
+          "args": "v4, v3, v17"
+        },
+        {
+          "offset": 118,
+          "op": "const/16",
+          "args": "v18, 7"
+        },
+        {
+          "offset": 122,
+          "op": "aput-wide",
+          "args": "v4, v3, v18"
+        },
+        {
+          "offset": 126,
+          "op": "const-string",
+          "args": "v19, \"CTRL\""
+        },
+        {
+          "offset": 130,
+          "op": "move/from16",
+          "args": "v22, v0"
+        },
+        {
+          "offset": 134,
+          "op": "invoke-static/range",
+          "args": "v19, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getCafId(Ljava/lang/String;)I"
+        },
+        {
+          "offset": 140,
+          "op": "move-result",
+          "args": "v0"
+        },
+        {
+          "offset": 142,
+          "op": "move-wide/from16",
+          "args": "v20, v4"
+        },
+        {
+          "offset": 146,
+          "op": "const/16",
+          "args": "v4, 190"
+        },
+        {
+          "offset": 150,
+          "op": "invoke-static",
+          "args": "v4, v0, v3, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getCmd(I I [J)Lcom/conexant/universalfunction/CnxtUsbCommand;"
+        }
+      ]
+    },
+    {
+      "method": "setDefaultAvailable",
+      "offset": 216,
+      "commandConstant": "v4, 190",
+      "call": "v4, v2, v0, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getCmd(I I [J)Lcom/conexant/universalfunction/CnxtUsbCommand;",
+      "context": [
+        {
+          "offset": 180,
+          "op": "aput-wide",
+          "args": "v6, v0, v8"
+        },
+        {
+          "offset": 184,
+          "op": "aput-wide",
+          "args": "v10, v0, v9"
+        },
+        {
+          "offset": 188,
+          "op": "aput-wide",
+          "args": "v13, v0, v12"
+        },
+        {
+          "offset": 192,
+          "op": "aput-wide",
+          "args": "v20, v0, v15"
+        },
+        {
+          "offset": 196,
+          "op": "aput-wide",
+          "args": "v20, v0, v16"
+        },
+        {
+          "offset": 200,
+          "op": "aput-wide",
+          "args": "v20, v0, v17"
+        },
+        {
+          "offset": 204,
+          "op": "aput-wide",
+          "args": "v20, v0, v18"
+        },
+        {
+          "offset": 208,
+          "op": "invoke-static/range",
+          "args": "v19, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getCafId(Ljava/lang/String;)I"
+        },
+        {
+          "offset": 214,
+          "op": "move-result",
+          "args": "v2"
+        },
+        {
+          "offset": 216,
+          "op": "invoke-static",
+          "args": "v4, v2, v0, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getCmd(I I [J)Lcom/conexant/universalfunction/CnxtUsbCommand;"
+        }
+      ]
+    },
+    {
+      "method": "setEQCFGIsBypass",
+      "offset": 32,
+      "commandConstant": "v2, 187",
+      "call": "v2, v1, v0, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getCmd(I I [J)Lcom/conexant/universalfunction/CnxtUsbCommand;",
+      "context": [
+        {
+          "offset": 0,
+          "op": "const/4",
+          "args": "v4, 1"
+        },
+        {
+          "offset": 2,
+          "op": "new-array",
+          "args": "v0, v4, [J"
+        },
+        {
+          "offset": 6,
+          "op": "const-wide/16",
+          "args": "v1, 0"
+        },
+        {
+          "offset": 10,
+          "op": "const/4",
+          "args": "v3, 0"
+        },
+        {
+          "offset": 12,
+          "op": "aput-wide",
+          "args": "v1, v0, v3"
+        },
+        {
+          "offset": 16,
+          "op": "const-string",
+          "args": "v1, \"CTRL\""
+        },
+        {
+          "offset": 20,
+          "op": "invoke-static",
+          "args": "v1, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getCafId(Ljava/lang/String;)I"
+        },
+        {
+          "offset": 26,
+          "op": "move-result",
+          "args": "v1"
+        },
+        {
+          "offset": 28,
+          "op": "const/16",
+          "args": "v2, 187"
+        },
+        {
+          "offset": 32,
+          "op": "invoke-static",
+          "args": "v2, v1, v0, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getCmd(I I [J)Lcom/conexant/universalfunction/CnxtUsbCommand;"
+        }
+      ]
+    },
+    {
+      "method": "setFreeman3EQ",
+      "offset": 290,
+      "commandConstant": "v1, 190",
+      "call": "v1, v6, v0, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getCmd(I I [J)Lcom/conexant/universalfunction/CnxtUsbCommand;",
+      "context": [
+        {
+          "offset": 258,
+          "op": "aput-wide",
+          "args": "v1, v0, v3"
+        },
+        {
+          "offset": 262,
+          "op": "iget",
+          "args": "v6, v6, Lcom/conexant/cnxtusbcheadset/CX2070xBandEQCoeffs;->A1 I"
+        },
+        {
+          "offset": 266,
+          "op": "int-to-long",
+          "args": "v1, v6"
+        },
+        {
+          "offset": 268,
+          "op": "const/4",
+          "args": "v6, 7"
+        },
+        {
+          "offset": 270,
+          "op": "aput-wide",
+          "args": "v1, v0, v6"
+        },
+        {
+          "offset": 274,
+          "op": "const-string",
+          "args": "v6, \"CTRL\""
+        },
+        {
+          "offset": 278,
+          "op": "invoke-static",
+          "args": "v6, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getCafId(Ljava/lang/String;)I"
+        },
+        {
+          "offset": 284,
+          "op": "move-result",
+          "args": "v6"
+        },
+        {
+          "offset": 286,
+          "op": "const/16",
+          "args": "v1, 190"
+        },
+        {
+          "offset": 290,
+          "op": "invoke-static",
+          "args": "v1, v6, v0, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getCmd(I I [J)Lcom/conexant/universalfunction/CnxtUsbCommand;"
+        }
+      ]
+    },
+    {
+      "method": "setFreeman3EQEnabled",
+      "offset": 34,
+      "commandConstant": "v2, 188",
+      "call": "v2, v1, v0, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getCmd(I I [J)Lcom/conexant/universalfunction/CnxtUsbCommand;",
+      "context": [
+        {
+          "offset": 0,
+          "op": "const/16",
+          "args": "v0, 13"
+        },
+        {
+          "offset": 4,
+          "op": "new-array",
+          "args": "v0, v0, [J"
+        },
+        {
+          "offset": 8,
+          "op": "const/4",
+          "args": "v1, 0"
+        },
+        {
+          "offset": 10,
+          "op": "const-wide/16",
+          "args": "v2, 1"
+        },
+        {
+          "offset": 14,
+          "op": "aput-wide",
+          "args": "v2, v0, v1"
+        },
+        {
+          "offset": 18,
+          "op": "const-string",
+          "args": "v1, \"CTRL\""
+        },
+        {
+          "offset": 22,
+          "op": "invoke-static",
+          "args": "v1, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getCafId(Ljava/lang/String;)I"
+        },
+        {
+          "offset": 28,
+          "op": "move-result",
+          "args": "v1"
+        },
+        {
+          "offset": 30,
+          "op": "const/16",
+          "args": "v2, 188"
+        },
+        {
+          "offset": 34,
+          "op": "invoke-static",
+          "args": "v2, v1, v0, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getCmd(I I [J)Lcom/conexant/universalfunction/CnxtUsbCommand;"
+        }
+      ]
+    },
+    {
+      "method": "getCurSampleRate",
+      "offset": 40,
+      "commandConstant": "v3, 346",
+      "call": "v3, v0, v4, v1, v2, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getMsgByCmd(I I [J Landroid/hardware/usb/UsbDeviceConnection; I)[B",
+      "context": [
+        {
+          "offset": 8,
+          "op": "const/4",
+          "args": "v0, 0"
+        },
+        {
+          "offset": 10,
+          "op": "const-wide/16",
+          "args": "v1, 62"
+        },
+        {
+          "offset": 14,
+          "op": "aput-wide",
+          "args": "v1, v4, v0"
+        },
+        {
+          "offset": 18,
+          "op": "const-string",
+          "args": "v0, \"CTRL\""
+        },
+        {
+          "offset": 22,
+          "op": "invoke-static",
+          "args": "v0, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getCafId(Ljava/lang/String;)I"
+        },
+        {
+          "offset": 28,
+          "op": "move-result",
+          "args": "v0"
+        },
+        {
+          "offset": 30,
+          "op": "sget-object",
+          "args": "v1, Lcom/conexant/cnxtusbcheadset/CnxtUsbDeviceBase;->mConnection Landroid/hardware/usb/UsbDeviceConnection;"
+        },
+        {
+          "offset": 34,
+          "op": "const/4",
+          "args": "v2, 1"
+        },
+        {
+          "offset": 36,
+          "op": "const/16",
+          "args": "v3, 346"
+        },
+        {
+          "offset": 40,
+          "op": "invoke-static",
+          "args": "v3, v0, v4, v1, v2, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getMsgByCmd(I I [J Landroid/hardware/usb/UsbDeviceConnection; I)[B"
+        }
+      ]
+    },
+    {
+      "method": "getDeviceChipCode",
+      "offset": 38,
+      "commandConstant": "v3, 259",
+      "call": "v3, v0, v4, v1, v2, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getMsgByCmd(I I [J Landroid/hardware/usb/UsbDeviceConnection; I)[B",
+      "context": [
+        {
+          "offset": 6,
+          "op": "const/4",
+          "args": "v0, 0"
+        },
+        {
+          "offset": 8,
+          "op": "const-wide/16",
+          "args": "v1, 1"
+        },
+        {
+          "offset": 12,
+          "op": "aput-wide",
+          "args": "v1, v4, v0"
+        },
+        {
+          "offset": 16,
+          "op": "const-string",
+          "args": "v0, \"CTRL\""
+        },
+        {
+          "offset": 20,
+          "op": "invoke-static",
+          "args": "v0, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getCafId(Ljava/lang/String;)I"
+        },
+        {
+          "offset": 26,
+          "op": "move-result",
+          "args": "v0"
+        },
+        {
+          "offset": 28,
+          "op": "sget-object",
+          "args": "v1, Lcom/conexant/cnxtusbcheadset/CnxtUsbDeviceBase;->mConnection Landroid/hardware/usb/UsbDeviceConnection;"
+        },
+        {
+          "offset": 32,
+          "op": "const/4",
+          "args": "v2, 1"
+        },
+        {
+          "offset": 34,
+          "op": "const/16",
+          "args": "v3, 259"
+        },
+        {
+          "offset": 38,
+          "op": "invoke-static",
+          "args": "v3, v0, v4, v1, v2, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getMsgByCmd(I I [J Landroid/hardware/usb/UsbDeviceConnection; I)[B"
+        }
+      ]
+    },
+    {
+      "method": "getEQParamList",
+      "offset": 100,
+      "commandConstant": "v7, 477",
+      "call": "v7, v5, v3, v6, v8, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getMsgByCmd(I I [J Landroid/hardware/usb/UsbDeviceConnection; I)[B",
+      "context": [
+        {
+          "offset": 68,
+          "op": "add-int/lit8",
+          "args": "v4, v2, 1"
+        },
+        {
+          "offset": 72,
+          "op": "int-to-long",
+          "args": "v5, v4"
+        },
+        {
+          "offset": 74,
+          "op": "aput-wide",
+          "args": "v5, v3, v1"
+        },
+        {
+          "offset": 78,
+          "op": "const-string",
+          "args": "v5, \"CTRL\""
+        },
+        {
+          "offset": 82,
+          "op": "invoke-static",
+          "args": "v5, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getCafId(Ljava/lang/String;)I"
+        },
+        {
+          "offset": 88,
+          "op": "move-result",
+          "args": "v5"
+        },
+        {
+          "offset": 90,
+          "op": "sget-object",
+          "args": "v6, Lcom/conexant/cnxtusbcheadset/CnxtUsbDeviceBase;->mConnection Landroid/hardware/usb/UsbDeviceConnection;"
+        },
+        {
+          "offset": 94,
+          "op": "const/16",
+          "args": "v7, 477"
+        },
+        {
+          "offset": 98,
+          "op": "const/4",
+          "args": "v8, 1"
+        },
+        {
+          "offset": 100,
+          "op": "invoke-static",
+          "args": "v7, v5, v3, v6, v8, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getMsgByCmd(I I [J Landroid/hardware/usb/UsbDeviceConnection; I)[B"
+        }
+      ]
+    },
+    {
+      "method": "getFeatureConfigFM3",
+      "offset": 40,
+      "commandConstant": "v5, 346",
+      "call": "v5, v2, v0, v4, v6, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getMsgByCmd(I I [J Landroid/hardware/usb/UsbDeviceConnection; I)[B",
+      "context": [
+        {
+          "offset": 8,
+          "op": "const-wide/16",
+          "args": "v1, 84"
+        },
+        {
+          "offset": 12,
+          "op": "const/4",
+          "args": "v3, 0"
+        },
+        {
+          "offset": 14,
+          "op": "aput-wide",
+          "args": "v1, v0, v3"
+        },
+        {
+          "offset": 18,
+          "op": "const-string",
+          "args": "v1, \"CTRL\""
+        },
+        {
+          "offset": 22,
+          "op": "invoke-static",
+          "args": "v1, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getCafId(Ljava/lang/String;)I"
+        },
+        {
+          "offset": 28,
+          "op": "move-result",
+          "args": "v2"
+        },
+        {
+          "offset": 30,
+          "op": "sget-object",
+          "args": "v4, Lcom/conexant/cnxtusbcheadset/CnxtUsbDeviceBase;->mConnection Landroid/hardware/usb/UsbDeviceConnection;"
+        },
+        {
+          "offset": 34,
+          "op": "const/16",
+          "args": "v5, 346"
+        },
+        {
+          "offset": 38,
+          "op": "const/4",
+          "args": "v6, 1"
+        },
+        {
+          "offset": 40,
+          "op": "invoke-static",
+          "args": "v5, v2, v0, v4, v6, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getMsgByCmd(I I [J Landroid/hardware/usb/UsbDeviceConnection; I)[B"
+        }
+      ]
+    },
+    {
+      "method": "getFeatureConfigFM3",
+      "offset": 372,
+      "commandConstant": "v5, 346",
+      "call": "v5, v1, v13, v7, v6, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getMsgByCmd(I I [J Landroid/hardware/usb/UsbDeviceConnection; I)[B",
+      "context": [
+        {
+          "offset": 334,
+          "op": "invoke-virtual",
+          "args": "v7, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;"
+        },
+        {
+          "offset": 340,
+          "op": "move-result-object",
+          "args": "v7"
+        },
+        {
+          "offset": 342,
+          "op": "invoke-static",
+          "args": "v0, v7, Landroid/util/Log;->d(Ljava/lang/String; Ljava/lang/String;)I"
+        },
+        {
+          "offset": 348,
+          "op": "new-array",
+          "args": "v13, v13, [J"
+        },
+        {
+          "offset": 352,
+          "op": "const-wide/16",
+          "args": "v11, 64"
+        },
+        {
+          "offset": 356,
+          "op": "aput-wide",
+          "args": "v11, v13, v3"
+        },
+        {
+          "offset": 360,
+          "op": "invoke-static",
+          "args": "v1, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getCafId(Ljava/lang/String;)I"
+        },
+        {
+          "offset": 366,
+          "op": "move-result",
+          "args": "v1"
+        },
+        {
+          "offset": 368,
+          "op": "sget-object",
+          "args": "v7, Lcom/conexant/cnxtusbcheadset/CnxtUsbDeviceBase;->mConnection Landroid/hardware/usb/UsbDeviceConnection;"
+        },
+        {
+          "offset": 372,
+          "op": "invoke-static",
+          "args": "v5, v1, v13, v7, v6, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getMsgByCmd(I I [J Landroid/hardware/usb/UsbDeviceConnection; I)[B"
+        }
+      ]
+    },
+    {
+      "method": "getFreeman3EQConfig",
+      "offset": 30,
+      "commandConstant": "v3, 442",
+      "call": "v3, v1, v0, v2, v4, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getMsgByCmd(I I [J Landroid/hardware/usb/UsbDeviceConnection; I)[B",
+      "context": [
+        {
+          "offset": 0,
+          "op": "const/16",
+          "args": "v0, 13"
+        },
+        {
+          "offset": 4,
+          "op": "new-array",
+          "args": "v0, v0, [J"
+        },
+        {
+          "offset": 8,
+          "op": "const-string",
+          "args": "v1, \"CTRL\""
+        },
+        {
+          "offset": 12,
+          "op": "invoke-static",
+          "args": "v1, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getCafId(Ljava/lang/String;)I"
+        },
+        {
+          "offset": 18,
+          "op": "move-result",
+          "args": "v1"
+        },
+        {
+          "offset": 20,
+          "op": "sget-object",
+          "args": "v2, Lcom/conexant/cnxtusbcheadset/CnxtUsbDeviceBase;->mConnection Landroid/hardware/usb/UsbDeviceConnection;"
+        },
+        {
+          "offset": 24,
+          "op": "const/16",
+          "args": "v3, 442"
+        },
+        {
+          "offset": 28,
+          "op": "const/4",
+          "args": "v4, 1"
+        },
+        {
+          "offset": 30,
+          "op": "invoke-static",
+          "args": "v3, v1, v0, v2, v4, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getMsgByCmd(I I [J Landroid/hardware/usb/UsbDeviceConnection; I)[B"
+        }
+      ]
+    },
+    {
+      "method": "getFreeman3EQParam",
+      "offset": 58,
+      "commandConstant": "v5, 446",
+      "call": "v5, v1, v0, v2, v4, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getMsgByCmd(I I [J Landroid/hardware/usb/UsbDeviceConnection; I)[B",
+      "context": [
+        {
+          "offset": 28,
+          "op": "move-result",
+          "args": "v1"
+        },
+        {
+          "offset": 30,
+          "op": "int-to-long",
+          "args": "v1, v1"
+        },
+        {
+          "offset": 32,
+          "op": "const/4",
+          "args": "v4, 1"
+        },
+        {
+          "offset": 34,
+          "op": "aput-wide",
+          "args": "v1, v0, v4"
+        },
+        {
+          "offset": 38,
+          "op": "const-string",
+          "args": "v1, \"CTRL\""
+        },
+        {
+          "offset": 42,
+          "op": "invoke-static",
+          "args": "v1, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getCafId(Ljava/lang/String;)I"
+        },
+        {
+          "offset": 48,
+          "op": "move-result",
+          "args": "v1"
+        },
+        {
+          "offset": 50,
+          "op": "sget-object",
+          "args": "v2, Lcom/conexant/cnxtusbcheadset/CnxtUsbDeviceBase;->mConnection Landroid/hardware/usb/UsbDeviceConnection;"
+        },
+        {
+          "offset": 54,
+          "op": "const/16",
+          "args": "v5, 446"
+        },
+        {
+          "offset": 58,
+          "op": "invoke-static",
+          "args": "v5, v1, v0, v2, v4, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getMsgByCmd(I I [J Landroid/hardware/usb/UsbDeviceConnection; I)[B"
+        }
+      ]
+    },
+    {
+      "method": "getFwVersion",
+      "offset": 30,
+      "commandConstant": "v4, 259",
+      "call": "v4, v1, v0, v2, v3, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getMsgByCmd(I I [J Landroid/hardware/usb/UsbDeviceConnection; I)[B",
+      "context": [
+        {
+          "offset": 0,
+          "op": "const/16",
+          "args": "v0, 13"
+        },
+        {
+          "offset": 4,
+          "op": "new-array",
+          "args": "v0, v0, [J"
+        },
+        {
+          "offset": 8,
+          "op": "const-string",
+          "args": "v1, \"CTRL\""
+        },
+        {
+          "offset": 12,
+          "op": "invoke-static",
+          "args": "v1, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getCafId(Ljava/lang/String;)I"
+        },
+        {
+          "offset": 18,
+          "op": "move-result",
+          "args": "v1"
+        },
+        {
+          "offset": 20,
+          "op": "sget-object",
+          "args": "v2, Lcom/conexant/cnxtusbcheadset/CnxtUsbDeviceBase;->mConnection Landroid/hardware/usb/UsbDeviceConnection;"
+        },
+        {
+          "offset": 24,
+          "op": "const/4",
+          "args": "v3, 1"
+        },
+        {
+          "offset": 26,
+          "op": "const/16",
+          "args": "v4, 259"
+        },
+        {
+          "offset": 30,
+          "op": "invoke-static",
+          "args": "v4, v1, v0, v2, v3, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getMsgByCmd(I I [J Landroid/hardware/usb/UsbDeviceConnection; I)[B"
+        }
+      ]
+    },
+    {
+      "method": "saveEQParamsToFlash",
+      "offset": 220,
+      "commandConstant": "v4, 220",
+      "call": "v4, v2, v13, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getCmd(I I [J)Lcom/conexant/universalfunction/CnxtUsbCommand;",
+      "context": [
+        {
+          "offset": 188,
+          "op": "aput-wide",
+          "args": "v2, v13, v17"
+        },
+        {
+          "offset": 192,
+          "op": "iget",
+          "args": "v2, v8, Lcom/conexant/genericfeature/EQParam;->filterType I"
+        },
+        {
+          "offset": 196,
+          "op": "int-to-long",
+          "args": "v2, v2"
+        },
+        {
+          "offset": 198,
+          "op": "aput-wide",
+          "args": "v2, v13, v12"
+        },
+        {
+          "offset": 202,
+          "op": "iget-wide",
+          "args": "v2, v8, Lcom/conexant/genericfeature/EQParam;->gain D"
+        },
+        {
+          "offset": 206,
+          "op": "double-to-long",
+          "args": "v2, v2"
+        },
+        {
+          "offset": 208,
+          "op": "aput-wide",
+          "args": "v2, v13, v16"
+        },
+        {
+          "offset": 212,
+          "op": "invoke-static",
+          "args": "v15, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getCafId(Ljava/lang/String;)I"
+        },
+        {
+          "offset": 218,
+          "op": "move-result",
+          "args": "v2"
+        },
+        {
+          "offset": 220,
+          "op": "invoke-static",
+          "args": "v4, v2, v13, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getCmd(I I [J)Lcom/conexant/universalfunction/CnxtUsbCommand;"
+        }
+      ]
+    },
+    {
+      "method": "saveEQParamsToFlash",
+      "offset": 878,
+      "commandConstant": "v4, 220",
+      "call": "v4, v9, v11, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getCmd(I I [J)Lcom/conexant/universalfunction/CnxtUsbCommand;",
+      "context": [
+        {
+          "offset": 850,
+          "op": "int-to-long",
+          "args": "v12, v12"
+        },
+        {
+          "offset": 852,
+          "op": "const/4",
+          "args": "v14, 6"
+        },
+        {
+          "offset": 854,
+          "op": "aput-wide",
+          "args": "v12, v11, v14"
+        },
+        {
+          "offset": 858,
+          "op": "iget",
+          "args": "v9, v9, Lcom/conexant/cnxtusbcheadset/CX2070xBandEQCoeffs;->A1 I"
+        },
+        {
+          "offset": 862,
+          "op": "int-to-long",
+          "args": "v12, v9"
+        },
+        {
+          "offset": 864,
+          "op": "const/4",
+          "args": "v9, 7"
+        },
+        {
+          "offset": 866,
+          "op": "aput-wide",
+          "args": "v12, v11, v9"
+        },
+        {
+          "offset": 870,
+          "op": "invoke-static",
+          "args": "v15, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getCafId(Ljava/lang/String;)I"
+        },
+        {
+          "offset": 876,
+          "op": "move-result",
+          "args": "v9"
+        },
+        {
+          "offset": 878,
+          "op": "invoke-static",
+          "args": "v4, v9, v11, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getCmd(I I [J)Lcom/conexant/universalfunction/CnxtUsbCommand;"
+        }
+      ]
+    },
+    {
+      "method": "saveEQParamsToFlash",
+      "offset": 1042,
+      "commandConstant": "v4, 220",
+      "call": "v4, v1, v0, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getCmd(I I [J)Lcom/conexant/universalfunction/CnxtUsbCommand;",
+      "context": [
+        {
+          "offset": 1008,
+          "op": "const-wide/high16",
+          "args": "v13, 4643211215818981376"
+        },
+        {
+          "offset": 1012,
+          "op": "goto/16",
+          "args": "-11fh"
+        },
+        {
+          "offset": 1016,
+          "op": "move-object",
+          "args": "v15, v3"
+        },
+        {
+          "offset": 1018,
+          "op": "const/16",
+          "args": "v21, -1001"
+        },
+        {
+          "offset": 1022,
+          "op": "new-array",
+          "args": "v0, v5, [J"
+        },
+        {
+          "offset": 1026,
+          "op": "const-wide/16",
+          "args": "v1, 255"
+        },
+        {
+          "offset": 1030,
+          "op": "aput-wide",
+          "args": "v1, v0, v6"
+        },
+        {
+          "offset": 1034,
+          "op": "invoke-static",
+          "args": "v15, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getCafId(Ljava/lang/String;)I"
+        },
+        {
+          "offset": 1040,
+          "op": "move-result",
+          "args": "v1"
+        },
+        {
+          "offset": 1042,
+          "op": "invoke-static",
+          "args": "v4, v1, v0, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getCmd(I I [J)Lcom/conexant/universalfunction/CnxtUsbCommand;"
+        }
+      ]
+    },
+    {
+      "method": "switchEQMode",
+      "offset": 58,
+      "commandConstant": "v2, 90",
+      "call": "v2, v1, v0, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getCmd(I I [J)Lcom/conexant/universalfunction/CnxtUsbCommand;",
+      "context": [
+        {
+          "offset": 28,
+          "op": "const/4",
+          "args": "v3, 0"
+        },
+        {
+          "offset": 30,
+          "op": "aput-wide",
+          "args": "v1, v0, v3"
+        },
+        {
+          "offset": 34,
+          "op": "int-to-long",
+          "args": "v1, v5"
+        },
+        {
+          "offset": 36,
+          "op": "const/4",
+          "args": "v5, 1"
+        },
+        {
+          "offset": 38,
+          "op": "aput-wide",
+          "args": "v1, v0, v5"
+        },
+        {
+          "offset": 42,
+          "op": "const-string",
+          "args": "v1, \"CTRL\""
+        },
+        {
+          "offset": 46,
+          "op": "invoke-static",
+          "args": "v1, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getCafId(Ljava/lang/String;)I"
+        },
+        {
+          "offset": 52,
+          "op": "move-result",
+          "args": "v1"
+        },
+        {
+          "offset": 54,
+          "op": "const/16",
+          "args": "v2, 90"
+        },
+        {
+          "offset": 58,
+          "op": "invoke-static",
+          "args": "v2, v1, v0, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->getCmd(I I [J)Lcom/conexant/universalfunction/CnxtUsbCommand;"
+        }
+      ]
+    }
+  ],
+  "buttonMethods": [
+    {
+      "class": "Lcom/conexant/cnxtusbcheadset/FreemanCnxtUsbDevice;",
+      "name": "handleHidBtnState",
+      "descriptor": "(B)V",
+      "registers": 4,
+      "instructions": [
+        {
+          "offset": 0,
+          "op": "and-int/lit8",
+          "args": "v0, v3, 1"
+        },
+        {
+          "offset": 4,
+          "op": "const/4",
+          "args": "v1, 1"
+        },
+        {
+          "offset": 6,
+          "op": "if-ne",
+          "args": "v1, v0, +00dh"
+        },
+        {
+          "offset": 10,
+          "op": "sget-object",
+          "args": "v3, Lcom/conexant/cnxtusbcheadset/FreemanCnxtUsbDevice;->TAG Ljava/lang/String;"
+        },
+        {
+          "offset": 14,
+          "op": "const-string",
+          "args": "v0, \"handleHidBtnState: KEY_VOLUME_UP\""
+        },
+        {
+          "offset": 18,
+          "op": "invoke-static",
+          "args": "v3, v0, Landroid/util/Log;->d(Ljava/lang/String; Ljava/lang/String;)I"
+        },
+        {
+          "offset": 24,
+          "op": "invoke-virtual",
+          "args": "v2, v1, Lcom/conexant/cnxtusbcheadset/FreemanCnxtUsbDevice;->onKeyEvent(I)V"
+        },
+        {
+          "offset": 30,
+          "op": "return-void",
+          "args": ""
+        },
+        {
+          "offset": 32,
+          "op": "shr-int/lit8",
+          "args": "v0, v3, 1"
+        },
+        {
+          "offset": 36,
+          "op": "and-int/2addr",
+          "args": "v0, v1"
+        },
+        {
+          "offset": 38,
+          "op": "if-ne",
+          "args": "v1, v0, +00eh"
+        },
+        {
+          "offset": 42,
+          "op": "sget-object",
+          "args": "v3, Lcom/conexant/cnxtusbcheadset/FreemanCnxtUsbDevice;->TAG Ljava/lang/String;"
+        },
+        {
+          "offset": 46,
+          "op": "const-string",
+          "args": "v0, \"handleHidBtnState: KEY_VOLUME_DOWN\""
+        },
+        {
+          "offset": 50,
+          "op": "invoke-static",
+          "args": "v3, v0, Landroid/util/Log;->d(Ljava/lang/String; Ljava/lang/String;)I"
+        },
+        {
+          "offset": 56,
+          "op": "const/4",
+          "args": "v3, 2"
+        },
+        {
+          "offset": 58,
+          "op": "invoke-virtual",
+          "args": "v2, v3, Lcom/conexant/cnxtusbcheadset/FreemanCnxtUsbDevice;->onKeyEvent(I)V"
+        },
+        {
+          "offset": 64,
+          "op": "return-void",
+          "args": ""
+        },
+        {
+          "offset": 66,
+          "op": "shr-int/lit8",
+          "args": "v0, v3, 2"
+        },
+        {
+          "offset": 70,
+          "op": "and-int/2addr",
+          "args": "v0, v1"
+        },
+        {
+          "offset": 72,
+          "op": "if-ne",
+          "args": "v1, v0, +00eh"
+        },
+        {
+          "offset": 76,
+          "op": "sget-object",
+          "args": "v3, Lcom/conexant/cnxtusbcheadset/FreemanCnxtUsbDevice;->TAG Ljava/lang/String;"
+        },
+        {
+          "offset": 80,
+          "op": "const-string",
+          "args": "v0, \"handleHidBtnState: One Clicked\""
+        },
+        {
+          "offset": 84,
+          "op": "invoke-static",
+          "args": "v3, v0, Landroid/util/Log;->d(Ljava/lang/String; Ljava/lang/String;)I"
+        },
+        {
+          "offset": 90,
+          "op": "const/4",
+          "args": "v3, 5"
+        },
+        {
+          "offset": 92,
+          "op": "invoke-virtual",
+          "args": "v2, v3, Lcom/conexant/cnxtusbcheadset/FreemanCnxtUsbDevice;->onKeyEvent(I)V"
+        },
+        {
+          "offset": 98,
+          "op": "return-void",
+          "args": ""
+        },
+        {
+          "offset": 100,
+          "op": "shr-int/lit8",
+          "args": "v0, v3, 3"
+        },
+        {
+          "offset": 104,
+          "op": "and-int/2addr",
+          "args": "v0, v1"
+        },
+        {
+          "offset": 106,
+          "op": "if-ne",
+          "args": "v1, v0, +00eh"
+        },
+        {
+          "offset": 110,
+          "op": "sget-object",
+          "args": "v3, Lcom/conexant/cnxtusbcheadset/FreemanCnxtUsbDevice;->TAG Ljava/lang/String;"
+        },
+        {
+          "offset": 114,
+          "op": "const-string",
+          "args": "v0, \"handleHidBtnState: Double Clicked\""
+        },
+        {
+          "offset": 118,
+          "op": "invoke-static",
+          "args": "v3, v0, Landroid/util/Log;->d(Ljava/lang/String; Ljava/lang/String;)I"
+        },
+        {
+          "offset": 124,
+          "op": "const/4",
+          "args": "v3, 6"
+        },
+        {
+          "offset": 126,
+          "op": "invoke-virtual",
+          "args": "v2, v3, Lcom/conexant/cnxtusbcheadset/FreemanCnxtUsbDevice;->onKeyEvent(I)V"
+        },
+        {
+          "offset": 132,
+          "op": "return-void",
+          "args": ""
+        },
+        {
+          "offset": 134,
+          "op": "shr-int/lit8",
+          "args": "v3, v3, 4"
+        },
+        {
+          "offset": 138,
+          "op": "and-int/2addr",
+          "args": "v3, v1"
+        },
+        {
+          "offset": 140,
+          "op": "if-ne",
+          "args": "v1, v3, +00dh"
+        },
+        {
+          "offset": 144,
+          "op": "sget-object",
+          "args": "v3, Lcom/conexant/cnxtusbcheadset/FreemanCnxtUsbDevice;->TAG Ljava/lang/String;"
+        },
+        {
+          "offset": 148,
+          "op": "const-string",
+          "args": "v0, \"handleHidBtnState: Triple Clicked\""
+        },
+        {
+          "offset": 152,
+          "op": "invoke-static",
+          "args": "v3, v0, Landroid/util/Log;->d(Ljava/lang/String; Ljava/lang/String;)I"
+        },
+        {
+          "offset": 158,
+          "op": "const/4",
+          "args": "v3, 7"
+        },
+        {
+          "offset": 160,
+          "op": "invoke-virtual",
+          "args": "v2, v3, Lcom/conexant/cnxtusbcheadset/FreemanCnxtUsbDevice;->onKeyEvent(I)V"
+        },
+        {
+          "offset": 166,
+          "op": "return-void",
+          "args": ""
+        }
+      ]
+    },
+    {
+      "class": "Lcom/conexant/cnxtusbcheadset/FreemanCnxtUsbDevice;",
+      "name": "onKeyEvent",
+      "descriptor": "(I)V",
+      "registers": 4,
+      "instructions": [
+        {
+          "offset": 0,
+          "op": "iget-object",
+          "args": "v2, v2, Lcom/conexant/cnxtusbcheadset/FreemanCnxtUsbDevice;->mKeyEventListeners Ljava/util/List;"
+        },
+        {
+          "offset": 4,
+          "op": "invoke-interface",
+          "args": "v2, Ljava/util/List;->iterator()Ljava/util/Iterator;"
+        },
+        {
+          "offset": 10,
+          "op": "move-result-object",
+          "args": "v2"
+        },
+        {
+          "offset": 12,
+          "op": "invoke-interface",
+          "args": "v2, Ljava/util/Iterator;->hasNext()Z"
+        },
+        {
+          "offset": 18,
+          "op": "move-result",
+          "args": "v0"
+        },
+        {
+          "offset": 20,
+          "op": "if-eqz",
+          "args": "v0, +00dh"
+        },
+        {
+          "offset": 24,
+          "op": "invoke-interface",
+          "args": "v2, Ljava/util/Iterator;->next()Ljava/lang/Object;"
+        },
+        {
+          "offset": 30,
+          "op": "move-result-object",
+          "args": "v0"
+        },
+        {
+          "offset": 32,
+          "op": "check-cast",
+          "args": "v0, Lcom/conexant/genericfeature/IUsbKeyEventListener;"
+        },
+        {
+          "offset": 36,
+          "op": "const/4",
+          "args": "v1, 0"
+        },
+        {
+          "offset": 38,
+          "op": "invoke-interface",
+          "args": "v0, v3, v1, Lcom/conexant/genericfeature/IUsbKeyEventListener;->onKeyEvent(I Z)V"
+        },
+        {
+          "offset": 44,
+          "op": "goto",
+          "args": "-10h"
+        },
+        {
+          "offset": 46,
+          "op": "return-void",
+          "args": ""
+        }
+      ]
+    }
+  ]
+}
