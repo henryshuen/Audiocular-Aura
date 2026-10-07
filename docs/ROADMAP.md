@@ -1,7 +1,7 @@
 # AuraPEQ FreeDSP Roadmap
 
-## M0 - Local reproducible baseline — ACTIVE
-- [ ] fork / upstream configured：本機 remotes 已設定；遠端 fork 尚未驗證可用，gh 權杖無效。
+## M0 - Local reproducible baseline — COMPLETE
+- [x] fork / upstream configured：Round 0.5 已確認 origin 分支可讀取且與本機 HEAD 相同。
 - [x] dependencies install：未修改的 package-lock.json，npm ci 成功。
 - [x] build succeeds：upstream baseline 的 tsc && vite build 成功。
 - [x] PowerShell scripts：語法解析、setup、verify、dev 啟動及 strictPort 失敗路徑驗證通過。
@@ -10,19 +10,23 @@
 基準 commit：af0bcf7057860307bf81b00746f0cbdb93366514。
 日期：2026-10-07（Asia/Taipei）。Node v24.16.0 / npm 11.13.0。
 branch：fix/freedsp-conexant。
-origin：https://github.com/henryshuen/Audiocular-Aura.git （僅設定目標，尚非已建立 fork 的證據）。
+origin：https://github.com/henryshuen/Audiocular-Aura.git。
 upstream：https://github.com/mandy321/Audiocular-Aura.git。
-gh auth status 回報權杖無效；公開 fork 的 git ls-remote 回報 Repository not found，
-因此無法區分不存在或無權限存取。以 upstream clone 到專案根目錄，未建立巢狀目錄。
-Henry 需 gh auth login -h github.com 後建立或確認 fork。
+Round 0 當時 gh auth status 回報權杖無效，fork 查詢回報 Repository not found；
+因此當時以 upstream clone 到專案根目錄，未建立巢狀目錄。
+Round 0.5：Henry 已建立 fork；git ls-remote origin refs/heads/fix/freedsp-conexant
+確認遠端 SHA 為 af0a73c45db495f0b7a9cb6d6c70c04af4d1f647，與本機 HEAD 相同。
+此提交包含 Round 0 四份文件及三支 PowerShell 腳本。
+本機追蹤 origin/fix/freedsp-conexant，ahead/behind 為 0/0；Round 0.5 開始時工作目錄乾淨。
 npm ci 回報 5 vulnerabilities（1 moderate、4 high）；未執行 audit fix 或升級依賴。
-M0 本機項目已完成；仍維持 ACTIVE，待 Henry 完成遠端 fork 設定。
+M0 已完成；M1 尚未開始，等待 Henry 核准。
 Round 0 結束時 dev server 正在執行，僅監聽 127.0.0.1:5173。
 HTTP 以 curl.exe --noproxy '*' 驗證；一般 Invoke-WebRequest 曾回傳 404，
 直接請求已確認 Vite 頁面正確，未改動系統代理設定。
 HTTP 驗證只證明文件可提供，不證明瀏覽器 UI 或 WebHID 行為。
 
 ## M1 - Packet-level test harness — PENDING
+- 遵守 GENERAL 的永久 FreeDSP-only scope 與 DECISIONS D008；新增實作優先放在 src/freedsp/。
 - isolate Conexant packet construction
 - add deterministic packet serialization tests
 - mock HID transport where practical
@@ -119,3 +123,10 @@ src/dsp.ts:789-804 每次重寫 bands，最後 switchEQModeConexant(device, 0)�
 
 未證明：RAM 音效、取樣率實際對應、A/B 聽感、Flash 持久性、回讀、硬體 preamp。
 Round 0 不建立封包測試或 mock HID harness，這些屬於待核准的 M1。
+
+## Round 0.5 scope
+僅更新 GENERAL、ROADMAP、DECISIONS、DONE，加入 FreeDSP 隔離規則及每輪 scope/regression 回報。
+不修改 src 或協定程式碼，不操作硬體，不開始 M1。
+verify.ps1 已通過（exit 0）；沒有 test script，單元測試為 SKIP。
+本輪 HTTP 檢查確認 localhost 無法連線，伺服器目前未執行。
+Round 0.5 四份文件修改尚未提交或推送；Round 0 原有提交已確認在 origin。

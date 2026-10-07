@@ -7,6 +7,24 @@
 - Windows 11
 - Henry 有實體裝置，可手動驗證。
 
+## Permanent FreeDSP-only scope
+This branch targets ONLY:
+- Moondrop FreeDSP
+- VID 0x35D8
+- PID 0x1496
+- CONEXANT / Freeman DSP
+
+Do not intentionally modify behavior for:
+- SAVITECH
+- FIIO
+- FIIO_JA11
+- non-FreeDSP MOONDROP / Comtrue devices
+
+Shared files may only be edited where strictly required to connect the FreeDSP-specific path.
+Prefer putting NEW FreeDSP-specific implementation into src/freedsp/
+rather than expanding unrelated protocol code inside shared files.
+此規則適用於本分支所有後續開發輪次；共享檔案的必要連接修改也必須檢查其他協定是否受影響。
+
 ## Development philosophy
 - Make the smallest change necessary.
 - One hypothesis per experimental round where practical.
@@ -80,6 +98,18 @@ Codex 每輪必須回報：
 8. Exact local web URL as a clickable URL
 9. Current roadmap milestone
 10. Documentation files updated
+
+每輪報告必須包含以下區段：
+
+### Scope / regression check
+- FreeDSP-specific files changed:
+- Shared files changed:
+- Non-FreeDSP protocol code changed: YES / NO
+
+Default must be: Non-FreeDSP protocol code changed: NO.
+If YES, STOP and explain why before continuing.
+若發現非 FreeDSP 協定程式碼需要修改或已被修改，立即停止並向 Henry 說明原因，
+不得默默擴大範圍或繼續該修改。
 
 Never finish a round without this report.
 Round 0 僅 bootstrap；不改 Conexant 協定、不操作硬體、不寫 Flash、不建立 PR。

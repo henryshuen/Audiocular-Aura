@@ -23,3 +23,22 @@
 - 還原本輪 build 產生的已追蹤 dist 差異；確認 src、package.json、package-lock.json、
   dist 與基準無差異。最終僅新增 docs/ 與 scripts/，未 commit、push 或建立 PR。
 - 未執行任何實體 HID、RAM、Flash、聽感或 Android 測試；沒有硬體成果列為完成。
+
+## 2026-10-07 — Round 0.5
+- 開始時 git status 乾淨；目前分支 fix/freedsp-conexant。
+- origin 為 https://github.com/henryshuen/Audiocular-Aura.git；
+  upstream 為 https://github.com/mandy321/Audiocular-Aura.git。
+- 確認 Round 0 四份文件及三支腳本已包含在提交
+  af0a73c45db495f0b7a9cb6d6c70c04af4d1f647（chore: bootstrap FreeDSP development workflow）。
+- 以 git ls-remote 確認 origin/fix/freedsp-conexant 的遠端 SHA 與本機 HEAD 相同。
+  本機追蹤分支為 origin/fix/freedsp-conexant，ahead/behind 為 0/0。
+- GENERAL 新增永久 FreeDSP-only scope、src/freedsp/ 優先隔離規則與每輪 Scope / regression check。
+- DECISIONS 新增 D008；ROADMAP 將 M0 標為 COMPLETE，M1 仍為 PENDING，未開始。
+- 以 Windows PowerShell 執行 scripts/verify.ps1，exit 0：TypeScript + Vite build 通過。
+  沒有 test script，單元測試為 SKIP；未新增或聲稱完成 M1 測試。
+- 還原本輪建置產生的 dist 差異；確認 src、scripts、package.json、package-lock.json、dist 無變更。
+- Scope / regression check：FreeDSP-specific source files changed: none；shared source files changed: none；
+  Non-FreeDSP protocol code changed: NO。僅四份 docs 文件變更，未操作任何硬體。
+- 本輪 localhost HTTP 檢查無法連線；伺服器目前未執行，也未自動啟動。
+  固定網址 http://localhost:5173/；啟動命令 .\scripts\dev.ps1。
+- Round 0.5 文件修改保留為未提交工作目錄變更；本輪未 commit、push 或建立 PR。
