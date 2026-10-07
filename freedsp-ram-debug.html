@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="zh-Hant"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>FreeDSP M2N RAM debug</title><style>
+<title>FreeDSP M2O RAM debug</title><style>
 body{font:16px/1.6 system-ui,sans-serif;max-width:1060px;margin:24px auto;padding:0 16px;background:#10141d;color:#e6eaf2}button,input,select{font:inherit;padding:6px;margin:4px;background:#202a3d;color:inherit;border:1px solid #70809b;border-radius:5px}button:disabled{opacity:.4}table{width:100%;border-collapse:collapse}td,th{padding:6px;border-bottom:1px solid #394459;text-align:left}input[type=number]{width:100px}textarea{box-sizing:border-box;width:100%;height:270px;background:#0b0f17;color:#d5e1ef;padding:12px}p{margin:12px 0}#status{padding:12px;background:#202a3d}.scroll{overflow-x:auto}
 </style></head><body>
-<h1>FreeDSP M2N：九段 RAM debug</h1>
+<h1>FreeDSP M2O：完整九段 RAM 驗證</h1>
 <p>僅 Moondrop FreeDSP35D8:1496／Windows native bridge。RAM only；無Flash、Preamp、90。PK負增益。正式頁面的Sync不使用此路徑。</p>
 <p>APO OFF、Windows輸出FreeDSP、初始音量1–2/100；首次Apply耳機離耳。協定成功且無異常後才低音量聽；同曲、同比較音量。異常立即停止。Restore是unity，不是原EQ備份。</p>
 <p>此頁是獨立九段編輯器；初值未讀回裝置，沒有自動Apply。可手動載入正式UI儲存狀態，但不載入tilt／Preamp。</p>
@@ -14,8 +14,12 @@ body{font:16px/1.6 system-ui,sans-serif;max-width:1060px;margin:24px auto;paddin
 <button id="safe">填入安全測試值400Hz／−12dB／Q1（不送出）</button>
 <button id="apply">Apply選定band RAM</button><button id="restore">Restore選定band unity</button>
 <button id="confirm">確認本band可聽變化＋恢復</button>
-<p id="gate">先完成UI Band1、5、9各自Apply／Restore＋聽感確認；三段之間必須先還原。</p>
-<button id="sync">Sync完整九段RAM（確認三段後）</button><button id="flat">Restore全部九段unity</button>
+<p id="gate">M2N UI1/5/9 可逆 Web 聽感已確認；M2O 全九段仍待手動驗證。</p>
+<button id="preset">填入 M2O 九段負增益 PK 預設（不送出）</button>
+<button id="sync">Apply完整九段RAM</button><button id="flat">Restore全部九段unity</button>
+<p>首次全九段 Apply 時 IEM 離耳；成功後低音量聽，再明確確認。Restore 後再聽並確認恢復；無明顯變化或異常請停止並保留 log，不按 YES。</p>
+<button id="heardApply">確認全九段可聽變化 YES（僅紀錄）</button>
+<button id="heardRestore">確認全九段可聽恢復 YES（僅紀錄）</button>
 <p>disabled送同slot unity；LSQ／HSQ／NOTCH與正增益未支持。全九段只逐slot送一次，遇錯立即停止；部分完成時不自動rollback。重新連線不代表Flash保存或狀態讀回。</p>
 <button id="copy">複製完整log</button><textarea id="log" readonly aria-label="完整native log"></textarea>
 <script type="module">

@@ -1,5 +1,5 @@
 import {describe,it,expect} from 'vitest';
-import {uiToWire,validateBands,modelWebBand,RamBridge} from '../../src/freedsp/webRam.ts';
+import {uiToWire,validateBands,modelWebBand,RamBridge,fullNinePreset} from '../../src/freedsp/webRam.ts';
 import type {Band} from '../../src/main.ts';
 import nativeDebug from '../../tools/freedsp-native/RamDebug.cs?raw';
 import page from '../../src/freedsp/ramDebugPage.ts?raw';
@@ -20,6 +20,17 @@ function fakeBridge(){
  return {bridge:new RamBridge(fetcher),calls,setFail:()=>{fail=true;},setHold:(p:Promise<Response>)=>{hold=p;}};
 }
 describe('M2N Web/native RAM contract; no physical HID',()=>{
+ it('M2O distinguishable negative PK preset validates all nine packets at every known rate',()=>{
+   const b=validateBands(fullNinePreset());
+   expect(b.map(v=>v.freq)).toEqual([250,400,630,1000,1600,2500,4000,6300,10000]);
+   expect(b.map(v=>v.gain)).toEqual([-3,-4,-5,-6,-7,-8,-9,-10,-12]);
+   for(const rate of [4,5,6,7,8]){
+     const models=b.map(v=>modelWebBand(v,rate));
+     expect(models.map(m=>m.payload[1])).toEqual([1,2,3,4,5,6,7,8,9]);
+     expect(new Set(models.map(m=>m.payload.slice(2,8).join(','))).size).toBe(9);
+     expect(b.map(v=>modelWebBand(v,rate,true).payload.slice(2,8))).toEqual(Array(9).fill([3,4194304,0,0,0,0]));
+   }
+ });
  it('UI0..8 direct raw1..9 mapping; rejects noninteger/out-of-range',()=>{
    expect(Array.from({length:9},(_,i)=>uiToWire(i))).toEqual([1,2,3,4,5,6,7,8,9]);
    for(const i of [-1,9,13,NaN,.5])expect(()=>uiToWire(i)).toThrow();

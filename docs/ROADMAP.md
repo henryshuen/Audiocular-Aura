@@ -2010,3 +2010,28 @@ Henry independently verified session/token/debugInspect backend success. Supplie
 Fix frontend only: bind defaultfetch toglobalThis; preserve injectedfetch mocks. FailedConnect now clearsconnected state and shows actualreason inpage status/log. One integratedtest uses realRamBridge, mocksession andexactsuccessfuldebugInspectJSON, asserting clickedConnect enablesApply/Restore, connectedstatus andsuccesslog; no optionallogPath required. No hardware/connect endpoint invoked byCodex; no native/CAF/190/mapping/coefficient/Flash/preamp/productionSync/nonFreeDSP changes.
 
 Connect correction final verification: focused2files/15tests passed; verify.ps1 once exit0,18files/149tests＋TypeScript/Vite passed. Exact successfuldebugInspect response now leads toconnectedstatus, Apply/Restoreenabled andsuccesslog inintegratedfrontendmock test. Native/protocol filesunchanged, no hardware calls. Generateddist restored; gitdiffcheckpassed.
+
+## 2026-10-08 — M2O full-nine Web RAM validation policy
+Henry verified M2N UI1/wire1, UI5/wire5 and UI9/wire9: protocol Apply/Restore PASS and audible Apply/Restore YES for each. Combined with prior individual native wire1..9 reversals, this opens the full-nine Web gate without retesting those bands. Simultaneous nine-band hardware behavior remains PENDING.
+M2O remains isolated DEV RAM debug only, UI1..9 -> wire1..9. Explicit editor-only preset: PK/Q1 at250/400/630/1000/1600/2500/4000/6300/10000Hz with -3/-4/-5/-6/-7/-8/-9/-10/-12dB. First full-nine Apply with IEM out of ears, APO OFF, FreeDSP output and low volume; listen only after protocol success without abnormalities.
+Prepare all selected coefficients AND packet bytes before first190; send each wire once in order, matching CAF required. Stop first failure, no retry/rollback/automatic restore. Existing explicit188/187/346 prerequisites unchanged and logged;190 is sole EQ write. Each wire has BEGIN/PASS and final protocol complete only after all nine pass.
+Separate user-only audible Apply YES then audible Restore YES; no inferred audibility. Restore writes nine unity filters, keeps editor values, and is neither prior-EQ backup nor readback. No Flash/preamp/positive gain/nonPK/production sender replacement/non-FreeDSP changes. Codex performs no hardware actions. STOP at M2O READY pending Henry.
+### Problem / hypothesis / next action
+Observed problem: individual slots and Web bands1/5/9 passed, but full-nine simultaneous Web Apply/Restore is not yet validated.
+Verified facts: Henry reports all three M2N protocol and audible reversals PASS/YES. Existing native path selects all nine exactly once, stops first failure and requires matching CAF; packet preparation now completes before first190.
+Possible causes: full-nine combined behavior may differ from individually tested slots; no such defect established.
+Ruled out / weakened: need to repeat the completed M2N gate; protocol completion alone proves audible success; editor display is device readback.
+Next validation: Henry explicitly loads M2O preset, full-nine Apply, listens/confirms, full-nine unity Restore, listens/confirms. Failure/uncertainty stops with full log; no automatic recovery.
+Possible fix direction: only investigate a concrete full-nine failure after its evidence; no production integration in this round.
+
+## Evidence for upstream / Issue #3 — M2O increment
+Henry reports M2N Web UI1->wire1, UI5->wire5, UI9->wire9 each protocol Apply/Restore PASS and audible Apply/Restore YES, in addition to native individual wire1..9 reversible evidence. These establish isolated negative PK RAM effects, not simultaneous nine-band/Flash/preamp/readback or native bit-exact coefficients. M2O prepares an explicit negative-only nine-band preset and current-rate190 packets, preserves188/187/346 prerequisites and bounded matching responses. Full-nine hardware/audible result is PENDING; no new hardware evidence produced by Codex.
+
+### Scope / regression check
+- FreeDSP-specific files changed: isolated debug HTML, src/freedsp/webRam.ts, src/freedsp/ramDebugPage.ts, tools/freedsp-native/RamDebug.cs.
+- Analysis/test files changed: tests/freedsp/webRam.test.ts, tests/freedsp/ramUiStartup.test.ts, tools/freedsp-native/Tests/Program.cs.
+- Shared runtime files changed: NONE.
+- Non-FreeDSP protocol code changed: NO.
+
+### M2O final automated verification
+Focused frontend2files/18tests PASS; native57synthetic/mock tests PASS (including exactnine190 packets, per-wire PASS/FAIL, stop-on-second-wirefailure, no retry/rollback/full-complete claim). verify.ps1 executed once at end: exit0, TypeScript/Vite build and18files/152tests PASS. Sandbox temp rename/loopback restrictions resolved by running offline tests in normal local environment; no physical device was used. Generateddist restored to initial state; intended-file git diff --check PASS. M2O remains READY pending Henry's full-nine listening result. Shared runtime files changed NONE; Non-FreeDSP protocol code changed NO.

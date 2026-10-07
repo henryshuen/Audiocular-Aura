@@ -63,11 +63,16 @@ public static class RamDebug
         if (rate?.SampleHz is not int hz) { log.WriteLine("STOP unknown/missing346 rate; no190"); return 7; }
         bool restore = r.Action is "restoreBand" or "restoreNine";
         // Prepare ALL selected packets before first190; no silent skip/truncation or partial invalid model.
-        var packets = Selected(r).Select(i => (Index:i, Coeff:Calculate(hz,r.Bands[i],restore))).ToArray();
+        var packets = Selected(r).Select(i => {
+            var coeff = Calculate(hz,r.Bands[i],restore);
+            return (Index:i, Coeff:coeff, Tx:Packet(i,coeff));
+        }).ToArray();
         foreach(var item in packets) {
-            byte[] tx = Packet(item.Index,item.Coeff); allowed.Add(tx);
+            byte[] tx = item.Tx; allowed.Add(tx);
+            log.WriteLine($"WIRE{Wire(item.Index)} {r.Action} BEGIN");
             log.WriteLine($"UI Band{item.Index+1} index={item.Index} -> wire{Wire(item.Index)} currentHz={hz} Gain={item.Coeff.Gain} scale={item.Coeff.Scale} integers=[{string.Join(",",item.Coeff.Words)}]");
-            if (SafeRam.Exchange(hid,190,tx,log,clocks(),false,tx) is null) { log.WriteLine("STOP partial operation; no rollback/retry; some selected bands may remain active"); return 7; }
+            if (SafeRam.Exchange(hid,190,tx,log,clocks(),false,tx) is null) { log.WriteLine($"WIRE{Wire(item.Index)} {r.Action} FAIL"); log.WriteLine("STOP partial operation; no rollback/retry; some selected bands may remain active"); return 7; }
+            log.WriteLine($"WIRE{Wire(item.Index)} {r.Action} PASS");
         }
         log.WriteLine($"RESULT: PROTOCOL COMPLETE bands={packets.Length}; audible validation PENDING; unity is not prior-EQ backup; no persistence claim");
         return 0;

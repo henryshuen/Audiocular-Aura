@@ -1,5 +1,5 @@
 import {describe,it,expect,vi} from 'vitest';
-import {RamBridge} from '../../src/freedsp/webRam.ts';
+import {RamBridge,validateBands,fullNinePreset} from '../../src/freedsp/webRam.ts';
 import ts from 'typescript';
 // @ts-expect-error Node VM is test-only; this repository deliberately excludes Node type declarations.
 import {runInNewContext} from 'node:vm';
@@ -24,10 +24,44 @@ function startup(failConnect=false,Bridge?:new()=>RamBridge){
    .replace(/^import .*$/gm,'').replace('import.meta.env.DEV','true');
  runInNewContext(js,{document:d.document,location:{hostname:'localhost',port:'5173',origin:'http://localhost:5173'},
    RamBridge:Bridge ?? class {async connect(){calls++;if(failConnect)throw new Error('MOCK session unavailable');return {ok:true,log:'MOCK metadata'};}},
-   validateBands:()=>[],console,Set,Date,Number});
+   validateBands,fullNinePreset,console,Set,Date,Number});
  return {...d,calls:()=>calls};
 }
 describe('M2N frontend startup only; no bridge/HID',()=>{
+ it('M2O failure stops the page without retry or automatic restore/confirmation',async()=>{
+   const actions:string[]=[];
+   class FailedBridge extends RamBridge {
+     async connect(){return {ok:true,log:'MOCK metadata'};}
+     async run(action:Parameters<RamBridge['run']>[0]):Promise<never>{actions.push(action);throw new Error('MOCK WIRE2 FAIL partial operation');}
+   }
+   const d=startup(false,FailedBridge);await d.nodes.connect.listeners.get('click')!();
+   await d.nodes.sync.listeners.get('click')!();await d.nodes.sync.listeners.get('click')!();
+   expect(actions).toEqual(['syncNine']);expect(d.nodes.status.textContent).toContain('STOP');
+   expect(d.nodes.log.value).toContain('WIRE2 FAIL');expect(d.nodes.heardApply.disabled).toBe(true);
+   expect(d.nodes.flat.disabled).toBe(true);expect(d.nodes.sync.disabled).toBe(true);
+ });
+ it('M2O uses prior gate, explicit preset/apply/restore and separate manual listening confirmations',async()=>{
+   const actions:string[]=[];
+   class MockBridge extends RamBridge {
+     async connect(){return {ok:true,log:'MOCK metadata'};}
+     async run(action:Parameters<RamBridge['run']>[0],_index:number,bands:Parameters<RamBridge['run']>[2]){
+       actions.push(action);expect(bands).toEqual(fullNinePreset());return {ok:true,log:'MOCK PROTOCOL COMPLETE bands=9'};
+     }
+   }
+   const d=startup(false,MockBridge);
+   d.nodes.preset.listeners.get('click')!();expect(actions).toEqual([]);
+   await d.nodes.connect.listeners.get('click')!();expect(d.nodes.sync.disabled).toBe(false);
+   expect(d.nodes.heardApply.disabled).toBe(true);
+   await d.nodes.sync.listeners.get('click')!();
+   expect(d.nodes.log.value).not.toContain('Error');
+   expect(actions).toEqual(['syncNine']);expect(d.nodes.heardApply.disabled).toBe(false);
+   expect(d.nodes.heardRestore.disabled).toBe(true);
+   d.nodes.heardApply.listeners.get('click')!();expect(d.nodes.log.value).toContain('audible Apply YES');
+   await d.nodes.flat.listeners.get('click')!();
+   expect(actions).toEqual(['syncNine','restoreNine']);expect(d.nodes.heardRestore.disabled).toBe(false);
+   d.nodes.heardRestore.listeners.get('click')!();expect(d.nodes.log.value).toContain('audible Restore YES');
+   expect(d.nodes.gate.textContent).toContain('Restore聽感YES');
+ });
  it('renders all nine rows and enables Connect with zero startup fetch/session calls',()=>{
    const d=startup();expect(d.nodes.bands.children).toHaveLength(9);expect(d.nodes.selection.children).toHaveLength(9);
    expect(d.nodes.connect.disabled).toBe(false);expect(d.nodes.connect.listeners.has('click')).toBe(true);
