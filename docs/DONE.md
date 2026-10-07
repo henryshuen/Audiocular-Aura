@@ -286,3 +286,11 @@ M2L Windows native evidence：input/output report bytes62、feature0，HidP_Init
 - 沒有改nativeC#、CAFserializer/190/bandmapping/coefficient/payload、Flash/90/220、production或nonFreeDSPprotocol。
 - 四份文件記錄Henry的新wire6/7hardware證據及Windowscaps/metadata的解讀限制；沒有新增.md或commit runtime log。
 - Codex本輪沒有實體HID探索或寫入；wire7 audibleRestore、wire8/9仍待Henry測試。
+
+## M2L Toggle — small manual UX patch
+Observed problem: Henry可能錯過單次Apply/Restore的瞬間聽感變化。
+Verified facts: 前次wire7Apply/Restore protocol成功；Restore聽感仍未確認，沒有已知protocoldefect。
+Fix: 手動改為A=Apply、R=Restore，可反覆切換，顯示STATE APPLIED/RESTORED；本band兩種operation各成功至少一次才接受Enter確認。
+N=no clear difference並停止；Q立即停止；不自動Restore。尚無本run操作時STATE UNKNOWN，不冒稱已還原。
+若Enter確認時仍APPLIED，接受聽感確認但停止後續bands並警示，避免累積；建議R後Enter。
+StartSdkBand1..4與TEMP完整log保留；native/CAF/190/math/mapping/payload/rate/Flash/90/220/production/nonFreeDSP未修改。

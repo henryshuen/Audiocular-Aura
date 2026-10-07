@@ -282,3 +282,11 @@ Safety firstApply判斷從SDK1改為selectedfirstSDK；每次新run從指定band
 Nativechildlauncher、operationnames、CAFflow/serializer/bandmapping/coefficient/math/payload及failurepolicy完全不變；僅manualtoolselection/summary/tests/doc變更。
 Windowsinput/output62、feature0、preparsed-ID1、SETsuccess/matchingCAF支持1ID+61data interpretation，不能當rawUSB捕捉；此證據在ROADMAP保存。
 GlobalPreamp仍另輪NOTVERIFIED；no Flash/90/220/production/nonFreeDSP changes。
+
+## M2L Toggle — small manual UX patch
+Observed problem: Henry可能錯過單次Apply/Restore的瞬間聽感變化。
+Verified facts: 前次wire7Apply/Restore protocol成功；Restore聽感仍未確認，沒有已知protocoldefect。
+Fix: 手動改為A=Apply、R=Restore，可反覆切換，顯示STATE APPLIED/RESTORED；本band兩種operation各成功至少一次才接受Enter確認。
+N=no clear difference並停止；Q立即停止；不自動Restore。尚無本run操作時STATE UNKNOWN，不冒稱已還原。
+若Enter確認時仍APPLIED，接受聽感確認但停止後續bands並警示，避免累積；建議R後Enter。
+StartSdkBand1..4與TEMP完整log保留；native/CAF/190/math/mapping/payload/rate/Flash/90/220/production/nonFreeDSP未修改。

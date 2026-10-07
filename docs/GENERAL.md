@@ -305,3 +305,11 @@ wire7是PROTOCOL VERIFIED / AUDIBLE RESTORE UNCONFIRMED，不是failed；Henry�
 OnlySdkBand不新增；保持單一resume參數與既有nativefixedoperation calls，沒有CAF/serializer/190/mapping/coefficients/payload變更。
 Logs仍TEMP/AuraPEQ、unique/raw完整保存、markers與compactsummary；runtime logs不commit；nohardware由Codex執行。
 文件仍僅GENERAL/ROADMAP/DECISIONS/DONE；此輪停在M2L-Resume ready，未知九band/preamp/production全部不開始。
+
+## M2L Toggle — small manual UX patch
+Observed problem: Henry可能錯過單次Apply/Restore的瞬間聽感變化。
+Verified facts: 前次wire7Apply/Restore protocol成功；Restore聽感仍未確認，沒有已知protocoldefect。
+Fix: 手動改為A=Apply、R=Restore，可反覆切換，顯示STATE APPLIED/RESTORED；本band兩種operation各成功至少一次才接受Enter確認。
+N=no clear difference並停止；Q立即停止；不自動Restore。尚無本run操作時STATE UNKNOWN，不冒稱已還原。
+若Enter確認時仍APPLIED，接受聽感確認但停止後續bands並警示，避免累積；建議R後Enter。
+StartSdkBand1..4與TEMP完整log保留；native/CAF/190/math/mapping/payload/rate/Flash/90/220/production/nonFreeDSP未修改。

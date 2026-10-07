@@ -31,9 +31,8 @@ describe('M2L remaining-band diagnostic boundary', () => {
     expect(wrapper).toContain('TEMP resolves inside repository');
     expect(wrapper).toContain('$writer.WriteLine($line)');
     expect(module).toContain('$results = @(1..4');
-    expect(module).toContain('ProtocolApply -ne \'PASS\'');
-    expect(module).toContain('ProtocolRestore -ne \'PASS\'');
-    expect(module).toContain('audible restoration not confirmed; stop before next band');
+    expect(module).toContain('if ($code -ne 0)');
+    expect(module).toContain('Confirm blocked: successful APPLY and RESTORE are required');
     expect(module).toContain('M2L BAND MAP SUMMARY');
     expect(module).toContain('FIRST APPLY with IEM OUT OF EARS');
     expect(module).not.toMatch(/ApplyRemainingBand0|ApplySafeRamTest|RunAs|Invoke-Expression/);
