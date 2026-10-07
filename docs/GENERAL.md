@@ -407,3 +407,16 @@ Pop evidence revised: approximately18 quiet repeatable transients per full9x2 Ap
 
 ## M2T permanent controls boundary
 Preserve original main UI and other DAC behavior. Add FreeDSP controls only with proven interface/command/field/unit/sign/range/reply evidence. Preamp of either sign, balance and mic control mappings are UNKNOWN; current adapter Tone Tilt is unsupported. Auto Preamp depends on true hardware globalgain; never emulate preamp/balance with stacked user PEQ. No silent allocation of two of nine wires to shelves. Physical mic presence, generic math symbols or simulation meters are not control evidence. Explain and disable only FreeDSP unavailable controls, clear stale display/simulated meters, keep explicit PK Sync and editor-independent unity Restore. Henry's nine-default/structure-preserving Flat UX is hardware PASS. Flash/persistence remains LAST; no speculative commands or Codex hardware tests.
+
+## UPSTREAM PR COMPATIBILITY RULE
+
+1. Development/debug UX may temporarily differ from upstream to accelerate FreeDSP validation.
+2. Before opening a PR, review every FreeDSP-specific UI/UX deviation against the original author's architecture and interaction semantics.
+3. Prefer upstream behavior whenever it does not conflict with verified FreeDSP hardware requirements.
+4. Isolate device-specific differences behind FreeDSP-specific branches/guards; do not globally change generic behavior.
+5. Do not submit debug-only pages, temporary validation controls, redundant connection entry points, or local-only experimental UX unless genuinely necessary for production support.
+6. For Reset Defaults, Reset to Flat, Tone Tilt, Preamp, Balance, Mic and storage, preserve upstream semantics for other DACs. Use FreeDSP-specific overrides only when required by verified hardware/protocol behavior.
+7. Before PR creation, perform an explicit **upstream cleanup pass**: compare fork behavior against upstream, remove temporary debug surfaces, minimize FreeDSP-specific code, preserve original naming/style, and document unavoidable architectural exceptions.
+8. The Windows native HID helper is currently a verified transport requirement for FreeDSP because browser WebHID lacks host-initiated Input GET_REPORT. Keep this exception minimal and well documented; the helper remains transport-only.
+
+Current priorities: PEQ RAM is hardware PASS. Preamp is the highest-priority unresolved feature. Next research must seek a real FreeDSP global gain/preamp control, not emulate it with PEQ. Flash/persistence stays last.

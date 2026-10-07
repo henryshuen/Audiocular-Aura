@@ -389,3 +389,17 @@ New controls require a verified FreeDSP command/interface mapping, field units/s
 ## M2T durable controls policy
 Preamp (negative and positive), per-channel globalgain/balance and mic gain/loopback/levels remain UNKNOWN; current FreeDSP adapter does not support Tone Tilt. Do not infer a master gain from command190 Gain, a balance command from LRDetect, or mic controls from generic CX2077x conversion exports/button monitoring. Pinned all-DEX/static native inventory is reproducible, but not firmware/UAC/capture evidence. Auto Preamp depends on a working hardware gain command; do not enable it as a supposed software-only feature. Preserve all nine user PK slots; no shelf allocation or nine-band balance emulation.
 Only exact35D8:1496 UI is restricted. Clear stale local Tilt/preamp display on connect, block delayed Auto Preamp activation, cancel random mic animations and explain unavailable controls. No production sender/transport/coefficients changes. UNKNOWN controls have no hardware test in the combined session; future implementation requires interface/module/command/field/sign/range/reply evidence. Original generic Flat's1000Hz collapse is explicit ea93274 behavior; retain it for other DACs. Henry reports Free nine defaults/structure-preserving Flat PASS. Flash/persistence LAST.
+
+## 2026-10-08 — UPSTREAM PR COMPATIBILITY RULE
+
+Decision: temporary development/debug UX differences are permitted to accelerate FreeDSP validation, but they are not automatically suitable for an upstream PR.
+
+1. Before opening a PR, review every FreeDSP-specific UI/UX deviation against the original author's architecture and interaction semantics.
+2. Prefer upstream behavior unless verified FreeDSP hardware requirements conflict.
+3. Keep device-specific overrides behind FreeDSP-specific branches/guards rather than changing generic behavior globally.
+4. Exclude debug-only pages, temporary validation controls, redundant connection entry points and local-only experimental UX unless genuinely necessary for production support.
+5. Preserve other DAC semantics for Reset Defaults, Reset to Flat, Tone Tilt, Preamp, Balance, Mic and storage. FreeDSP overrides require verified hardware/protocol justification.
+6. Perform an explicit **upstream cleanup pass** before PR creation: compare fork/upstream behavior, remove temporary debug surfaces, minimize FreeDSP-specific code, preserve original naming/style and document unavoidable architectural exceptions.
+7. Retain the minimal, documented Windows native HID transport exception: FreeDSP requires host-initiated Input GET_REPORT, which browser WebHID does not expose. This requirement is verified for the current FreeDSP response flow; the helper remains transport-only.
+
+Priority decision: PEQ RAM is hardware PASS. Preamp remains the highest-priority unresolved feature; seek a real FreeDSP global gain/preamp control rather than PEQ emulation. Flash/persistence remains last.
