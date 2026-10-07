@@ -357,17 +357,31 @@ Test("M2N fullnine iterates exactly once; disabled slot unity; restoreNine allun
         using var hid=new MockHid(NonMatch(190));foreach(var b in new[]{NonMatch(188),NonMatch(187),Reply()})hid.Responses.Enqueue(b);
         using var log=new StringWriter();Check(RamDebug.Run(hid,r,log,[],()=>new FakeClock())==0,"Full state");
         Check(hid.Transmissions.Count==12,"Three prerequisites+nine190 only");
+      for(int wire=1;wire<=9;wire++)Check(log.ToString().Contains($"WIRE{wire} {action} PASS"),"Per-wire protocol PASS");
         Check(hid.Transmissions.Skip(3).Select(b=>BinaryPrimitives.ReadInt32LittleEndian(b.AsSpan(14))).SequenceEqual(Enumerable.Range(1,9)),"All slots unique");
         Check(BinaryPrimitives.ReadInt32LittleEndian(hid.Transmissions[5].AsSpan(22))==4194304,"Disabled B0 unity");
         if(action=="restoreNine")Check(hid.Transmissions.Skip(3).All(b=>BinaryPrimitives.ReadInt32LittleEndian(b.AsSpan(22))==4194304),"Allunity");
     }
 });
+  Test("M2O varied fullnine preset matches all nine precomputed packets",()=>{
+      int[] frequencies=[250,400,630,1000,1600,2500,4000,6300,10000];
+      int[] gains=[-3,-4,-5,-6,-7,-8,-9,-10,-12];
+      var bands=Enumerable.Range(0,9).Select(i=>new DebugBand(i,frequencies[i],gains[i],1,"PK",true)).ToArray();
+      foreach(string action in new[]{"syncNine","restoreNine"}) {
+          using var hid=new MockHid(NonMatch(190));foreach(var b in new[]{NonMatch(188),NonMatch(187),Reply()})hid.Responses.Enqueue(b);
+          using var log=new StringWriter();var allowed=new List<byte[]>();
+          Check(RamDebug.Run(hid,new(action,0,bands),log,allowed,()=>new FakeClock())==0,"Complete preset");
+          Check(allowed.Count==9,"Nine authorized packets");
+          for(int i=0;i<9;i++)Check(hid.Transmissions[i+3].SequenceEqual(RamDebug.Packet(i,RamDebug.Calculate(48000,bands[i],action=="restoreNine"))),"Exact precomputed packet");
+      }
+  });
 Test("M2N failed/unknown rate or partial190 aborts without retries/rollback",()=>{
     using var unknown=new MockHid(Reply(9));unknown.Responses.Enqueue(NonMatch(188));unknown.Responses.Enqueue(NonMatch(187));using var log=new StringWriter();
     Check(RamDebug.Run(unknown,new("syncNine",0,Nine()),log,[],()=>new FakeClock())==7&&unknown.Transmissions.Count==3,"No190");
     using var failed=new MockHid(NonMatch(190));foreach(var b in new[]{NonMatch(188),NonMatch(187),Reply(),NonMatch(190)})failed.Responses.Enqueue(b);
     for(int j=0;j<4;j++)failed.Results.Enqueue(new(true,0));failed.Results.Enqueue(new(false,31));
     Check(RamDebug.Run(failed,new("syncNine",0,Nine()),log,[],()=>new FakeClock())==7&&failed.Transmissions.Count==5,"First190 done, second fails, no later slot");
+      Check(log.ToString().Contains("WIRE2 syncNine FAIL")&&!log.ToString().Contains("RESULT: PROTOCOL COMPLETE"),"Failure log never claims full completion");
 });
 Test("M2N bridge origin/host constraints reject external, null,127UI and other ports",()=>{
     Check(DebugBridge.AllowedOrigin("http://localhost:5173","127.0.0.1:5174"),"Exact origins");

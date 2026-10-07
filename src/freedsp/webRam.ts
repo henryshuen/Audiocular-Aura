@@ -1,6 +1,8 @@
 import type { Band } from '../main.ts';
 import { nativePeakFloat, nativeScaling, officialRateHz } from '../../scripts/freedsp/ram-semantics.mjs';
 export type RamAction = 'applyBand' | 'restoreBand' | 'syncNine' | 'restoreNine';
+export const fullNinePreset = ():Band[] => [250,400,630,1000,1600,2500,4000,6300,10000].map((freq,index)=>
+  ({index,freq,gain:[-3,-4,-5,-6,-7,-8,-9,-10,-12][index],q:1,type:'PK',enabled:true}));
 export const uiToWire = (index:number) => {
   if (!Number.isInteger(index) || index<0 || index>8) throw new Error('UI index 必須是0–8');
   return index+1;
