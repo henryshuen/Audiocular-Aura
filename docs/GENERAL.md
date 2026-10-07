@@ -243,7 +243,7 @@ Windows沒有per-call timeout參數，仍保留30s childwatchdog；freshRX及mon
 Native GetInputReport是state API，不以單一188推論FIFO、Windowscache、priorM2F來源或「GET會消耗queue」。
 硬體唯一TX仍346；Codex只做offline/build，Henry執行script一次；M2J結果PENDING，不進RAM190/Flash/production。
 
-## Current M2K policy — isolated native RAM proof
+## Historical M2K policy — isolated native RAM proof
 Henry M2J硬體回報：MI_03/col01，usagePage000C/usage0001，input/output62、feature0；SET/GET均success/error0。
 Matching346在GET#1取得：reply1/count13/CTRL B32D2300，words=[62,5,0,32,0,0,0,0,0,0,0,0,0]。
 Level1 NATIVE HID TRANSPORT VERIFIED；Level2 CAF346 QUERY VERIFIED；Level3 RAM190/EQ PENDING HENRY TEST。
@@ -260,3 +260,28 @@ Henry：APO OFF、outputFreeDSP、Windows1–2/100、首次Apply前IEM離耳、�
 任何protocol error停止，先貼完整log、不聽不重試。成功且無異常才低音量聽；比較同曲同音量，突大聲/噪聲/失衡/失真/斷線立刻停止。
 Codex本輪僅build/offline/mock，不做HID探索/硬體寫入。M2K hardware保持PENDING；Henry後續回報不自動修改docs，等待下一輪明確授權。
 文件只更新GENERAL/ROADMAP/DECISIONS/DONE，不新增.md。本輪停在M2K，禁止自動production integration。
+
+## 2026-10-07 — M2K real hardware result (Henry report)
+VERIFIED: native bidirectional CAF transport、188 matching、Windows padded187 accepted、matching346 index5=48k、matchingRAM190。
+SDK0→wire5 Apply PK400Hz/-12dB/Q1/selector0 有清楚可聽變化；同band unity Restore 有清楚可聽恢復。
+Apply與Restore的190均觀察firstGET reply0→secondGET reply1；bounded GET justified，無reSET。
+Henry描述air/ambience/reverberation減少，但未能定位400Hz；不聲稱tonal accuracy、bitexact、其他bands、九band、Flash或globalpreamp已驗證。
+M2K SINGLE-BAND RAM AUDIO EFFECT / WIRE5 APPLY-RESTORE VERIFIED。
+M2L開始：wire6–9 HARDWARE VALIDATION PENDING；Codex僅離線實作，不做實體測試。
+
+## Current M2L diagnostic policy — remaining official live bands
+M2K wire5已由Henry證實可逆可聽作用；M2L僅SDK1/wire6、SDK2/wire7、SDK3/wire8、SDK4/wire9，硬體結果仍PENDING。
+唯一手動入口scripts/test-freedsp-native-band-map.ps1，無CLI參數；不重測wire5，不接受任意numeric band/opcode/frequency/gain/Q。
+Native只接受query346及固定ApplyRemainingBand1..4/RestoreRemainingBand1..4；舊M2K ApplySafeRamTest/RestoreSafeRamTest已在探索前拒絕。
+沿用M2K400Hz/-12dB/Q1/current matching346 rate/selector0/native coefficient model；只改payload word1，不改數學，1LSB uncertainty保留。
+每band必須Apply→聽感→同band unity Restore→確認恢復，再進下一band。任何protocol failure、Q、restore聽感N/P/Q立即停止整輪。
+Apply聽感N/S仍先提供同bandRestore；成功且確認恢復後才能繼續；summary不把protocol-only或不確定當VERIFIED。
+Q不自動追加restore或retry；已Apply/partialfailure時可能仍有測試filter，必須警示並停止review，不能宣稱全局恢復。
+完整stdout/stderr、prompts/answers及summary寫到TEMP/AuraPEQ unique .log、AutoFlush；禁止TEMP解析到repo內，不commit runtime logs。
+console顯示protocol進度，完整hex/header/math保留在log；SDK/wire APPLY/RESTORE BEGIN/END markers可定位單band。
+全四band protocol與可逆聽感都pass時只貼M2L BAND MAP SUMMARY；error/timeout/disconnect/abnormal/contradictory/differing/uncertain須附相關sections。
+初始APO OFF/outputFreeDSP/Windows1–2/100/首次Apply IEM離耳/熟悉music/no tone；protocol成功且無異常後才聽，同曲同比較音量。
+第一安全round後可低volume繼續；突大聲/噪聲/失衡/失真/斷線立即Q（prompt）或Ctrl+C（command進行中），不連續試送。
+NativeoneSET/boundedGET/30schildwatchdog/failurestop不變；188/187 enable/bypass副作用及unity僅testedband說明保留。
+No Flash/220/90/production integration/non-FreeDSP changes；no unknown SDK5..8/九band研究；no preamp研究或實作。
+Global Preamp/Master Gain屬另輪UNRESOLVED/NOT VERIFIED；禁止以每個biquad乘gain模擬preamp。

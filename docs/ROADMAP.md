@@ -29,7 +29,8 @@ M2H：M2G346實測rawTotal=0/newEvents=0已回報；正常Windows Chrome的官�
 本輪僅四份docs，Case C不要求手動test；native transport屬後續另輪，M2 RAM proof仍NOT PROVEN。
 M2I：Henry實測SET346/GET成功、有效CAF188回應，Level1 native transport VERIFIED；matchingCAF346 NOT YET VERIFIED。
 M2J：Henry實測GET#1取得matching346，Level2 VERIFIED；當時index5=48k，不證明多GET必要或queue來源。
-M2K：固定native PK400Hz/-12dB/Q1 Apply與band5 unity Restore已實作；187 Windows length adapter有API依據，RAM/EQ硬體結果PENDING HENRY TEST。
+M2K：Henry實測 padded187 accepted，wire5 RAM190 Apply有明顯可聽變化、unity Restore清楚恢復；single-band RAM effect VERIFIED。
+M2L：相同濾波器只改wire6–9，互動逐段Apply/Restore；IMPLEMENTATION READY / HARDWARE VALIDATION PENDING。
 Round 0 結束時 dev server 正在執行，僅監聽 127.0.0.1:5173。
 HTTP 以 curl.exe --noproxy '*' 驗證；一般 Invoke-WebRequest 曾回傳 404，
 直接請求已確認 Vite 頁面正確，未改動系統代理設定。
@@ -44,7 +45,7 @@ HTTP 驗證只證明文件可提供，不證明瀏覽器 UI 或 WebHID 行為。
 - 實際日誌 fixture 尚無來源可建立；目前 fixture 不是硬體擷取或正確協定證據。
 - [x] NO hardware behavior assumptions；沒有裝置存取，也未開始 M2。
 
-## M2 - Single-band RAM proof — NOT PROVEN
+## M2 - Single-band RAM proof — VERIFIED for SDK0 / wire5 (M2K)
 Goal: Make ONE intentionally obvious attenuation PEQ change work in FreeDSP RAM.
 Use attenuation, not dangerous boost, for initial real-hardware testing.
 Current M2K test: PK / 400 Hz / -12 dB / Q1.0 / SDK band0→wire5.
@@ -1635,3 +1636,90 @@ Possible fix direction:
 - Shared runtime changed: NONE；Production runtime changed: NO；Non-FreeDSP protocol code changed: NO。
 - Documentation: GENERAL/ROADMAP/DECISIONS/DONE only；New documentation files created: NO。
 - verify產生的tracked dist已還原，只保留本輪intendedfiles；git diff --check通過。M2K hardware PENDING。
+
+## 2026-10-07 — M2K real hardware result (Henry report)
+VERIFIED: native bidirectional CAF transport、188 matching、Windows padded187 accepted、matching346 index5=48k、matchingRAM190。
+SDK0→wire5 Apply PK400Hz/-12dB/Q1/selector0 有清楚可聽變化；同band unity Restore 有清楚可聽恢復。
+Apply與Restore的190均觀察firstGET reply0→secondGET reply1；bounded GET justified，無reSET。
+Henry描述air/ambience/reverberation減少，但未能定位400Hz；不聲稱tonal accuracy、bitexact、其他bands、九band、Flash或globalpreamp已驗證。
+M2K SINGLE-BAND RAM AUDIO EFFECT / WIRE5 APPLY-RESTORE VERIFIED。
+M2L開始：wire6–9 HARDWARE VALIDATION PENDING；Codex僅離線實作，不做實體測試。
+
+## M2L — remaining official live-band validation
+Implementation READY / HARDWARE VALIDATION PENDING。
+|SDK band|Wire band|Current hardware status|
+|---|---|---|
+|0|5|VERIFIED M2K: matching protocol＋audible Apply/reversal|
+|1|6|PENDING HENRY|
+|2|7|PENDING HENRY|
+|3|8|PENDING HENRY|
+|4|9|PENDING HENRY|
+控制變數只有wireband，固定PK400Hz/-12dB/Q1、selector0、M2K coefficient/current346rate/nativepath。
+順序wire6 Apply→listen→wire6 Restore→confirm、wire7同樣、wire8同樣、wire9同樣；不重測wire5、不中途累積、不進unknownSDK5..8。
+New entry: scripts/test-freedsp-native-band-map.ps1；internal scripts/freedsp/BandValidation.psm1維持互動與nativechildwatchdog。
+Native old fixedwire5 operations rejected beforediscovery；八個remaining fixed operations無band/gain/freq/Q options。
+完整raw transcript自動存TEMP/AuraPEQ/freedsp-band-map-yyyyMMdd-HHmmss-GUID.log，unique/CreateNew/AutoFlush、repo內TEMP拒絕。
+Console顯示progress、protocolclassification/RESULT；fullhex/math/header均在log。Prompt與answers也保存，markers定位SDK/wire/APPLY/RESTORE。
+ENTER確認；Apply N=no、S=uncertain；Restore N=no、P=partial；Qabort不autoRestore。restore未確認停止，不送laterband。
+Failure/timeout/unknownrate/GET error停止，no listening/no reSET/no autoRestore；partialwrite可能active，summary明列。
+成功摘要判定：ProtocolApplyPASS、AudibleApplyYES、ProtocolRestorePASS、AudibleRestoreYES四條件齊備才wireVERIFIED。
+其餘protocol-only/nochange/uncertain/failed/aborted/notrun分開呈現；全四成功只貼summary，差異/矛盾/異常附相關bandsections。
+
+### Research checkpoint — M2L implementation and offline evidence
+- Examined: M2K Henry報告、officialshiftSDK0..4+5 fixture、nativefixedmodel/guard、interactivecontroller與logging/watchdog。
+- Verified facts: 42nativeoffline tests passed；11PS mocktests在WindowsPowerShell通過；所有knownrates各band只word1不同。
+- Verified facts: mock exactApply/Restorepairs、failurestop、Enter/N/S/P/Q、EOFabort、markers/compactsummary；native190 reply0→reply1 syntheticcase可matching完成。
+- Hypotheses: wire6..9是否都有可逆可聽效果尚未實測；M2K subjective描述不等同頻率響應量測。
+- Discarded hypotheses: wire5結果可代替allbands；protocolACK即audible；uncertainrestoration可繼續累積；Q可默默自動restore。
+- Unresolved fields: wire6..9 hardwareeffects/reversal、nativefinal1LSB optimum、trueglobalpreamp。
+- Next search target: finalverification/scope/Git後STOP；Henry一次interactivevalidation，不由Codex執行hardware。
+
+## Global Preamp / Master Gain — separate FUTURE milestone
+Status: UNRESOLVED / NOT VERIFIED。
+現有AuraPEQ Conexant globalgain path不是已驗證的realFreeDSPpreamp，不能由本輪band成功外推。
+禁止以乘上每個biquad的方式模擬preamp；本輪不研究、不實作。
+Later questions: officialFreeman3是否暴露trueglobal/masterDSPgain？哪個CAFcommand/module？是否獨立PEQ？可否RAM、Flashpersistence、readback？
+必須另輪官方app/static/native investigation，不綁M2Lbandvalidation。
+
+## Evidence for upstream / Issue #3
+M2K realhardware：188/187/346/190 matching，paddedWindows187accepted，346index5→48k。
+190在Apply與Restore均firstGETreply0、secondGETreply1，支持boundedGET的重要性，無SETresend。
+SDK0/wire5 selector0 PK400Hz/-12dB/Q1造成clear audiblechange，同band官方unity恢復前狀態。
+這是RAM單band可逆audioeffect證據，不證frequencylocalization、nativebitexact、所有bands、Flash、globalpreamp。
+M2L只SDK1..4→wire6..9，同coefficients只變word1，每段必須同bandrestore；implementationready、hardwarepending。
+Browserrawinputabsence/hostsend不能判firmware沒reply；nativeCAF＋audible/reversal證據已成立。Production尚未integrate，nootherprotocolchanges。
+
+### Problem / hypothesis / next action
+Observed problem:
+- wire5已證可逆audioeffect；其餘官方live slots還未實測，不能宣稱全五band可用。
+Verified facts:
+- M2K Apply/Restore matchingprotocol＋clear audiblereversal；padded187accepted；190reply0→reply1；officialSDK1..4+5mapping。
+Possible causes:
+- 若剩餘slot無效果：slot/bank/state/firmware差異或聽感不確定；本輪只controlwirefield，尚無實測失敗可歸因。
+Ruled out / weakened:
+- nativeRAM190完全無作用；padded187必被device拒絕；oneGET永遠足夠；wire5audible可外推allslots；globalgain已驗證。
+Next validation:
+- Henry只跑interactive script一次，逐bandApply/listen/Restore/confirm；全成功貼summary，異常貼對應sections，error停不retry。
+Possible fix direction:
+- 全部可逆後再另輪評估五bandproduction；若band差異則保持同filter分析該section，不加gain/bands、不進未知九band或preamp。
+
+### Failed / verified history — current
+M2F WebHID188timeout/190未送；M2G346hostsend/rawTotal0；M2Hbrowser官方GET替代不實用。
+M2I nativevalidCAF；M2J matching346/48k；M2Kwire5 matching＋audibleApply/Restore→singlebandRAMVERIFIED。
+M2Lwire6..9→PENDING HENRY，ImplementationREADY。
+
+### Research checkpoint — M2L final offline handoff
+- Examined: final native/model/CLI、interactivePSmodule、11mockcases、42nativecases、15files/125projecttests、realofflinechildstdoutpump、stagedscope準備。
+- Verified facts: nativebuild0warnings/0errors；42native及11WindowsPowerShellmocktests通過；verify.ps1 exit0；git diff --check通過。
+- Verified facts: realchildpump完整擷取OFFLINE Tests assembly43lines；production/src/dist無diff；新增文件只有code/tests，沒有.md或runtime log。
+- Hypotheses: wire6–9hardwareeffects仍未知；不從mocksummary的VERIFIED字樣推論實體結果。
+- Discarded hypotheses: EOF等於ENTER；logging/interruption後可把已跑hardware標NOTRUN；失敗可自動繼續或重試。
+- Unresolved fields: wire6–9可聽及恢復、nativefinalquantizer1LSB、truepreamp另輪。
+- Next search target: commit/push後STOP，Henry低volume按一次interactive流程，回傳compactsummary／必要bandsections。
+
+### Scope / regression check
+- FreeDSP-specific files: SafeRam.cs、Program.cs、nativeTests/Program.cs、nativeSafeRamScope.test.ts、nativeBandMapScope.test.ts、nativeBandValidation.tests.ps1。
+- Interactive test script: scripts/test-freedsp-native-band-map.ps1；internal helper: scripts/freedsp/BandValidation.psm1。
+- Shared runtime changed: NONE；Production runtime changed: NO；Non-FreeDSP protocol changed: NO。
+- Documentation changed: GENERAL/ROADMAP/DECISIONS/DONE ONLY；New documentation files: NO；Runtime log files committed: NO。
+- M2Kwire5 VERIFIED；M2LimplementationREADY，wire6–9 PENDING HENRY；no unknown9band/preamp/Flash work。

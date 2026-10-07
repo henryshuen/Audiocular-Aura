@@ -247,3 +247,24 @@
 - 官方pinned APK12method static replay與fixture完全一致；PS三scripts語法解析通過；非法CLI在裝置探索前拒絕。
 - 400Hz quantized transfer function離線計算：48k約-11.99998dB，其他knownrates約-12dB；這是數學驗證，無聽感證據。
 - 已還原本輪build產生的tracked dist；git diff --check通過，production/非FreeDSP差異NONE，M2K hardware仍PENDING。
+
+## 2026-10-07 — M2K real hardware result (Henry report)
+VERIFIED: native bidirectional CAF transport、188 matching、Windows padded187 accepted、matching346 index5=48k、matchingRAM190。
+SDK0→wire5 Apply PK400Hz/-12dB/Q1/selector0 有清楚可聽變化；同band unity Restore 有清楚可聽恢復。
+Apply與Restore的190均觀察firstGET reply0→secondGET reply1；bounded GET justified，無reSET。
+Henry描述air/ambience/reverberation減少，但未能定位400Hz；不聲稱tonal accuracy、bitexact、其他bands、九band、Flash或globalpreamp已驗證。
+M2K SINGLE-BAND RAM AUDIO EFFECT / WIRE5 APPLY-RESTORE VERIFIED。
+M2L開始：wire6–9 HARDWARE VALIDATION PENDING；Codex僅離線實作，不做實體測試。
+
+## 2026-10-07 — M2L remaining-band implementation / offline verification
+- 新增唯一互動入口test-freedsp-native-band-map.ps1與隔離BandValidation.psm1 helper。
+- Nativepayload/runner改為SDK1..4→wire6..9，固定八個Apply/Restore operation names；wire5/oldM2Koperations在探索前拒絕。
+- 係數數學未改：400Hz/-12dB/Q1、selector0/current346rate、dynamicGain/scale、feedbacksign、nearestquantization及1LSB限制。
+- 每段Apply後同段Restore；任何protocolfail/Q/restore聽感未確認停整輪；fullmarkers/prompts/answers與selfcontainedsummary已實作。
+- Runtime log使用TEMP/AuraPEQ unique/CreateNew/AutoFlush，拒絕TEMP解析至repo；沒有runtime log committed。
+- Native42離線tests通過，包括allrate/allbandonlyword1diff、fixedallowlist、reply0→reply1，以及既有M2Kfailure/math/tests。
+- WindowsPowerShell11mocktests通過，涵蓋exactpairing、allENTER、N/S/P/Q、failure/EOF/noexitcode、summary/markers/pathcontract。
+- verify.ps1 exit0：15files/125tests、TypeScript/Vite build及testtypecheck全部通過；新增scope/staticSDKmappingchecks。
+- 以OFFLINE nativeTests assembly測試真實childstdoutpump，捕捉完整42test結果；未執行hardware helper。
+- Codex無device/HID操作；src/production/non-FreeDSP code沒有變更。M2Lwire6..9 hardware全部PENDING HENRY。
+- GENERAL/ROADMAP/DECISIONS/DONE四文件已更新；未新增.md，preamp另輪NOTVERIFIED milestone已保留。

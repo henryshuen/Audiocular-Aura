@@ -244,3 +244,23 @@ Flat來源：pinned officialRamStaticEvidence.json setDefaultAvailable直接190�
 套此flat不執行官方setDefaultAvailable的多band/多selector loop；Restore不是previousEQ備份，enable/bypass state亦可能改變。
 400Hz模型固定attenuation，nearest float32 rounding接續M2E，無native32candidate搜尋，所以1LSB uncertainty保留。
 不自動90或Flash；protocol ACK與audible/restoration evidence分開。若成功但無效果，下一輪研究enable/bank/mapping/90，不放大或加band。
+
+## 2026-10-07 — M2K real hardware result (Henry report)
+VERIFIED: native bidirectional CAF transport、188 matching、Windows padded187 accepted、matching346 index5=48k、matchingRAM190。
+SDK0→wire5 Apply PK400Hz/-12dB/Q1/selector0 有清楚可聽變化；同band unity Restore 有清楚可聽恢復。
+Apply與Restore的190均觀察firstGET reply0→secondGET reply1；bounded GET justified，無reSET。
+Henry描述air/ambience/reverberation減少，但未能定位400Hz；不聲稱tonal accuracy、bitexact、其他bands、九band、Flash或globalpreamp已驗證。
+M2K SINGLE-BAND RAM AUDIO EFFECT / WIRE5 APPLY-RESTORE VERIFIED。
+M2L開始：wire6–9 HARDWARE VALIDATION PENDING；Codex僅離線實作，不做實體測試。
+
+## D031 — M2L controlled remaining-band validation
+依HenryM2Kprotocol＋Apply/Restore可逆聽感回報，wire5 SINGLE-BAND RAM AUDIO EFFECT VERIFIED；不外推頻率定位、bitexact、全bands或Flash。
+190 firstGET reply0→secondGET reply1在兩次write皆見，保留bounded GET，不reSET。padded187 accepted不等於Android USB transfer長度已擷取。
+M2L唯一變數為wire6..9，SDK1..4官方+5 mapping已保存static evidence；filter/selector/ratequery/coeffmodel/transport完全沿用。
+Native八個fixed operation names＋query346，不收numeric band；guard僅allow remainingbands固定cut/unity。wire5與舊M2K CLI退出本輪reachable write set。
+每bandApply後須samebandRestore，再由Henry確認可聽恢復；restore N/P/Q或protocol error全停止，不累積filters。
+ApplyN/S不是硬體VERIFIED，但仍容許人工確認同bandrestore；restoreYES後可進下一band，異常/不同結果附sections供review。
+Q只停止，不自動write；這避免abort/disconnect/abnormal狀態追加未授權測試。可能殘留filter明列，不能宣稱Q會還原。
+Logs用GetTempPath/AuraPEQ unique CreateNew＋AutoFlush，拒絕repo內TEMP；每bandmarkers/fullraw保留，摘要成功僅pass＋YES/YES才VERIFIED。
+互動state machine用dependency-injected protocol/answers做offline tests；真實launcher只接受八個fixed names、onechild、30s watchdog、finallycleanup。
+PS module屬隔離診斷helper，沒有新增projectdocs或production連接。GlobalPreamp/MasterGain另輪，禁止逐biquadscale模擬，不在M2L研究。
