@@ -155,3 +155,16 @@
   最終verify.ps1 exit0：TypeScript、Vite4.5.14 build、測試型別檢查、9files/65tests；原52tests保留，新增13tests。
   GENERAL/ROADMAP/DECISIONS/DONE已更新，來源inventory、命令差異、排除模型與Issue evidence pack已保存。
   本輪無硬體access/RAM/Flash寫入、GUI、自動同步、GitHub留言或非FreeDSP protocol修改。
+
+## 2026-10-07 — M2E research checkpoints
+- Phase1：起始git乾淨，baseline verify9files/65tests通過；核對現有RAM迴圈/word0/band/Gain/activation與官方Java差異。
+  官方native library保留係數函式symbols，已找到可直接靜態解析的具體入口；未載入/執行APK或native library。
+- Phase2：靜態追出JNI native callback、參數16bit布局、Gain=e+2與2^(25-Gain) scale、feedback negation、Java0..4band guard、current-rate查詢與兩張不一致rate tables。
+  已定位PK設計與native floor/floor+1量化；所有結論來自instructions，不執行native library。
+- Phase3：保存inspect-eq.py與Java/JNI/ARM64來源fixture；追完整service/enable鏈與獨立mode90入口。
+  offline float/scaling模型吻合45個Gain及225個係數的兩候選區間；沒有稱為bit-exact native converter或RAM硬體capture。
+  Byte解讀確認舊190buffer會被官方layout讀為command13/count1/錯module；runtime沒有修改。
+- Phase4：完整verify.ps1 exit0，TypeScript/Vite build與test typecheck通過，10files/73tests（新增8tests）。
+  再次靜態抽取22Java methods、9native functions、4JNI registrations，與保存JSON完全相同。
+  GENERAL/ROADMAP/DECISIONS/DONE與逐項比較、原因排序、明確限制、Issue #3 evidence pack已更新。
+  無APK/native執行、硬體access、RAM/Flash寫入、聆聽測試、production runtime或非FreeDSP protocol變更。

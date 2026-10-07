@@ -147,6 +147,12 @@ APK只可從既有證據或官方直接來源取得並作靜態資料解析，�
 來源證據恢復的serializer仍須與硬體效果分開報告；當輪禁止runtime變更時只新增離線分析／測試。
 Henry明確指定remote Git交付的研究輪次，通過verify、scope與文件檢查後，由Codex自行stage intended files、commit、push並確認乾淨工作目錄。
 
+RAM與Flash的selector/band/rate不得共用未核對的schema。SDK的band guard只證明該API範圍，
+不等於硬體band上限；未知九段RAM mapping時不得把所有band直接+5。
+固定點係數必須連同Gain/exponent一起檢查；「不同於官方量化」與「數學上無效」分開判斷，
+不能把較低精度的自洽表示直接當成零效果原因。Host write完成、vendor ACK、DSP效果分開報告。
+官方SDK也可能忽略錯誤或使用descriptor未確認的Report ID；後續FreeDSP實作不得盲目複製或繞過gate。
+
 Round 0 僅 bootstrap；不改 Conexant 協定、不操作硬體、不寫 Flash、不建立 PR。
 結束後等待 Henry 核准，再開始 M1。
 

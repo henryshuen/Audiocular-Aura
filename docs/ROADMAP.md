@@ -22,6 +22,7 @@ npm ci 回報 5 vulnerabilities（1 moderate、4 high）；未執行 audit fix �
 M0 與 M1 已完成；M2A descriptor 已由 Henry 檢查，未送 RAM。M2B 已提交；
 M2C-Research 找到官方 app helper TX/RX dump；M2D-Deep已恢復官方Java serializer，62-byte HID buffer／61-byte WebHID data邊界HIGH confidence。
 M2D只完成離線格式研究；runtime尚未修改，M2 RAM proof仍NOT PROVEN。
+M2E已追到JNI/native數學、Gain/exponent、RAM band/rate及enable/service鏈；比較與離線模型完成，實機原因尚未隔離。
 Round 0 結束時 dev server 正在執行，僅監聽 127.0.0.1:5173。
 HTTP 以 curl.exe --noproxy '*' 驗證；一般 Invoke-WebRequest 曾回傳 404，
 直接請求已確認 Vite 頁面正確，未改動系統代理設定。
@@ -69,6 +70,13 @@ Success: Henry can clearly hear the difference while all other variables remain 
 - [x] HIGH model精確重播114buffers；190有獨立來源，commit明確255；舊尺寸模型排除。
 - [ ] 官方host實際completion capture、native係數數學、短187的WebHID適配及RAM/audio proof。
 - 本輪不改runtime、不送硬體，停止於M2D-Deep。舊M2B/M2C條目保留歷史狀態，已被本輪來源證據更新。
+
+### M2E — Official RAM/EQ Semantics Reconstruction — research COMPLETE
+- [x] Flutter bridge→Java service→Freeman3→JNI→native參數/係數/Gain/符號/量化靜態追查。
+- [x] 45個Gain、225coefficients候選區間、payload/band/rate/framing的隔離模型與測試。
+- [x] Current AuraPEQ CORRECT/WRONG/UNSUPPORTED ASSUMPTION/UNKNOWN比較與零效果原因排序。
+- [ ] 九段live mapping、Dart UI排程、native精確LSB portable quantizer、短187/legacyID4/5 WebHID支持。
+- 不修改production runtime、不存取硬體；M2 RAM/audio proof仍NOT PROVEN。
 
 ## M3 - Full 9-band real-time PEQ — PENDING
 - all 9 bands
@@ -414,9 +422,17 @@ Possible fix direction:
   [HID1.11 §6.2.2.7](https://www.usb.org/sites/default/files/hid1_11.pdf)與[Android controlTransfer](https://developer.android.com/reference/android/hardware/usb/UsbDeviceConnection)支持此API邊界。
 - All114 buffers exact replay；Flash commit在DEX是long常數255（FF000000），不是-1；190來自setFreeman3EQ，word1=band+5。
   同一serializer不代表同一payload：220分metadata/coefficients/commit，259讀firmware，187只有1word，188有13words。
-- Remaining limits: 未取得July APK精確版本/hook，沒有actual completion capture；native係數/Gain數學與短187 WebHID適配未證實。
+- M2E native evidence: registered JNI callback0x27F4→CxAudioConvertEqParams2Coeffs0x2ABC→EqDesignFx0x3510。
+  Gain=e+2、scale=2^(25-Gain)，A0/A1是負的normalized a1/a2；PK Q轉BW，float32後32個近鄰量化。
+  45個Gain與225個官方words全部吻合模型的候選區間；尚非bit-exact final-neighbor converter。
+- M2E RAM:190 `[0,band+5,Gain,B0,B1,B2,A0,A1,0×5]`，SDK band0..4→5..9，current-rate346查詢，單次write；
+  Aura使用rate4..8、band1..9、五rate迴圈，且缺188/187。九段RAM mapping尚未證實，不能一律+5。
+- Strongest zero-effect explanation: 現有data按官方布局解析為command13/count1/module0x230000BE，非190/CTRL。
+  Host Sync Complete沒有vendor ACK/DSP效果證據。其次為word0錯selector及漏enable；沒有實機因果隔離。
+-90payload `[90,0,...]`值有來源，但Java190鏈無post-write90，Aura每次追加90的必要性／覆蓋效果未證實。
+- Remaining limits: 未取得July APK精確版本/hook、actual completion capture、nine-band live mapping；Dart UI排程與短187/ID4/5 WebHID適配未證實。
 - ONE optional future capture: 官方app切EQ mode一次，只抓command90的SET_REPORT提交/完成與完整payload62；
-  確认wValue0x0201/interface3、首01、61data邊界及實際長度。此輪不要求Henry執行，不送Aura候選。
+  確認wValue0x0201/interface3、首01、61data邊界及實際長度。此輪不要求Henry執行，不送Aura候選。
 - 本輪沒有發表GitHub留言。
 
 ### M2B Scope / regression check
@@ -772,3 +788,170 @@ Possible fix direction:
 - 本輪不修改src、sync、RAM sender、Flash、preamp、readback、package/test config；不操作硬體。
 - Current milestone: M2D-Deep — serializer convergence COMPLETE；M2 hardware RAM proof NOT PROVEN。
 - 固定localhost URL：http://localhost:5173/；啟動命令.\scripts\dev.ps1。本輪不啟動server、不開browser。
+
+## M2E — Official RAM/EQ Semantics Reconstruction — 2026-10-07
+起始HEAD0b37c10，工作目錄乾淨，baseline verify通過9files/65tests；Henry remote mode，本輪不存取硬體。
+
+### Research checkpoint — phase 1 current runtime / native lead
+- Examined: M2D官方APK/hash、完整Java方法資料、AuraPEQ Conexant RAM/sync/math路徑、native exported strings。
+- Verified facts: Aura RAM每band迴圈rate4..8，word0=rateIndex、word1=band.index+1、Gain固定3；沒有187/188，最後90mode0。
+  官方setFreeman3EQ word0=0，band經shift+5，Gain由native回傳，native precision參數24。
+  APK內libcxaudiodsplib_embca_jni.so保留CxAudioConvertEqParams2Coeffs、EqDesignFx、BandFxToFloat與JNI轉欄位symbols。
+- Hypotheses: RAM把Flash slot/rate schema誤用；Gain是native係數縮放資訊而非固定值；band輸入範圍需由呼叫者驗證。
+- Discarded hypotheses: 不把M2D已確定的61byte layout重新列成未定候選，不因Sync Complete認定DSP接受。
+- Unresolved fields: Java band guard/producer、sample-rate查詢來源、Gain數學、native固定點與feedback符號、90與187/188順序。
+- Next search target: 靜態ELF/ARM64解出native轉換與縮放，並追Java callers/constant arrays/輸入與enable分支。
+
+### Research checkpoint — phase 2 JNI/native scaling / RAM guard
+- Examined: pinned arm64 libcxaudiodsplib_embca_jni.so，JNI_OnLoad registration、callback0x27F4、CxAudioConvertEqParams2Coeffs0x2ABC、EqDesignFx0x3510、EqFxToFloat0x3800、Java callers/constants。
+- Verified facts: native callback完整傳sampleHz/inputParam/outputCoeff/precision24；Java flags/frequency/Q×256/gain×256進native四個16bit欄位。
+  native FX exponent e由log(maxAbsCoefficient)/ln2計算；輸出Gain=e+2，effective scale=2^(24-1-e)=2^(25-Gain)。Gain3→Q22，Gain2→Q23。
+  native明確negate兩個denominator coefficients，B不反號；feedback符號方向與Aura相同，但固定Q22/Gain3不是一般公式。
+  PK的Q會轉bandwidth再計算alpha；float32 coefficients經32種floor/floor+1近鄰選擇（整數仍可+1），不是單純Math.round。
+  handleSySendEqParams直接把Flutter band交EQParam，沒有減1；Freeman3 set/getEQParam接受0..4，shift+5→5..9。
+  不能把此5-band即時SDK API當成已證實9-band RAM mapping；setDefaultAvailable另外清0..9與word0=0/1。
+  FREQ_SAMPLE_RATE包含44100；SAMPLE_RATE_ARRAY的index4卻寫44000，兩張表不同，不能混用。
+  getCurSampleRate由command346 [62,0×12]回應word1取index；RAM只算一次/current，fallback為caller sampleRate48000。
+- Hypotheses: 190word0可能channel/target selector（初始化用0/1），沒有field name，不命名成rateIndex。
+- Discarded hypotheses: 190word0可直接使用Flash rate4..8、九band一律+5、Gain總為3、precision24等同Q24、全rate RAM更新。
+- Unresolved fields: exact native最後LSB量化、nine-band live API、Dart UI呼叫次序、legacy EQ enable ID4/5在target descriptor的可用性。
+- Next search target: 重建native量化並與45組官方係數比較；追SvcModClient/Service EQ enable與90路徑，保存可重現來源。
+
+### Research checkpoint — phase 3 complete native boundary / independent replay
+- Examined: Flutter UsbDeviceHandler→SvcModClient→FreemanController→FreemanSession→FreemanCnxtUsbDevice；native registration/JNI callback/struct/float design/exponent/32candidate quantizer。
+- Verified facts: 45組Gain全部吻合離線模型；225係數全部位於native對應的兩個整數候選內，包括24bit signed feedback反號。
+  實際native先floor與floor+1再反號，不能把整數只保留一個ceil/floor候選。
+  現有builder按官方WebHID布局解讀，190會成command13、count1、module0x230000BE，並不是190/CTRL；新增byte解讀測試。
+  Service的setEQ先getEQEnabled，必要時setEQEnabled(true)（legacyGETID5/SETID4），再進Freeman3CAF188/187/346/190。
+  setEQParam路徑沒有post190的90；mode90由獨立Flutter preset方法/Service command提供。不能宣稱每次190後必須90。
+  libapp.so為12,649,432byte Dart AOT，只有snapshot exports、無debug sections；UI事件先後未恢復。
+- Hypotheses: selector0/1可能channel；90在每次write後可能重載preset，但firmware效果未證實，不作fact。
+- Discarded hypotheses: 固定Gain3/Q22普遍正確、每rate更新RAM、現有Host Sync Complete=vendor ACK/DSP生效。
+- Unresolved fields: native最後1LSB候選挑選尚未在portable helper逐bit重現；nine-band live mapping、legacyID4/5/短187的WebHIDdescriptor支持、Dart UI排程。
+- Next search target: 完成逐項狀態表/零效果原因排序與具體fix plan，驗證後自動Git交付；不實作runtime。
+
+### Full real-time EQ call chain and native arguments
+完整方法與instruction addresses見tests/freedsp/fixtures/officialRamStaticEvidence.json及officialRamEvidence.md。
+Source仍為M2D同一官方APK/hash；本輪不另外假設JNI CAF serializer。
+
+Flutter handleSySendEqParams直接讀band/freq/gain/q，filterType=0，sampleRate fallback48000
+→SvcModClient.getUsbEQ→FreemanController.setEQParam→FreemanSession.executeCommand
+→getEQEnabled／必要時setEQEnabled(true)→FreemanCnxtUsbDevice.setEQParam。
+Freeman3 branch接受band0..4；首次CAF enable順序188[1,0×12]、187[0]
+→getCurSampleRate command346[62,0×12]（回應word1為index）
+→native conversion→190[0,band+5,Gain,B0,B1,B2,A0,A1,0×5]→helper ACK。沒有Java post190的90。
+
+Eq2Coeff native method `(I,Object,Object,I)I`＝sampleHz、EQBandParam input、CX2070xBandEQCoeffs output、precision24。
+Registered callback0x27F4；native input struct是flagsU16/frequencyU16/QrawU16/gainRawS16（共8bytes），
+Java先int(q×256)/int(gain×256)朝零截斷。JNI寫native coeff五signed-int及Gain byte，再由Java long[] serializer寫32bits。
+Native C函式0x2ABC呼叫EqDesignFx、EqFxToFloat與pole check；Java遇conversion result非0回傳null。
+輸出FX exponent e→Gain=e+2；scale=2^(24−1−e)=2^(25−Gain)。Gain3Q22、Gain2Q23。
+Feedback A0/A1是−normalized a1/−normalized a2；native明確反號，B保留原符號，24bit負數向32bit延伸。
+
+PK alpha不是Aura簡單sin(w)/(2Q)：native將Qraw/256轉BW=float32((2/ln2)asinh(1/(2Q)))，
+alpha=sin(w)sinh((ln2/2)BW w/sin(w))，gainRaw/256進A=10^(g/40)，normalize後float32。
+Quantizer對五coeff先float32×scale，再32種floor或floor+1組合，clip±(2^23−1)、穩定pole檢查及三probe響應評估；
+反號在量化後。離線helper重建float/scale/候選區間，不宣稱精確重建最後候選挑選；全部225words均在兩候選內。
+Q22/Gain3是自洽特例，較低精度本身不能解釋完全無效果；但大的boost/shelf係數可能超出signed24。
+
+### Band / sample-rate / activation boundaries
+- 官方即時SDK五band0..4→wire5..9，setter/getter guards一致；Flutter bridge沒有減1。
+  Flash九band1..9與初始化slots0..9不等於九段live mapping。未知硬體mapping不能用「全部+5」取代。
+-190word0固定0；初始化使用0/1，符合channel/target假說，但沒有權威欄位名稱；確定不能當Flash rate4..8。
+- RAM只根據current index4..8選44100/48000/96000/192000/384000之一；query失敗或超範圍回caller48000。
+  FREQ_SAMPLE_RATE實際為44100；另一張config/readback SAMPLE_RATE_ARRAY index4錯寫44000，不能混成一張表。
+- Service的legacy enable：GET inputID5/6bytes；canUpdate最多三次檢查；enable SET outputID4/interface3
+  `[04,40,01,11,C8,03]`。Henry descriptor未提供ID4/5支持，不能現在移植到WebHID。
+- CAF188結果設enable flag；187的結果被忽略，source仍可能繼續190。FreemanSession亦丟掉setEQParam錯誤。
+  不能把官方UI/service成功當成vendor ACK，後續實作須改善錯誤傳遞，而非照抄。
+-90是獨立preset selection `[90,index,0×11]`；Flashsource確認0是custom。
+  190路徑沒有呼叫90；Dart libapp.so是無debug的AOT snapshot，UI是否另排90未恢復。
+  「90會重載Flash覆蓋RAM」只是候選解釋，沒有firmware或實機證據，不列為confirmed defect。
+- First getEQParam可能query442並對較新FW做selector0/1、slots0..9 flat reset；不是每次同步必要操作，不能複製reset。
+
+### Current AuraPEQ comparison
+Status針對該列明確範圍。CORRECT只表示source/schema/數學一致，不表示硬體已通過。
+
+| Area | Official app behavior | Current AuraPEQ | Status | Likely impact |
+| --- | --- | --- | --- | --- |
+| 精確VID/PID辨識 | res/qc.xml→Freeman3 | 35D8/1496→CONEXANT | CORRECT | 沒有走錯SAVITECH的正常FreeDSP分支 |
+| Report ID/容量 | external1/data61 | external1/data61但內又含ID/U16 prefix | WRONG | 全部命令vendor欄位偏移，最高零效果候選 |
+| RAM command number |190 |190呼叫值 | CORRECT | 正確opcode選擇；實際framing解讀不是190 |
+| CTRL module數值/LE | B32D2300字元packing | 數值/LE相同，offset錯 | CORRECT value / WRONG placement | DSP dispatch可失敗 |
+| RAMword0 | 固定0，初始化另有1 | Flash rate4..8 | WRONG | 寫錯target selector，可能全部忽略 |
+| RAMband | SDK0..4→5..9 | Aura0..8→1..9 | WRONG for proven SDK path | 不同stage；九段完整對應仍UNKNOWN |
+| rate Hz表4..8 |44100/48000/96000/192000/384000 | 相同 | CORRECT literals | 無須把44100改44000 |
+| RAM rate選擇/次數 |346 current lookup、一次；fallback48000 | 不查current，五次 | WRONG | 無效selector或反覆覆蓋；不能稱更新所有rates |
+| Gain來源/scale | native e+2，2^(25−Gain) |3及2^22 | UNSUPPORTED ASSUMPTION | 可自洽，但未動態防24bit溢位；不獨立證明零效果 |
+| B/feedback符號 |B原號，A0=−a1/A1=−a2 |相同 | CORRECT | 不是「feedback少反號」問題 |
+| signed word packing | native24bit係數sign-extended32 | JS int32 LE | CORRECT packing / UNKNOWN range safety | 不保證所有boost值在24bit內 |
+| PK Q/math/rounding | Q/gain先trunc256；BW alpha；float32+32候選 | 原double Q/gain、普通RBJ alpha、Math.round | WRONG as exact SDK reconstruction | 曲線/LSB不同，較不像完全零效果 |
+| filter enum PK/LS/HS | nativeflags0/1/2；Flutter即時入口只PK0 |0/1/2 metadata；RAM有PK/LSQ/HSQ math | CORRECT enum / UNKNOWN full math equivalence | 非PK尚未重建完整native量化 |
+| RAM13words/零尾 |13words、尾5zero |相同 | CORRECT schema capacity | 不能修復header/selector |
+| 首次188/187 |先188enable再187EQCFG，另有legacy enable |完全沒有 | WRONG omission relative to source | DSP可能仍bypass；WebHID適配未證實 |
+|90payload/mode0 |[90,0,...]custom有來源 |同值 | CORRECT payload | framing仍錯 |
+|90後置順序 |Java190路徑無post90；獨立preset入口 |sync尾與realtime batch尾強制90 | UNSUPPORTED ASSUMPTION | 可能重載preset，效果UNKNOWN |
+|成功/ACK |lower CAF解析reply/count；上層service可能丟錯誤 |只await host send，Sync Complete | WRONG success interpretation | 無效payload也可能顯示完成 |
+| output→feature fallback |CAF SET_REPORT outputID1 |失敗後無條件featureID1 | UNSUPPORTED ASSUMPTION | descriptor沒證明feature支持，不是vendorACK |
+| preamp |本輪未追到Freeman3獨立master命令 |只存state | UNKNOWN command / CORRECT description as no-op | 不能調硬體preamp；不解釋非零band EQ完全無效 |
+| readback |官方getEQParam/446、Flash477等 |從local state恢復，不解析DSP EQ | UNSUPPORTED ASSUMPTION if called device state | flat UI不代表DSP flat，未改readback |
+| A/B |nativepreset有index，沒有Aura A/B硬體slot證據 |切localprofiles並sync | UNKNOWN physical slot semantics | 應以有效RAM更新驗證，不把UI切換當硬體slot切換 |
+| Flash metadata |gain朝零截整數，Qtrunc256 |gain×256、Qround256 | WRONG | 影響保存metadata，非RAM零效果主因 |
+| Flash rate/band/commit |rate4..8/band1..9，commit255 |same rate/band，但commit−1/Gain3 | CORRECT indices / WRONG commit / UNSUPPORTED fixed precision | 本輪不修Flash |
+
+### Ranked explanations for zero audible effect
+1. **最高：錯誤framing/dispatch。** 有確定byte證據：現有190在正確layout解讀為command13/count1/module0x230000BE；
+   真正190/CTRL未在正確欄位。Host成功不等於DSP接受。沒有硬體因果實驗，因此稱最強候選，不稱已實測根因。
+2. **高：RAMword0誤用Flash rate4..8。** 官方runtime0、初始化0/1；target selector非法可使全部寫入無效。
+3. **中高：漏188/187及可能legacy EQ enable。** 直接缺少官方enable鏈，但ID4/5/187在WebHID可用性未知。
+4. **中：band mapping不符與九band泛化。** 官方五band5..9，Aura1..9有部分重疊，不獨立證明全部無效。
+5. **較低／未證實：post-write90重載preset。** Java無此步驟；firmware可能覆寫RAM，但無直接效果證據。
+6. **較低：math/precision/active-rate差異。** 可改曲線或溢位；Q22/Gain3在attenuation範圍自洽，不能把差異當零效果根因。
+Flashmetadata/commit與無preamp命令不列為本次RAM sync零效果的首要解釋。
+
+### Exact future runtime fixes / remaining gates
+本輪沒有實作下列production變更。未來只在FreeDSP path，新的邏輯放src/freedsp/，共享caller只接線：
+1. 完整重建正確61data（0、packed、CTRL、13words），ReportID外傳；不裁切舊截尾buffer。
+2. RAMword0固定已證實selector0；不要把Flash rate loop搬來；query346選一次currentHz，有明確fallback/error政策。
+3. 已證實SDK五band用0..4→5..9。九段UI不能全部+5；需另證九段live mapping，未證實band拒絕/停用，不靜默丟段。
+4. native-compatible conversion：參數trunc256、PK BW formula、float32、dynamicGain/scale、signed24 bounds、feedback符號、近鄰量化。
+   exactLSB quantizer可依保存native instructions另port；PK之外也要獨立fixtures，不能改共享RBJ公式影響其他DAC。
+5. 首次enable按188/187來源處理，但短187及legacyID4/5須先確認WebHID descriptor/transfer可行性；不猜padding/fallback。
+6.90 preset selection與RAM寫入分開；沒有證據時不把post190強制90當必要commit，不宣稱mode0會/不會覆蓋RAM。
+7.等待vendor reply，檢查command/module/reply/count及timeout，把host-write成功和DSP ACK分開；官方SDK丟錯誤不可照抄。
+8. Flash的commit255/metadata gain修正屬另輪Flash範圍，本輪只記錄；preamp/readback不附帶擴張。
+
+### Explicit answers
+1. Command190 definitely correct? **YES for official Freeman3 RAM opcode**，不代表當前bytes被DSP辨成190。
+2. Current Aura RAM190 payload correct? **NO**：word0、band mapping、current-rate策略與enable鏈不符，另有framing錯誤。
+3. Band mapping correct? **NO for proven0..4→5..9 SDK API**；完整九段RAM mapping仍UNKNOWN。
+4. Sample-rate mapping correct? **Hz literals YES；RAM selector/五rate loop NO**。current346查詢缺失。
+5. Coefficient scaling/sign correct? **feedback sign YES；Q22/Gain3是自洽特例但普遍假設未證實；exact SDK math/rounding NO**。
+6. Command90 activation correct? **opcode/payload/custom0 YES；framing NO；post190必要性/效果UNKNOWN**。
+7. Single most likely zero-effect reason? **錯誤CAF framing，命令/module不是190/CTRL，而Sync Complete只證明host promise完成。**
+8. Exact runtime fixes? 上述1–7；九段mapping、短187/ID4/5與native最後LSB保留明確gate，不能假裝全部已可安全實作。
+
+### Problem / hypothesis / next action
+Observed problem:
+- Henry報告Sync Complete但無可聽差異；本輪不操作硬體。現有buffers與官方布局/190語意不符。
+Verified facts:
+- 完整Java→JNI/native鏈、SDKband0..4→5..9、單一current-rate、188/187、Gain/scale/sign、45Gain/225words、錯command13解讀。
+Possible causes:
+- 依上述排序：framing、wrongselector、漏enable、band泛化、post90、math；不是已測量的硬體因果排序。
+Ruled out / weakened:
+-190opcode本身不是錯；feedback反號方向相符；Gain3/Q22差異不能單獨證明無效；五rate RAM假說無來源支持。
+Next validation:
+- 本輪完成無硬體verify與自動commit/push；下一輪授權FreeDSP-specific實作前，先解九段mapping及短enable descriptor gate。
+Possible fix direction:
+- 優先修serializer/190selector及ACK，再依可證band/current-rate/native模型接FreeDSP-only path；不附帶Flash/preamp/readback或其他DAC改動。
+
+### Research checkpoint — phase 4 verified offline delivery
+- Examined: final comparison table、8explicit answers、production scope及全部自動驗證。
+- Verified facts: verify.ps1 exit0；10files/73tests及TypeScript/build通過；8個新tests保留原有65tests。
+  pinned APK再次抽取22Java methods、9native functions、4JNI registrations，保存JSON完全相同。
+  45Gain/225係數候選區間來自既有官方Flash dump交叉驗證，不是新RAM190 capture。
+- Hypotheses: framing/dispatch為最強零效果候選；未進行硬體因果驗證。
+- Discarded hypotheses: 固定Q22/Gain3的差異本身足以證明完全無效果；SDK五band等於已證九段mapping。
+- Unresolved fields: 九段live mapping、最終量化neighbor、Dart UI排程、ID4/5及短187的WebHID支持。
+- Next search target: 本輪停止於M2E；下一輪須獲授權再處理FreeDSP-only runtime fixes與上述gates。
+- Scope: docs及FreeDSP offline scripts/tests/fixtures；shared runtime NONE；non-FreeDSP protocol NO；no hardware access。

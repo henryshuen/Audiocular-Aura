@@ -108,3 +108,16 @@ command190須依setFreeman3EQ獨立來源；commit須依官方long常數255，�
 Native Gain是signed byte、coeff fields是signed int，轉Java long後統一寫低32bits；不是mixed-width wire fields。
 precision24這個JNI參數不單獨證明Q24或Q22；未確認native數學前不改共享係數公式。
 187只有1word、188有13words，對短187不能憑容量補zero後宣稱WebHID已支持。
+
+## D020 — RAM semantics require caller and native provenance
+190使用官方即時caller的selector0、band0..4→5..9與current sampleHz；不能把Flash rate4..8/band1..9直接重用。
+這個五band SDK限制不證明FreeDSP硬體只有五band，也不授權把九band通通加5。
+native precision24搭配Gain=e+2，effective coefficient scale為2^(25-Gain)；固定Q22/Gain3只是一個特例。
+Feedback反號與B原符號分開核對；native16bit參數與32bit傳輸word不得混為同一struct。
+
+## D021 — Representation mismatch is not hardware causality
+Q22/Gain3在native inverse scale公式與signed24範圍內可自洽；動態Gain2/Q23提高精度，
+不能把與SDK不同就直接定為無效或零效果。固定Q22在大係數時可能超出24bit，需動態縮放/範圍檢查。
+現有framing按官方布局解讀會成command13/count1/錯CTRL，是最強零效果候選，但仍非實機因果實驗。
+188/187與current-rate190來自可追溯Java鏈；mode90是獨立preset入口，190後強制90的必要性與效果未證實。
+Service legacyID4/5與短187的WebHID支持未知，未取得descriptor證據不得嘗試；first-read flat初始化不可盲目複製到sync。
