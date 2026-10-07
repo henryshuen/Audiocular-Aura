@@ -121,3 +121,12 @@ Q22/Gain3在native inverse scale公式與signed24範圍內可自洽；動態Gain
 現有framing按官方布局解讀會成command13/count1/錯CTRL，是最強零效果候選，但仍非實機因果實驗。
 188/187與current-rate190來自可追溯Java鏈；mode90是獨立preset入口，190後強制90的必要性與效果未證實。
 Service legacyID4/5與短187的WebHID支持未知，未取得descriptor證據不得嘗試；first-read flat初始化不可盲目複製到sync。
+
+## D022 — M2F is a controlled diagnostic, not production replacement
+Henry已授權單段manual hardware test。診斷使用官方CAF envelope及selector0/wire5，不替換正常sync或Flash。
+187固定report適配保留logical count1，以零padding補到61data；這是本輪明確實驗例外，
+不是來源已證的Android短transfer等價性。matching reply缺失時停止，不改framing、不fallback feature、不重試。
+WebHID input events與官方GET_REPORT結果是否相同亦待硬體證據；未確認legacyID4/5維持不送。
+只採current-rate346有效index4..8；不猜fallback。Native最後neighbor未精確移植，nearest rounding明確標記，
+以signed24/穩定pole與離線頻率響應測試約束固定衰減設定。Flat只清測試band，並非備份restore。
+ACK不等同可聽EQ生效；Henry回報前M2F hardware proof保持PENDING。mode90獨立手動，首次測試不使用。

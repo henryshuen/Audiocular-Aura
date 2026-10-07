@@ -23,6 +23,7 @@ M0 與 M1 已完成；M2A descriptor 已由 Henry 檢查，未送 RAM。M2B 已�
 M2C-Research 找到官方 app helper TX/RX dump；M2D-Deep已恢復官方Java serializer，62-byte HID buffer／61-byte WebHID data邊界HIGH confidence。
 M2D只完成離線格式研究；runtime尚未修改，M2 RAM proof仍NOT PROVEN。
 M2E已追到JNI/native數學、Gain/exponent、RAM band/rate及enable/service鏈；比較與離線模型完成，實機原因尚未隔離。
+M2F單段官方格式診斷已實作；Henry手動硬體結果PENDING，正常production runtime未更換。
 Round 0 結束時 dev server 正在執行，僅監聽 127.0.0.1:5173。
 HTTP 以 curl.exe --noproxy '*' 驗證；一般 Invoke-WebRequest 曾回傳 404，
 直接請求已確認 Vite 頁面正確，未改動系統代理設定。
@@ -77,6 +78,12 @@ Success: Henry can clearly hear the difference while all other variables remain 
 - [x] Current AuraPEQ CORRECT/WRONG/UNSUPPORTED ASSUMPTION/UNKNOWN比較與零效果原因排序。
 - [ ] 九段live mapping、Dart UI排程、native精確LSB portable quantizer、短187/legacyID4/5 WebHID支持。
 - 不修改production runtime、不存取硬體；M2 RAM/audio proof仍NOT PROVEN。
+
+### M2F — First controlled hardware RAM proof — implementation READY / hardware PENDING
+- [x] 官方CAF61data／externalID1、reply parser、matching ACK/timeout、精確descriptor gate。
+- [x] 單段selector0／SDKband0→wire5、current346、188/187/190、動態係數與same-band flat。
+- [x] DEV診斷頁手動控制，移除舊九段framing探測；Flash/production paths未改。
+- [ ] Henry connection/apply/listening/restore logs；RAM proof不可提前完成。
 
 ## M3 - Full 9-band real-time PEQ — PENDING
 - all 9 bands
@@ -434,6 +441,16 @@ Possible fix direction:
 - ONE optional future capture: 官方app切EQ mode一次，只抓command90的SET_REPORT提交/完成與完整payload62；
   確認wValue0x0201/interface3、首01、61data邊界及實際長度。此輪不要求Henry執行，不送Aura候選。
 - 本輪沒有發表GitHub留言。
+
+### M2F controlled diagnostic evidence / hardware pending
+- 新diagnostic codec與114個既有官方helper buffers逐byte相同；外部ID1/data61、packed1、CTRL5、words9。
+- Exact sequence:188[1,0×12]→187[0]→346[62,0×12]→190[0,5,Gain,B0,B1,B2,A0,A1,0×5]。
+  每步matching command/reply1/CTRL/count有效後才繼續；346要求word1 index4..8；只算一次current-rate。
+-187是logical helper14，診斷保留count1並補零到固定61data；此WebHID傳輸適配是明確M2F實驗，尚未證實hardware等價性。
+- Native-compatible float/BW/parameter trunc/Gain/scale/sign；最後32-neighbor optimizer尚未移植，以nearest rounding作診斷近似。
+- 首次sequence不含90，也不含descriptor未知的legacyID4/5。control-transfer GET_REPORT與WebHID input event是否同樣提供reply未證實。
+- Hardware result PENDING：沒有新packet由Codex送到硬體；ACK與聽感必須Henry實測。
+- Upstream evidence只保存於repo，未發布Issue comment。
 
 ### M2B Scope / regression check
 - FreeDSP-specific files changed: src/freedsp/conexantReconstruction.ts、tests/freedsp/conexantReconstruction.test.ts、tests/freedsp/fixtures/henryM2ADescriptor.ts。
@@ -955,3 +972,45 @@ Possible fix direction:
 - Unresolved fields: 九段live mapping、最終量化neighbor、Dart UI排程、ID4/5及短187的WebHID支持。
 - Next search target: 本輪停止於M2E；下一輪須獲授權再處理FreeDSP-only runtime fixes與上述gates。
 - Scope: docs及FreeDSP offline scripts/tests/fixtures；shared runtime NONE；non-FreeDSP protocol NO；no hardware access。
+
+## M2F — First controlled RAM hardware proof — ready for Henry / proof PENDING
+### Problem / hypothesis / next action
+Observed problem:
+- 正常sync只證host send，尚無正確190/CTRL ACK與可聽結果。M2F用單段診斷隔離，不修正常production。
+Verified facts:
+- 新codec逐byte重播114個官方helper buffers；13word190解讀回190/count13/CTRL，全部words保留。
+- WebHID外部ID1、61data、helper62；input/output61descriptor gate在open/send前檢查。
+- Safe test與flat均188→187→346→190；190固定word0=0、word1=5，單一current rate4..8；不自動90。
+- ACK需ID1/61bytes/prefix0/有效count/reply1/同command/CTRL；346至少兩words，word1為rate index。
+- 每command2500ms deadline，HOST SENT/ACK/MISMATCH/TIMEOUT/SEND ERROR分開；secondaryID不當CAF ACK；listener清理。
+- 係數由M2E模型、參數trunc256、PK BW formula、dynamic Gain/scale/feedback sign產生；nearest rounding為明確近似。
+- verify.ps1 exit0：11files/94tests、TypeScript/Vite build與test typecheck通過；新增21tests，原73tests保留。
+- localhost root、freedsp-debug.html、兩個diagnostic TS modules及離線model HTTP200；只驗證可提供，不宣稱瀏覽器或硬體成功。
+Possible causes:
+-187短transfer與固定61padding未必等價；CAF控制GET_REPORT回應未必送到WebHID input event。
+- 未加入ID4/5 legacy enable或獨立mode90，可能影響EQ active state；不為了聽感盲目加命令。
+- Native最後1LSB選擇尚未完全移植；五rate離線quantized poles穩定，1000Hz接近-12dB，頻率網格無實質boost。
+Ruled out / weakened:
+- 新診斷190不再解析成13、不截尾、不寫Flash rate selector、不做九段/五rate迴圈；host完成不再當ACK。
+Next validation:
+- Henry低Windows音量、IEM先離耳、關閉其他control頁，開http://localhost:5173/freedsp-debug.html。
+- 按Inspect/connect，核對descriptor後勾安全條件；按Apply SAFE TEST，完整ACK後低音量比較。
+- 按Restore tested band to FLAT，完整ACK後以相同來源/音量比較。第一次不按獨立mode90；DO NOT USE FLASH。
+- 任一STOP/TIMEOUT/MISMATCH停止，回報完整logs與聽感，勿自動重試或以拔插當保證restore。
+Possible fix direction:
+- 依第一個失敗command／ACK／聽感結果隔離transport、enable及RAM語意；本輪不繼續production fixes。
+
+### Research checkpoint — diagnostic implementation / verified delivery
+- Examined: M2E source、現有DEV頁、官方helper fixtures、mock input events與固定衰減響應。
+- Verified facts: production14modules build未加入診斷；11files/94tests通過、HTTP route/module提供成功；Codex沒有硬體access。
+- Hypotheses: 正確framing/selector/188187可讓單段RAM生效；187適配與WebHIDreply delivery待Henry驗證。
+- Discarded hypotheses: 必須九段全寫、五rate全寫、自動post19090、host send即DSP success。
+- Unresolved fields: hardware ACK/聽感/flat return、187 padding、GET_REPORT vs input events、legacyenable與exactnativeLSB。
+- Next search target: 等Henry回報；硬體proof保持PENDING。
+
+### Scope / regression check
+- FreeDSP-specific files: src/freedsp/officialRamProof.ts、src/freedsp/debugPage.ts、freedsp-debug.html。
+- Analysis/test files: tests/freedsp/officialRamProof.test.ts。
+- Shared files: docs/GENERAL.md、ROADMAP.md、DECISIONS.md、DONE.md；shared runtime NONE。
+- Production runtime changed: NO。
+- Non-FreeDSP protocol code changed: NO。

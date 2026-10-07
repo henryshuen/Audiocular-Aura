@@ -163,7 +163,7 @@ Pure packet tests 不載入 src/dsp.ts、UI、navigator.hid 或真實裝置。
 傳輸測試只注入記憶體 fake，檢查 reportId、原始 data 與 fallback／錯誤傳遞。
 測試環境基準為 Node 24；Vitest 4.1.11 的最低支援版本由其 engines 限制。
 
-## Manual FreeDSP diagnostics / RAM probe
+## Historical M2A manual diagnostics / RAM probe
 M2A 診斷只在 Vite 開發模式的 freedsp-debug.html 啟用，與主程式自動連線／回讀路徑隔離。
 先拔除 FreeDSP，在 localhost 點「FreeDSP M2A 診斷（手動選取／RAM）」進入同一頁籤，
 關閉其他 AuraPEQ 頁籤後才連接硬體。裝置只能透過手動 requestDevice 精確選取 VID/PID。
@@ -182,3 +182,15 @@ Flat 與 attenuation 只對選定的一個取樣率送九組係數與既有 mode
 這是固定其餘變數，不是九段功能或多取樣率驗證。不能宣稱傳輸成功就是 RAM EQ 成功。
 Henry 手動維持相同來源、Windows 極低音量、framing 與播放取樣率；停用 Equalizer APO，
 第一次套用時不佩戴 IEM。不得寫 Flash、使用正增益或依賴 preamp；發生錯誤立即停止。
+
+## Current M2F controlled RAM proof
+M2F取代診斷頁的舊CURRENT/candidate九段測試；正常production sync仍不變。
+僅DEV頁、手動操作、精確VID35D8/PID1496及input/output ID1各61bytes；無連線自動命令。
+只對selector0／SDKband0→wire5送PK1000Hz/-12dB/Q0.7或同段flat；不試未知bands、不寫Flash/preamp。
+使用188→187→346→190，每步等待CAF matching reply，host send成功不能宣稱DSP成功。
+本輪明確授權187適配實驗：保留官方count1與單word0，補零到固定61data，記錄logical helper14及transport helper62；
+這不是已證明的官方短transfer等價性。若無matching ACK即停止，不改count、不猜framing或feature fallback。
+不嘗試未確認ID4/5；不自動mode90。90只保留獨立手動診斷，第一次三步測試不按。
+未知current rate不猜48000；係數dynamic Gain/scale，保留native最終neighbor未移植的限制。
+Henry以低Windows音量、IEM先離耳測試，維持相同來源/音量；flat不是完整原設定備份。
+硬體ACK、聽感與flat返回均須Henry回報；不得以mock tests提前標記RAM proof完成。

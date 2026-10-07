@@ -168,3 +168,14 @@
   再次靜態抽取22Java methods、9native functions、4JNI registrations，與保存JSON完全相同。
   GENERAL/ROADMAP/DECISIONS/DONE與逐項比較、原因排序、明確限制、Issue #3 evidence pack已更新。
   無APK/native執行、硬體access、RAM/Flash寫入、聆聽測試、production runtime或非FreeDSP protocol變更。
+
+## 2026-10-07 — M2F controlled diagnostic implementation
+- Baseline起始working tree乾淨、fix/freedsp-conexant、M2E69c5532；verify10files/73tests通過。
+- 新增FreeDSP專用officialRamProof codec、CAF RX parser與ACK/timeout transport，診斷頁改為單段manual test/flat。
+- Wire schema固定selector0/band5；188/187/346/190依序ACK gating，無五rate loop、無自動90/Flash/legacyID4/5。
+- 新增114buffers獨立重播、mock ACK/mismatch/timeout/scope tests、五rate穩定pole與衰減頻率響應檢查。
+- GENERAL/ROADMAP/DECISIONS/DONE記錄187固定report實驗、native最後neighbor限制與Henry hardware結果PENDING。
+- Codex未連接或寫入硬體、未做聆聽測試；production DSP與non-FreeDSP protocol無變更。
+- 最終verify.ps1 exit0：11files/94tests（新增21tests）、TypeScript/build/test typecheck全部通過。
+- 既有dev.ps1已啟動localhost:5173；root/debug HTML/diagnostic TS modules/model HTTP200。
+  HTTP檢查不觸發HID，沒有稱為瀏覽器互動或硬體proof；等待Henry手動回報。
