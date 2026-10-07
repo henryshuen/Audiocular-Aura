@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FreeDSP M2A 診斷</title>
+  <style>
+    :root { color-scheme: light dark; font: 16px/1.6 system-ui, sans-serif; }
+    body { max-width: 960px; margin: 2rem auto; padding: 0 1rem; }
+    button, select { font: inherit; padding: .45rem .65rem; margin: .3rem; }
+    fieldset { margin: 1rem 0; } pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+    textarea { width: 100%; min-height: 18rem; box-sizing: border-box; font-family: monospace; }
+    [hidden] { display: none !important; }
+  </style>
+</head>
+<body>
+  <h1>FreeDSP M2A：descriptor 與 RAM 探測</h1>
+  <p>僅限 VID 0x35D8 / PID 0x1496。此頁不自動連線、不回讀 DSP、不寫 Flash 或 preamp。</p>
+  <p>先關閉其他 AuraPEQ 頁籤，停用 Equalizer APO、Windows 音量調到極低，第一次套用時不要佩戴 IEM。</p>
+  <p id="status" role="status">等待手動選取。選取與檢查不開啟裝置，也不傳送 report。</p>
+  <div id="controls" hidden>
+    <button id="select-device">1. 手動選取 FreeDSP（僅檢查）</button>
+    <button id="inspect" disabled>重新檢查 descriptor（不寫入）</button>
+    <details open><summary>WebHID metadata / descriptor</summary><pre id="descriptor">尚無資料</pre></details>
+    <fieldset>
+      <legend>2. 手動 RAM 測試</legend>
+      <label>Framing <select id="framing">
+        <option value="CURRENT">CURRENT</option>
+        <option value="CANDIDATE_NO_EMBEDDED_REPORT_ID">CANDIDATE_NO_EMBEDDED_REPORT_ID</option>
+      </select></label>
+      <label>與 Windows 播放格式相同的取樣率 <select id="sample-rate">
+        <option value="44100">44100 Hz</option><option value="48000" selected>48000 Hz</option>
+        <option value="96000">96000 Hz</option><option value="192000">192000 Hz</option>
+        <option value="384000">384000 Hz</option>
+      </select></label>
+      <p>CURRENT = 61 bytes；候選 = 62 bytes。descriptor 必須恰好匹配；不符就停止，不補零、不截斷。</p>
+      <p>每次只對選定取樣率送出 9 段係數（其他段設 flat），再啟用既有 mode 0，共 10 個封包。這不是九段功能驗證。</p>
+      <label><input id="safety" type="checkbox"> 我已確認音量極低、未佩戴 IEM、取樣率相同，且只測 RAM。</label>
+      <div>
+        <button id="flat" disabled>套用 Flat（僅 RAM）</button>
+        <button id="attenuation" disabled>套用單段 −12 dB（僅 RAM）</button>
+      </div>
+      <p>單段設定：第 1 段 PK / 1000 Hz / −12 dB / Q 0.7；其餘 8 段 0 dB。兩次比較維持相同 framing、取樣率、來源及音量。</p>
+    </fieldset>
+    <label for="log">診斷與完整 TX 日誌（可全選複製）</label>
+    <textarea id="log" readonly></textarea>
+  </div>
+  <script type="module" src="/src/freedsp/debugPage.ts"></script>
+</body>
+</html>
