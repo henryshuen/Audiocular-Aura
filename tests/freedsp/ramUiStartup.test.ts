@@ -1,5 +1,6 @@
 import {describe,it,expect,vi} from 'vitest';
 import {RamBridge,validateBands,fullNinePreset,unityPreset,positiveBandPreset,positiveMultiPreset,analyzeSafety,M2R_GATE_KEY} from '../../src/freedsp/webRam.ts';
+import {freeDspGainRange} from '../../src/freedsp/capabilities.ts';
 import ts from 'typescript';
 // @ts-expect-error Node VM is test-only; this repository deliberately excludes Node type declarations.
 import {runInNewContext} from 'node:vm';
@@ -24,7 +25,7 @@ function startup(failConnect=false,Bridge?:new()=>RamBridge){
    .replace(/^import .*$/gm,'').replace('import.meta.env.DEV','true');
  runInNewContext(js,{document:d.document,location:{hostname:'localhost',port:'5173',origin:'http://localhost:5173'},
    RamBridge:Bridge ?? class {async connect(){calls++;if(failConnect)throw new Error('MOCK session unavailable');return {ok:true,log:'MOCK metadata'};}},
-   validateBands,fullNinePreset,unityPreset,positiveBandPreset,positiveMultiPreset,analyzeSafety,M2R_GATE_KEY,localStorage:storage,console,Set,Date,Number});
+   freeDspGainRange,validateBands,fullNinePreset,unityPreset,positiveBandPreset,positiveMultiPreset,analyzeSafety,M2R_GATE_KEY,localStorage:storage,console,Set,Date,Number});
  return {...d,calls:()=>calls,storage};
 }
 describe('M2N frontend startup only; no bridge/HID',()=>{
@@ -33,13 +34,13 @@ describe('M2N frontend startup only; no bridge/HID',()=>{
      ? {token:'A'.repeat(64),mode:'M2N RAM ONLY'} : {ok:true,log:'MOCK unity complete'}),{status:200}));
    class MockBridge extends RamBridge{constructor(){super(f as typeof fetch);}}
    const d=startup(false,MockBridge);await d.nodes.connect.listeners.get('click')!();
-   const gain=d.nodes.bands.children[0].children[2].children[0];gain.value='-13';gain.listeners.get('input')!();
+   const gain=d.nodes.bands.children[0].children[2].children[0];gain.value='-17';gain.listeners.get('input')!();
    expect(d.nodes.apply.disabled).toBe(true);expect(d.nodes.restore.disabled).toBe(false);expect(d.nodes.flat.disabled).toBe(false);
    await d.nodes.apply.listeners.get('click')!();expect(f).toHaveBeenCalledTimes(2);
    expect(d.nodes.log.value).toContain('EDITOR VALIDATION');expect(d.nodes.status.textContent).not.toContain('STOP');
    await d.nodes.restore.listeners.get('click')!();await d.nodes.flat.listeners.get('click')!();
    expect(f).toHaveBeenCalledTimes(4);expect(d.nodes.restore.disabled).toBe(false);expect(d.nodes.flat.disabled).toBe(false);
-   expect(d.nodes.bands.children[0].children[2].children[0].value).toBe('-13');
+   expect(d.nodes.bands.children[0].children[2].children[0].value).toBe('-17');
  });
  it('transport STOP blocks Apply, but explicit emergency unity Restore works; no auto retry',async()=>{
    const actions:string[]=[];let fail=true;

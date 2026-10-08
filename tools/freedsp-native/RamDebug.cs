@@ -21,8 +21,8 @@ public sealed record RamDebugRequest([property:JsonRequired] string Action, [pro
         {
             var b = Bands[i];
             if (b is null || b.Index != i || b.Type != "PK" || !double.IsFinite(b.Freq) || !double.IsFinite(b.Gain) || !double.IsFinite(b.Q)
-                || b.Freq < 20 || b.Freq > 20000 || b.Gain < -12 || b.Gain > 12 || b.Q < .1 || b.Q > 10)
-                throw new InvalidOperationException("Position/index mismatch or unsupported band; PK20..20000Hz/-12..12dB/Q0.1..10 only; Apply separately enforces composite budget");
+                || b.Freq < 20 || b.Freq > 20000 || b.Gain < GainPolicy.MinDb || b.Gain > GainPolicy.MaxDb || b.Q < .1 || b.Q > 10)
+                throw new InvalidOperationException("Position/index mismatch or unsupported band; PK20..20000Hz/official App -16..6dB/Q0.1..10 only; not firmware or safety limits");
         }
     }
 }

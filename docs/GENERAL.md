@@ -1,5 +1,16 @@
 # AuraPEQ FreeDSP Development Rules
 
+## 2026-10-09 — Final connection, gain and Reset UX rule
+This rule supersedes earlier gain recommendations, local-only FreeDSP resets and the proposed nine 1kHz Flat reconstruction. Historical hardware evidence stays valid.
+- Exact FreeDSP35D8:1496 uses the official App per-band policy −16..+6 dB. Henry's supplied gain modal and cached APK strings support an application restriction, not a firmware maximum or clipping-safety guarantee. Other DAC gain policies stay unchanged.
+- Share the capability across slider, number, curve drag, preset/import and RAM/Flash preflight. Direct editing visibly clamps; imports reject out-of-range gains atomically without silent clipping. CONNECT preserves retained local values; invalid retained settings block explicit Sync, not independent unity Restore. Native validation must match; coefficient mathematics and RAM190/Flash220 packet algorithms stay unchanged.
+- Until complete, exact-device readback proves all9 parameters, enabled state and RAM/persistent source, CONNECT is metadata only. Display `Device EQ Unknown — Local Editor`; never substitute localStorage or a profile name for hardware state. DISCONNECT preserves local editor and marks device state stale/offline. Ignore stale connection/session and late RAM UI completions.
+- Any explicit action overwriting unknown hardware state must warn first. CONNECT never automatically writes RAM/Flash. Do not copy the official first-getEQParam initializer: its source can clear slots0..9 on both paths with190.
+- RESET DEFAULTS: exactly9 enabled PK bands at31/62/125/250/500/1000/2000/4000/8000Hz,0dB,Q0.7. RESET TO FLAT: exactly9, retain frequency/Q/type/enabled and set every gain0, including disabled rows. Both intentionally Sync stereo RAM after accurate confirmation; never automatically save Flash. Other DAC reset behavior unchanged. Existing unsupported type/invalid frequency/Q still fails preflight; no new filters.
+- FreeDSP graph display is symmetric ±18 dB; generic remains ±12. Plot extent is distinct from per-band policy and combined response/safety.
+- Keep verified native Input GET_REPORT exception minimal. No readback command allowlist expansion, new controls, preamp emulation, production release or PR in this round. Henry's prior stereo RAM and56/56 Flash/persistence PASS is preserved, not revalidated here.
+- Evidence and pending manual acceptance: tests/freedsp/fixtures/freeDspFinalUxEvidence.md.
+
 ## 2026-10-09 — Gain audit and persistence evidence precedence
 This latest rule supersedes older range/pending interpretations while preserving historical results.
 - Henry reports56/56matchingFlashACKs and EQ persisting after physicalUSB reconnection: tested-session HARDWARE PASS. Exact profile/raw log not supplied in this audit; no fractional/all-rate/+12headroom inference.

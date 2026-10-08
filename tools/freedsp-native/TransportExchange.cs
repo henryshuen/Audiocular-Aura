@@ -18,7 +18,7 @@ public sealed record TransportRequest([property:JsonRequired] string Report)
      90=>count==13&&w[0]==90&&w.Skip(1).All(v=>v==0),
      220=>count==13&&(
        (w[0]==255&&w.Skip(1).All(v=>v==0))||
-       (w[0]==0&&w[1] is >=1 and <=9&&w[2] is >=20 and <=20000&&w[3] is >=25 and <=2560&&w[4]==0&&w[5] is >=-12 and <=12&&w.Skip(6).All(v=>v==0))||
+       (w[0]==0&&w[1] is >=1 and <=9&&w[2] is >=20 and <=20000&&w[3] is >=25 and <=2560&&w[4]==0&&w[5]>=GainPolicy.MinDb&&w[5]<=GainPolicy.MaxDb&&w.Skip(6).All(v=>v==0))||
        (w[0] is >=4 and <=8&&w[1] is >=1 and <=9&&w[2] is >=0 and <=25&&w.Skip(3).Take(5).All(v=>v>=-8388608&&v<=8388607)&&w.Skip(8).All(v=>v==0))),
      _=>false};
    if(!valid)throw new InvalidOperationException("CAF field/packet shape violation");return b;

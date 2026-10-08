@@ -1,4 +1,5 @@
 import {isFreeDsp} from './freedsp/webHid.ts';
+import {gainRangeFor,freeDspGainRange} from './freedsp/capabilities.ts';
 import type { Band } from "./main.ts";
 import {isExperimentalFreeDspActive} from './freedsp/graphicalRam.ts';
 import {nativePeakFloat} from '../scripts/freedsp/ram-semantics.mjs';
@@ -56,14 +57,15 @@ function xToFreq(x: number, width: number) {
  * MATHEMATICS: Gain to Y Coordinate
  */
 function gainToY(gain: number, height: number) {
-	return height / 2 - (gain / CONFIG.gainRange) * (height / 2 - CONFIG.padding);
+	return height / 2 - (gain / graphGainRange()) * (height / 2 - CONFIG.padding);
 }
+function graphGainRange(){return isExperimentalFreeDspActive()||isFreeDsp((window as any).device??null)?18:CONFIG.gainRange;}
 
 /**
  * MATHEMATICS: Y Coordinate to Gain
  */
 function yToGain(y: number, height: number) {
-	return (-(y - height / 2) * CONFIG.gainRange) / (height / 2 - CONFIG.padding);
+	return (-(y - height / 2) * graphGainRange()) / (height / 2 - CONFIG.padding);
 }
 
 /**
@@ -204,7 +206,7 @@ function drawGrid(c: CanvasRenderingContext2D, width: number, height: number) {
 	c.textAlign = "right";
 
 	// Horizontal Gain lines
-	for (let g = -CONFIG.gainRange; g <= CONFIG.gainRange; g += 6) {
+	for (let g = -graphGainRange(); g <= graphGainRange(); g += 6) {
 		const y = gainToY(g, height);
 		c.beginPath();
 		c.moveTo(CONFIG.padding, y);
@@ -625,8 +627,9 @@ export function renderPEQ(
 			const freq = Math.round(xToFreq(clampedX, w));
 			const gain = Math.round(yToGain(clampedY, h) * 10) / 10;
 
-			// Limit gain range within -12 to 12
-			const clampedGain = Math.max(-12, Math.min(12, gain));
+			// Per-device editor policy; the response plot has a separate symmetric range.
+			const range=isExperimentalFreeDspActive()?freeDspGainRange:gainRangeFor((window as any).device??null);
+			const clampedGain = Math.max(range.min, Math.min(range.max, gain));
 
 			const clampedFreq = Math.max(CONFIG.minFreq, Math.min(CONFIG.maxFreq, freq));
 

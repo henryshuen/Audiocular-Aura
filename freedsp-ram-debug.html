@@ -6,7 +6,7 @@ body{font:16px/1.6 system-ui,sans-serif;max-width:1060px;margin:24px auto;paddin
 <h1>FreeDSP M2R：一次完成正增益／雙聲道／click觀察</h1>
 <p>手動驗證#1：Connect → 緊急Restore全九段unity → P1填入 → Apply選定Band5 → 聽並記錄 → Restore本段 → 記錄恢復 → P2填入 → Apply完整九段 → 聽並記錄 → Restore全部 → 記錄 → NEG填入 → Apply完整九段 → 記錄 → Restore全部 → 記錄。</p>
 <p>APO OFF、Windows輸出FreeDSP、初始音量1–2/100、首次正增益Apply IEM離耳、只用音樂不用測試音；異常音量／噪音／失真立即停止。正增益可能削波；此輪預算不是硬體headroom保證。</p>
-<p>僅35D8:1496／PK／20–20000Hz／每段−12..+12dB／Q0.1..10。每段±12不代表合成±12。暫時+6/+6.1dB開發門檻已移除；保留五速率係數／穩定性／量化驗證。此頁為歷史診斷入口；正常主頁使用既有正增益警告／確認。無preamp、Flash、220、90、其他filter或utility命令。</p>
+<p>僅35D8:1496／PK／20–20000Hz／官方App每段政策−16..+6dB／Q0.1..10；不是硬體或安全增益上限，合成響應可超出單段範圍。暫時+6/+6.1dB開發門檻已移除；保留五速率係數／穩定性／量化驗證。此頁為歷史診斷入口；正常主頁使用既有正增益警告／確認。無preamp、Flash、220、90、其他filter或utility命令。</p>
 <p>wire1path0 LEFT→wire1path1 RIGHT→…→wire9path1，相同係數；LEFT/RIGHT為硬體驗證命名。完整九段18次190；首敗STOP、無自動retry/rollback。Restore不依賴editor或觀察；錯誤後可明確選緊急Restore，是新unity操作不是重試。無readback／原EQ備份／persistence。</p>
 <button id="connect">連線 FreeDSP（僅metadata）</button><button id="load">載入正式UI儲存九段（本地）</button>
 <p id="status">請使用 .\scripts\dev.ps1，尚未送任何命令。</p>

@@ -58,7 +58,7 @@ describe('M2T evidence and exact-FreeDSP UI, offline only',()=>{
     expect(ctx.autoPreampEnabled).toBe(true);expect(ctx.recalculateAutoPreamp).toHaveBeenCalledWith(false);
   });
   it('FreeDSP connection resets displayed preamp and Tilt locally and stops fake mic animation',()=>{
-    const ctx={configureFreeDspControlNotes:vi.fn(),document:{getElementById:()=>null,querySelectorAll:()=>[]},setAutoPreampEnabled:vi.fn(),setGlobalGainState:vi.fn(),resetTiltState:vi.fn(),updateGlobalGainUI:vi.fn(),window:{stopFreeDspMicDisplay:vi.fn()}};
+    const ctx={showFreeDspDeviceState:vi.fn(),configureFreeDspControlNotes:vi.fn(),document:{getElementById:()=>null,querySelectorAll:()=>[]},setAutoPreampEnabled:vi.fn(),setGlobalGainState:vi.fn(),resetTiltState:vi.fn(),updateGlobalGainUI:vi.fn(),window:{stopFreeDspMicDisplay:vi.fn()}};
     runInNewContext(extract('configureFreeDspUI')+'\nconfigureFreeDspUI(true)',ctx);
     expect(ctx.resetTiltState).toHaveBeenCalledOnce();expect(ctx.updateGlobalGainUI).toHaveBeenCalledWith(0);expect(ctx.window.stopFreeDspMicDisplay).toHaveBeenCalledOnce();
   });

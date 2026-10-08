@@ -1,4 +1,34 @@
-## Latest checkpoint — gain limits audit completed (2026-10-09)
+## Latest checkpoint — Final FreeDSP UX (2026-10-09)
+Scope is limited to CONNECT/DISCONNECT truthfulness, gain policy and two Reset actions. Prior stereo RAM PASS and Henry-reported56/56 Flash acknowledgments plus persistence after USB reconnection remain valid. No hardware operation or Flash algorithm rework.
+
+### Research checkpoint
+- Examined: official SDK/APK reconstructions446/477/442/346, first-getEQParam initialization,57 helper pairs, supplied official gain/nonflat screenshots and AuraPEQ ONLINE/local-flat screenshot; current connection, editor/import/curve and Reset paths.
+- Verified facts: source446 returns coefficients;477 parses nine parameter entries. Neither recovered evidence establishes a complete exact-device profile including per-band enabled and RAM/persistent source. Saved dump has no446/477 replies. Official first-getEQParam may write unity190; it is not safe to transplant as read-only CONNECT.
+- Implemented fallback: metadata-only CONNECT preserves local values and labels Unknown; DISCONNECT preserves values and labels stale/offline. Saved device profile names are not used as FreeDSP device state. Version guards discard stale connect/session and late RAM status completion. Explicit hardware-overwrite actions warn.
+- Implemented policy: exact FreeDSP −16..+6 App envelope across existing gain entry/import/preflight and matching native guards. Import rejection is atomic. FreeDSP plot±18 is separate from per-band policy; generic plot/editor±12 unchanged.
+- Implemented Reset: Defaults9 expected PK/Q.7; Flat retains frequency/Q/type/enabled and zeros all9 gains. Both explicitly confirmed stereo RAM Sync, no automatic Flash. Latest instruction supersedes planned nine1kHz Flat and local-only development resets.
+- Hypotheses: official App nonflat display may come from parameter query, persistence or App state. Screenshot does not distinguish these.
+- Discarded: ONLINE/default local curve means device Flat; localStorage is readback;446 alone proves complete current profile; official getter call chain is entirely read-only.
+- Unresolved fields: exact-device query replies, per-band enabled, profile source, stereo consistency and inverse conversion fidelity. No new gain safety/headroom claim.
+- Next validation: Henry's limited connection/limits/Reset manual acceptance in freeDspFinalUxEvidence.md. Readback needs complete exact-device response/source evidence before any implementation. No speculative hardware query now.
+
+### Problem / hypothesis / next action
+Observed problem: CONNECT showed local Flat as apparent hardware state; inherited±12 policy differs from official App; reset semantics/band count were inconsistent.
+Verified facts: CONNECT lacks complete readback; official modal says−16..+6; FreeDSP has9 verified stereo wires; current encoders/plans retain existing bytes.
+Possible causes: generic last-applied UI naming, inherited gain bounds, temporary reset behavior. Actual device EQ is unknown to this page.
+Ruled out / weakened: readback from a saved name; per-band App bound is a firmware/safety guarantee; automatically clearing EQ is a read operation.
+Next validation: manual UX acceptance, without automatic CONNECT writes. Reset writes RAM only after Henry's explicit confirmation; cancel must leave editor/device alone.
+Possible fix direction: keep truthful local/device state separation and exact-device guards; extend readback only after full field/source proof. Preserve frozen controls and proven RAM/Flash algorithms.
+
+## Evidence for upstream / Issue #3
+FreeDSP35D8:1496 remains native Input GET_REPORT transport with ID1/61 data bytes. Prior stereo RAM18 writes and Henry's56/56 Flash acknowledgments plus reconnect persistence PASS are preserved. Official source446 provides coefficients and477 parses parameter entries, but current evidence lacks complete enabled/source/stereo semantics and actual exact-device replies; the57 saved helper pairs contain neither query. Official first-getEQParam may clear slots0..9 on both paths with190, so no automatic getter transplant. CONNECT now preserves local editor and says `Device EQ Unknown — Local Editor`; disconnect marks stale, stale async completions are ignored, explicit overwrite warns. Official supplied gain modal and cachedAPK support exact-FreeDSP−16..+6 App policy; no firmware or safe gain inference. Existing sliders/numbers/drag/import/native guards align, other DACs unchanged. Defaults9 PK/Q.7 expected frequencies; Flat9 keeps frequency/Q/type/enabled, all gains0; both confirmed stereo RAM Sync, noFlash. No coefficient/serializer/packet order/transport API change. Offline evidence and manual acceptance: tests/freedsp/fixtures/freeDspFinalUxEvidence.md. Readback remains blocked at the verified evidence boundary; no release/PR.
+
+### Automated verification
+- Focused7files/106tests plus3files/32 diagnostic/control regression tests PASS (10files/138 total); includes actual DOM gain inputs, canvas drag callbacks, connect/disconnect state, stale session races, Reset order/cancel/failure, JSON/text import atomicity and existing RAM/Flash golden plans.
+- Native offline/mock73tests PASS; isolated build succeeds. Initial sandbox loopback socket denial was resolved by running the same FAKE-child tests with loopback permission; no physical HID execution.
+- Final verify.ps1 and scope review results are recorded in DONE.md. First full run exposed stale test-harness imports and obsolete+12 policy expectations; those tests were corrected, not bypassed.
+
+## Historical checkpoint — gain limits audit completed (2026-10-09)
 This newest checkpoint supersedes older range/pending interpretations; historical milestones remain below.
 - Henry reports56/56matchingFlashACKs and EQ persistence after physicalUSB reconnection: tested-session HARDWARE PASS. Exactprofile/rawlog not supplied; no+12/fractional/all-rate inference.
 - Inventoried current414b7b9 and refreshed upstreamaf0bcf7057860307bf81b00746f0cbdb93366514. Detailed report: tests/freedsp/fixtures/freeDspGainAudit.md.
@@ -24,7 +54,7 @@ Ruled out / weakened: hard+6universal numerical limit; ACK proves+12support; low
 Next validation: review recommended policy, seek exactcallback/specification, improve offline fidelity evidence. No hardware request now.
 Possible fix direction: separately implement-16..+6deviceguards with explicitimport messaging/independentunityRestore/otherDAC preservation; quantizerfidelity and fractionalboot are distinct follow-ups. No speculativepreamp/Flashschema change.
 
-## Evidence for upstream / Issue #3
+### Historical gain-audit evidence for upstream / Issue #3
 Exact35D8:1496descriptor remainsID1/61databytes; native InputGET_REPORT exception unchanged. Henry reports56/56FlashmatchingACKs plus persistence afterUSBreconnection. PinnedAPK SHA04756b49acfea523758d86101c96c1824b7b209ae3a8836c07837088e795d2d5 contains localized-16..+6failure text; exactDartguard/firmwareheadroom unknown. Upstreamaf0bcf7 and fork inherit±12hostpolicy.190Gain is exponent/signed24;220metadata integerdB versusQ8.8coefficientinput. No verifiedpreamp/limiter. Warning/AutoReduce is heuristic, not clipping protection; keyboardFlash bypasses main warningwrapper but retains confirmation/preflight.3150offlinecases show fit but35PKstrict-stability failures and extreme stable-response distortion; no+12hardware/fullscale claim. Recommend separateFreeDSP-16..+6product envelope with numerical/fidelitychecks; otherDACs unchanged. Fractionalboot requires exactfirmware/API or separately approved objective evidence. See freeDspGainAudit.md for reproducible source inventory. No runtime/device/build/PR change.
 
 

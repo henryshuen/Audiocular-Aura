@@ -1,4 +1,5 @@
 import {isFreeDsp} from './freedsp/webHid.ts';
+import {freeDspOverwriteWarning} from './freedsp/deviceState.ts';
 import {getFreeDspSession as attachFreeDsp} from './freedsp/session.ts';
 import { buildConexantPacket, quantizeConexantCoefficients } from "./freedsp/conexantPacket.ts";
 import { sendConexantReport as sendFreeDSPReport } from "./freedsp/conexantTransport.ts";
@@ -762,7 +763,7 @@ export function setupListener(device: HIDDevice) {
 /**
  * Sync all bands and preamp gain to device RAM
  */
-export async function syncToDevice(explicit=false) {
+export async function syncToDevice(explicit=false,overwriteConfirmed=false) {
 	const device = getDevice();
 	const eqState = getEqState();
 	if (!device || !eqState) return;
@@ -770,7 +771,8 @@ export async function syncToDevice(explicit=false) {
  if(isFreeDsp(device)){
    if(!explicit)return; // profile/import/undo/edit are local only for FreeDSP.
    if(getGlobalGainState()!==0 || getAutoPreampEnabled() || getBassTiltState()!==0 || getTrebleTiltState()!==0)throw new Error('FreeDSP preamp/tilt未實作；請將本地值設0，勿當作已套用。');
-   showSyncing();try{await attachFreeDsp(device).sync(eqState);localStorage.setItem(`last_eq_state_${device.vendorId}_${device.productId}`,JSON.stringify(eqState));}finally{hideSyncing();}return;
+   if(!overwriteConfirmed && !confirm(freeDspOverwriteWarning+'\nSync九段雙聲道RAM EQ；不保存Flash。繼續？'))return false;
+   showSyncing();try{await attachFreeDsp(device).sync(eqState);localStorage.setItem(`last_eq_state_${device.vendorId}_${device.productId}`,JSON.stringify(eqState));}finally{hideSyncing();}return true;
  }
 
 	showSyncing();
@@ -859,7 +861,7 @@ export async function flashToFlash() {
 	const device = getDevice();
 	if (!device) return;
  if(isFreeDsp(device)){
-   if(!confirm('FreeDSP 永久寫入：完整9段／五個rate banks，55次command220含commit。持久性尚未硬體驗證；失敗可能部分完成，無自動retry／rollback。繼續？'))return false;
+   if(!confirm(freeDspOverwriteWarning+'\nFreeDSP 永久寫入：完整9段／五個rate banks，55次command220含commit。失敗可能部分完成，無自動retry／rollback。繼續？'))return false;
    const editor=getEqState();if(!editor)throw new Error('FreeDSP editor unavailable');
    showSyncing();try{await attachFreeDsp(device).flash(editor);log('FreeDSP Flash協定完成；請以USB完全斷電重接且不RAM Sync驗證持久性。');}finally{hideSyncing();}return true;
  }
@@ -1658,5 +1660,6 @@ export async function executeFactoryReset(device: HIDDevice) {
 
 export async function restoreFreeDspUnity(){
  const d=getDevice();if(!d || !isFreeDsp(d))return;
- showSyncing();try{await attachFreeDsp(d).sync([],true);}finally{hideSyncing();}
+ if(!confirm(freeDspOverwriteWarning+'\n將全九段雙聲道RAM覆寫為unity，不修改LOCAL EDITOR、不保存Flash。繼續？'))return false;
+ showSyncing();try{await attachFreeDsp(d).sync([],true);}finally{hideSyncing();}return true;
 }

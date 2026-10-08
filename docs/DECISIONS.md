@@ -1,5 +1,16 @@
 # AuraPEQ FreeDSP Decisions
 
+## 2026-10-09 — Final UX: truthful CONNECT, official App envelope and confirmed RAM Reset
+Choose the explicit Unknown fallback over speculative readback. Source446/477 and screenshots do not establish all9 parameters plus enabled/source/stereo state on1496. No new query or native API extension. The official first-getEQParam call chain can initialize unity190; copying it would violate read-only CONNECT. Preserve local editor and mark stale on disconnect; no saved-name substitution, no stale session registration or late RAM status overwrite.
+
+Implement exact-FreeDSP−16..+6 as product policy, supported by supplied official modal and cachedAPK strings. Direct edits visibly clamp; imports reject without partial update or silent clipping; explicit RAM/Flash preflight retains existing mathematical checks. A retained out-of-range local value is not altered on CONNECT and must be corrected before Apply. Restore remains editor independent. This does not declare firmware limits, safe positive gain or preamp/headroom support.
+
+Use a central TS capability and equivalent isolated C# gain constants. Native debug validator and220 metadata allowlist previously rejected−16, so align these policy guards only. Do not modify coefficient generation, signed24/exponent handling, Flash metadata truncation, packet plan or HTTP/SET/GET behavior. Keep native transport exception and other DAC behavior unchanged.
+
+Latest Henry instruction takes precedence: Flat zeros every gain including disabled bands and preserves frequency/Q/type/enabled; do not reconstruct1kHz. Defaults creates9 enabled PK bands at31/62/125/250/500/1000/2000/4000/8000Hz,Q.7. Both describe and require intentional stereo RAM overwrite, then call existing Sync; no automatic Flash. Unsupported retained type/invalid frequency/Q still rejects before transfer. No new filter choices. Generic upstream Reset unchanged.
+
+Keep the FreeDSP response plot symmetric±18 to show−16; generic±12 retained. Combined response is not constrained to the per-band range. Prior RAM/Flash/persistence hardware evidence remains intact; new UX requires Henry's manual acceptance. Evidence: tests/freedsp/fixtures/freeDspFinalUxEvidence.md.
+
 ## 2026-10-09 — Gain limits audit recommendation; runtime unchanged
 Accept Henry-reported56/56matchingFlashACKs plus EQ persistence after physicalUSB reconnection as tested-session hardwarePASS. Preserve earlier successful results without inferring+12gain safety/fractional fidelity/all-rate behavior.
 

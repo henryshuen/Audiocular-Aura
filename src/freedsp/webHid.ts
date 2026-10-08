@@ -1,7 +1,8 @@
 import {CafRamSession} from './cafRam.ts';
 import {requireMatchingReport} from './descriptor.ts';
 import {CTRL,parseCaf,hex} from './cafCodec.ts';
-export const isFreeDsp=(d:{vendorId:number;productId:number}|null)=>!!d && d.vendorId===0x35d8 && d.productId===0x1496;
+import {isFreeDsp} from './capabilities.ts';
+export {isFreeDsp} from './capabilities.ts';
 export function isCafDevice(d:HIDDevice){
  if(!isFreeDsp(d))return false;
  try{requireMatchingReport(d,'input',61);requireMatchingReport(d,'output',61);

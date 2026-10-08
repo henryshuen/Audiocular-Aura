@@ -215,13 +215,15 @@ export async function importProfile(e: Event) {
 				band.index = idx;
 			});
 
+			// Reject the entire FreeDSP import before touching editor/DOM on invalid gain.
+			if(isFreeDsp(getDevice()))setEqState(importedBands);
 			// Re-create DOM elements for strips to ensure correct bands count
 			const stripsContainer = document.getElementById("eqStrips");
 			if (stripsContainer) {
 				stripsContainer.innerHTML = "";
 			}
 
-			setEqState(importedBands);
+			if(!isFreeDsp(getDevice()))setEqState(importedBands);
 			setGlobalGainState(profile.globalGain);
 
 			// Update UI and send preamp packet
@@ -282,6 +284,7 @@ export async function loadProfileFromText(content: string, presetName?: string) 
 			band.index = idx;
 		});
 
+		if(isFreeDsp(getDevice()))setEqState(importedBands);
 		// Re-create DOM elements for strips to ensure correct bands count
 		const stripsContainer = document.getElementById("eqStrips");
 		if (stripsContainer) {
@@ -289,7 +292,7 @@ export async function loadProfileFromText(content: string, presetName?: string) 
 		}
 
 		// Update internal state
-		setEqState(importedBands);
+		if(!isFreeDsp(getDevice()))setEqState(importedBands);
 		(window as any).resetTiltState?.();
 		
 		const autoPreamp = (window as any).getAutoPreampEnabled?.();

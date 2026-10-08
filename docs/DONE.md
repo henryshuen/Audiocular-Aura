@@ -1,3 +1,20 @@
+## 2026-10-09 — Final FreeDSP UX implemented offline
+- Reviewed supplied screenshots, official446/477/442/346 source evidence,57 saved helper pairs and dangerous first-getEQParam unity initializer. Published freeDspFinalUxEvidence.md with precise readback limitations and manual acceptance steps.
+- CONNECT retains local editor and displays Device EQ Unknown — Local Editor; no new readback/auto-write. DISCONNECT preserves local values and labels stale/offline. Saved device name cannot masquerade as readback. Stale metadata/session and late RAM UI completions are guarded.
+- Exact35D8:1496 gain policy−16..+6 implemented centrally for slider/numeric/drag/preset/import and existing RAM/Flash preflight. Direct-edit clamp is visible; invalid imports reject atomically. Matching isolated native policy guards updated; no coefficient/serializer/packet plan changes. Generic DAC±12 unchanged.
+- Defaults is9 enabled PK/Q.7 at expected frequencies; Flat retains frequency/Q/type/enabled and zeros all9 gains. Both require accurate confirmation and use existing stereo RAM Sync, never automatic Flash. Cancel and failure reporting tested; other DAC Reset retained.
+- Focused7files/106tests plus3files/32 regression tests PASS (10files/138 total), including DOM gain bounds, actual drag callback, disconnect/reconnect and delayed metadata/chooser, Reset both orders/cancel/failure, JSON/text import rejection,21 native-derived RAM golden vectors and existing56 Flash plan tests. New UX hardware acceptance is pending; no new HARDWARE PASS claimed.
+- Native isolated test build PASS,73offline/mock tests PASS. Initial sandbox loopback socket denial resolved with loopback permission; fake child only, no HID discovery/open. First full frontend verification exposed missing new imports in extracted-function test contexts and obsolete+12 policy expectations; corrected those tests and reran verification.
+- Final verify.ps1 PASS: TypeScript/Vite build and28files/280tests. Existing diagnostic range labels also align with current policy; no new debug controls. Generated dist and this round's isolated temporary output are excluded from delivery.
+- Prior Henry stereo RAM and56/56 Flash/persistence PASS preserved. No physical device access, new filters/controls, native API extension, production release or PR.
+
+### Scope / regression check
+- FreeDSP-specific files changed: capabilities/deviceState/editor/session/WebHID dispatch/Web RAM validation/CAF log and existing diagnostic range labels; isolated native gain-policy guards.
+- Analysis/test files changed: focused DOM/import/connection/Reset/gain/RAM/Flash regression tests, native mock endpoints and freeDspFinalUxEvidence.md.
+- Shared runtime files changed: src/fn.ts, src/main.ts, src/peq.ts, src/importExport.ts, src/dsp.ts; necessary exact-FreeDSP UI hooks and overwrite confirmations only.
+- Non-FreeDSP protocol code changed: NO. Other DAC gain ranges, packet senders and Reset semantics retained; regression mocks pass. Coefficient/CAF serialization/RAM18-write plan/Flash56-write plan/transport API unchanged.
+- All4docs and Issue3pack updated; git diff --check PASS after generated-output cleanup. Authorized commit/push follows; no new hardware acceptance claim.
+
 ## 2026-10-09 — gain limits audit completed (offline only)
 - Recorded Henry-reported56/56matchingFlashACKs and EQ persistence after physicalUSB reconnection as tested-session hardwarePASS. No+12/fractional/all-rate validation claimed.
 - Inventoried all current/upstream gain entry/clamp/rounding/reset/curve/safety/190/220/native boundaries; fetched upstreammainaf0bcf7057860307bf81b00746f0cbdb93366514. Runtime unchanged.
