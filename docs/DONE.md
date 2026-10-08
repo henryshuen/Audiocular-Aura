@@ -478,3 +478,12 @@ Focused preamp evidence tests:5 PASS. Final verify.ps1: TypeScript/production bu
 
 ### Round1 automated verification
 Offline Python descriptor tests:7 PASS. Final verify.ps1: TypeScript/production build PASS;240 tests across25 files PASS. git diff --check PASS after excluding regenerated dist. Runtime/non-FreeDSP protocol changes NONE; physical access only enumerated identity and standard descriptor reads.
+
+## Control Research Round2/4 — official pregain static trace complete
+- Recovered pinned official APK USB debug getter, SPV setter direct ARM64/MethodChannel edges and selected Java/JNI/protocol/USB transport chain; preserved raw instruction/byte fixtures and reproduction scripts.
+- Recorded concrete logical SPV setter4B012302 + Q8.8 signed16LE and native floor(dB*256+.5)/read scaling. Recorded getter decoding and official saveToFlash omitted-default=true. No calls were executed.
+- Verified selected SPV worker uses Android bulkTransfer on HID OUT and endpoint enumeration requires class3 interrupt IN+OUT. Existing exact1496 fixture has HID IN83 only; offline incompatibility test passes and excludes audio isochronous OUT as substitute.
+- Distinguished BLE debug PEQ-derived calculation from separate BLE0x0A/sub7/hundredths-dB setter. Recorded lack of exact1496 route and unavailable remote/cached device-function-map artifact.
+- Recorded static AOT UNVERIFIED SDK/indirect-call limits; cross-checked selected direct calls against raw ARM64 and selected JNI/DEX. No exhaustive callgraph claim.
+- Updated round budget to2/4 COMPLETE,2 remaining; no Round3, runtime code, non-FreeDSP protocol changes, target binary execution or hardware operations.
+- Verification:7 focused offline tests PASS; final verify.ps1 build and240 tests/25files PASS; git diff --check PASS. Build-generated dist excluded from research changes.

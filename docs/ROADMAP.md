@@ -2575,3 +2575,47 @@ Physical exact35D8:1496 full422-byte configuration recovered read-only via Windo
 
 ### Round1 automated verification
 Offline Python descriptor tests:7 PASS. Final verify.ps1: TypeScript/production build PASS;240 tests across25 files PASS. git diff --check PASS after excluding regenerated dist. Runtime/non-FreeDSP protocol changes NONE; physical access only enumerated identity and standard descriptor reads.
+
+## Control Research Round2/4 — targeted pregain call-chain checkpoint
+Examined: pinned official APK pregain-specific DEX references and Dart snapshot metadata; no hardware/descriptor/PCM rescan. Verified Java handleSetSpvPreGain -> task closure -> SPV protocol path constructs opcode35(0x23), then SpvCodecNative.buildSpvPacket and USB transmitter. This establishes a concrete non-CAF pregain path, not yet exact1496 support. Dart snapshot hash7a1ea3f6f5cf1089a7f6e55d7f20dbfd/compressed-pointers; NativeAssetsManifest empty. Hypothesis: this path is device-family restricted. Unresolved: exact device dispatch, Dart UI/protocol call edges, scale/body wrapper. Next target: static snapshot/object-pool decode and corresponding DEX transport/dispatch classes. No target binary execution or hardware actions.
+
+### Research checkpoint — AOT/JNI/endpoint convergence
+Examined: targeted Dart pool/function/direct-call recovery, selected DEX dispatcher/SPV worker and three SpvCodecNative JNI functions. Verified USB debug reads stored SPV pregain; setter crosses Flutter MethodChannel into SPV0x23, Q8.8 signed16 LE. BLE debug computes pregain from PEQ data; separate BLE setter uses0x0A/sub7 and hundredths-dB. SPV transmitter uses Android bulkTransfer on HID interrupt OUT, despite CTRL-OUT log wording. Its endpoint selector requires HID interrupt IN+OUT; exact saved1496 HID has IN83 only. Discarded hypothesis: this SPV implementation supplies a compatible exact1496 pregain transport. Unresolved: remote/cache device function-map and any distinct FreeDSP gain path; AOT17225 indirect calls unresolved, SDK profile UNVERIFIED. Next target after round closure: remaining CAF/firmware candidates, not more generic pregain scanning.
+
+## Control Research Round2/4 — COMPLETE (2026-10-08)
+Conclusion: exact35D8:1496 pregain routing NOT FOUND; true preamp confidence LOW. Generic SPV path/payload recovered, but structurally incompatible with captured exact-device endpoints. This closes the recovered SPV lead for implementation, not all possible hardware gain. No runtime changes or hardware operations; no Round3 started. Round2 complete leaves2 rounds within the hard4-round cap.
+
+Evidence and reproducible instructions: tests/freedsp/fixtures/officialPregainEvidence.md, officialPregainProtocolEvidence.json, officialPregainAotEvidence.json; scripts/freedsp/inspect-pregain.py, inspect-pregain-aot.py. APK SHA04756b49acfea523758d86101c96c1824b7b209ae3a8836c07837088e795d2d5. dae-rs0.1.13 static parser uses matching snapshot hash but UNVERIFIED SDK profile; field types/decompiler branch structure not trusted. Direct ARM64 BL/JNI/DEX/pool literals cross-checked. No exhaustive dynamic call-graph claim or missing-xref-as-unreachable claim.
+
+| Area | Recovered official behavior | Exact1496 implication |
+|---|---|---|
+| UI/state | USB debug read -> getSpvPreGain; SPV PEQ/profile/reset/factory callers -> setSpvPreGain | Generic SPV family, not identified FreeDSP route |
+| Device dispatch | /spv,/spv5,/bluetrumusb,/jieliusb; UUID/version remote/cache function list | Exact1496 function-map artifact missing |
+| Java/native | handleSetSpvPreGain -> Lns4.w -> Lha4.c/o -> SpvCodecNative | Distinct from CAF, PCM mixer and UAC |
+| Logical payload | 4B 01 23 02 gainLo gainHi; endpoint-capacity padding afterward | No permission to transplant into CAF |
+| Transport | Lbt4.k -> Lat4.call -> bulkTransfer on OUT; Lju2.j requires HID interrupt IN+OUT | Captured1496 HID has IN83 only: incompatible |
+| Scale/sign | floor(dB*256+.5), signed16 LE read /256, step1/256dB | Arithmetic range -128..127.99609375, not hardware limit |
+| Readback | SPV getter command35 -> response offset0 Q8.8 | Static only; no1496 reply |
+| Persistence | Omitted saveToFlash defaults true; optional Lha4.m after setter | Official setter not safely RAM-only by default |
+| BLE | Debug PEQ-derived calculation; distinct setter cmd0x0A/sub7 signed16 hundredths-dB | No exact1496 BLE association/envelope recovered |
+| Master/LR | No channel field in SPV logical setter | No proof of FreeDSP stereo/master or pre-PEQ semantics |
+
+### Problem / hypothesis / next action
+Observed problem: PEQ RAM is hardware PASS; real preamp remains unresolved and generic pregain strings were not enough.
+Verified facts: bounded UI/MethodChannel/DEX/JNI/USB call chain recovered; SPV endpoint requirement conflicts with exact1496 descriptors; separate BLE format and computed debug value distinguished; official default persistence flag identified.
+Possible causes: exact1496 gain is exposed through UAC volume or a different CAF/firmware path; fetched capability map may route device UI differently. These are hypotheses, not confirmed implementation.
+Ruled out / weakened: SPV0x23 as a compatible1496 implementation; CTRL-OUT log as proof of controlTransfer; shared SPV/BLE units; BLE debug calculation as hardware readback; generic gain names as device support; numeric representation as safe hardware range.
+Next validation: separately authorized Round3 remaining CAF/firmware candidates. No further generic/APK-wide, PCM, descriptor or FreeDSPStudio rescan. No hardware test requested now.
+Possible fix direction: only exact-device compatible transport/command plus position/headroom evidence could enable true Preamp. No PEQ emulation; retain main UI/upstream semantics and transport-only native helper. Flash after research closure.
+
+## Evidence for upstream / Issue #3 — Control Research Round2
+Pinned official APK SHA04756b49acfea523758d86101c96c1824b7b209ae3a8836c07837088e795d2d5 contains a concrete SPV pregain setter: Dart MethodChannel -> Java Lns4.w -> logical4B012302 + signed16 LE Q8.8 gain -> HID endpoint transfer. Getter decodes signed16/256. Android worker calls bulkTransfer, not UAC class/controlTransfer; HID selector requires interrupt IN+OUT. Captured35D8:1496 HIDinterface3 has interruptIN83 only (audioOUT01 is isochronous/class1), so that SPV sender is incompatible with this configuration. Exact1496 pregain dispatch not recovered; device function lists can be remote/cached. BLE pregain uses different0.01dB format; BLE debug derives gain from PEQ, not hardware-register readback. No SPV/BLE transplantation, hardware action or runtime change. UAC2 FU2 L/R Volume remains independently descriptor-supported, but CUR/RANGE and relation to CAF PEQ remain unknown. True preamp LOW; Round2/4 complete,2 rounds remain.
+
+### Scope / regression check — Round2
+- FreeDSP analysis/test files changed: targeted static extractors, offline endpoint/scale model, seven tests and evidence fixtures.
+- Shared runtime files changed: NONE.
+- Non-FreeDSP protocol code changed: NO.
+- Hardware operations: NONE; no target binary execution, gain/volume/PEQ/Flash or GUI access.
+
+### Round2 automated verification
+Seven focused offline pregain tests PASS (endpoint incompatibility, audio-OUT exclusion, valid synthetic HID pair, malformed descriptors, signed Q8.8, raw ARM64 BL decoding and native signed conversion). Final verify.ps1: TypeScript/production build PASS;240 tests across25 files PASS. Regenerated dist excluded from this research commit. git diff --check PASS. Analysis fixtures reproducibly extracted from pinned APK; no runtime/device operations.
