@@ -2619,3 +2619,61 @@ Pinned official APK SHA04756b49acfea523758d86101c96c1824b7b209ae3a8836c07837088e
 
 ### Round2 automated verification
 Seven focused offline pregain tests PASS (endpoint incompatibility, audio-OUT exclusion, valid synthetic HID pair, malformed descriptors, signed Q8.8, raw ARM64 BL decoding and native signed conversion). Final verify.ps1: TypeScript/production build PASS;240 tests across25 files PASS. Regenerated dist excluded from this research commit. git diff --check PASS. Analysis fixtures reproducibly extracted from pinned APK; no runtime/device operations.
+
+## Control Research Round3/4 — working checkpoint
+Examined: existing pinned Freeman constructor/method caches, FeatureConfigFM3 and complete57 helper-pair inventory; no descriptor/SPV/PCM rescan. Verified346 subkeys62(current sample rate),90(saved EQ mode),84(feature availability),64(feature enabled state). Feature response byte14 maps bits1..5 to Diagnose/HiFiFM/DongleLRDetect/LPM/EQInFW; availability bit0 to FeatureCtrlEnabled. Hypothesis: LRDetect may be device recognition rather than gain; source consumers still to inspect. No field-position-based gain inference. Unresolved: consumers, remaining command fields, firmware/config artifacts. Next search target: targeted Freeman/FeatureConfig callsites and config assets. No hardware or runtime changes.
+
+### Research checkpoint — exact SDK family and closure
+Examined: targeted full Freeman bodies/direct SDK references, FeatureConfig parcel/controller/service flow, firmware metadata struct, resource-linked device-list XML and all57 helper pairs. Verified R$xml.devicelist resolves to res/qc.xml with exactVID13784/PID5270 under Freeman3; factory compares both IDs then constructs Freeman device. All10 known command families classified in officialFreemanControlEvidence.md. 346 source flags only name FeatureCtrl/Diagnose/HiFiFM/LRDetect/LPM/EQInFW; no gain/mic/volume setter consumer recovered. 442 parses sample rate only;446 coefficients;477 nine per-band parameters. Helper45coefficient logs match and no separate gain/mic transaction found. Discarded: LRDetect as Balance, exponent as Preamp, unparsed data as controls. Unresolved: actual firmware image/private schema, optional feature replies, UAC ranges/placement/backend. Next target: final Round4 bounded cross-validation/decision; no new broad research.
+
+## Control Research Round3/4 — COMPLETE (2026-10-08)
+Source evidence: tests/freedsp/fixtures/officialFreemanControlEvidence.md and officialFreemanControlStaticEvidence.json; reproducible targeted inspect-freeman-controls.py. APK SHA04756b49acfea523758d86101c96c1824b7b209ae3a8836c07837088e795d2d5; resource2132017153/res/qc.xml SHA f778b2f61b1449db3884f0be5e77a21b0b6c4c424a485ee3a6e56002fd4ea620. Exact family association HIGH, individual optional support not hardware verified. No new CAF control candidate qualifies HIGH/MEDIUM. Round3 complete,1 round remains; no Round4 started.
+
+| Family | Source caller/direction | Classification |
+|---|---|---|
+|90|switchEQMode setter; getEQMode via346/90|[90,modeIndex] EQ mode; supported mode domain unknown|
+|187|setEQCFGIsBypass setter|[0] EQ bypass configuration; not master mute|
+|188|setFreeman3EQEnabled setter|[1] EQ enable prerequisite; not gain|
+|190|setDefaultAvailable/setFreeman3EQ setters|per-path/per-slot exponent plus five coefficients; no independent preamp|
+|220|saveEQParamsToFlash setter|band metadata, five-rate coefficient bank,255 commit; no globalgain section|
+|259|getDeviceChipCode/getFwVersion getters|query1 -> chip identity; zero query -> four version words|
+|346|getCurSampleRate/getEQMode/getFeatureConfigFM3 getters|subkeys62/90/84/64; source flag map below|
+|442|getFreeman3EQConfig getter|response int10 -> sample-rate array; other words unparsed|
+|446|getFreeman3EQParam/getF3EQCoefficientList getters|[0,slot], exponent byte18 and coefficients22..38; list raw1..9; single getter band+5|
+|477|getEQParamList getter|band1..9 -> rate/band/frequency/Q/filterType/signed per-bandgain; no global section|
+
+346 feature byte14: availability bit0 FeatureCtrlEnabled; bits1..5 Diagnose/HiFiFM/DongleLRDetect/LPM/EQInFW available. Enabled query64 uses bits1..5 for corresponding enabled state. Availability6/7, enabled0/6/7 and later bytes remain unclassified; no guessed gain/capture/persistence names. Source consumers are data/service/parcel flow, not level controls. Offline model preserves unknown data. Query meanings are SDK app interpretation, not newly obtained1496 replies.
+FirmwareParam fields are identity/version/CRC/partition/USB IDs; no gain/mic capability fields. Targeted asset names found no firmware blob; resolving the actual XML resource recovered exact-device table despite obfuscated filename. Actual1496 firmware image/symbols/private control schema unavailable. This is bounded artifact closure, not proof hardware lacks private controls.
+
+### Candidate ranking / Round4 survivors
+| Source -> field | Semantic evidence / exact applicability | Confidence | Blocker / disposition |
+|---|---|---|---|
+|Round1 exact UAC FU2 -> L/R Volume|independent RW bits, exact1496 playback|HIGH descriptor / MEDIUM Balance mechanism|CUR/RANGE, safe backend, behavior unknown; survives|
+|Round1 exact UAC FU5 -> mono Volume/master Mute|RW bits, exact1496 capture|HIGH descriptor / MEDIUM basic Mic mechanism|range/behavior/backend unknown; DSP mic/monitor not proved; survives|
+|FU2 -> true pre-PEQ Preamp|USB volume exists, CAF PEQ placement unknown|LOW Preamp|no headroom proof; not implementation survivor|
+|346 LRDetect -> Balance|boolean detection name only, SDK family matches|REJECTED|no level payload/setter/units|
+|190/446 Gain or477 gain -> Preamp|source explicitly coefficient exponent/per-band gain|REJECTED|not independent global stage|
+|346 unnamed flags/442 unparsed words/220 zero tails|no source-named control meaning|LOW|do not invent semantics; not surviving|
+|FirmwareParam -> gain capability|only identity/update metadata|REJECTED|no gain field|
+|Known CAF -> independent Tone/mic monitor|no command/field/control route recovered|LOW|no implementation survivor|
+Statuses: Preamp LOW; Balance MEDIUM; Mic MEDIUM for basic UAC Volume/Mute only; independent Global Tone LOW. No claim any control is physically absent, no proposed mystery-bit tests, no Balance/Mic implementation.
+
+### Problem / hypothesis / next action
+Observed problem: verified stereo PEQ RAM works, but independent global gain/Balance/Mic/Tone remain unresolved.
+Verified facts: exact official SDK Freeman3 association recovered; all10 known families and4 recovered346 subkeys classified; no independent gain/mic path in reviewed callers/trace; two exact UAC descriptor mechanisms remain.
+Possible causes: basic levels may be managed by Audio Class rather than CAF; private firmware mechanisms may exist without available schemas. Neither proves pre-PEQ headroom.
+Ruled out / weakened: LRDetect as Balance;190 exponent/477 bandgain as Preamp; metadata as global stage; arbitrary zero/unparsed words as controls; native math/meters as physical controls.
+Next validation: separately authorized Round4 FINAL cross-validation/implementation decision for two UAC candidates and evidence limits only. No new broad APK/PCM/SPV/descriptor/FreeDSPStudio research, no guessed command space, no automatic hardware trial.
+Possible fix direction: use existing UI only if safe backend, exact values and feature semantics qualify; freeze unresolved controls after4. Never consume PEQ wires for Preamp/Tone. Then Flash/persistence, release/upstream cleanup. No Round5.
+
+## Evidence for upstream / Issue #3 — Control Research Round3
+Official pinned APK SDK resource R$xml.devicelist=2132017153 -> res/qc.xml explicitly maps VID13784/PID5270 (35D8:1496) to Freeman3; factory compares both IDs. Known CAF families90/187/188/190/220/259/346/442/446/477 resolve to EQ mode/bypass/enable, per-path band coefficients, EQ persistence, identity/version and EQ/config queries.346 subkeys62=current rate,90=saved mode,84/64=feature availability/enabled. Byte14 named flags are FeatureCtrl,Diagnose,HiFiFM,DongleLRDetect,LPM,EQInFW; unnamed bits/tail UNKNOWN.442 only interprets sample-rate index;446/477 are band-specific, not pregain. All57helper pairs comprise90x1,220x55,259x1 and45 matching coefficient logs; no named mastergain/balance/mic transfer. No new source-backed CAF control survives. Exact UAC L/R playback Volume and mono capture Volume/masterMute remain descriptor-supported; ranges/behavior/backend and pre-PEQ placement unknown. No hardware/runtime change. Round3/4 complete,1 final round remains; unresolved controls freeze after4, then persistence/release/PR cleanup.
+
+### Scope / regression check — Round3
+- FreeDSP-specific analysis/test files: targeted static extractor, feature-bit offline model, five tests and evidence fixtures.
+- Shared runtime files changed: NONE.
+- Non-FreeDSP protocol code changed: NO.
+- Hardware operations: NONE; no USB/CAF/UAC probe, volume/Windows setting/PEQ/Flash change or target execution.
+
+### Round3 automated verification
+Five focused Python tests PASS (exact SDK device association, independent feature availability/enabled bits, unknown-data preservation, short-buffer rejection and source-named field coverage). Existing57 helper pairs deterministically reproduce saved analysis;45 coefficient correlations match. Final verify.ps1 build PASS;240 tests/25files PASS. Regenerated dist excluded; git diff --check PASS. No runtime/hardware changes.

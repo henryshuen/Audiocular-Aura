@@ -487,3 +487,12 @@ Offline Python descriptor tests:7 PASS. Final verify.ps1: TypeScript/production 
 - Recorded static AOT UNVERIFIED SDK/indirect-call limits; cross-checked selected direct calls against raw ARM64 and selected JNI/DEX. No exhaustive callgraph claim.
 - Updated round budget to2/4 COMPLETE,2 remaining; no Round3, runtime code, non-FreeDSP protocol changes, target binary execution or hardware operations.
 - Verification:7 focused offline tests PASS; final verify.ps1 build and240 tests/25files PASS; git diff --check PASS. Build-generated dist excluded from research changes.
+
+## Control Research Round3/4 — known Freeman/CAF families classified
+- Extracted targeted Freeman/FeatureConfig/controller/factory/firmware metadata bodies and direct SDK references from pinned official APK; no full APK/native/AOT rescan.
+- Resolved R$xml.devicelist through resources.arsc to res/qc.xml and preserved decoded XML/hash. Exact35D8:1496 listed as Freeman3; factory compares VID/PID and constructs Freeman device.
+- Classified source callers/directions/known fields for90/187/188/190/220/259/346/442/446/477. Recorded346 subkeys62/90/84/64 and exact named feature-bit map; preserved unclassified bits/tail in offline model.
+- Re-analyzed all57 existing helper pairs;90x1/220x55/259x1,9 metadata/45 coefficient/1 commit; all45 coefficient logs match. No new hardware transfer or readback produced.
+- Recorded firmware metadata identity/version/CRC/partition fields and absence of a targeted bundled firmware artifact; retained limits on private firmware absence claims.
+- Completed candidate ranking: no new HIGH/MEDIUM CAF control survivor; exact UAC playback/capture mechanisms retained for final bounded decisions. Round3/4 COMPLETE,1 round remains; no Round4/runtime/hardware/non-FreeDSP protocol changes.
+- Verification:5 focused offline tests PASS;57helper-pair reanalysis matches saved fixture; verify.ps1 build and240tests/25files PASS. Regenerated dist excluded; git diff --check PASS.
