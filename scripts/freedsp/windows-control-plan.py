@@ -54,10 +54,12 @@ def actions(endpoint):
         result['attenuate-right'] = {'levels': [original[0], low[1]]}
         result['center'] = {'levels': original}
     else:
-        try:
-            result['mic-down'] = {'levels': [attenuated(volume['hardwareVolume'][0])]}
-        except ValueError as error:
-            result['attenuationBlocked'] = str(error)
+        level = volume['hardwareVolume'][0]
+        target = -12
+        if level['minDb'] <= target <= level['currentDb']:
+            result['mic-down'] = {'levels': [target]}
+        else:
+            result['attenuationBlocked'] = '-12dB is outside range or above saved baseline; no write'
         result['mic-mute'] = {'mute': True}
         result['mic-unmute'] = {'mute': False}
     return result
