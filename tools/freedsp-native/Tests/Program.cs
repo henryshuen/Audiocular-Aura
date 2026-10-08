@@ -558,6 +558,38 @@ async Task RunTransportBridgeMock(){
  }finally{cancellation.Cancel();await server;}
 }
 if(args.Length==2 && args[0]=="--export-m2s")File.WriteAllText(args[1],System.Text.Json.JsonSerializer.Serialize(M2sVectors(),new System.Text.Json.JsonSerializerOptions{WriteIndented=true}));
+byte[] FlashPacket(int command,int[] words){
+ var b=new byte[62];b[0]=1;BinaryPrimitives.WriteUInt32LittleEndian(b.AsSpan(2),13u|((uint)command<<16));
+ BinaryPrimitives.WriteUInt32LittleEndian(b.AsSpan(6),Caf346.Module);
+ for(int i=0;i<words.Length;i++)BinaryPrimitives.WriteInt32LittleEndian(b.AsSpan(10+4*i),words[i]);return b;
+}
+byte[] FlashReply(int command){var b=NonMatch(command);b[2]=0;return b;}
+Test("Flash primitive:56 requests, exact SET once / matching Input GET, commit255 last",()=>{
+ var plan=new List<byte[]>{FlashPacket(90,[90,..new int[12]])};
+ for(int wire=1;wire<=9;wire++)plan.Add(FlashPacket(220,[0,wire,1000,256,0,0,..new int[7]]));
+ for(int wire=1;wire<=9;wire++)for(int rate=4;rate<=8;rate++)plan.Add(FlashPacket(220,[rate,wire,3,4194304,0,0,0,0,..new int[5]]));
+ plan.Add(FlashPacket(220,[255,..new int[12]]));Check(plan.Count==56,"56 requests");
+ foreach(var tx in plan){int cmd=tx[4];using var hid=new MockHid(FlashReply(cmd));using var log=new StringWriter();
+   Check(TransportExchange.Run(hid,new(Convert.ToBase64String(tx)),log,()=>new FakeClock())==0,"Matching Flash response");
+   Check(hid.Transmissions.Single().SequenceEqual(tx)&&hid.Calls.SequenceEqual(new[]{"SET","GET"}),"No retry unchanged SET/GET");}
+ Check(BinaryPrimitives.ReadInt32LittleEndian(plan[^1].AsSpan(10))==255,"Commit unsigned255");
+});
+Test("Flash malformed class/commit/rate/metadata rejected before SET",()=>{
+ foreach(var tx in new[]{FlashPacket(220,[-1,..new int[12]]),FlashPacket(220,[1,5,3,4194304,..new int[9]]),
+   FlashPacket(220,[0,10,1000,256,0,-6,..new int[7]]),FlashPacket(220,[0,5,1000,256,0,-1536,..new int[7]]),
+   FlashPacket(90,[90,1,..new int[11]])}){
+   using var hid=new MockHid(NonMatch(220));using var log=new StringWriter();
+   Throws(()=>TransportExchange.Run(hid,new(Convert.ToBase64String(tx)),log));Check(hid.Transmissions.Count==0,"Invalid Flash never SET");}
+});
+Test("Flash first bad response fails immediately without GET polling or SET retry",()=>{
+ var tx=FlashPacket(220,[255,..new int[12]]);
+ foreach(var rx in new[]{NonMatch(190),Reply(5),new byte[62]}){
+   using var hid=new MockHid(rx);hid.Responses.Enqueue(rx);hid.Responses.Enqueue(FlashReply(220));using var log=new StringWriter();
+   Check(TransportExchange.Run(hid,new(Convert.ToBase64String(tx)),log,()=>new FakeClock())==7,"Mismatch STOP");
+   Check(hid.Calls.SequenceEqual(new[]{"SET","GET"}),"One SET one GET only");}
+ var nonzero=NonMatch(220);nonzero[2]=1;using var bad=new MockHid(nonzero);using var badLog=new StringWriter();
+ Check(TransportExchange.Run(bad,new(Convert.ToBase64String(tx)),badLog,()=>new FakeClock())==7&&bad.Calls.Count==2,"Unexpected count STOP");
+});
 Console.WriteLine($"Native offline tests: {passed} passed; SYNTHETIC / MOCK ONLY; no hardware access.");
 return 0;
 

@@ -1764,10 +1764,10 @@ export function configureFreeDspUI(active:boolean){
  }
  setAutoPreampEnabled(false);setGlobalGainState(0);resetTiltState();updateGlobalGainUI(0);
  (window as any).stopFreeDspMicDisplay?.();
- for(const id of ['globalGainSlider','checkAutoPreamp','slideBassTilt','slideTrebleTilt','btnFlash']){const e=document.getElementById(id) as HTMLInputElement|null;if(e)e.disabled=true;}
+ for(const id of ['globalGainSlider','checkAutoPreamp','slideBassTilt','slideTrebleTilt']){const e=document.getElementById(id) as HTMLInputElement|null;if(e)e.disabled=true;}
  document.querySelectorAll<HTMLInputElement|HTMLButtonElement|HTMLSelectElement>('.utility-card-full input, .utility-card-full select, .utility-card-full button').forEach(e=>e.disabled=true);
  const send=document.getElementById('btnSendToDevice') as HTMLButtonElement|null;if(send){send.disabled=true;send.title='FreeDSP 此通用操作尚未驗證；請用SYNC TO RAM。';}
- const flash=document.getElementById('btnFlash');if(flash){flash.textContent='FreeDSP Flash 尚未驗證／停用';flash.removeAttribute('data-i18n');}
+ const flash=document.getElementById('btnFlash') as HTMLButtonElement|null;if(flash){flash.disabled=false;flash.textContent='SAVE FREEDSP TO FLASH (PERMANENT)';flash.title='READY：協定候選，USB斷電持久性尚未硬體驗證';flash.removeAttribute('data-i18n');}
  const actions=document.getElementById('hardwareMemoryActions');if(actions)actions.style.flexWrap='wrap';
  const note=document.getElementById('freeDspStorageNote');if(note)note.hidden=false;
  const ramStatus=document.getElementById('freeDspRamStatus');if(ramStatus){ramStatus.hidden=false;ramStatus.textContent='FREEDSP RAM：已連線，狀態未讀回；LOCAL EDITOR尚未由本次Sync送出。';}

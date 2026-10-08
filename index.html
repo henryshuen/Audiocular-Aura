@@ -307,7 +307,7 @@
 
             <button id="btnFlash" class="btn btn-highlight action" disabled aria-label="Write current EQ settings permanently to DAC Flash" data-i18n="btn_save_flash">SAVE TO FLASH (PERMANENT)</button>
           </div>
-          <p id="freeDspStorageNote" hidden>LOCAL EDITOR：拖曳、輸入、RESET TO FLAT、Slot A/B/OFF 只改本地快照；不是硬體slots。FREEDSP RAM：需Windows原生HID helper（非browser-only）；僅明確SYNC TO RAM或RESTORE。9 wires × LEFT/RIGHT，共18次190。Restore不修改editor；沒有PEQ讀回／Flash／持久保存。</p>
+          <p id="freeDspStorageNote" hidden>LOCAL EDITOR：拖曳、輸入、RESET TO FLAT、Slot A/B/OFF只改本地，不是硬體slots。FREEDSP RAM：明確SYNC／RESTORE，9 wires × LEFT/RIGHT共18次190。FREEDSP FLASH：另按SAVE永久寫入，五個rate banks／55次220含commit；USB斷電持久性尚未硬體驗證。需Windows原生HID helper；Restore RAM不修改editor，也不還原Flash。沒有PEQ讀回。</p>
           <p id="freeDspRamStatus" hidden role="status" aria-live="polite">FREEDSP RAM：狀態未讀回；尚未執行本次Sync／Restore。</p>
         </section>
       </div>

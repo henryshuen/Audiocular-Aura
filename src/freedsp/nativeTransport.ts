@@ -2,6 +2,7 @@
 import {CTRL,parseCaf} from './cafCodec.ts';
 import type {CafCommand,CafTransport} from './cafRam.ts';
 export class NativeCafTransport implements CafTransport {
+ readonly supportsFlash=true;
  private token='';private controller:AbortController|null=null;private disposed=false;
  constructor(private log:(s:string)=>void,private fetcher:typeof fetch=globalThis.fetch.bind(globalThis)){}
  async connect(){

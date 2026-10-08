@@ -146,12 +146,23 @@ async function safeSyncToDevice() {
 }
 
 async function safeFlashToFlash() {
-	if(isFreeDsp(getDevice())){log('FreeDSP Flash未驗證／停用。');return;}
+	if(isFreeDsp(getDevice())){
+    if((window as any).isConfigurationUnsafe?.()){showSafetyModal('flash');return;}
+    await saveFreeDspFlash();return;
+  }
 	if ((window as any).isConfigurationUnsafe?.()) {
 		showSafetyModal("flash");
 	} else {
 		await flashToFlash();
 	}
+}
+
+async function saveFreeDspFlash(){
+  const button=document.getElementById('btnFlash') as HTMLButtonElement|null;if(button)button.disabled=true;
+  try{setFreeDspRamStatus('FREEDSP FLASH：等待明確Save／ACK；非RAM Sync。');const saved=await flashToFlash();
+    setFreeDspRamStatus(saved===true?'FREEDSP FLASH：56次matching回應含commit完成；持久性尚未硬體PASS。':'FREEDSP FLASH：Save已取消，沒有Flash寫入。');}
+  catch(e){setFreeDspRamStatus('FREEDSP FLASH：未完成／可能部分保存；STOP，不重試。請查看逐封包log。');log(String(e));}
+  finally{if(button)button.disabled=!isFreeDsp(getDevice());}
 }
 
 function showSafetyModal(action: "sync" | "flash") {
@@ -238,7 +249,7 @@ btnSafetyProceed?.addEventListener("click", async () => {
 	if (action === "sync") {
 		if(isFreeDsp(getDevice()))await syncFreeDspRam();else await syncToDevice();
 	} else if (action === "flash") {
-		await flashToFlash();
+		if(isFreeDsp(getDevice()))await saveFreeDspFlash();else await flashToFlash();
 	}
 });
 
