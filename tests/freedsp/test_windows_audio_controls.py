@@ -67,10 +67,30 @@ class WindowsAudioTests(unittest.TestCase):
 
     def test_mic_plan_preserves_original_and_has_no_boost(self):
         actions = plan.actions(fixture['endpoints'][1])
-        self.assertEqual(actions['mic-down'], {'levels': [-3]})
+        self.assertEqual(actions['mic-down'], {'levels': [-12]})
         self.assertEqual(actions['mic-mute'], {'mute': True})
         self.assertEqual(actions['mic-unmute'], {'mute': False})
         self.assertEqual(actions['restore'], {'levels': [0], 'mute': False})
+
+    def test_mic_fixed_target_and_saved_restore_for_nonzero_baseline(self):
+        endpoint = copy.deepcopy(fixture['endpoints'][1])
+        volume, _ = plan.select_controls(endpoint)
+        volume['hardwareVolume'][0]['currentDb'] = -6
+        actions = plan.actions(endpoint)
+        self.assertEqual(actions['mic-down'], {'levels': [-12]})
+        self.assertEqual(actions['restore']['levels'], [-6])
+        self.assertNotIn('mic-up', actions)
+        volume['hardwareVolume'][0]['currentDb'] = -20
+        self.assertNotIn('mic-down', plan.actions(endpoint))
+
+    def test_mic_target_outside_reported_range_is_blocked(self):
+        endpoint = copy.deepcopy(fixture['endpoints'][1])
+        volume, _ = plan.select_controls(endpoint)
+        volume['hardwareVolume'][0]['minDb'] = -10
+        actions = plan.actions(endpoint)
+        self.assertNotIn('mic-down', actions)
+        self.assertEqual(actions['mic-mute'], {'mute': True})
+        self.assertEqual(actions['mic-unmute'], {'mute': False})
 
     def test_identity_range_or_ambiguity_changes_stop(self):
         for alteration in ['identity', 'range', 'duplicate']:

@@ -74,8 +74,14 @@ other at its original value, and CENTER restores original pair (including
 any preexisting asymmetry). The expected Windows stereo channel0LEFT/1RIGHT
 assignment follows two-channel layout and saved FL/FR descriptor; Henry must
 verify ear direction. This is NOT CAF path0/path1 indexing.
-Mic test attenuates mono channel by at most3dB, explicit mute/unmute, restores
-original level/mute. This is basic capture volume; no mic DSP, meter/peak query,
+Mic test sets mono capture hardware volume to exactly-12dB, explicit
+mute/unmute unchanged, and restores saved original level/mute (normally0dB).
+Verified range-74..0dB provides attenuation only: positive hardware gain is
+unavailable through this UAC control; no mic-up +12dB. If-12dB is above the
+saved baseline or outside the reported range, mic-down is blocked. Writing,
+recorded attenuation/mute and restoration remain PENDING hardware validation;
+changing this diagnostic does not establish a hardware PASS.
+This is basic capture volume; no mic DSP, meter/peak query,
 sidetone, loopback/monitor/AGC or persistence claim.
 
 One manual session, only when convenient:

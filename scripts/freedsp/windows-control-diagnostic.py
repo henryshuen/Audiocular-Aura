@@ -133,6 +133,8 @@ def run(reader, args):
     for flow, choices in available.items():
         print(flow + ': ' + json.dumps(choices))
     print('APO OFF; normal music only; low Windows volume. No test tones.')
+    print('Mic: mic-down sets -12dB; mic-restore restores saved original level (normally0dB).')
+    print('Verified capture UAC hardware range: -74..0dB. Positive hardware gain is unavailable through this control; no mic-up +12dB.')
     print('Commands: attenuate-left, center, attenuate-right; mic-down, mic-mute, mic-unmute, mic-restore.')
     print('Q = explicitly restore both saved original states and exit. Ctrl+C/error: STOP, no automatic retry/rollback; use saved recovery command.')
     while True:
