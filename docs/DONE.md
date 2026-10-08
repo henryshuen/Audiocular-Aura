@@ -496,3 +496,15 @@ Offline Python descriptor tests:7 PASS. Final verify.ps1: TypeScript/production 
 - Recorded firmware metadata identity/version/CRC/partition fields and absence of a targeted bundled firmware artifact; retained limits on private firmware absence claims.
 - Completed candidate ranking: no new HIGH/MEDIUM CAF control survivor; exact UAC playback/capture mechanisms retained for final bounded decisions. Round3/4 COMPLETE,1 round remains; no Round4/runtime/hardware/non-FreeDSP protocol changes.
 - Verification:5 focused offline tests PASS;57helper-pair reanalysis matches saved fixture; verify.ps1 build and240tests/25files PASS. Regenerated dist excluded; git diff --check PASS.
+
+## Control Research Round4/4 COMPLETE — 2026-10-08
+- Read exact FreeDSP Windows audio function service/INF usbaudio2/usbaudio2.inf; retained class driver.
+- Successfully activated documented direct hardware IAudioVolumeLevel/IAudioMute on exact adapter playback/capture paths. Captured unique2-channel playback and1-channel capture nodes; all current/range/mute values and exact endpoint/part IDs preserved in primary JSON.
+- Read playback-74/-74dB/muted; capture0dB/unmuted; ranges-74..0dB/step.5. Endpoint hardware mask3 and endpoint getters agree with direct hardware controls. No raw USB CUR/RANGE claim or numeric FU-ID read claim.
+- Audited read and temporary diagnostic COM vtable/IID against Microsoft SDK headers; preserved source URLs/hashes. Added deterministic offline plans, identity/range guards and temporary Henry-operated original-state CLI. Codex executed no setter, listening/recording or hardware restoration test.
+- Final decisions documented: Preamp FROZEN-UNKNOWN, Balance DIAGNOSTIC-ONLY, Mic DIAGNOSTIC-ONLY, Global Tone FROZEN-UNSUPPORTED; production controls unchanged/disabled. Current muted/minimum playback blocks attenuation without auto-adjustment.
+- Round1 COMPLETE; Round2 COMPLETE; Round3 COMPLETE; Round4 COMPLETE. Control research CLOSED; no Round5. Next milestone FLASH / PERSISTENCE, then release/upstream cleanup/PR; none started here.
+- Updated all four docs and Issue3 evidence summary; production/runtime/native helper/non-FreeDSP protocol unchanged.
+
+### Round4 automated verification
+9 focused offline Python tests PASS (no COM/device calls); diagnostic --help PASS without hardware activation. Final verify.ps1: TypeScript/production build PASS;240 tests across25files PASS. No setter/listening/recording/restoration test executed by Codex. Build-generated dist excluded from research commit. git diff --check PASS.

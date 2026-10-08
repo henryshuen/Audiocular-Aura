@@ -2677,3 +2677,42 @@ Official pinned APK SDK resource R$xml.devicelist=2132017153 -> res/qc.xml expli
 
 ### Round3 automated verification
 Five focused Python tests PASS (exact SDK device association, independent feature availability/enabled bits, unknown-data preservation, short-buffer rejection and source-named field coverage). Existing57 helper pairs deterministically reproduce saved analysis;45 coefficient correlations match. Final verify.ps1 build PASS;240 tests/25files PASS. Regenerated dist excluded; git diff --check PASS. No runtime/hardware changes.
+
+## Control Research Round4/4 — read-only Windows checkpoint
+Examined: documented Microsoft Core Audio/DeviceTopology APIs and exact-device connected-adapter COM getters only; no rejected-protocol or descriptor rescan. Verified live1496 playback hardware Volume2channels/Mute and capture hardware Volume1channel/Mute through IPart.Activate, with endpointHardwareSupportMask3 on both paths. Driver dB range -74..0,step.5 on all3channels; playback current[-74,-74],mutedtrue;capture current0,mutedfalse. KS node0/1(playback),2/3(capture) are NOT USB FU IDs. No raw UAC CUR/RANGE or pre-PEQ placement claim. Hypothesis: unique per-path volume/mute nodes correspond to sole descriptor FeatureUnit; exact numeric FU mapping remains inferred. Next action: offline bounded manual diagnostic tests/closure, no Codex setter execution. Playback baseline muted/minimum must reject attenuation and never auto-raise/unmute.
+
+## Control Research Round4/4 — FINAL COMPLETE (2026-10-08)
+
+### Research checkpoint
+Examined: documented Microsoft DeviceTopology hardware interfaces, SDK ABI headers, exact Windows audio function identity and one read-only Core Audio capture. Verified: usbaudio2/usbaudio2.inf retained; unique playback2-channel hardware Volume plus Mute, unique capturemono Volume plus Mute. Current playback-74/-74dB/muted; capture0dB/unmuted; all ranges-74..0dB/step.5. Hardware mask3 corroborates direct interfaces. No driver replacement, stream, raw USB/KS request or setter executed.
+Hypotheses: Windows hardware nodes correspond to sole descriptor FU2/FU5 on their paths; numeric entity mapping inferred, not directly returned. Discarded: ordinary endpoint getters alone prove hardware mapping; hardware attenuation proves pre-PEQ gain; minimum/muted baseline supports attenuation. Unresolved: physical channel direction, audible/recorded effects, successful setter/restore behavior, pre-PEQ placement. Next target: no further control search. Known-interface manual diagnostic is optional; next development milestone FLASH / PERSISTENCE.
+
+| Control | Evidence | Final confidence | Final status | Hardware validation / freeze reason |
+|---|---|---|---|---|
+|Preamp|Hardware volume accessible; no CAF/headroom placement proof|LOW true preamp|FROZEN-UNKNOWN|No pre-PEQ proof; not output-volume or PEQ substitution|
+|Balance|Exact hardware Volume has2channels/current/ranges|HIGH Windows read; FU2 numeric mapping inferred|DIAGNOSTIC-ONLY|Read PASS; setter/ear/restore pending; production disabled|
+|Mic|Exact capture hardware Volume1channel/Mute/current/ranges|HIGH Windows read; FU5 numeric mapping inferred|DIAGNOSTIC-ONLY|Read PASS; setter/recording/restore pending; production disabled|
+|Global Tone|No independent known mechanism|LOW|FROZEN-UNSUPPORTED|Current adapter unsupported; no hardware-absence claim or hidden PEQ use|
+
+Three isolated Python helpers prepare one temporary Henry-operated CLI: documented direct hardware getters, offline original-or-lower plans, explicit guarded setters. Original endpoint/part/range/state saved before writes in LOCALAPPDATA; center restores original pair, attenuation at most3dB; mic attenuation/mute/unmute/restoration only. No automatic retry/rollback; failure/interrupt retains snapshot and prints explicit recovery. Current muted/minimum playback blocks tests without auto-adjustment. See tests/freedsp/fixtures/freeDspWindowsAudioEvidence.md for source links, ABI fixture and one manual sequence. No production UI or transport replacement.
+
+### Problem / hypothesis / next action
+Observed problem: descriptor-backed controls lacked a verified Windows backend; preamp placement remained unknown.
+Verified facts: exact driver hardware volume/mute getters succeed with known current/ranges; no writes performed. PEQ RAM hardware PASS unchanged.
+Possible causes: firmware/driver attenuation stage placement not exposed by topology; numeric UAC association only inferred.
+Ruled out / weakened: generic endpoint software-volume assumption, raw KS node=FU ID assumption, recovered incompatible SPV route, using ordinary output attenuation as proven headroom.
+Next validation: one optional Henry manual known-interface session; setter/behavior/restore pending. No Round5; development moves to FLASH / PERSISTENCE.
+Possible fix direction: keep Balance/Mic diagnostic-only and Preamp/Tone frozen; no production integration without behavior evidence. No PEQ emulation.
+
+## Evidence for upstream / Issue #3 — final control research closure
+Exact35D8:1496 UAC2 topology provides playback FU2 independent FL/FR Volume/masterMute and capturemono FU5 Volume/masterMute. Windows usbaudio2 hardware IAudioVolumeLevel/IAudioMute activation on unique exact adapter paths succeeded: playback2channels -74/-74dB muted; capture1channel0dB unmuted; ranges-74..0/step.5. These are Windows hardware/driver dB, not raw USB CUR/RANGE; KSnode0/2 are not FU entityIDs. Numeric FU2/FU5 association is topology inference. No driver replacement/KS/raw request or setter executed. Bounded saved-state manual diagnostic prepared; no production control enabled. Preamp FROZEN-UNKNOWN (placement/headroom absent); Balance/Mic DIAGNOSTIC-ONLY (read HIGH, behavior pending); independent Tone FROZEN-UNSUPPORTED in adapter. Control research1/2/3/4 COMPLETE; no5. Next persistence, then release/upstream cleanup; remove temporary surfaces and preserve original UI/otherDAC semantics and minimal native HID transport exception.
+
+### Scope / regression check — Round4
+- FreeDSP-specific files changed: isolated scripts/freedsp Python reader/planner/manual diagnostic and evidence fixtures.
+- Analysis/test files changed: tests/freedsp/test_windows_audio_controls.py and fixtures; four docs updated.
+- Shared runtime files changed: NONE.
+- Non-FreeDSP protocol code changed: NO.
+- Physical access: authorized read-only PnP/Core Audio getters only; no setters, CAF, PEQ, Flash, driver or stream changes.
+
+### Round4 automated verification
+9 focused offline Python tests PASS (no COM/device calls); diagnostic --help PASS without hardware activation. Final verify.ps1: TypeScript/production build PASS;240 tests across25files PASS. No setter/listening/recording/restoration test executed by Codex. Build-generated dist excluded from research commit. git diff --check PASS.

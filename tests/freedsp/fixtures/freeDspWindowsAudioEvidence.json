@@ -1,0 +1,159 @@
+{
+  "capturedUtc": "2026-10-08T01:03:31.053060+00:00",
+  "vid": "0x35D8",
+  "pid": "0x1496",
+  "safety": "Read-only COM getters, exact connected adapter guard; no setters, raw USB/KS, CAF, stream, driver or settings changes.",
+  "limits": "Windows part/node IDs are not USB Feature Unit IDs; dB/ranges are driver values, not raw UAC CUR/RANGE. Does not establish PEQ placement or write behavior.",
+  "endpoints": [
+    {
+      "flow": "playback",
+      "endpointId": "{0.0.0.00000000}.{96b8b243-ad44-4410-8319-2dfb616835c2}",
+      "adapterId": "{2}.\\\\?\\usb#vid_35d8&pid_1496&mi_00#7&3474ef0f&1&0000#{6994ad04-93ef-11d0-a3cc-00a0c9223196}\\msft_topo",
+      "parts": [
+        {
+          "localId": 65536,
+          "ksNodeId": 0,
+          "name": "Headset",
+          "globalId": "{2}.\\\\?\\usb#vid_35d8&pid_1496&mi_00#7&3474ef0f&1&0000#{6994ad04-93ef-11d0-a3cc-00a0c9223196}\\msft_topo/00010000",
+          "VolumeInterfaceResult": "HRESULT 0x80004002",
+          "MuteInterfaceResult": "HRESULT 0x80004002",
+          "EnumPartsOutgoingResult": "HRESULT 0x80070490"
+        },
+        {
+          "localId": 131072,
+          "ksNodeId": 0,
+          "name": "Volume",
+          "globalId": "{2}.\\\\?\\usb#vid_35d8&pid_1496&mi_00#7&3474ef0f&1&0000#{6994ad04-93ef-11d0-a3cc-00a0c9223196}\\msft_topo/00020000",
+          "hardwareVolume": [
+            {
+              "channel": 0,
+              "currentDb": -74.0,
+              "minDb": -74.0,
+              "maxDb": 0.0,
+              "stepDb": 0.5
+            },
+            {
+              "channel": 1,
+              "currentDb": -74.0,
+              "minDb": -74.0,
+              "maxDb": 0.0,
+              "stepDb": 0.5
+            }
+          ],
+          "MuteInterfaceResult": "HRESULT 0x80004002"
+        },
+        {
+          "localId": 131073,
+          "ksNodeId": 1,
+          "name": "Mute",
+          "globalId": "{2}.\\\\?\\usb#vid_35d8&pid_1496&mi_00#7&3474ef0f&1&0000#{6994ad04-93ef-11d0-a3cc-00a0c9223196}\\msft_topo/00020001",
+          "VolumeInterfaceResult": "HRESULT 0x80004002",
+          "hardwareMute": true
+        },
+        {
+          "localId": 65537,
+          "ksNodeId": 1,
+          "name": "",
+          "globalId": "{2}.\\\\?\\usb#vid_35d8&pid_1496&mi_00#7&3474ef0f&1&0000#{6994ad04-93ef-11d0-a3cc-00a0c9223196}\\msft_topo/00010001",
+          "VolumeInterfaceResult": "HRESULT 0x80004002",
+          "MuteInterfaceResult": "HRESULT 0x80004002",
+          "EnumPartsIncomingResult": "HRESULT 0x80070490"
+        }
+      ],
+      "endpointHardwareSupportMask": 3,
+      "endpointChannels": [
+        {
+          "channel": 0,
+          "currentDb": -74.0
+        },
+        {
+          "channel": 1,
+          "currentDb": -74.0
+        }
+      ],
+      "endpointMute": true,
+      "endpointRange": {
+        "minDb": -74.0,
+        "maxDb": 0.0,
+        "stepDb": 0.5
+      }
+    },
+    {
+      "flow": "capture",
+      "endpointId": "{0.0.1.00000000}.{491be561-9744-408b-8ebc-221f2fedace8}",
+      "adapterId": "{2}.\\\\?\\usb#vid_35d8&pid_1496&mi_00#7&3474ef0f&1&0000#{6994ad04-93ef-11d0-a3cc-00a0c9223196}\\msft_topo",
+      "parts": [
+        {
+          "localId": 65539,
+          "ksNodeId": 3,
+          "name": "Microphone",
+          "globalId": "{2}.\\\\?\\usb#vid_35d8&pid_1496&mi_00#7&3474ef0f&1&0000#{6994ad04-93ef-11d0-a3cc-00a0c9223196}\\msft_topo/00010003",
+          "VolumeInterfaceResult": "HRESULT 0x80004002",
+          "MuteInterfaceResult": "HRESULT 0x80004002",
+          "EnumPartsIncomingResult": "HRESULT 0x80070490"
+        },
+        {
+          "localId": 131075,
+          "ksNodeId": 3,
+          "name": "Mute",
+          "globalId": "{2}.\\\\?\\usb#vid_35d8&pid_1496&mi_00#7&3474ef0f&1&0000#{6994ad04-93ef-11d0-a3cc-00a0c9223196}\\msft_topo/00020003",
+          "VolumeInterfaceResult": "HRESULT 0x80004002",
+          "hardwareMute": false
+        },
+        {
+          "localId": 131074,
+          "ksNodeId": 2,
+          "name": "Volume",
+          "globalId": "{2}.\\\\?\\usb#vid_35d8&pid_1496&mi_00#7&3474ef0f&1&0000#{6994ad04-93ef-11d0-a3cc-00a0c9223196}\\msft_topo/00020002",
+          "hardwareVolume": [
+            {
+              "channel": 0,
+              "currentDb": 0.0,
+              "minDb": -74.0,
+              "maxDb": 0.0,
+              "stepDb": 0.5
+            }
+          ],
+          "MuteInterfaceResult": "HRESULT 0x80004002"
+        },
+        {
+          "localId": 65538,
+          "ksNodeId": 2,
+          "name": "",
+          "globalId": "{2}.\\\\?\\usb#vid_35d8&pid_1496&mi_00#7&3474ef0f&1&0000#{6994ad04-93ef-11d0-a3cc-00a0c9223196}\\msft_topo/00010002",
+          "VolumeInterfaceResult": "HRESULT 0x80004002",
+          "MuteInterfaceResult": "HRESULT 0x80004002",
+          "EnumPartsOutgoingResult": "HRESULT 0x80070490"
+        }
+      ],
+      "endpointHardwareSupportMask": 3,
+      "endpointChannels": [
+        {
+          "channel": 0,
+          "currentDb": 0.0
+        }
+      ],
+      "endpointMute": false,
+      "endpointRange": {
+        "minDb": -74.0,
+        "maxDb": 0.0,
+        "stepDb": 0.5
+      }
+    }
+  ],
+  "errors": [],
+  "pnpAudioFunction": {
+    "instanceId": "USB\\VID_35D8&PID_1496&MI_00\\7&3474ef0f&1&0000",
+    "properties": [
+      {
+        "KeyName": "DEVPKEY_Device_Service",
+        "Data": "usbaudio2"
+      },
+      {
+        "KeyName": "DEVPKEY_Device_DriverInfPath",
+        "Data": "usbaudio2.inf"
+      }
+    ],
+    "source": "Read-only Get-PnpDeviceProperty during Round4"
+  }
+}
