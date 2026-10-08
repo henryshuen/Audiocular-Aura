@@ -1,0 +1,276 @@
+{
+  "apkSha256": "04756b49acfea523758d86101c96c1824b7b209ae3a8836c07837088e795d2d5",
+  "libappSha256": "d7a36533a469218685d7ffe4670bfa6c01e66897fc4f907de3e20ce9843420ac",
+  "category": "Primary static string bytes; unassigned call sites",
+  "limitations": "Offsets are file offsets, not function addresses. Strings do not prove execution, exact-device routing, slider enforcement or hardware capability.",
+  "findings": [
+    {
+      "term": "-16dB",
+      "encoding": "utf-8",
+      "matchCount": 1,
+      "entries": [
+        {
+          "fileOffset": 621579,
+          "context": "FAIL: the gain range is -16dB~6dB\ufffdget:_usesJiuFrequencyEncoding@1527188586\ufffdTokenManager\ufffdScrollSprin"
+        }
+      ]
+    },
+    {
+      "term": "-16dB",
+      "encoding": "utf-16-le",
+      "matchCount": 4,
+      "entries": [
+        {
+          "fileOffset": 567745,
+          "context": "\ua930\uc2e4\ud328: \uc774\ub4dd \ubc94\uc704: -16dB~6dB\u5ffa\u694d\u6978\u416e\u7070\u696c\u6163\u6974\u6e6f\u3333\u2633\u544a\u7079\u4265\u7361\u2665\u434a\u6c61\u616c\u6c62\u2665\u414a\u6363\u7365\u6973\u6c62\u4065\u3831\u3533\u3233\u3834"
+        },
+        {
+          "fileOffset": 635380,
+          "context": "\u7473\u6e61\u6264\ua779\u30b2\u30a4\u30f3\u5024\u306e\u7bc4\u56f2\u306f-16dB\u301c6dB\u3067\u3059\uf4ad\u0866\u6d5c\ub769\uf400\u7d66\u2859\ub775\uf400\ube66\u967c\u0c6e\u21ff\u5071\ud396\u5562\u335c\u5f80\u846a\uef76\ufd53\u2780\u9160\u8fde\u63a5\u8d85\u65f6\uff0c\u8bf7"
+        },
+        {
+          "fileOffset": 713515,
+          "context": "\u6e61\ua774\u5931\u6557\uff1a\u589e\u76ca\u53d6\u503c\u7bc4\u570d\u70ba-16dB~6dB\u4fae\u6a62\u6365\u5f74\u6973\u706d\u656c\u6e49\u7473\u6e61\u6563\u664f\u6587\uea67\u1a81\u8eff\u6557\u5562\u6972\u902e\u7562\u646e\u656c\u6449\u679a\u7465\u6c3a\u7361\u4374\u6968\u646c"
+        },
+        {
+          "fileOffset": 972599,
+          "context": "\u3138\ua734\u5931\u8d25\uff1a\u589e\u76ca\u53d6\u503c\u8303\u56f4\u4e3a-16dB~6dB\u69b6\u616d\u6567\u2f73\u6369\u775f\u5f6e\u6964\u6c61\u676f\u705f\u6369\u702e\u676e\u4db8\u7962\u6c6c\u2420\u6f6d\u6164\u526c\u756f\u6574\u6f43\u746e\u6e65\u4e74\u6d61\u9465\u6150\u7372"
+        }
+      ]
+    },
+    {
+      "term": "-18dB",
+      "encoding": "utf-8",
+      "matchCount": 1,
+      "entries": [
+        {
+          "fileOffset": 1128769,
+          "context": "FAIL: the gain range is -18dB~12dB\ufffdresetSpvPeq\ufffdpackage:android_file_picker/src/android_platform_fil"
+        }
+      ]
+    },
+    {
+      "term": "-18dB",
+      "encoding": "utf-16-le",
+      "matchCount": 4,
+      "entries": [
+        {
+          "fileOffset": 241700,
+          "context": "\u7a84\ua938\u5931\u6557\uff1a\u589e\u76ca\u53d6\u503c\u7bc4\u570d\u70ba-18dB~12dB\u708a\u7261\u3474\u50c2\u656c\u7361\u2065\u7661\u696f\u2064\u7266\u7165\u6575\u746e\u6f20\u6570\u6172\u6974\u6e6f\u2e73\u7586\u7a76\u53a2\u6e79\u4c63\u3363\u7453\u7461\u4565\u6576"
+        },
+        {
+          "fileOffset": 777761,
+          "context": "\u3531\u3831\u3033\ua937\u30b2\u30a4\u30f3\u5024\u306e\u7bc4\u56f2\u306f-18dB\u301c12dB\u3067\u3059\u539c\u7274\u6165\u436d\u6e6f\u7573\u656d\u9e72\u7075\u6164\u6574\u6553\u616d\u746e\u6369\u9b73\ucd9c\ub825 \ubaa8\ub4dc \uc124\uc815 \uc2e4\ud328:"
+        },
+        {
+          "fileOffset": 1021200,
+          "context": "\uab36\uc2e4\ud328: \uc774\ub4dd \ubc94\uc704: -18dB~12dB\uc689\ub930\uc830\u2d30\u924e\u6573\u656c\u7463\u6c41\u8a6c\u6950\u6578\ub26c\u7543\u6570\u7472\u6e69\u4c6f\u636f\u6c61\u7a69\u7461\u6f69\u456e\u5573\ua873\u6572\u6f6d\u6576\u7453"
+        },
+        {
+          "fileOffset": 1074794,
+          "context": "\u6577\ua962\u5931\u8d25\uff1a\u589e\u76ca\u53d6\u503c\u8303\u56f4\u4e3a-18dB~12dB\u53cc\u6365\u7275\u5365\u636f\u656b\u5f74\u654e\u5877\u3035\u4339\u7265\u6974\u6966\u6163\u6574\u7257\u7061\u6570\u9372\u8aac\u660e\u66f8\u304c\u3042\u308a\u307e\u305b\u3093\u816f"
+        }
+      ]
+    },
+    {
+      "term": "\u589e\u76ca\u7bc4\u570d\uff1a",
+      "encoding": "utf-8",
+      "matchCount": 0,
+      "entries": []
+    },
+    {
+      "term": "\u589e\u76ca\u7bc4\u570d\uff1a",
+      "encoding": "utf-16-le",
+      "matchCount": 1,
+      "entries": [
+        {
+          "fileOffset": 656421,
+          "context": "\u3733\u3139\u67a4\u7465\u733a\u6275\u7274\u6565\u6f43\u746e\u7865\u8b74\u589e\u76ca\u7bc4\u570d\uff1a\u678a\u7872\u6c6d\u699e\u5073\u6761\u6e69\u4567\u616e\u6c62\u6465\u7292\u6769\u7468\u6554\u7478\u67b6\u7465\u683a\u6165\u6972\u676e\u6554\u7473\u6e49\u7473\u7572\u7463\u6f69\u336e\u4e96\u5445\u4353\u5041\u3245"
+        }
+      ]
+    },
+    {
+      "term": "gain range",
+      "encoding": "utf-8",
+      "matchCount": 3,
+      "entries": [
+        {
+          "fileOffset": 621565,
+          "context": "ate@251271612\ufffdFAIL: the gain range is -16dB~6dB\ufffdget:_usesJiuFrequencyEncoding@1527188586\ufffdTokenManager\ufffdSc"
+        },
+        {
+          "fileOffset": 1083289,
+          "context": "on@1450421016\ufffdFAIL: the gain range is -12dB~3dB\ufffdMM-d\ufffdfloatingCursorPaint\ufffdNot Found\ufffdBLUETOOTH (0x00)\ufffdP\u0000r\u0000"
+        },
+        {
+          "fileOffset": 1128755,
+          "context": "onToggle\ufffdsRGB\ufffdFAIL: the gain range is -18dB~12dB\ufffdresetSpvPeq\ufffdpackage:android_file_picker/src/android_pla"
+        }
+      ]
+    },
+    {
+      "term": "gain range",
+      "encoding": "utf-16-le",
+      "matchCount": 0,
+      "entries": []
+    },
+    {
+      "term": "Gain range",
+      "encoding": "utf-8",
+      "matchCount": 0,
+      "entries": []
+    },
+    {
+      "term": "Gain range",
+      "encoding": "utf-16-le",
+      "matchCount": 1,
+      "entries": [
+        {
+          "fileOffset": 741987,
+          "context": "\u6e5f\u7865\u5f74\u7473\u7065\u702e\u676e\u6490\u6e79\u6a3a\u696f\u976eGain range\uff1a\u73a4\u7465\u6f3a\u536e\u7465\u6553\u656c\u7463\u6f69\ub86e\u735f\u6163\u656c\u7543\u7672\u5365\u7165\u6575\u636e\u4065\u3833\u3934\u3030\u3836\u64b4\u6469\u6843\u6e61\u6567\u7041\u4c70\u6669\u6365\u6379"
+        }
+      ]
+    },
+    {
+      "term": "minGain",
+      "encoding": "utf-8",
+      "matchCount": 1,
+      "entries": [
+        {
+          "fileOffset": 702014,
+          "context": "noTextSelectionControls\ufffdminGain\ufffd_initDecode@1148178306\ufffdbind\ufffdTL\ufffdProgressIndicatorThemeData\ufffd_DeviceGrid"
+        }
+      ]
+    },
+    {
+      "term": "minGain",
+      "encoding": "utf-16-le",
+      "matchCount": 0,
+      "entries": []
+    },
+    {
+      "term": "maxGain",
+      "encoding": "utf-8",
+      "matchCount": 1,
+      "entries": [
+        {
+          "fileOffset": 844569,
+          "context": "t@81384654\ufffdColorFloat64\ufffdmaxGain\ufffdget:_isShieldT1SC@148024354\ufffd_all@38490068\ufffd_onHorizontalDragEnd@284408"
+        }
+      ]
+    },
+    {
+      "term": "maxGain",
+      "encoding": "utf-16-le",
+      "matchCount": 0,
+      "entries": []
+    },
+    {
+      "term": "limiter",
+      "encoding": "utf-8",
+      "matchCount": 0,
+      "entries": []
+    },
+    {
+      "term": "limiter",
+      "encoding": "utf-16-le",
+      "matchCount": 0,
+      "entries": []
+    },
+    {
+      "term": "headroom",
+      "encoding": "utf-8",
+      "matchCount": 0,
+      "entries": []
+    },
+    {
+      "term": "headroom",
+      "encoding": "utf-16-le",
+      "matchCount": 0,
+      "entries": []
+    },
+    {
+      "term": "preGain",
+      "encoding": "utf-8",
+      "matchCount": 14,
+      "entries": [
+        {
+          "fileOffset": 264567,
+          "context": "ient\ufffdapplyPEQ: Restored preGain to \ufffdMM-dd\ufffdqwt\ufffdnx\ufffd\ufffd\u0351n\u007fM\ufffdn\u007f\b\ufffd\ufffdl\u000fa\f\ufffd\u0351n\u007fM\ufffdn\u007f\ufffde\f\ufffd\ufffdS\ufffd\ufffd\u001aO\ufffdw\ufffdf\u0006r\ufffd\u0016b\u0351/T\f\ufffd\ufffd"
+        },
+        {
+          "fileOffset": 337147,
+          "context": "\ufffd \u0000E\u0000Q\u0000\ufffdGainLinePainter\ufffdpreGain(dB)\ufffdrequestedWithHeaderOriginAllowList\ufffd{veQ0RM\u0000O\u0000O\u0000N\u0000D\u0000R\u0000O\u0000P\u0000\ufffda(u\u000bz\ufffd^"
+        },
+        {
+          "fileOffset": 465401,
+          "context": " Failed to read current preGain: \ufffd_restartBleSourceScan@249487043\ufffd_runExtension\ufffdparsePartialString\ufffd\u001f\u0004"
+        },
+        {
+          "fileOffset": 518112,
+          "context": " SPV: Failed to restore preGain: \ufffd\ufffd\ufffdn\u007f\tc.\ufffd1Y%\ufffd\ufffdmillisecondsSinceEpoch\ufffdProxy failed to establish tunne"
+        },
+        {
+          "fileOffset": 577539,
+          "context": "et:tips_anc_normal_desc\ufffdpreGainRaw\ufffd%5D\ufffdSyncANCModeEvent\ufffdget:longPressOne\ufffdRestorableDouble\ufffdancEffect\ufffdB"
+        },
+        {
+          "fileOffset": 581053,
+          "context": "\ufffdapplyPEQ SPV: Restored preGain to \ufffdHH'h'\ufffdsystemGrey0\ufffdRead more about status codes at https://develop"
+        },
+        {
+          "fileOffset": 625426,
+          "context": "applyPEQ: Failed to set preGain to minimum: \ufffdinit:_metaSynonyms@234043213\ufffdpackage:moondrop_app/dialog"
+        },
+        {
+          "fileOffset": 684968,
+          "context": "file: Failed to restore preGain: \ufffdfdf\ufffdget:_effectiveHorizontalTitleGap@98247952\ufffdcontent-disposition\ufffdi"
+        }
+      ]
+    },
+    {
+      "term": "preGain",
+      "encoding": "utf-16-le",
+      "matchCount": 2,
+      "entries": [
+        {
+          "fileOffset": 339190,
+          "context": "\u3130\u3631\u3739\u63a0\u6572\u7461\u4965\u616d\u6567\u6143\u6863\ubb65preGain \u9700\u8981\u662f -128.00~127.99 dB\u679e\u7465\u613a\u636e\u655f\u6666\u6365\u3174\u1985\u4c6a\ua198\u9ea6\u514b"
+        },
+        {
+          "fileOffset": 713075,
+          "context": "\u6469\u6261\u656c\u7453\u7461\u4065\u3433\u3039\u3738\u3032\u9132\u5199preGain\u61b0\u7070\u696c\u6163\u6974\u6e6f\u782f\u642d\u6274\u6f6f\u2b6b\u6d78\ucc6c\u435f\u7275\u6576\u4164\u696e\u616d\u6974\u6e6f\u7542\u6c69\u6564\u5372\u6174\u6574\u3140\u3130\u3031\u3637\u3538\u709a\u6f72\u706d"
+        }
+      ]
+    },
+    {
+      "term": "setSpvPreGain",
+      "encoding": "utf-8",
+      "matchCount": 4,
+      "entries": [
+        {
+          "fileOffset": 236680,
+          "context": "\u000e\ufffd\u000e\ufffd\u000e\ufffd\u000e\ufffd\u000e\ufffdedx\ufffd, alpha: \ufffdsetSpvPreGain\ufffd_withUtc@0150898\ufffdM\u0000O\u0000O\u0000N\u0000D\u0000R\u0000O\u0000P\u0000g0Q\u0000R\u0000\ufffd0\ufffd0\ufffd0\ufffd0\ufffd0\ufffd0\ufffd0\ufffd0W0f0E\u0000Q\u0000-\ufffd\ufffd[\ufffd0"
+        },
+        {
+          "fileOffset": 435562,
+          "context": "0655\ufffdcreateChildContext\ufffdsetSpvPreGain -1.5\ufffd\ufffdStP\ufffdapplication/vnd.astraea-software.iota\ufffdget:isAgree\ufffdDart_Fina"
+        },
+        {
+          "fileOffset": 771004,
+          "context": "\t\ufffd\t\ufffd\t\ufffd\t\ufffd\t\ufffd\t\ufffd\t\ufffd\t \u0000\ufffd\t\ufffd\t\ufffd\t\ufffdsetSpvPreGain 0$\ufffd=====>SyncDeviceConnectedEvent: Device not in map yet, creating te"
+        },
+        {
+          "fileOffset": 1186313,
+          "context": "orUpdate\ufffdonPrimaryFixed\ufffdsetSpvPreGain -9.5\ufffdProtocolData\ufffdM\u0000O\u0000O\u0000N\u0000D\u0000R\u0000O\u0000P\u0000\ufffd0\ufffd0\ufffd0k0\ufffd0\ufffd0\ufffd0\ufffd0\ufffdconnection_timeout"
+        }
+      ]
+    },
+    {
+      "term": "setSpvPreGain",
+      "encoding": "utf-16-le",
+      "matchCount": 0,
+      "entries": []
+    }
+  ]
+}
