@@ -529,3 +529,13 @@ Recorded Henry's final hardware results and production decisions (manual evidenc
 - Updated all four docs; recorded four-round research closed, no Round5. Final scope: Connect/native transport,9-band stereo PEQ,Sync RAM,Unity Restore/reset UX,Flash/persistence,release cleanup,upstream cleanup,PR preparation.
 - NEXT MILESTONE FLASH / PERSISTENCE is the only remaining hardware feature milestone. Not started. No code change, Balance implementation or hardware operation at this checkpoint.
 - Verification for this documentation-only checkpoint: git diff --check PASS; no tests/build/hardware checks run.
+
+## 2026-10-08 — final product / upstream strategy documentation checkpoint
+- Updated GENERAL/ROADMAP/DECISIONS/DONE only; no production implementation, Flash work or hardware operations.
+- Recorded exact35D8:1496 Moondrop FreeDSP as sole current KNOWN_DACS CONEXANT device; current CONEXANT production branches effectively target FreeDSP only.
+- Recorded supported product scope: normal CONNECT/native HID transport,9-band PEQ/real-time curve/editor, RAM Sync,Unity Restore, local presets/import/export/undo/redo where applicable, Reset Defaults/To Flat; Flash once validated.
+- Recorded production exclusions: Preamp/Auto Preamp, Global Tone Tilt, DAC utility Filter Type,Amp/Gain Mode,Balance,Mic Gain/Loopback. Retained Henry-reported manual UAC Balance/Mic PASS and evidence without production integration; mic-74..0dB/step0.5 cannot boost. Four-round research closed.
+- Recorded final reset decision: FreeDSP defaults31/62/125/250/500/1000/2000/4000/8000Hz,0dB,Q0.7,PK; flat9 x1000Hz/0dB/Q1.0. Generic10-band semantics preserved. This supersedes temporary preserve-frequency/Q flat policy; runtime changes remain pending cleanup, not implemented/PASS here.
+- Recorded inherited audit boundaries: dedicated9-band CONEXANT path; partially reverse-engineered/unvalidated PEQ/Flash; no-op globalgain; software-composed Tone; Savitech utility commands; simulated Math.random mic meters. Other DAC behavior preserved; unsupported FreeDSP utilities/debug surfaces require pre-PR cleanup.
+- Final roadmap recorded: FLASH / PERSISTENCE -> upstream/product cleanup -> production build/release candidate -> regression verification -> final branch push -> upstream PR. Flash is the ONLY remaining hardware feature milestone, not started.
+- Documentation verification: git diff --check PASS only; no tests/build/hardware verification run.

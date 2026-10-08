@@ -2759,3 +2759,39 @@ Henry reports 9-band stereo RAM PEQ, Sync and Unity Restore HARDWARE PASS; reset
 - Shared runtime files changed: NONE.
 - Non-FreeDSP protocol code changed: NO.
 - Hardware operations: NONE. Verification: git diff --check only.
+
+## 2026-10-08 — FINAL product scope and upstream strategy (authoritative)
+This checkpoint supersedes earlier temporary reset policy and narrower feature lists. Documentation only: these are final product requirements, not newly implemented or hardware-tested behavior.
+
+### Device / protocol scope
+Current upstream KNOWN_DACS contains one CONEXANT device: Moondrop FreeDSP, VID0x35D8/PID0x1496, Conexant/Freeman DSP. Current CONEXANT-specific production branches therefore effectively target this FreeDSP only; this is not permission to generalize unverified devices or alter other protocols.
+
+### Supported FreeDSP product scope
+Keep normal CONNECT, verified Windows native HID transport,9-band stereo PEQ, Real-Time PEQ Response Curve, graphical/editor controls, RAM Sync, Restore Unity, local presets/import/export/undo/redo where applicable, Reset Defaults, Reset To Flat, and Flash/persistence once validated. Flash is not yet validated or started here.
+Exclude FreeDSP production Preamp/Auto Preamp, Global Tone Tilt, utility Filter Type (DAC filter), Amp Mode, Gain Mode, Channel Balance, Microphone Gain and Microphone Loopback Monitor. The utility Filter Type exclusion is distinct from PEQ band filter types and is not permission to expand their verified scope. Preamp stays FROZEN-UNKNOWN; Global Tone stays FROZEN-UNSUPPORTED. Balance and Mic UAC Volume/Mute are Henry-reported HARDWARE MANUAL PASS but deliberately excluded from production; retain diagnostics/evidence. Mic range-74..0dB/step0.5 provides no positive boost. Four-round control research is closed; no Round5 or reopening unless new exact-device evidence appears and Henry authorizes reconsideration.
+
+### Final reset semantics / upstream compatibility
+- RESET DEFAULTS: exactly9 FreeDSP bands at31/62/125/250/500/1000/2000/4000/8000Hz, gain0dB, Q0.7, PK. Never expand FreeDSP to generic10bands.
+- RESET TO FLAT: rebuild neutral bands at1000Hz/gain0dB/Q1.0 using the author's existing semantics, respecting active device count: generic10-band device gets10bands; FreeDSP gets9bands.
+- This explicitly supersedes temporary FreeDSP development behavior that preserved frequency/Q layout while zeroing gains. The old behavior remains historical implementation evidence, not final product policy.
+- Root bug: generic reset functions assume10bands instead of device-specific count. Fix FreeDSP count during the future cleanup milestone; do not globally change other DAC reset semantics. Local resets remain distinct from explicit hardware Restore Unity. No reset runtime changes made at this checkpoint; the final FreeDSP flat layout is still a cleanup requirement.
+
+### Upstream audit / PR boundary
+Upstream has a dedicated9-band CONEXANT path, but its partially reverse-engineered Conexant PEQ/Flash implementation is not fully hardware validated. Fork's verified RAM hardware results do not validate upstream Flash. setGlobalGainConexant is a no-op. Upstream Global Tone Tilt is software composition into effective PEQ gains, not independent FreeDSP hardware Tone.
+Filter/Amp/Gain/Balance/Mic utility setters use Savitech commands, not FreeDSP implementations. Microphone Loopback meter uses Math.random/simulated peaks, not hardware telemetry. Source device/protocol coverage is not per-model hardware validation. Before PR, hide/disable unsupported FreeDSP utilities, remove debug/development-only surfaces, preserve upstream naming/interaction semantics where compatible, retain only minimal isolated transport exceptions and leave other DAC behavior unchanged.
+
+### FINAL roadmap (supersedes earlier cleanup ordering)
+1. FLASH / PERSISTENCE — the ONLY remaining hardware feature milestone.
+2. Upstream/product cleanup: FreeDSP Reset Defaults9bands; Reset To Flat9 x1000Hz/Q1/0dB; hide/disable unsupported utilities; remove debug/development-only surfaces.
+3. Final production build / release candidate.
+4. Final regression verification.
+5. Push final branch.
+6. Upstream PR.
+
+NEXT MILESTONE = FLASH / PERSISTENCE. No Flash, production implementation or hardware operations started in this documentation checkpoint.
+
+## Evidence for upstream / Issue #3 — final product and reset strategy
+Known CONEXANT device is exact35D8:1496 FreeDSP only. Native transport and9-band stereo RAM PEQ/Sync/Restore are hardware PASS; Flash remains unvalidated. Keep normal CONNECT/editor/curve/local profile tools. Exclude Preamp/Auto Preamp/Tone and generic DAC/mic utilities; manual UAC Balance/Mic PASS does not change their product exclusion. Upstream Conexant Flash is partially reverse-engineered; globalgain setter is a no-op; Tone is PEQ composition, Savitech utilities are not FreeDSP controls, mic meters are simulated. Final local resets must respect active band count: FreeDSP defaults9listedfrequencies/Q0.7/0dB/PK, flat9 x1kHz/Q1/0dB; generic10-band semantics unchanged. Temporary preserve-frequency/Q flat policy is superseded; runtime cleanup pending. Flash first, then cleanup/release/regression/finalpush/PR; no more control research without new exact-device evidence.
+
+### Scope / regression check — final strategy checkpoint
+Only GENERAL/ROADMAP/DECISIONS/DONE changed. Shared runtime files changed: NONE. Non-FreeDSP protocol code changed: NO. Hardware operations: NONE. Validation: git diff --check only; no build/tests or new reset hardware PASS claimed.
