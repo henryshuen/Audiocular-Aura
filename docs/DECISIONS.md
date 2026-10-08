@@ -442,3 +442,37 @@ Decision: close all four control research rounds; no Round5. The two surviving d
 
 Playback original -74/-74dB and muted; capture0dB/unmuted; ranges-74..0dB, step.5. No setters executed by Codex. Known current playback cannot qualify for attenuation; Henry must choose a low audible baseline before a future manual session. Explicit tests never boost beyond original values; center restores original asymmetry. Each action revalidates identity/range and all target levels before first write; first failure stops with original snapshot retained. Restore behavior is supported by documented setters and prepared code, not yet hardware-validated.
 Next FLASH / PERSISTENCE, then release/upstream cleanup/PR. Pending known-interface manual checks do not reopen research or authorize production integration. Preserve upstream semantics for other DACs and transport-only native helper. Evidence and concise manual sequence: tests/freedsp/fixtures/freeDspWindowsAudioEvidence.md.
+
+## 2026-10-08 — FINAL FreeDSP production scope / shutdown checkpoint
+
+| Feature / control | Final evidence / production decision |
+|---|---|
+|9-band stereo PEQ RAM|HARDWARE PASS, Henry-reported|
+|Sync RAM|HARDWARE PASS, Henry-reported|
+|Restore Unity|HARDWARE PASS, Henry-reported|
+|Reset/default UX|PASS, Henry-reported|
+|Channel Balance UAC L/R|HARDWARE MANUAL PASS, Henry-reported; DIAGNOSTIC-ONLY; no production integration|
+|Mic UAC Volume/Mute|HARDWARE MANUAL PASS, Henry-reported; DIAGNOSTIC-ONLY; no production integration|
+|Mic hardware range|-74..0dB, step0.5dB; positive boost unavailable through this control|
+|Preamp|FROZEN-UNKNOWN; no proven pre-PEQ/headroom control|
+|Global Tone|FROZEN-UNSUPPORTED in FreeDSP production adapter|
+
+DO NOT integrate Channel Balance for FreeDSP: technically hardware-verified, but low product value for the current FreeDSP scope. DO NOT integrate Mic Volume/Mute: Henry needs microphone amplification, while this verified control provides attenuation only. Retain both diagnostics/evidence for future reference; validation-only runtime surfaces must still be reviewed/removed from the production PR. These are deliberate production exclusions, not failed hardware tests.
+Henry's new manual PASS supersedes the earlier pending setter/listening/recording/restoration status for Balance/Mic; no new test was performed by Codex at this checkpoint. It does not establish pre-PEQ placement or convert inferred Windows-node/FU numeric correspondence into raw USB evidence. Control research Round1/2/3/4 COMPLETE; no Round5 and no reopening.
+
+### Upstream audit finding / PR compatibility boundary
+The inherited setDacBalance implementation uses Savitech command22 (src/dsp.ts). Its intended SAVITECH protocol device list (src/constants.ts) includes Audiocular Aura, TRN Black Pearl, Fosi Audio DS2 / iBasso DC04 Pro, JCally JM20, and JCally JM20 Pro / compatible Savitech. This is source-level protocol coverage, NOT per-model hardware validation.
+The inherited UI change handler calls setDacBalance without a per-protocol capability gate (src/main.ts); the fork already guards exact FreeDSP in the sender. Current upstream source has no equivalent Balance implementation for MOONDROP, CONEXANT or FIIO/FIIO_JA11 families. Do not infer generic balance support from a visible slider.
+Microphone Loopback Monitor meter animation uses Math.random and simulated peaks (src/main.ts), not real hardware microphone-level telemetry. Preserve upstream behavior for other devices; before PR ensure FreeDSP does not misleadingly expose excluded Balance/Mic, simulated microphone meters, frozen Preamp/Tone or other unsupported controls. No generic behavior changes are authorized by this checkpoint.
+
+### Final FreeDSP production target / next milestone
+1. Connect / minimal native transport
+2. 9-band stereo PEQ
+3. Sync RAM
+4. Restore Unity / reset UX
+5. FLASH / PERSISTENCE
+6. Release cleanup
+7. Upstream compatibility cleanup
+8. PR preparation
+
+NEXT MILESTONE = FLASH / PERSISTENCE. Flash is the only remaining hardware feature milestone before release work. Not started at this checkpoint. No Balance/Mic integration, control research, implementation or hardware operation is authorized here.

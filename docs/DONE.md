@@ -508,3 +508,24 @@ Offline Python descriptor tests:7 PASS. Final verify.ps1: TypeScript/production 
 
 ### Round4 automated verification
 9 focused offline Python tests PASS (no COM/device calls); diagnostic --help PASS without hardware activation. Final verify.ps1: TypeScript/production build PASS;240 tests across25files PASS. No setter/listening/recording/restoration test executed by Codex. Build-generated dist excluded from research commit. git diff --check PASS.
+
+## 2026-10-08 — documentation-only production-scope checkpoint
+Recorded Henry's final hardware results and production decisions (manual evidence reported by Henry; not a new Codex hardware test):
+
+| Feature / control | Final evidence / production decision |
+|---|---|
+|9-band stereo PEQ RAM|HARDWARE PASS, Henry-reported|
+|Sync RAM|HARDWARE PASS, Henry-reported|
+|Restore Unity|HARDWARE PASS, Henry-reported|
+|Reset/default UX|PASS, Henry-reported|
+|Channel Balance UAC L/R|HARDWARE MANUAL PASS, Henry-reported; DIAGNOSTIC-ONLY; no production integration|
+|Mic UAC Volume/Mute|HARDWARE MANUAL PASS, Henry-reported; DIAGNOSTIC-ONLY; no production integration|
+|Mic hardware range|-74..0dB, step0.5dB; positive boost unavailable through this control|
+|Preamp|FROZEN-UNKNOWN; no proven pre-PEQ/headroom control|
+|Global Tone|FROZEN-UNSUPPORTED in FreeDSP production adapter|
+
+- Balance is deliberately excluded from production due to low current product value. Mic Volume/Mute is deliberately excluded because attenuation cannot meet Henry's microphone amplification requirement. Diagnostics/evidence retained; no production integration performed.
+- Updated upstream audit findings: inherited Savitech command22 Balance coverage/device list and missing generic UI protocol gate; no per-model hardware PASS inferred. Recorded absence of an equivalent source Balance implementation for Moondrop/Conexant/FiiO and simulated Math.random mic meter peaks; preserve other DAC behavior and audit FreeDSP exclusions before PR.
+- Updated all four docs; recorded four-round research closed, no Round5. Final scope: Connect/native transport,9-band stereo PEQ,Sync RAM,Unity Restore/reset UX,Flash/persistence,release cleanup,upstream cleanup,PR preparation.
+- NEXT MILESTONE FLASH / PERSISTENCE is the only remaining hardware feature milestone. Not started. No code change, Balance implementation or hardware operation at this checkpoint.
+- Verification for this documentation-only checkpoint: git diff --check PASS; no tests/build/hardware checks run.
