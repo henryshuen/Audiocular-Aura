@@ -23,7 +23,7 @@ if (args[0] == "debugRam")
     catch (Exception error) { Console.Error.WriteLine("INVALID DEBUG REQUEST before discovery: " + error.Message); return 2; }
 }
 Console.WriteLine($"FreeDSP Native CAF diagnostic — {args[0]}");
-Console.WriteLine("VID/PID: 0x35D8 / 0x1496; no Flash or driver changes");
+Console.WriteLine("VID/PID: 0x35D8 / 0x1496; explicit scoped transport only; no driver changes");
 if (args[0] == "query346") Console.WriteLine($"TX preview ({Caf346.ReportBytes} bytes): {Caf346.Hex(Caf346.CreateQuery())}");
 Console.WriteLine("Discovery access=0; query access=GENERIC_READ|GENERIC_WRITE (0xC0000000), share=READ|WRITE (3), synchronous flags=0");
 Console.WriteLine("HidD calls have no timeout parameter. Launcher limits process to30s; each exchange bounded1000ms,346 initial GET precedes clock; no SET resend.");

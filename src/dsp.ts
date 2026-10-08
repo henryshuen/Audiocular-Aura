@@ -858,7 +858,11 @@ export async function syncToDevice(explicit=false) {
 export async function flashToFlash() {
 	const device = getDevice();
 	if (!device) return;
- if(isFreeDsp(device)){log("FreeDSP Flash未驗證；沒有送220。");return;}
+ if(isFreeDsp(device)){
+   if(!confirm('FreeDSP 永久寫入：完整9段／五個rate banks，55次command220含commit。持久性尚未硬體驗證；失敗可能部分完成，無自動retry／rollback。繼續？'))return false;
+   const editor=getEqState();if(!editor)throw new Error('FreeDSP editor unavailable');
+   showSyncing();try{await attachFreeDsp(device).flash(editor);log('FreeDSP Flash協定完成；請以USB完全斷電重接且不RAM Sync驗證持久性。');}finally{hideSyncing();}return true;
+ }
 	if (!confirm("Save to permanent memory? The settings will load automatically when you power on the DAC.")) return;
 
 	showSyncing();

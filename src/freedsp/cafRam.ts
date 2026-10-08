@@ -3,13 +3,23 @@ import type {Band} from '../main.ts';
 import {encodeCaf} from './cafCodec.ts';
 import type {CafResponse} from './cafCodec.ts';
 import {modelWebBand,validateBands,analyzeSafety,unityPreset} from './webRam.ts';
-export type CafCommand=188|187|346|190;
-export interface CafTransport{exchange(command:CafCommand,data:Uint8Array):Promise<CafResponse>;dispose():void;}
+import {buildFlashPlan,executeFlashPlan,saveFlashRecovery} from './flash.ts';
+export type CafCommand=188|187|346|190|90|220;
+export interface CafTransport{readonly supportsFlash?:boolean;exchange(command:CafCommand,data:Uint8Array):Promise<CafResponse>;dispose():void;}
 const rates=[4,5,6,7,8];
 export class CafRamSession {
  private busy=false;private stopped=false;private disposed=false;
  constructor(private transport:CafTransport,private log:(s:string)=>void){}
  dispose(){this.disposed=true;this.transport.dispose();}
+ async flash(value:Band[],save=saveFlashRecovery){
+   if(this.busy || this.disposed || this.stopped)throw new Error('FreeDSP BUSY／STOP；Flash不可重試，請重新連線。');
+   if(this.transport.supportsFlash!==true)throw new Error('Native Flash transport required');
+   const plan=buildFlashPlan(value);
+   save(plan); // Exact local editor + known unity plan retained before first hardware SET.
+   this.log('FLASH snapshot/unity recovery plan saved; RAM state not read back. Metadata gain is integer dB (official truncation); no Tone/Preamp.');
+   this.busy=true;
+   try{await executeFlashPlan(this.transport,plan,this.log);}catch(e){this.stopped=true;throw e;}finally{this.busy=false;}
+ }
  async sync(value:Band[],restore=false){
    if(this.busy || this.disposed || (this.stopped && !restore))throw new Error('FreeDSP BUSY／STOP；明確Restore或重新連線，不自動重試。');
    const bands=restore?unityPreset():validateBands(value);

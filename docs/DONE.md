@@ -539,3 +539,14 @@ Recorded Henry's final hardware results and production decisions (manual evidenc
 - Recorded inherited audit boundaries: dedicated9-band CONEXANT path; partially reverse-engineered/unvalidated PEQ/Flash; no-op globalgain; software-composed Tone; Savitech utility commands; simulated Math.random mic meters. Other DAC behavior preserved; unsupported FreeDSP utilities/debug surfaces require pre-PR cleanup.
 - Final roadmap recorded: FLASH / PERSISTENCE -> upstream/product cleanup -> production build/release candidate -> regression verification -> final branch push -> upstream PR. Flash is the ONLY remaining hardware feature milestone, not started.
 - Documentation verification: git diff --check PASS only; no tests/build/hardware verification run.
+
+## FreeDSP Flash milestone — software implementation completed; hardware pending (2026-10-09)
+- Cross-checked full saved official saveEQParamsToFlash/switchEQMode instructions and all55command220 pairs; added deterministic analysis script/derived JSON and evidence note. Confirmed observed order90custom0,9metadata,45band/rate coefficients,commit255; metadata gain integerdB/Qtrunc256; preserved source/dump versus hardware evidence limits.
+- Implemented complete isolated56-packet plan and unity plan, reusing same RAM coefficient model, fullband/rate stability/range preflight, disabled unity and exact local snapshot beforeSET. No Tone/Preamp/Balance/Mic content.
+- Integrated existing Save permanent workflow for exactFreeDSP with native transport; added shape-limited90/220 and immediate first-response mismatchSTOP. Native helper remains transport-only; no native coefficient/business implementation. RAM sequence and otherDAC senders unchanged.
+- Added perpacketSTART/PASS/ACK-count/failure logs, sharedBUSY/STOP, no retry/rollback/reset; saved editor is not deviceFlash backup. Completion labels do not claim persistence or readback.
+- Added importable negative-only9-band test profile and one power-removal/reconnect manual sequence. No hardware operations by Codex. READY FOR HARDWARE VALIDATION / NOT YET HARDWARE PASS.
+- Retained final9-band Defaults/Flat cleanup decisions without reset runtime changes; future cleanup/release/regression/PR awaits Henry persistence result.
+
+### Flash offline verification completed
+Focused4files/73tests PASS (including14Flash tests, actual generic Save regression and existing profile parser). Native72mock tests PASS, including exact56primitive exchanges/shape rejection/immediate first mismatchSTOP; no hardware calls. verify.ps1 once PASS: TypeScript/production build,254tests/26files. Derived official Flash JSON reproduces savedsource/dump and importable safe profile matches generator. git diff --check PASS. Build-generated dist excluded; no release packaging/PR or hardware validation performed.

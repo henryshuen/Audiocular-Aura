@@ -1,0 +1,945 @@
+{
+  "category": "DERIVED cross-check of saved official DEX and helper buffers, not a new USB capture",
+  "apkSha256": "04756b49acfea523758d86101c96c1824b7b209ae3a8836c07837088e795d2d5",
+  "method": "saveEQParamsToFlash",
+  "selectedInstructions": [
+    {
+      "offset": 140,
+      "opcode": "iget-wide",
+      "args": "v2, v8, Lcom/conexant/genericfeature/EQParam;->qFactor D"
+    },
+    {
+      "offset": 144,
+      "opcode": "mul-double/2addr",
+      "args": "v2, v13"
+    },
+    {
+      "offset": 146,
+      "opcode": "double-to-long",
+      "args": "v2, v2"
+    },
+    {
+      "offset": 156,
+      "opcode": "aput-wide",
+      "args": "v16, v13, v6"
+    },
+    {
+      "offset": 174,
+      "opcode": "aput-wide",
+      "args": "v9, v13, v7"
+    },
+    {
+      "offset": 184,
+      "opcode": "aput-wide",
+      "args": "v9, v13, v11"
+    },
+    {
+      "offset": 188,
+      "opcode": "aput-wide",
+      "args": "v2, v13, v17"
+    },
+    {
+      "offset": 198,
+      "opcode": "aput-wide",
+      "args": "v2, v13, v12"
+    },
+    {
+      "offset": 202,
+      "opcode": "iget-wide",
+      "args": "v2, v8, Lcom/conexant/genericfeature/EQParam;->gain D"
+    },
+    {
+      "offset": 206,
+      "opcode": "double-to-long",
+      "args": "v2, v2"
+    },
+    {
+      "offset": 208,
+      "opcode": "aput-wide",
+      "args": "v2, v13, v16"
+    },
+    {
+      "offset": 436,
+      "opcode": "move",
+      "args": "v3, v12"
+    },
+    {
+      "offset": 438,
+      "opcode": "const/16",
+      "args": "v8, 8"
+    },
+    {
+      "offset": 544,
+      "opcode": "invoke-virtual",
+      "args": "v11, v9, v2, v12, Lcom/conexant/cnxtusbcheadset/Eq2Coeff;->CxAudioConvertEqParams2Coeffs(I Lcom/conexant/cnxtusbcheadset/EQBandParam; I)Lcom/conexant/cnxtusbcheadset/CX2070xBandEQCoeffs;"
+    },
+    {
+      "offset": 792,
+      "opcode": "aput-wide",
+      "args": "v12, v11, v6"
+    },
+    {
+      "offset": 802,
+      "opcode": "aput-wide",
+      "args": "v12, v11, v7"
+    },
+    {
+      "offset": 812,
+      "opcode": "aput-wide",
+      "args": "v12, v11, v18"
+    },
+    {
+      "offset": 822,
+      "opcode": "aput-wide",
+      "args": "v12, v11, v17"
+    },
+    {
+      "offset": 832,
+      "opcode": "aput-wide",
+      "args": "v12, v11, v19"
+    },
+    {
+      "offset": 842,
+      "opcode": "aput-wide",
+      "args": "v12, v11, v16"
+    },
+    {
+      "offset": 854,
+      "opcode": "aput-wide",
+      "args": "v12, v11, v14"
+    },
+    {
+      "offset": 866,
+      "opcode": "aput-wide",
+      "args": "v12, v11, v9"
+    },
+    {
+      "offset": 894,
+      "opcode": "if-ne",
+      "args": "v11, v12, +01ch"
+    },
+    {
+      "offset": 898,
+      "opcode": "if-ne",
+      "args": "v3, v8, +01ah"
+    },
+    {
+      "offset": 906,
+      "opcode": "invoke-static",
+      "args": "v8, v9, v7, v7, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->writeGolemCmdToDevice(Landroid/hardware/usb/UsbDeviceConnection; Lcom/conexant/universalfunction/CnxtUsbCommand; I Z)Z"
+    },
+    {
+      "offset": 954,
+      "opcode": "invoke-static",
+      "args": "v8, v9, v7, v6, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->writeGolemCmdToDevice(Landroid/hardware/usb/UsbDeviceConnection; Lcom/conexant/universalfunction/CnxtUsbCommand; I Z)Z"
+    },
+    {
+      "offset": 1026,
+      "opcode": "const-wide/16",
+      "args": "v1, 255"
+    },
+    {
+      "offset": 1030,
+      "opcode": "aput-wide",
+      "args": "v1, v0, v6"
+    },
+    {
+      "offset": 1054,
+      "opcode": "invoke-static",
+      "args": "v1, v0, v7, v7, Lcom/conexant/cnxtusbcheadset/CafCmdHelper;->writeGolemCmdToDevice(Landroid/hardware/usb/UsbDeviceConnection; Lcom/conexant/universalfunction/CnxtUsbCommand; I Z)Z"
+    }
+  ],
+  "requestCount": 56,
+  "command220Count": 55,
+  "order": [
+    {
+      "pair": 1,
+      "kind": "mode",
+      "command": 90,
+      "head": [
+        90,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rxCount": 0
+    },
+    {
+      "pair": 2,
+      "kind": "flash-metadata",
+      "command": 220,
+      "head": [
+        0,
+        1,
+        60,
+        179,
+        0,
+        -7
+      ],
+      "rxCount": 0
+    },
+    {
+      "pair": 3,
+      "kind": "flash-metadata",
+      "command": 220,
+      "head": [
+        0,
+        2,
+        90,
+        179,
+        0,
+        -9
+      ],
+      "rxCount": 0
+    },
+    {
+      "pair": 4,
+      "kind": "flash-metadata",
+      "command": 220,
+      "head": [
+        0,
+        3,
+        690,
+        179,
+        0,
+        -9
+      ],
+      "rxCount": 0
+    },
+    {
+      "pair": 5,
+      "kind": "flash-metadata",
+      "command": 220,
+      "head": [
+        0,
+        4,
+        1000,
+        179,
+        0,
+        -7
+      ],
+      "rxCount": 0
+    },
+    {
+      "pair": 6,
+      "kind": "flash-metadata",
+      "command": 220,
+      "head": [
+        0,
+        5,
+        3000,
+        179,
+        0,
+        -7
+      ],
+      "rxCount": 0
+    },
+    {
+      "pair": 7,
+      "kind": "flash-metadata",
+      "command": 220,
+      "head": [
+        0,
+        6,
+        4495,
+        179,
+        0,
+        -5
+      ],
+      "rxCount": 0
+    },
+    {
+      "pair": 8,
+      "kind": "flash-metadata",
+      "command": 220,
+      "head": [
+        0,
+        7,
+        5900,
+        179,
+        0,
+        -7
+      ],
+      "rxCount": 0
+    },
+    {
+      "pair": 9,
+      "kind": "flash-metadata",
+      "command": 220,
+      "head": [
+        0,
+        8,
+        7300,
+        179,
+        0,
+        2
+      ],
+      "rxCount": 0
+    },
+    {
+      "pair": 10,
+      "kind": "flash-metadata",
+      "command": 220,
+      "head": [
+        0,
+        9,
+        8000,
+        179,
+        0,
+        -6
+      ],
+      "rxCount": 0
+    },
+    {
+      "pair": 11,
+      "kind": "flash-coefficients",
+      "command": 220,
+      "head": [
+        4,
+        1,
+        3,
+        4171048,
+        -8309181,
+        4138437
+      ],
+      "rxCount": 0
+    },
+    {
+      "pair": 12,
+      "kind": "flash-coefficients",
+      "command": 220,
+      "head": [
+        5,
+        1,
+        3,
+        4172921,
+        -8315601,
+        4142937
+      ],
+      "rxCount": 0
+    },
+    {
+      "pair": 13,
+      "kind": "flash-coefficients",
+      "command": 220,
+      "head": [
+        6,
+        1,
+        3,
+        4183565,
+        -8352010,
+        4168509
+      ],
+      "rxCount": 0
+    },
+    {
+      "pair": 14,
+      "kind": "flash-coefficients",
+      "command": 220,
+      "head": [
+        7,
+        1,
+        3,
+        4188924,
+        -8370285,
+        4181378
+      ],
+      "rxCount": 0
+    },
+    {
+      "pair": 15,
+      "kind": "flash-coefficients",
+      "command": 220,
+      "head": [
+        8,
+        1,
+        3,
+        4191610,
+        -8379441,
+        4187835
+      ],
+      "rxCount": 0
+    },
+    {
+      "pair": 16,
+      "kind": "flash-coefficients",
+      "command": 220,
+      "head": [
+        4,
+        2,
+        3,
+        4149314,
+        -8254881,
+        4106246
+      ],
+      "rxCount": 0
+    },
+    {
+      "pair": 17,
+      "kind": "flash-coefficients",
+      "command": 220,
+      "head": [
+        5,
+        2,
+        3,
+        4152916,
+        -8265638,
+        4113296
+      ],
+      "rxCount": 0
+    },
+    {
+      "pair": 18,
+      "kind": "flash-coefficients",
+      "command": 220,
+      "head": [
+        6,
+        2,
+        3,
+        4173459,
+        -8326816,
+        4153502
+      ],
+      "rxCount": 0
+    },
+    {
+      "pair": 19,
+      "kind": "flash-coefficients",
+      "command": 220,
+      "head": [
+        7,
+        2,
+        3,
+        4183843,
+        -8357633,
+        4173827
+      ],
+      "rxCount": 0
+    },
+    {
+      "pair": 20,
+      "kind": "flash-coefficients",
+      "command": 220,
+      "head": [
+        8,
+        2,
+        3,
+        4189064,
+        -8373102,
+        4184047
+      ],
+      "rxCount": 0
+    },
+    {
+      "pair": 21,
+      "kind": "flash-coefficients",
+      "command": 220,
+      "head": [
+        4,
+        3,
+        3,
+        3898831,
+        -7453134,
+        3590464
+      ],
+      "rxCount": 0
+    },
+    {
+      "pair": 22,
+      "kind": "flash-coefficients",
+      "command": 220,
+      "head": [
+        5,
+        3,
+        3,
+        3920462,
+        -7524336,
+        3634670
+      ],
+      "rxCount": 0
+    },
+    {
+      "pair": 23,
+      "kind": "flash-coefficients",
+      "command": 220,
+      "head": [
+        6,
+        3,
+        3,
+        4050246,
+        -7942040,
+        3899900
+      ],
+      "rxCount": 0
+    },
+    {
+      "pair": 24,
+      "kind": "flash-coefficients",
+      "command": 220,
+      "head": [
+        7,
+        3,
+        3,
+        4120345,
+        -8161421,
+        4043157
+      ],
+      "rxCount": 0
+    },
+    {
+      "pair": 25,
+      "kind": "flash-coefficients",
+      "command": 220,
+      "head": [
+        8,
+        3,
+        3,
+        4156822,
+        -8273997,
+        4117703
+      ],
+      "rxCount": 0
+    },
+    {
+      "pair": 26,
+      "kind": "flash-coefficients",
+      "command": 220,
+      "head": [
+        4,
+        4,
+        3,
+        3874155,
+        -7188385,
+        3387812
+      ],
+      "rxCount": 0
+    },
+    {
+      "pair": 27,
+      "kind": "flash-coefficients",
+      "command": 220,
+      "head": [
+        5,
+        4,
+        3,
+        3896941,
+        -7279342,
+        3445214
+      ],
+      "rxCount": 0
+    },
+    {
+      "pair": 28,
+      "kind": "flash-coefficients",
+      "command": 220,
+      "head": [
+        6,
+        4,
+        3,
+        4035777,
+        -7813969,
+        3794958
+      ],
+      "rxCount": 0
+    },
+    {
+      "pair": 29,
+      "kind": "flash-coefficients",
+      "command": 220,
+      "head": [
+        7,
+        4,
+        3,
+        4112320,
+        -8095762,
+        3987779
+      ],
+      "rxCount": 0
+    },
+    {
+      "pair": 30,
+      "kind": "flash-coefficients",
+      "command": 220,
+      "head": [
+        8,
+        4,
+        3,
+        4152596,
+        -8240728,
+        4089236
+      ],
+      "rxCount": 0
+    },
+    {
+      "pair": 31,
+      "kind": "flash-coefficients",
+      "command": 220,
+      "head": [
+        4,
+        5,
+        3,
+        3463763,
+        -5230897,
+        2284254
+      ],
+      "rxCount": 0
+    },
+    {
+      "pair": 32,
+      "kind": "flash-coefficients",
+      "command": 220,
+      "head": [
+        5,
+        5,
+        3,
+        3505854,
+        -5451036,
+        2394305
+      ],
+      "rxCount": 0
+    },
+    {
+      "pair": 33,
+      "kind": "flash-coefficients",
+      "command": 220,
+      "head": [
+        6,
+        5,
+        3,
+        3791087,
+        -6797972,
+        3140066
+      ],
+      "rxCount": 0
+    },
+    {
+      "pair": 34,
+      "kind": "flash-coefficients",
+      "command": 220,
+      "head": [
+        7,
+        5,
+        3,
+        3973655,
+        -7554503,
+        3617401
+      ],
+      "rxCount": 0
+    },
+    {
+      "pair": 35,
+      "kind": "flash-coefficients",
+      "command": 220,
+      "head": [
+        8,
+        5,
+        3,
+        4078492,
+        -7960398,
+        3891506
+      ],
+      "rxCount": 0
+    },
+    {
+      "pair": 36,
+      "kind": "flash-coefficients",
+      "command": 220,
+      "head": [
+        4,
+        6,
+        2,
+        6962341,
+        -8300486,
+        3389464
+      ],
+      "rxCount": 0
+    },
+    {
+      "pair": 37,
+      "kind": "flash-coefficients",
+      "command": 220,
+      "head": [
+        5,
+        6,
+        3,
+        3518833,
+        -4446626,
+        1826742
+      ],
+      "rxCount": 0
+    },
+    {
+      "pair": 38,
+      "kind": "flash-coefficients",
+      "command": 220,
+      "head": [
+        6,
+        6,
+        3,
+        3783903,
+        -6258750,
+        2755825
+      ],
+      "rxCount": 0
+    },
+    {
+      "pair": 39,
+      "kind": "flash-coefficients",
+      "command": 220,
+      "head": [
+        7,
+        6,
+        3,
+        3964009,
+        -7271727,
+        3387106
+      ],
+      "rxCount": 0
+    },
+    {
+      "pair": 40,
+      "kind": "flash-coefficients",
+      "command": 220,
+      "head": [
+        8,
+        6,
+        3,
+        4071611,
+        -7814685,
+        3764259
+      ],
+      "rxCount": 0
+    },
+    {
+      "pair": 41,
+      "kind": "flash-coefficients",
+      "command": 220,
+      "head": [
+        4,
+        7,
+        2,
+        6114037,
+        -5805267,
+        2589378
+      ],
+      "rxCount": 0
+    },
+    {
+      "pair": 42,
+      "kind": "flash-coefficients",
+      "command": 220,
+      "head": [
+        5,
+        7,
+        2,
+        6217817,
+        -6498141,
+        2853973
+      ],
+      "rxCount": 0
+    },
+    {
+      "pair": 43,
+      "kind": "flash-coefficients",
+      "command": 220,
+      "head": [
+        6,
+        7,
+        3,
+        3495945,
+        -5474553,
+        2413774
+      ],
+      "rxCount": 0
+    },
+    {
+      "pair": 44,
+      "kind": "flash-coefficients",
+      "command": 220,
+      "head": [
+        7,
+        7,
+        3,
+        3785525,
+        -6808698,
+        3152084
+      ],
+      "rxCount": 0
+    },
+    {
+      "pair": 45,
+      "kind": "flash-coefficients",
+      "command": 220,
+      "head": [
+        8,
+        7,
+        3,
+        3970700,
+        -7559542,
+        3624206
+      ],
+      "rxCount": 0
+    },
+    {
+      "pair": 46,
+      "kind": "flash-coefficients",
+      "command": 220,
+      "head": [
+        4,
+        8,
+        3,
+        4848891,
+        -2573094,
+        234703
+      ],
+      "rxCount": 0
+    },
+    {
+      "pair": 47,
+      "kind": "flash-coefficients",
+      "command": 220,
+      "head": [
+        5,
+        8,
+        3,
+        4813250,
+        -3037828,
+        450292
+      ],
+      "rxCount": 0
+    },
+    {
+      "pair": 48,
+      "kind": "flash-coefficients",
+      "command": 220,
+      "head": [
+        6,
+        8,
+        3,
+        4568610,
+        -5770983,
+        1930127
+      ],
+      "rxCount": 0
+    },
+    {
+      "pair": 49,
+      "kind": "flash-coefficients",
+      "command": 220,
+      "head": [
+        7,
+        8,
+        3,
+        4404420,
+        -7119629,
+        2923310
+      ],
+      "rxCount": 0
+    },
+    {
+      "pair": 50,
+      "kind": "flash-coefficients",
+      "command": 220,
+      "head": [
+        8,
+        8,
+        3,
+        4306345,
+        -7767170,
+        3516565
+      ],
+      "rxCount": 0
+    },
+    {
+      "pair": 51,
+      "kind": "flash-coefficients",
+      "command": 220,
+      "head": [
+        4,
+        9,
+        2,
+        5979293,
+        -3147245,
+        1554148
+      ],
+      "rxCount": 0
+    },
+    {
+      "pair": 52,
+      "kind": "flash-coefficients",
+      "command": 220,
+      "head": [
+        5,
+        9,
+        2,
+        6079903,
+        -3959725,
+        1839548
+      ],
+      "rxCount": 0
+    },
+    {
+      "pair": 53,
+      "kind": "flash-coefficients",
+      "command": 220,
+      "head": [
+        6,
+        9,
+        3,
+        3423132,
+        -4702403,
+        2006735
+      ],
+      "rxCount": 0
+    },
+    {
+      "pair": 54,
+      "kind": "flash-coefficients",
+      "command": 220,
+      "head": [
+        7,
+        9,
+        3,
+        3728088,
+        -6375000,
+        2871798
+      ],
+      "rxCount": 0
+    },
+    {
+      "pair": 55,
+      "kind": "flash-coefficients",
+      "command": 220,
+      "head": [
+        8,
+        9,
+        3,
+        3933664,
+        -7325403,
+        3454950
+      ],
+      "rxCount": 0
+    },
+    {
+      "pair": 56,
+      "kind": "flash-commit",
+      "command": 220,
+      "head": [
+        255,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "rxCount": 0
+    }
+  ],
+  "limits": [
+    "No separate stereo selectors in220; shared saved configuration inferred, boot stereo application pending.",
+    "Metadata gain truncates whole dB; coefficients use Q8.8 parameter quantization and dynamic coefficient Gain.",
+    "No proof of commit atomicity, persistence, wear limits, fractional metadata reload precision or PEQ readback."
+  ]
+}

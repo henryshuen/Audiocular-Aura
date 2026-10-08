@@ -137,7 +137,7 @@ public static class SafeRam
     {
         // Only fixed diagnostic reports; this is not a public arbitrary-command transport.
         int txCommand = (int)((BinaryPrimitives.ReadUInt32LittleEndian(tx.AsSpan(2)) >> 16) & 0x7fff);
-        if (expected != txCommand || !((expected == 190 && scopedRam is not null && tx.AsSpan().SequenceEqual(scopedRam)) || IsAllowedReport(tx))) throw new InvalidOperationException("Report outside fixed diagnostic allowlist");
+        if (expected != txCommand || !(((expected is 190 or 90 or 220) && scopedRam is not null && tx.AsSpan().SequenceEqual(scopedRam)) || IsAllowedReport(tx))) throw new InvalidOperationException("Report outside fixed diagnostic allowlist");
         log.WriteLine($"Command{expected} TX requestedLength={tx.Length} logicalLength={(expected == 187 ? 14 : 62)}:\n{Caf346.Hex(tx)}");
         log.WriteLine("SET API=HidD_SetOutputReport once; invoking"); log.Flush();
         var sent = hid.SetOutputReport(tx);
@@ -154,6 +154,9 @@ public static class SafeRam
             if (!call.Success) { log.WriteLine("GET FAILED; buffer not a confirmed response"); log.Flush(); return null; }
             var r = Caf346.Parse(rx);
             bool matching = r.Valid && r.Command == expected && (expected != 346 || r.Matching346);
+            if((expected is 90 or 220) && (!matching || r.Count!=0)) {
+                log.WriteLine("FLASH RESPONSE MISMATCH; STOP immediately, no later GET/SET/retry");log.Flush();return null;
+            }
             log.WriteLine($"command={r.Command} reply={r.Reply} count={r.Count} module={r.Module:x8}; logicalwords=[{string.Join(",", r.Words)}] capacityWords=[{string.Join(",", r.CapacityWords)}]");
             log.WriteLine(matching ? "MATCHING CAF RESPONSE" : r.Valid ? "VALID CAF NON-MATCH" : $"INVALID CAF: {r.Reason}"); log.Flush();
             if (queryTiming && attempt == 1) clock.Start();
