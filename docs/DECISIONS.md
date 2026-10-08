@@ -1,5 +1,20 @@
 # AuraPEQ FreeDSP Decisions
 
+## 2026-10-09 — Gain limits audit recommendation; runtime unchanged
+Accept Henry-reported56/56matchingFlashACKs plus EQ persistence after physicalUSB reconnection as tested-session hardwarePASS. Preserve earlier successful results without inferring+12gain safety/fractional fidelity/all-rate behavior.
+
+Recommend optionA (-16..+6dB) as future exact-FreeDSP product envelope, matching reported officialApp and pinnedAPK failure messages. Application-policy recommendation, not firmware/safe-audible limit. ExactDartcallback and rationale UNKNOWN. Current±12 remains unchanged this round. OptionB lacks evidence for extra positive headroom; optionC lacks a verified safe-operating mechanism. Nonpositive/offline alternatives reduce exposure but still require numerical checks.
+
+Separately authorized implementation should align editor/import/graph/TypeScript/native guards, visibly explain out-of-range imported presets, preserve independentunityRestore and otherDAC behavior. No preamp emulation, gain-field reinterpretation or Flash redesign.
+
+3150offlinecases show finite/signed24fit does not imply stability/response fidelity; extreme cases fail inside both official and current ranges. Native32-neighbor optimization/inverse-fidelity checks differ from currentnearest rounding. Record a separate numerical-fidelity follow-up, not runtime changes. Native inversegain tolerance approximately1dB is not a limiter.
+
+Flash integermetadata versusQ8.8coefficient inputs is confirmed arithmetic/source behavior; boot reconstruction from metadata remains a hypothesis. Existing persistencePASS does not resolve fractional precision. Current+12hardware processing/headroom is UNKNOWN, not confirmed supported or universally rejected.
+
+Detailed source inventory, numerical results, evidence boundaries and future separately approved validation options: tests/freedsp/fixtures/freeDspGainAudit.md. No control-research reopening or hardware operations.
+
+
+
 ## 2026-10-08 — M2Q hardware evidence / Restore 不依賴 editor
 接受 Henry 全九段雙路徑 18 command190 Apply／Restore 的協定、雙耳等量、置中與恢復 PASS；取代 M2Q Web pending，不代表 production／正增益／Flash／preamp 完成。
 負增益九段的強烈頻譜變化與低頻 high-pass-like 聽感支持 per-wire frequency/gain 行為，不等於量測響應或 HP filter 實作。

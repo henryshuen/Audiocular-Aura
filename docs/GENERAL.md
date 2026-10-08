@@ -1,4 +1,17 @@
-﻿# AuraPEQ FreeDSP Development Rules
+# AuraPEQ FreeDSP Development Rules
+
+## 2026-10-09 — Gain audit and persistence evidence precedence
+This latest rule supersedes older range/pending interpretations while preserving historical results.
+- Henry reports56/56matchingFlashACKs and EQ persisting after physicalUSB reconnection: tested-session HARDWARE PASS. Exact profile/raw log not supplied in this audit; no fractional/all-rate/+12headroom inference.
+- Official reported FreeDSP App range is-16..+6dB; pinnedAPK localized failure strings corroborate it. Treat it as an App product envelope, not a recovered firmware limit or safe audible maximum. Exact Dart enforcement callback remains unresolved.
+- Current-12..+12 is inherited UI plus host application guards. Historical positive-PK audiblePASS remains valid for those tests; not a blanket+12/full-scale/headroom HARDWARE PASS. Current editor log's "verified range" wording overstates available range/safety evidence.
+- Recommend future exact-FreeDSP-16..+6product policy with numerical/fidelity preflight and honest headroom warnings; otherDACs unchanged. Recommendation only: this audit does not change runtime, serializers or Flash plan.
+- Finite/signed24fit, stable poles, faithful response, matchingACK and audible persistence are separate gates. Extreme lowfrequency/highrate quantization can distort even negativeEQ; currentnearest rounding is not bit-exact official32-neighbor selection.
+- RAM usesQ8.8gain-derived coefficients; Flash adds truncated integerdB metadata and same coefficientbanks. Fractionalreboot behavior UNKNOWN; no invented scaling/readback.
+- Independent preamp/headroom/limiter remains unverified; frozen controls stay closed. Low final listening volume does not establish internal clipping prevention. No positive hardware experiment without separate Henry approval.
+- Durable inventory/results: tests/freedsp/fixtures/freeDspGainAudit.md; offline gain-audit.mjs and inspect-gain-limits.py. No hardware/build/runtime/PR operations this round.
+
+
 
 ## 2026-10-08 — M2Q hardware PASS / 後續規則（取代先前 M2Q pending）
 - Henry 回報全九段雙聲道 Apply／Restore 硬體 PASS：各 18 command190；雙耳等量變化、聲像置中、Restore 正常。path0 LEFT／path1 RIGHT 為硬體推導名稱，非官方 SDK 名稱。

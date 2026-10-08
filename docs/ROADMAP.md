@@ -1,3 +1,33 @@
+## Latest checkpoint — gain limits audit completed (2026-10-09)
+This newest checkpoint supersedes older range/pending interpretations; historical milestones remain below.
+- Henry reports56/56matchingFlashACKs and EQ persistence after physicalUSB reconnection: tested-session HARDWARE PASS. Exactprofile/rawlog not supplied; no+12/fractional/all-rate inference.
+- Inventoried current414b7b9 and refreshed upstreamaf0bcf7057860307bf81b00746f0cbdb93366514. Detailed report: tests/freedsp/fixtures/freeDspGainAudit.md.
+- PinnedAPK rehashed; localized-16..+6failure strings extracted. SDK/JNI usesQ8.8input, dynamicexponent/signed24 and pole/inverse-fidelity checks; actual Dart guard/firmware range unknown.
+-3150offlinecases all finite/signed24fit.1050PK includes35quantized strict-stability failures;110float-or-quantized failures including2100unsupported reference shelves. Stable extreme negativePK can distort response. Ordinary1k/Q1 cases atall7gains/5banks pass center/stability.
+- Focused gainAudit/editorUx/flash61tests/3files PASS; no verify.ps1/build/native execution/device operations. InitialTempEPERM resolved before tests by workspace-local Temp.
+- Recommend future exactFreeDSP-16..+6application envelope with numerical/fidelity/headroom caveats; runtime unchanged. Positive beyond+6hardware UNKNOWN.
+- After Henry's persistencePASS, separate upstream/product cleanup is the next development milestone. This audit does not start cleanup/release/PR/Flash rework; frozen control research stays closed.
+
+### Research checkpoint
+Examined: full gain entry/clamp/export/reset/curve/safety/RAM/Flash/native software inventory; originalupstream; pinnedAPK strings/Java/JNI/quantizer; existing57helperpairs and completed control evidence.
+Verified facts: host±12; officialApp-16..+6failure text;190exponent;220integermetadata; Q8.8input; numerical failures and ordinary-case correctness; Henry persistence result.
+Hypotheses: officialrange is product/headroom policy; boot uses coefficientbanks or metadata reconstruction. Neither rationale nor boot alternative established.
+Discarded: coefficientfit implies safety; ACK implies+12headroom; exponent is preamp; pole stability proves fidelity; officialrange is universal math boundary.
+Unresolved fields: exactDartcallback/deviceguard, DSP accumulator/headroom/limiter, boot source selection, native finalquantizer choice.
+Next search target: exactAPI/firmware documentation or validatedAOTUIcallchain; offlinequantizer/fidelity comparison. Hardware only after separate Henry approval.
+
+### Problem / hypothesis / next action
+Observed problem: official-16..+6 versus inherited-12..+12; protocol/persistence success leaves gain safety and fractionalreboot ambiguity.
+Verified facts: applicationguards, dynamic signed24 and integermetadata differ; representability is not headroom. RAM/Flash share coefficient conversion.
+Possible causes: inherited generic UIpolicy; product clipping budget; near-unit-circle quantization; firmware metadata reconstruction.
+Ruled out / weakened: hard+6universal numerical limit; ACK proves+12support; low postDSPvolume proves no internalclipping; native exponent is attenuation.
+Next validation: review recommended policy, seek exactcallback/specification, improve offline fidelity evidence. No hardware request now.
+Possible fix direction: separately implement-16..+6deviceguards with explicitimport messaging/independentunityRestore/otherDAC preservation; quantizerfidelity and fractionalboot are distinct follow-ups. No speculativepreamp/Flashschema change.
+
+## Evidence for upstream / Issue #3
+Exact35D8:1496descriptor remainsID1/61databytes; native InputGET_REPORT exception unchanged. Henry reports56/56FlashmatchingACKs plus persistence afterUSBreconnection. PinnedAPK SHA04756b49acfea523758d86101c96c1824b7b209ae3a8836c07837088e795d2d5 contains localized-16..+6failure text; exactDartguard/firmwareheadroom unknown. Upstreamaf0bcf7 and fork inherit±12hostpolicy.190Gain is exponent/signed24;220metadata integerdB versusQ8.8coefficientinput. No verifiedpreamp/limiter. Warning/AutoReduce is heuristic, not clipping protection; keyboardFlash bypasses main warningwrapper but retains confirmation/preflight.3150offlinecases show fit but35PKstrict-stability failures and extreme stable-response distortion; no+12hardware/fullscale claim. Recommend separateFreeDSP-16..+6product envelope with numerical/fidelitychecks; otherDACs unchanged. Fractionalboot requires exactfirmware/API or separately approved objective evidence. See freeDspGainAudit.md for reproducible source inventory. No runtime/device/build/PR change.
+
+
 M2S UX final verification: focused16tests PASS; verify.ps1 once PASS (TypeScript/Vite build,21files/184tests); generateddist restored; git diff --check PASS. No hardware access.
 
 ## M2S main-page UX follow-up — ready
@@ -2820,6 +2850,16 @@ Possible fix direction: if allACKs pass but persistence/stereo fails, retain raw
 
 ## Evidence for upstream / Issue #3 — Flash increment
 Pinned official full Freeman save method and55helperpairs agree: command220metadata[0,wire,freq,trunc(Q*256),PK0,trunc(dB),zeros],coeff[rate4..8,wire,Gain,B0/B1/B2/A0/A1,zeros],commit[255,zeros]. Order all9metadata thenwire1..9 withrates4..8 thencommit; pre-save90[90,0,zeros]. Shared per-rate configuration, no L/Rselector; both-channel boot application unvalidated. Official intermediary false flag still does initialGET; source can ignorecoefficientfailure,whichforkdoesnotcopy. Fork reuses RAM-validated dynamic fixedpoint/sign/stability,prevalidates fullplan,saveslocal recovery,strictmatchingnativeSET/InputGET perpacket,firstfailureSTOP,no retry/rollback. Old sender metadata gain*256/fixedGain3/commit-1/Tilt/send-only not reused for exactFreeDSP. UIexistingSaveonly, otherDACbranchesunchanged. Persistence requires fullunplug/replug withoutRAMSync; NOT YET HARDWARE PASS.
+
+## Gain limits audit (2026-10-09) — research checkpoint
+- Examined current editor/import/curve/RAM/Flash/native validators and fetched upstream/main (af0bcf7057860307bf81b00746f0cbdb93366514).
+- Verified: inherited generic UI bounds are -12..+12. Exact-device application clamp and preflight reinforce them. RAM190 Gain is a coefficient exponent; Flash220 metadata gain is truncated whole dB.
+- Pinned APK hash rechecked; libapp.so contains localized failure text specifying -16dB~6dB, including English and Traditional Chinese. String locations are not recovered UI control-flow locations.
+- Henry reports 56/56 matching Flash ACKs and EQ persisting after physical USB reconnection. This supersedes hardware-pending status for that reported persistence test only; profile/gain values and a raw log were not supplied in this audit.
+- Hypotheses: official range is an application policy; fractional metadata may affect reconstruction. Not proven firmware limits or reboot reconstruction behavior.
+- Discarded: ACK acceptance establishes +12dB safety; signed Q8.8 width establishes audible gain range; coefficient exponent is preamp.
+- Unresolved: exact Dart validation callback/device routing, firmware headroom/limiter, boot coefficient-versus-metadata selection.
+- Next target: deterministic offline multi-rate coefficient/quantization matrix and production-policy recommendation. No device operations, runtime changes, build or control-research reopening.
 
 ### Scope / regression check — Flash
 - FreeDSP-specific files changed: flash plan/session/native framing plus offline analysis/profile/evidence/tests.

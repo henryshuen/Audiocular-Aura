@@ -1,3 +1,13 @@
+## 2026-10-09 — gain limits audit completed (offline only)
+- Recorded Henry-reported56/56matchingFlashACKs and EQ persistence after physicalUSB reconnection as tested-session hardwarePASS. No+12/fractional/all-rate validation claimed.
+- Inventoried all current/upstream gain entry/clamp/rounding/reset/curve/safety/190/220/native boundaries; fetched upstreammainaf0bcf7057860307bf81b00746f0cbdb93366514. Runtime unchanged.
+- Rehashed cached officialAPK SHA04756b49acfea523758d86101c96c1824b7b209ae3a8836c07837088e795d2d5; reproducibly extracted localized-16..+6failure strings/fileoffsets; cross-checked saved SDK/JNI/quantizer evidence and documented extraction limits.
+- Added deterministic offline3150-case matrix:7gains/6frequencies/5Qs/5rates, native-floatPK plus clearly labeled unsupported reference shelves. Retained failures, centerfidelity, quantizationerror, stable-neighbor distinction, composite sine gain and metadata truncation.
+- Published freeDspGainAudit.md detailed inventory/evidence/results/options; updated all4docs and Issue3pack; recorded future-16..+6recommendation without implementation.
+- Focused3files/61tests PASS (gainAudit15, editorUx32, Flash14). InitialTempEPERM resolved using workspace-local Temp; corrected new test to decode actual serializedCAF bytes. No verify.ps1, build, native execution, hardware access or PR.
+- Scope: documentation/offline scripts/tests/fixtures only; sharedruntime NONE; non-FreeDSP protocol code changed NO. Final git diff --check PASS; authorized commit/push follows.
+
+
 M2S UX final verification: focused16tests PASS; verify.ps1 once PASS (TypeScript/Vite build,21files/184tests); generateddist restored; git diff --check PASS. No hardware access.
 
 ## M2S main-page UX completed offline
