@@ -1,0 +1,159 @@
+{
+  "capturedUtc": "2026-10-08T01:03:31.053060+00:00",
+  "vid": "0x35D8",
+  "pid": "0x1496",
+  "safety": "Read-only COM getters, exact connected adapter guard; no setters, raw USB/KS, CAF, stream, driver or settings changes.",
+  "limits": "Windows part/node IDs are not USB Feature Unit IDs; dB/ranges are driver values, not raw UAC CUR/RANGE. Does not establish PEQ placement or write behavior.",
+  "endpoints": [
+    {
+      "flow": "playback",
+      "endpointId": "[redacted]",
+      "adapterId": "[redacted]",
+      "parts": [
+        {
+          "localId": 65536,
+          "ksNodeId": 0,
+          "name": "Headset",
+          "globalId": "[redacted]",
+          "VolumeInterfaceResult": "HRESULT 0x80004002",
+          "MuteInterfaceResult": "HRESULT 0x80004002",
+          "EnumPartsOutgoingResult": "HRESULT 0x80070490"
+        },
+        {
+          "localId": 131072,
+          "ksNodeId": 0,
+          "name": "Volume",
+          "globalId": "[redacted]",
+          "hardwareVolume": [
+            {
+              "channel": 0,
+              "currentDb": -74.0,
+              "minDb": -74.0,
+              "maxDb": 0.0,
+              "stepDb": 0.5
+            },
+            {
+              "channel": 1,
+              "currentDb": -74.0,
+              "minDb": -74.0,
+              "maxDb": 0.0,
+              "stepDb": 0.5
+            }
+          ],
+          "MuteInterfaceResult": "HRESULT 0x80004002"
+        },
+        {
+          "localId": 131073,
+          "ksNodeId": 1,
+          "name": "Mute",
+          "globalId": "[redacted]",
+          "VolumeInterfaceResult": "HRESULT 0x80004002",
+          "hardwareMute": true
+        },
+        {
+          "localId": 65537,
+          "ksNodeId": 1,
+          "name": "",
+          "globalId": "[redacted]",
+          "VolumeInterfaceResult": "HRESULT 0x80004002",
+          "MuteInterfaceResult": "HRESULT 0x80004002",
+          "EnumPartsIncomingResult": "HRESULT 0x80070490"
+        }
+      ],
+      "endpointHardwareSupportMask": 3,
+      "endpointChannels": [
+        {
+          "channel": 0,
+          "currentDb": -74.0
+        },
+        {
+          "channel": 1,
+          "currentDb": -74.0
+        }
+      ],
+      "endpointMute": true,
+      "endpointRange": {
+        "minDb": -74.0,
+        "maxDb": 0.0,
+        "stepDb": 0.5
+      }
+    },
+    {
+      "flow": "capture",
+      "endpointId": "[redacted]",
+      "adapterId": "[redacted]",
+      "parts": [
+        {
+          "localId": 65539,
+          "ksNodeId": 3,
+          "name": "Microphone",
+          "globalId": "[redacted]",
+          "VolumeInterfaceResult": "HRESULT 0x80004002",
+          "MuteInterfaceResult": "HRESULT 0x80004002",
+          "EnumPartsIncomingResult": "HRESULT 0x80070490"
+        },
+        {
+          "localId": 131075,
+          "ksNodeId": 3,
+          "name": "Mute",
+          "globalId": "[redacted]",
+          "VolumeInterfaceResult": "HRESULT 0x80004002",
+          "hardwareMute": false
+        },
+        {
+          "localId": 131074,
+          "ksNodeId": 2,
+          "name": "Volume",
+          "globalId": "[redacted]",
+          "hardwareVolume": [
+            {
+              "channel": 0,
+              "currentDb": 0.0,
+              "minDb": -74.0,
+              "maxDb": 0.0,
+              "stepDb": 0.5
+            }
+          ],
+          "MuteInterfaceResult": "HRESULT 0x80004002"
+        },
+        {
+          "localId": 65538,
+          "ksNodeId": 2,
+          "name": "",
+          "globalId": "[redacted]",
+          "VolumeInterfaceResult": "HRESULT 0x80004002",
+          "MuteInterfaceResult": "HRESULT 0x80004002",
+          "EnumPartsOutgoingResult": "HRESULT 0x80070490"
+        }
+      ],
+      "endpointHardwareSupportMask": 3,
+      "endpointChannels": [
+        {
+          "channel": 0,
+          "currentDb": 0.0
+        }
+      ],
+      "endpointMute": false,
+      "endpointRange": {
+        "minDb": -74.0,
+        "maxDb": 0.0,
+        "stepDb": 0.5
+      }
+    }
+  ],
+  "errors": [],
+  "pnpAudioFunction": {
+    "instanceId": "[redacted]",
+    "properties": [
+      {
+        "KeyName": "DEVPKEY_Device_Service",
+        "Data": "usbaudio2"
+      },
+      {
+        "KeyName": "DEVPKEY_Device_DriverInfPath",
+        "Data": "usbaudio2.inf"
+      }
+    ],
+    "source": "Read-only Get-PnpDeviceProperty during Round4"
+  }
+}

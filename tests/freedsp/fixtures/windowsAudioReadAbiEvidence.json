@@ -1,0 +1,126 @@
+{
+  "sourceHeaders": [
+    {
+      "file": "devicetopology.h",
+      "sha256": "00c16e449d4937f0a99ac796f4ea1b7652a2909b8463c771af25faf23d16e1fc",
+      "url": "https://raw.githubusercontent.com/microsoft/win32metadata/main/generation/WinSDK/RecompiledIdlHeaders/um/devicetopology.h"
+    },
+    {
+      "file": "endpointvolume.h",
+      "sha256": "e9a35c9edf8c9dd931da5fe1ea84344f0e20595d037ec6e97fa189d3d155ccd0",
+      "url": "https://raw.githubusercontent.com/microsoft/win32metadata/main/generation/WinSDK/RecompiledIdlHeaders/um/endpointvolume.h"
+    },
+    {
+      "file": "mmdeviceapi.h",
+      "sha256": "dcacabdf69f267a7892ab61f22f3293fc3173c2d962306ce89a0145def7b7b1a",
+      "url": "https://raw.githubusercontent.com/microsoft/win32metadata/main/generation/WinSDK/RecompiledIdlHeaders/um/mmdeviceapi.h"
+    }
+  ],
+  "interfaces": {
+    "Enumerator": {
+      "interface": "IMMDeviceEnumerator",
+      "iid": "A95664D2-9614-4F35-A746-DE8DB63617E6",
+      "auditedReadSlots": {
+        "EnumAudioEndpoints": 3
+      }
+    },
+    "Collection": {
+      "interface": "IMMDeviceCollection",
+      "iid": "0BD7A1BE-7A1A-44DB-8397-CC5392387B5E",
+      "auditedReadSlots": {
+        "GetCount": 3,
+        "Item": 4
+      }
+    },
+    "Device": {
+      "interface": "IMMDevice",
+      "iid": "D666063F-1587-4E43-81F1-B948E807363F",
+      "auditedReadSlots": {
+        "Activate": 3,
+        "GetId": 5
+      }
+    },
+    "Topology": {
+      "interface": "IDeviceTopology",
+      "iid": "2A07407E-6497-4A18-9787-32F79BD0D98F",
+      "auditedReadSlots": {
+        "GetConnector": 4
+      }
+    },
+    "Connector": {
+      "interface": "IConnector",
+      "iid": "9c2c4058-23f5-41de-877a-df3af236a09e",
+      "auditedReadSlots": {
+        "GetConnectedTo": 8,
+        "GetDeviceIdConnectedTo": 10
+      }
+    },
+    "Part": {
+      "interface": "IPart",
+      "iid": "AE2DE0E4-5BCA-4F2D-AA46-5D13F8FDB3A9",
+      "auditedReadSlots": {
+        "GetName": 3,
+        "GetLocalId": 4,
+        "GetGlobalId": 5,
+        "GetSubType": 7,
+        "EnumPartsIncoming": 10,
+        "EnumPartsOutgoing": 11,
+        "Activate": 13
+      }
+    },
+    "PartsList": {
+      "interface": "IPartsList",
+      "iid": "6DAA848C-5EB0-45CC-AEA5-998A2CDA1FFB",
+      "auditedReadSlots": {
+        "GetCount": 3,
+        "GetPart": 4
+      }
+    },
+    "Volume": {
+      "interface": "IAudioVolumeLevel",
+      "iid": "7FB7B48F-531D-44A2-BCB3-5AD5A134B3DC",
+      "auditedReadSlots": {
+        "GetChannelCount": 3,
+        "GetLevelRange": 4,
+        "GetLevel": 5
+      }
+    },
+    "Mute": {
+      "interface": "IAudioMute",
+      "iid": "DF45AEEA-B74A-4B6B-AFAD-2366B6AA012E",
+      "auditedReadSlots": {
+        "GetMute": 4
+      }
+    },
+    "EndpointVolume": {
+      "interface": "IAudioEndpointVolume",
+      "iid": "5CDF2C82-841E-4546-9722-0CF74078229A",
+      "auditedReadSlots": {
+        "GetChannelCount": 5,
+        "GetMasterVolumeLevel": 8,
+        "GetChannelVolumeLevel": 12,
+        "GetMute": 15,
+        "QueryHardwareSupport": 19,
+        "GetVolumeRange": 20
+      }
+    }
+  },
+  "limits": "Header audit establishes slot order/IIDs, not hardware semantics. No setters declared in reader.",
+  "manualDiagnosticSlots": {
+    "Enumerator": {
+      "GetDevice": 5
+    },
+    "Topology": {
+      "GetPartById": 7
+    },
+    "Part": {
+      "GetTopologyObject": 12
+    },
+    "Volume": {
+      "SetLevel": 6
+    },
+    "Mute": {
+      "SetMute": 3
+    }
+  }
+}
