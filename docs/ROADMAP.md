@@ -2518,3 +2518,60 @@ PEQ nine wires x LEFT/RIGHT RAM and native transport are Henry hardware PASS. In
 
 ### M2U automated verification
 Focused preamp evidence tests:5 PASS. Final verify.ps1: TypeScript/production build PASS;240 tests across25 files PASS, no hardware. git diff --check PASS. No production runtime changes; analysis/test/docs only.
+
+
+## Control Research Round1/4 — exact USB AudioControl / Feature Unit COMPLETE
+Budget: Round1COMPLETE,3 rounds remaining. Round2 official pregain exact-device callchain; Round3 remaining CAF/firmware; Round4 cross-validation/finaldecision. Do not exceed4 without explicit Henry authorization. After4 unresolved controls freeze UNKNOWN/UNSUPPORTED; move to Flash/persistence then release cleanup/upstream PR. PEQ RAM hardware PASS; real preamp remains highest control priority. This round does not start Round2.
+
+### Research checkpoint — exact physical descriptor acquisition
+Examined: present Windows PnP exact35D8:1496, parent hub/port properties, Microsoft USBView/user-mode hub descriptor IOCTL documentation, complete device/configuration descriptors, UAC2 Feature Unit definition, exact audio-driver service/INF.
+Verified facts: device online; standard hub reader verified VID/PID before descriptor request; one configuration422bytes/currentvalue1; bcdADC0200; interface0AudioControl,1playbackAS,2captureAS,3HID. Audio driver usbaudio2/usbaudio2.inf. Full raw bytes/hash/request log preserved in freeDspUsbConfiguration.json; parser output in freeDspAudioControlEvidence.json. Exactly one connection-info IOCTL and one standard configuration GET_DESCRIPTOR; no CAF/class/vendor/SET operation. No endpoint-volume changes.
+Hypotheses: independently addressable playback L/R volume could support hardware volume/balance; useful preamp depends on placement relative to CAF PEQ.
+Discarded: absence of all volume controls; existence of master Volume; assuming mute and volume permissions are identical; calling AudioControl topology proof of pre-PEQ headroom.
+Unresolved: current dB/ranges/resolution, gain placement/actual control behavior, driver-safe raw class-read path.
+Next target: Round2 exact-device official pregain callchain, only in a separately authorized next round. No additional descriptor access required now.
+
+### Exact topology and permissions
+UAC2 AC interface0 class/subclass/protocol01/01/20, bcdADC0x0200, class-specific total115bytes, category4(headset). One complete configuration, four interfaces.
+Playback: USB streaming inputterminal1(type0101,clock9,2channels,channelbitmap0x3 FRONT_LEFT/FRONT_RIGHT) -> FeatureUnit2(source1) -> headset outputterminal3(type0402,clock9). Microphone inputterminal4(type0201,clock10,1channel,bitmap1) -> FeatureUnit5(source4) -> USB streaming outputterminal6(type0101,clock10). ClockSource9 and10 are distinct. Associated-terminal fields link3/4 but are not additional signal-flow sources.
+No Mixer, Processing, Extension, Selector or Effect unit descriptors in this configuration. CAF PEQ is not represented by a separately named entity; its position inside the hardware path is unknown.
+
+| Feature Unit / path | Channel | Bitmap | Volume selector2 | Mute selector1 | Classification |
+|---|---|---|---|---|---|
+| FU2 playback,interface0 | master0 | 0x00000003 | ABSENT | READ_WRITE | Master mute supported; master volume absent |
+| FU2 playback,interface0 | logical1 LEFT | 0x0000000C | READ_WRITE | ABSENT | Volume SUPPORTED BY DESCRIPTOR |
+| FU2 playback,interface0 | logical2 RIGHT | 0x0000000C | READ_WRITE | ABSENT | Volume SUPPORTED BY DESCRIPTOR |
+| FU5 capture,interface0 | master0 | 0x00000003 | ABSENT | READ_WRITE | Capture master mute supported |
+| FU5 capture,interface0 | logical1 mono | 0x0000000C | READ_WRITE | ABSENT | Capture volume SUPPORTED BY DESCRIPTOR |
+Bass/Mid/Treble/InputGain controls absent in these Feature Unit bitmaps; this does not prove no private firmware tone/mic mechanism. LEFT/RIGHT here are UAC channel-cluster names, independently derived from descriptorbitmap3, not guessed official names for CAF payload selectors.
+Streaming playback interface1 alt0(noendpoint),alt1/2/3 stereo16/24/32-bit formats OUTendpoint0x01; capture interface2 alt0,alt1/2 mono16/24-bit INendpoint0x81; HIDinterface3 endpoint0x83. No sample-rate changes or stream reconfiguration occurred.
+
+### Read-only CUR / RANGE result and exact API blocker
+Master Volume: ABSENT; no request eligible. LEFT/RIGHT: descriptor-readable but NOT_READ, raw current/range/resolution UNKNOWN.
+Eligible UAC2 volume addressing would be bmRequestType0xA1 (class/interface IN), CURbRequest1/RANGE2, wValue0x0201 LEFT or0x0202 RIGHT, wIndex0x0200 (FU2/interface0). CUR signed16 LE dB/256; RANGE contains subrange count and MIN/MAX/RES. These are documented addresses only, not packets transmitted. No UAC1 GET_MIN/MAX/RES is applicable to this UAC2 device.
+The [Windows USB_DESCRIPTOR_REQUEST API](https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/usbioctl/ns-usbioctl-_usb_descriptor_request) overwrites request type/request with0x80/6; it cannot be repurposed to class CUR/RANGE. Exact audio function is bound to usbaudio2, whereas [WinUSB user API](https://learn.microsoft.com/en-us/windows-hardware/drivers/usbcon/winusb-architecture) requires Winusb.sys. No WinUsb_Initialize or driver replacement attempted. Existing HID adapter cannot forward UAC class requests. Therefore no raw-volume probe built/run through those incompatible backends. This is a blocker for the selected safe raw-USB path, not proof Windows has no alternative.
+Read-only KS/DeviceTopology may expose driver-mapped volume/range, but this round stops at recovered/classified topology; those APIs are unimplemented/unverified here and their16.16dB values must not be mislabeled raw UAC replies. No endpoint volume read/write was used as a substitute.
+
+### Preamp / Balance / Mic boundary
+Hardware/USB volume candidate, preamp semantics unverified. Volume descriptor confidence HIGH; actual control behavior/read values untested. True preamp confidence LOW: nominal terminal1->FU2->terminal3 ordering does not locate CAF PEQ relative to the gain stage or establish internal digital headroom. Main Preamp stays disabled.
+Independent descriptor-defined L/R Volume could support Channel Balance, but no writes/listening verification or implementation this round. Separate mono capture FU5 volume/mastermute provides a concrete microphone-control lead; DSP mic gain/monitor/AGC semantics and values unverified. No Mic integration.
+
+### Problem / hypothesis / next action
+Observed problem: Preamp remains unresolved despite PEQ RAM hardware PASS; M2U lacked AudioControl descriptors.
+Verified facts: exact hardware now proves UAC2 independent playback L/R Volume RW and master Mute RW; master Volume absent; separate mono capture controls; no Mixer/Processing/Extension entities.
+Possible causes: USB gain may be after the PEQ stage, or firmware may have a separate pregain path. Windows class-driver ownership prevents the selected raw CUR/RANGE backend.
+Ruled out / weakened: no USB volume controls at all; guessed Feature Unit IDs; generic Windows endpoint volume as raw USB proof; topology alone as true preamp proof.
+Next validation: Round2 official USB/BLE pregain exact1496 callchain. Preserve this descriptor evidence to cross-check any discovered gain path. No hardware trial or SET request requested.
+Possible fix direction: exact-device mechanism and placement evidence first; existing main UI only if real preamp is proven. No PEQ emulation or extra native business logic. Flash follows control-research closure.
+
+## Evidence for upstream / Issue #3 — Control Research Round1
+Physical exact35D8:1496 full422-byte configuration recovered read-only via Windows USB hub IOCTL. UAC2 bcdADC0200,ACinterface0. Playback USBIT1 -> FU2 -> headsetOT3; masterbitmap3=MuteRW/noVolume, LEFT/RIGHT bitmap0xC=VolumeRW/noMute. Capture micIT4 -> monoFU5 -> USBOT6. No Mixer/Processing/Extension entity. Independent USB volume is now descriptor-supported, but raw CUR/RANGE and position relative to CAF PEQ remain unknown; current usbaudio2 binding/hub GET_DESCRIPTOR API does not provide selected raw class-read route. No driver change/CAF/volume/gain/PEQ/Flash write. PEQ remains hardware PASS, main Preamp disabled pending real headroom evidence; control research limited to4rounds then freeze unresolved controls.
+
+### Scope / regression check — Control Research Round1
+- FreeDSP-specific analysis files: descriptor-only reader, offline UAC2 parser, exact raw/decoded fixtures and offline Python tests.
+- Shared runtime files changed: NONE.
+- Non-FreeDSP protocol code changed: NO.
+- Hardware operations: exact-device enumeration and standard descriptor reads only; no control writes, stream configuration, CAF/PEQ/Flash or volume changes.
+
+### Round1 automated verification
+Offline Python descriptor tests:7 PASS. Final verify.ps1: TypeScript/production build PASS;240 tests across25 files PASS. git diff --check PASS after excluding regenerated dist. Runtime/non-FreeDSP protocol changes NONE; physical access only enumerated identity and standard descriptor reads.

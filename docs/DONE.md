@@ -466,3 +466,15 @@ Henry reports FreeDSP nine-band defaults and structure-preserving Reset to Flat 
 
 ### M2U automated verification
 Focused preamp evidence tests:5 PASS. Final verify.ps1: TypeScript/production build PASS;240 tests across25 files PASS, no hardware. git diff --check PASS. No production runtime changes; analysis/test/docs only.
+
+
+## Control Research Round1/4 COMPLETE — 2026-10-08
+- Read exact present FreeDSP35D8:1496 through Windows PnP and standard hub connection-info/configuration GET_DESCRIPTOR. Captured device descriptor plus all422 configuration bytes with SHA256/request log; currentconfiguration1.
+- Decoded UAC2 bcdADC0200/ACinterface0, playbackAS1/captureAS2/HID3, terminal1/3 playback and4/6 capture, FeatureUnits2/5 and ClockSources9/10. Playback2channels bitmap3; separate capturemono. No Mixer/Processing/Extension descriptors.
+- Verified descriptor permissions: FU2 master Mute RW/Volume absent; LEFT/RIGHT Volume RW/Mute absent. FU5 mono channel Volume RW and master Mute RW. No main UI or hardware control implementation.
+- Exact Windows AudioControl service/INF is usbaudio2/usbaudio2.inf. Recorded selected raw CUR/RANGE API blocker; no raw values obtained, no class request/driver replacement or endpoint-volume substitute. No CAF, PEQ, gain, volume, Flash or stream changes.
+- Added descriptor-only collector/offline parser and7 offline tests; preserved raw/decoded fixtures. No repeated APK scan.
+- Recorded four-round research cap, Round1 COMPLETE and3 remaining; retained PEQ RAM hardware PASS/preamp priority/upstream cleanup rule/Flash after closure. No Round2 work started.
+
+### Round1 automated verification
+Offline Python descriptor tests:7 PASS. Final verify.ps1: TypeScript/production build PASS;240 tests across25 files PASS. git diff --check PASS after excluding regenerated dist. Runtime/non-FreeDSP protocol changes NONE; physical access only enumerated identity and standard descriptor reads.
