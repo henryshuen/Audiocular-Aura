@@ -24,9 +24,10 @@ function mock(){
  return {fetcher,reports,logs,t,c,setFail:(n:number)=>{fail=n;},setRate:(n:number)=>{rate=n;},setBadReply:()=>{badReply=true;}};
 }
 describe('normal FreeDSP native transport; mocked HTTP only, no hardware',()=>{
- it('valid+12 bands and composite above+6 are accepted unchanged after UI confirmation',async()=>{
-   const f=mock();await f.t.connect();const b=unityPreset().map(x=>({...x,freq:1000,gain:12,q:1}));await f.c.sync(b);
-   expect(f.reports).toHaveLength(21);for(let i=0;i<9;i++)expect([...f.reports[3+i*2]]).toEqual([...modelWebBand(b[i],5,false,0).bytes]);f.c.dispose();
+ it('valid+6 bands and composite above+6 retain existing packet algorithm; +12 host profile rejected',async()=>{
+   const f=mock();await f.t.connect();const b=unityPreset().map(x=>({...x,freq:1000,gain:6,q:1}));await f.c.sync(b);
+   expect(f.reports).toHaveLength(21);for(let i=0;i<9;i++)expect([...f.reports[3+i*2]]).toEqual([...modelWebBand(b[i],5,false,0).bytes]);
+   await expect(f.c.sync(b.map(x=>({...x,gain:12})))).rejects.toThrow('無效');expect(f.reports).toHaveLength(21);f.c.dispose();
  });
  it('metadata Connect sends no CAF; shared plan sends prerequisites then18 identical stereo packets',async()=>{
    const f=mock();await f.t.connect();expect(f.reports).toHaveLength(0);await f.c.sync(mixedPreset());

@@ -43,18 +43,17 @@ describe('gain audit offline evidence, never opens a device',()=>{
    const bands=freeDspDefaultBands();bands[0].type=type;expect(()=>validateBands(bands)).toThrow();
   }
  });
- it('import snapshot +12 is accepted by existing policy, +13 clamps with a log; -16 clamps to -12',()=>{
+ it('new official App policy rejects +12 import unchanged and accepts -16; offline matrix remains historical math evidence',()=>{
   const bands=freeDspDefaultBands(),logs:string[]=[];bands[0].gain=12;bands[1].gain=13;bands[2].gain=-16;
-  const normalized=normalizeFreeDspEditor(bands,s=>logs.push(s));
-  expect(normalized.slice(0,3).map(b=>b.gain)).toEqual([12,12,-12]);expect(logs.length).toBe(2);
-  expect(validateBands(normalized)[0].gain).toBe(12);
-  bands[0].gain=-16;expect(()=>validateBands(bands)).toThrow();
+  expect(()=>normalizeFreeDspEditor(bands,s=>logs.push(s))).toThrow('沒有自動夾限');
+  expect(bands.slice(0,3).map(b=>b.gain)).toEqual([12,13,-16]);
+  bands[0].gain=-16;bands[1].gain=6;expect(validateBands(bands)[0].gain).toBe(-16);
  });
  it('RAM coefficients retain fractional dB while Flash metadata truncates toward zero; Flash coefficients are identical to RAM',()=>{
-  const bands=freeDspDefaultBands();bands[0].gain=-6.75;bands[1].gain=6.75;
+  const bands=freeDspDefaultBands();bands[0].gain=-6.75;bands[1].gain=5.75;
   const plan=buildFlashPlan(bands);
   const words=(data:Uint8Array)=>parseCaf(1,new DataView(data.buffer,data.byteOffset,data.byteLength)).words;
-  expect(words(plan.packets[1].data)[5]).toBe(-6);expect(words(plan.packets[2].data)[5]).toBe(6);
+  expect(words(plan.packets[1].data)[5]).toBe(-6);expect(words(plan.packets[2].data)[5]).toBe(5);
   const coefficient=plan.packets[10]; // after90 and9metadata
   expect(words(coefficient.data).slice(2)).toEqual(modelWebBand(bands[0],4).payload.slice(2));
   expect(audit().metadata.find((x:any)=>x.gainDb===6.75)).toEqual({gainDb:6.75,coefficientInputDb:6.75,flashMetadataDb:6});

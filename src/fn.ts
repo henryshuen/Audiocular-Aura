@@ -1,6 +1,8 @@
 import {freeDspDefaultBands,freeDspEditorGain,normalizeFreeDspEditor} from './freedsp/editor.ts';
+import {gainRangeFor,freeDspGainRange} from './freedsp/capabilities.ts';
+import {showFreeDspDeviceState,freeDspOverwriteWarning} from './freedsp/deviceState.ts';
 import {selectCafDevice,isFreeDsp} from './freedsp/webHid.ts';
-import {connectFreeDsp,disconnectFreeDsp} from './freedsp/session.ts';
+import {connectFreeDsp,disconnectFreeDsp,getFreeDspSession} from './freedsp/session.ts';
 import {
 	DEFAULT_FREQS,
 	DEFAULT_LABELS,
@@ -24,6 +26,9 @@ import {isExperimentalFreeDspActive} from './freedsp/graphicalRam.ts';
  * STATE
  */
 let device: HIDDevice | null = null;
+let freeDspStateStale=false;
+let connectAttempt=0;
+export function getConnectionAttempt(){return connectAttempt;}
 
 // Retrieve persisted active EQ configuration
 const savedEq = localStorage.getItem("aura_active_eq_state");
@@ -99,6 +104,7 @@ export function setLastAppliedEqName(name: string) {
 }
 
 export function updateLastAppliedEqUI() {
+ if(isFreeDsp(device) || (!device && freeDspStateStale)){showFreeDspDeviceState(!!device);return;}
 	const lastEqEl = document.getElementById("lastAppliedEqDisplay");
 	if (lastEqEl) {
 		let displayName = lastAppliedEqName;
@@ -278,7 +284,8 @@ export function getEqState() {
 }
 
 export function setEqState(eq: EQ) {
-	eqState = isFreeDsp(device)?normalizeFreeDspEditor(eq,log):eq;
+	try{eqState = isFreeDsp(device)?normalizeFreeDspEditor(eq,log):eq;}
+ catch(e){log(String(e)+' LOCAL EDITOR保持原值。');throw e;}
 }
 
 export function setEQ(
@@ -609,7 +616,8 @@ export function defaultEqState(): EQ {
  * Trigger UI updates and EQ graph re-render
  */
 export function renderUI(eqState: EQ) {
-	if(isFreeDsp(device)){setEqState(eqState);eqState=getEqState();}
+	if(isFreeDsp(device))eqState=getEqState(); // Rendering never clamps retained local values.
+	const gainRange=gainRangeFor(device);
 	// Save current active state to localStorage
 	localStorage.setItem("aura_active_eq_state", JSON.stringify(eqState));
 	localStorage.setItem("aura_active_preamp_gain", globalGainState.toString());
@@ -660,10 +668,10 @@ export function renderUI(eqState: EQ) {
 
 					<div class="slider-container">
 						<span class="slider-label">${t("band_gain") || "Gain (dB)"}</span>
-						<input type="range" orient="vertical" min="-12" max="12" step="0.1" value="${band.gain}" 
+						<input type="range" orient="vertical" min="${gainRange.min}" max="${gainRange.max}" step="0.1" value="${band.gain}"
 							oninput="window.updateState(${i}, 'gain', this.value)" onchange="window.pushHistory()" ${device || isExperimentalFreeDspActive() ? "" : "disabled"} class="vertical-slider">
 						<div class="gain-input-wrapper">
-							<input type="number" value="${band.gain}" step="0.1" min="-12" max="12"
+							<input type="number" value="${band.gain}" step="0.1" min="${gainRange.min}" max="${gainRange.max}"
 								onchange="window.updateState(${i}, 'gain', this.value); window.pushHistory()" id="num-gain-${i}" ${device || isExperimentalFreeDspActive() ? "" : "disabled"} class="strip-input font-mono" size="6">
 						</div>
 					</div>
@@ -709,6 +717,8 @@ export function renderUI(eqState: EQ) {
  * Connect to audio DAC via WebHID
  */
 export async function connectToDevice() {
+	const attempt=++connectAttempt;
+	let freeDspAttempt=false;
 	try {
 		if(isExperimentalFreeDspActive()){log('先結束 FreeDSP 實驗圖形模式，再連線其他 DAC。');return;}
 		// Build filters dynamically from activeDacs database to include all supported VIDs
@@ -769,9 +779,15 @@ export async function connectToDevice() {
 
 		console.debug(`[DEBUG] connectToDevice: selected device collections:`, dev.collections?.map(c => `UsagePage: 0x${c.usagePage?.toString(16)}, Usage: 0x${c.usage?.toString(16)}`));
 
-		if(isFreeDsp(dev))await connectFreeDsp(dev,log); // Same chooser, native capability adapter; metadata only.
+		if(isFreeDsp(dev)){
+      freeDspAttempt=true;
+      if(attempt!==connectAttempt)return;
+      const session=await connectFreeDsp(dev,log); // Metadata only; no verified nine-band readback.
+      if(attempt!==connectAttempt){if(getFreeDspSession(dev)===session)disconnectFreeDsp(dev);return;}
+    }
 		if(isExperimentalFreeDspActive())return; // Recheck after the asynchronous browser chooser.
 		device = dev;
+		freeDspStateStale=false;
 		(window as any).device = dev;
 		if(!isFreeDsp(dev))await dev.open();
 
@@ -852,7 +868,7 @@ export async function connectToDevice() {
 		// Restore profile name for this specific device from localStorage if available
 		const deviceKey = `last_applied_eq_${device.vendorId}_${device.productId}`;
 		const savedName = localStorage.getItem(deviceKey);
-		if (savedName) {
+		if (savedName && !isFreeDsp(device)) {
 			setLastAppliedEqName(savedName);
 		}
 
@@ -860,6 +876,7 @@ export async function connectToDevice() {
 			await recalculateAutoPreamp(true);
 		}
 	} catch (err) {
+		if(freeDspAttempt && attempt!==connectAttempt)return;
 		if(device && isFreeDsp(device) && !device.opened){disconnectFreeDsp(device);device=null;(window as any).device=null;}
         log(`Connection Error: ${(err as Error).message}`);
 	}
@@ -869,7 +886,9 @@ export async function connectToDevice() {
  * Disconnect current device
  */
 export async function disconnectDevice() {
+	connectAttempt++;
 	if (!device) return;
+	const wasFreeDsp=isFreeDsp(device);
 	const protocol = getProtocol(device);
 	try {
 		if(isFreeDsp(device)){disconnectFreeDsp(device);configureFreeDspUI(false);}
@@ -884,6 +903,7 @@ export async function disconnectDevice() {
 		}
 
 		device = null;
+		freeDspStateStale=wasFreeDsp;
 		(window as any).device = null;
 
 		adjustBandsForDevice(null);
@@ -913,6 +933,7 @@ export async function disconnectDevice() {
 		enableControls(false);
 		configurePreampUI(globalGainState);
 		renderUI(eqState);
+		if(wasFreeDsp)showFreeDspDeviceState(false);
 		log("Disconnected.");
 	}
 }
@@ -920,15 +941,20 @@ export async function disconnectDevice() {
 /**
  * Reset all bands and gain to flat values and sync
  */
-function finishFreeDspLocalReset(bands:EQ,name:string){
+async function finishFreeDspLocalReset(bands:EQ,name:string){
+ const attempt=connectAttempt;
  setEqState(bands);const strips=document.getElementById('eqStrips');if(strips)strips.innerHTML='';
  renderUI(eqState);setLastAppliedEqName(name);initSlots();pushHistory();
- log('FreeDSP LOCAL EDITOR已重設；沒有hardware TX。RAM還原請用RESTORE FREEDSP RAM TO UNITY。');
+ try{
+   await syncToDevice(true,true); // One explicit confirmation covers this intentional RAM operation.
+   if(attempt!==connectAttempt)return;
+   log('FreeDSP Reset：九段雙聲道RAM Sync協定完成；沒有保存Flash，非讀回。');
+ }catch(e){if(attempt===connectAttempt)log('FreeDSP Reset RAM未完成；本地editor已重設，裝置狀態未知。'+String(e));}
 }
 export async function resetToDefaults() {
  if(isFreeDsp(device)){
-  if(!confirm('恢復FreeDSP本地9段預設（31–8000Hz、0dB、Q0.7、PK、全部啟用）？不寫入RAM。'))return;
-  finishFreeDspLocalReset(freeDspDefaultBands(),'Flat Profile (Default)');return;
+  if(!confirm(freeDspOverwriteWarning+'\nReset Defaults：九段31–8000Hz、0dB、Q0.7、PK、全部啟用，並覆寫雙聲道RAM EQ；不保存Flash。繼續？'))return;
+  await finishFreeDspLocalReset(freeDspDefaultBands(),'Flat Profile (Default)');return;
  }
 	if (
 		!confirm(
@@ -979,7 +1005,8 @@ export async function resetToDefaults() {
  */
 export async function resetToFlat() {
  if(isFreeDsp(device)){
-  finishFreeDspLocalReset(normalizeFreeDspEditor(eqState,log).map(b=>({...b,gain:b.enabled?0:b.gain})),'Flat Profile (Neutral)');return;
+  if(!confirm(freeDspOverwriteWarning+'\nReset To Flat：九段gain全部設0，保留頻率／Q／type／enabled，並覆寫雙聲道RAM EQ；不保存Flash。繼續？'))return;
+  await finishFreeDspLocalReset(normalizeFreeDspEditor(eqState,log,false).map(b=>({...b,gain:0})),'Flat Profile (Neutral)');return;
  }
 	log("[System] Resetting all bands to flat neutral values...");
 
@@ -1170,7 +1197,7 @@ export function adjustBandsForDevice(dev: HIDDevice | null) {
 
 	const protocol = getProtocol(dev);
  if(isFreeDsp(dev)){
-  setEqState(eqState.length===9?eqState:freeDspDefaultBands());
+  eqState=normalizeFreeDspEditor(eqState,log,false); // Preserve local values, never substitute device EQ.
   if(stripsContainer){stripsContainer.innerHTML='';stripsContainer.style.setProperty('--bands-count','9');stripsContainer.style.setProperty('--bands-count-tablet','9');stripsContainer.style.setProperty('--bands-count-mobile','3');}
   return;
  }
@@ -1339,12 +1366,13 @@ export async function loadCustomProfile(name: string) {
 	});
 
 	// Re-create DOM elements for strips
+	if(isFreeDsp(device)){try{setEqState(importedBands);}catch{return;}}
 	const stripsContainer = document.getElementById("eqStrips");
 	if (stripsContainer) {
 		stripsContainer.innerHTML = "";
 	}
 
-	setEqState(importedBands);
+	if(!isFreeDsp(device))setEqState(importedBands);
 	resetTiltState();
 	if (autoPreampEnabled) {
 		manualPreampState = profile.globalGain;
@@ -1680,7 +1708,7 @@ export function isConfigurationUnsafe(): boolean {
 
 export async function reduceGainsSafely() {
  if(isFreeDsp(device)){
-  const bands=normalizeFreeDspEditor(eqState,log).map(b=>({...b,gain:b.enabled?Math.min(10,b.gain):b.gain}));
+  const bands=normalizeFreeDspEditor(eqState,log,false).map(b=>({...b,gain:b.enabled?Math.min(freeDspGainRange.max,b.gain):b.gain}));
   const sum=bands.reduce((n,b)=>n+(b.enabled?Math.max(0,b.gain):0),0);
   if(sum>12)for(const b of bands)if(b.enabled && b.gain>0)b.gain*=12/sum;
   setEqState(bands);renderUI(eqState);pushHistory();log('FreeDSP AUTO REDUCE只調整LOCAL EDITOR正gain；不寫RAM、不使用preamp。請重新Sync確認。');return;
@@ -1771,5 +1799,6 @@ export function configureFreeDspUI(active:boolean){
  const actions=document.getElementById('hardwareMemoryActions');if(actions)actions.style.flexWrap='wrap';
  const note=document.getElementById('freeDspStorageNote');if(note)note.hidden=false;
  const ramStatus=document.getElementById('freeDspRamStatus');if(ramStatus){ramStatus.hidden=false;ramStatus.textContent='FREEDSP RAM：已連線，狀態未讀回；LOCAL EDITOR尚未由本次Sync送出。';}
+ showFreeDspDeviceState(true);
  const restore=document.getElementById('btnFreeDspRestore') as HTMLButtonElement|null;if(restore){restore.hidden=false;restore.style.display='flex';restore.disabled=false;}
 }

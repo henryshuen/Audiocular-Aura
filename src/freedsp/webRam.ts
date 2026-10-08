@@ -1,4 +1,5 @@
 import {encodeCaf} from './cafCodec.ts';
+import {freeDspGainRange} from './capabilities.ts';
 import type { Band } from '../main.ts';
 import { nativePeakFloat, nativeScaling, officialRateHz } from '../../scripts/freedsp/ram-semantics.mjs';
 export type RamAction = 'applyBand' | 'restoreBand' | 'syncNine' | 'restoreNine';
@@ -18,8 +19,8 @@ export function validateBands(value:unknown):Band[] {
   if (!Array.isArray(value) || value.length!==9) throw new Error('必須完整九列；不截斷、不跳過');
   return value.map((b:Band,i)=>{
     if (!b || b.index!==i || b.type!=='PK' || typeof b.enabled!=='boolean' ||
-        ![b.freq,b.gain,b.q].every(Number.isFinite) || b.freq<20 || b.freq>20000 || b.gain<-12 || b.gain>12 || b.q<.1 || b.q>10)
-      throw new Error(`UI Band${i+1} 無效；僅支持PK、20–20000Hz、−12..+12dB、Q0.1–10`);
+        ![b.freq,b.gain,b.q].every(Number.isFinite) || b.freq<20 || b.freq>20000 || b.gain<freeDspGainRange.min || b.gain>freeDspGainRange.max || b.q<.1 || b.q>10)
+      throw new Error(`UI Band${i+1} 無效；僅支持PK、20–20000Hz、官方App政策−16..+6dB、Q0.1–10`);
     return {index:i,freq:b.freq,gain:b.gain,q:b.q,type:'PK',enabled:b.enabled};
   });
 }

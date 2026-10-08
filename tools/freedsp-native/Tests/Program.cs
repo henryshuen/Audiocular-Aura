@@ -357,7 +357,7 @@ Test("M2R positive PK preflight without temporary composite cap; Restore always 
     var unsafeR=new RamDebugRequest("syncNine",0,Nine().Select(b=>b with {Freq=1000,Gain=3}).ToArray());
     using(var hid=new MockHid(NonMatch(190)))using(var log=new StringWriter()) {foreach(var b in new[]{NonMatch(188),NonMatch(187),Reply()})hid.Responses.Enqueue(b);Check(RamDebug.Run(hid,unsafeR,log,[],()=>new FakeClock())==0&&hid.Transmissions.Count==21,"Composite +6 development cap removed");}
     var highSingle=new RamDebugRequest("applyBand",0,Nine());highSingle.Bands[0]=highSingle.Bands[0] with {Gain=12};
-    using(var hid=new MockHid(NonMatch(190)))using(var log=new StringWriter()) {foreach(var b in new[]{NonMatch(188),NonMatch(187),Reply()})hid.Responses.Enqueue(b);Check(RamDebug.Run(hid,highSingle,log,[],()=>new FakeClock())==0&&hid.Transmissions.Count==5,"Individual+12 valid coefficients accepted");}
+    using(var hid=new MockHid(NonMatch(190)))using(var log=new StringWriter()) {Throws(()=>RamDebug.Run(hid,highSingle,log,[],()=>new FakeClock()));Check(hid.Transmissions.Count==0,"App policy rejects+12 before any SET");}
     var restoreR=unsafeR with {Action="restoreNine"};
     using(var hid=new MockHid(NonMatch(190)))using(var log=new StringWriter()) {
         foreach(var b in new[]{NonMatch(188),NonMatch(187),Reply()})hid.Responses.Enqueue(b);
@@ -577,9 +577,18 @@ Test("Flash primitive:56 requests, exact SET once / matching Input GET, commit25
 Test("Flash malformed class/commit/rate/metadata rejected before SET",()=>{
  foreach(var tx in new[]{FlashPacket(220,[-1,..new int[12]]),FlashPacket(220,[1,5,3,4194304,..new int[9]]),
    FlashPacket(220,[0,10,1000,256,0,-6,..new int[7]]),FlashPacket(220,[0,5,1000,256,0,-1536,..new int[7]]),
+   FlashPacket(220,[0,5,1000,256,0,-17,..new int[7]]),FlashPacket(220,[0,5,1000,256,0,7,..new int[7]]),
    FlashPacket(90,[90,1,..new int[11]])}){
    using var hid=new MockHid(NonMatch(220));using var log=new StringWriter();
    Throws(()=>TransportExchange.Run(hid,new(Convert.ToBase64String(tx)),log));Check(hid.Transmissions.Count==0,"Invalid Flash never SET");}
+});
+Test("FreeDSP App gain policy endpoints; unchanged RAM/Flash bytes, offline only",()=>{
+ foreach(int gain in new[]{-16,6}){
+   var request=new RamDebugRequest("applyBand",0,Nine());request.Bands[0]=request.Bands[0] with {Freq=1000,Gain=gain};
+   request.Validate();foreach(int hz in new[]{44100,48000,96000,192000,384000})_ = RamDebug.Calculate(hz,request.Bands[0],false);
+   var tx=FlashPacket(220,[0,5,1000,256,0,gain,..new int[7]]);
+   Check(new TransportRequest(Convert.ToBase64String(tx)).Bytes().SequenceEqual(tx),"Metadata policy accepts exact bytes without clamping");
+ }
 });
 Test("Flash first bad response fails immediately without GET polling or SET retry",()=>{
  var tx=FlashPacket(220,[255,..new int[12]]);

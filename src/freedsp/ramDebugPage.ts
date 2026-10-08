@@ -1,4 +1,5 @@
 import type {Band} from '../main.ts';
+import {freeDspGainRange} from './capabilities.ts';
 import {RamBridge,validateBands,fullNinePreset,unityPreset,positiveBandPreset,positiveMultiPreset,analyzeSafety,M2R_GATE_KEY} from './webRam.ts';
 if(import.meta.env.DEV && location.hostname==='localhost' && location.port==='5173'){
  const el=<T extends HTMLElement>(id:string)=>{const n=document.getElementById(id);if(!n)throw new Error(`Missing M2R element #${id}`);return n as T;};
@@ -30,7 +31,7 @@ if(import.meta.env.DEV && location.hostname==='localhost' && location.port==='51
  const render=()=>{
    el('bands').replaceChildren();bands.forEach((b,i)=>{
      const row=document.createElement('tr'),label=document.createElement('td');label.textContent=`Band${i+1} → wire${i+1}`;row.append(label);
-     for(const field of ['freq','gain','q'] as const){const td=document.createElement('td'),input=document.createElement('input');input.type='number';input.value=String(b[field]);input.min=field==='freq'?'20':field==='gain'?'-12':'.1';input.max=field==='freq'?'20000':field==='gain'?'12':'10';input.step=field==='freq'?'1':'.1';input.setAttribute('aria-label',`Band${i+1} ${field}`);input.addEventListener('input',()=>{b[field]=Number(input.value);update();});td.append(input);row.append(td);}
+     for(const field of ['freq','gain','q'] as const){const td=document.createElement('td'),input=document.createElement('input');input.type='number';input.value=String(b[field]);input.min=field==='freq'?'20':field==='gain'?String(freeDspGainRange.min):'.1';input.max=field==='freq'?'20000':field==='gain'?String(freeDspGainRange.max):'10';input.step=field==='freq'?'1':'.1';input.setAttribute('aria-label',`Band${i+1} ${field}`);input.addEventListener('input',()=>{b[field]=Number(input.value);update();});td.append(input);row.append(td);}
      const td=document.createElement('td'),enabled=document.createElement('input');enabled.type='checkbox';enabled.checked=b.enabled;enabled.addEventListener('change',()=>{b.enabled=enabled.checked;update();});td.append(enabled);row.append(td);const type=document.createElement('td');type.textContent='PK';row.append(type);el('bands').append(row);
    });update();
  };

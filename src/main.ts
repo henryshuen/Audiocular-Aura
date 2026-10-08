@@ -18,6 +18,7 @@ import {
 	resetToDefaults,
 	resetToFlat,
 	getDevice,
+	getConnectionAttempt,
 	autoConnectDevice,
 	saveCustomProfile,
 	undo,
@@ -123,6 +124,7 @@ btnReset?.addEventListener("click", async () => resetToDefaults());
 
 const btnResetFlat = document.getElementById("btnResetFlat");
 btnResetFlat?.addEventListener("click", async () => {
+	if(isFreeDsp(getDevice())){await resetToFlat();return;}
 	if (confirm("Reset all 10 bands to flat neutral values (0 dB, 1000 Hz, Q = 1.0)?")) {
 		await resetToFlat();
 	}
@@ -133,7 +135,13 @@ btnResetFlat?.addEventListener("click", async () => {
  */
 let safetyActionPending: "sync" | "flash" | null = null;
 
-async function syncFreeDspRam(){try{setFreeDspRamStatus('FREEDSP RAM：等待明確Sync回應…');await syncToDevice(true);setFreeDspRamStatus('FREEDSP RAM：Sync協定完成；非讀回，本次LOCAL EDITOR快照已送出。');}catch(e){setFreeDspRamStatus('FREEDSP RAM：Sync未完成／狀態未確認；請查看log。');log(String(e));}}
+async function syncFreeDspRam(){
+ const attempt=getConnectionAttempt();
+ try{setFreeDspRamStatus('FREEDSP RAM：等待明確Sync回應…');const result=await syncToDevice(true);
+   if(attempt!==getConnectionAttempt())return;
+   setFreeDspRamStatus(result===false?'Device EQ Unknown — Local Editor：已取消Sync，未改寫RAM。':'FREEDSP RAM：Sync協定完成；非讀回，本次LOCAL EDITOR快照已送出。');
+ }catch(e){if(attempt===getConnectionAttempt()){setFreeDspRamStatus('FREEDSP RAM：Sync未完成／狀態未確認；請查看log。');log(String(e));}}
+}
 
 async function safeSyncToDevice() {
 	if(isFreeDsp(getDevice()) && (window as any).isConfigurationUnsafe?.()){showSafetyModal("sync");return;}
@@ -1377,8 +1385,9 @@ window.addEventListener("keydown", (e: KeyboardEvent) => {
 function setFreeDspRamStatus(message:string){const e=document.getElementById('freeDspRamStatus');if(e)e.textContent=message;}
 document.getElementById('btnFreeDspRestore')?.addEventListener('click',async()=>{
  if(!isFreeDsp(getDevice()))return;
+ const attempt=getConnectionAttempt();
  const button=document.getElementById('btnFreeDspRestore') as HTMLButtonElement|null;if(button)button.disabled=true;
- try{setFreeDspRamStatus('FREEDSP RAM：等待全九段雙聲道unity Restore…');await restoreFreeDspUnity();setFreeDspRamStatus('FREEDSP RAM：unity Restore協定完成（18次190）；LOCAL EDITOR未修改。');}
- catch(e){setFreeDspRamStatus('FREEDSP RAM：Restore未完成／狀態未確認；STOP，無自動retry或rollback。');log(String(e));}
- finally{if(button)button.disabled=!isFreeDsp(getDevice());}
+ try{setFreeDspRamStatus('FREEDSP RAM：等待全九段雙聲道unity Restore…');const result=await restoreFreeDspUnity();if(attempt!==getConnectionAttempt())return;setFreeDspRamStatus(result===false?'Device EQ Unknown — Local Editor：已取消Restore，未改寫RAM。':'FREEDSP RAM：unity Restore協定完成（18次190）；LOCAL EDITOR未修改。');}
+ catch(e){if(attempt===getConnectionAttempt()){setFreeDspRamStatus('FREEDSP RAM：Restore未完成／狀態未確認；STOP，無自動retry或rollback。');log(String(e));}}
+ finally{if(button && attempt===getConnectionAttempt())button.disabled=!isFreeDsp(getDevice());}
 });

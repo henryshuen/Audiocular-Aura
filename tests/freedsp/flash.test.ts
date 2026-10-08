@@ -37,7 +37,7 @@ describe('FreeDSP Flash evidence/plan; offline mocks only',()=>{
    const node=ast.statements.find(n=>ts.isFunctionDeclaration(n)&&n.name?.text==='flashToFlash')!;
    const bands=flashTestPreset(),f=mock(),session=new CafRamSession(f.transport,f.log),generic=vi.fn(),tilt=vi.fn();
    const save=runInNewContext(ts.transpileModule(node.getText(ast).replace('export ',''),{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText+'\nflashToFlash',{
-     getDevice:()=>({vendorId:0x35d8,productId:0x1496}),isFreeDsp:()=>true,confirm:()=>true,getEqState:()=>bands,
+     getDevice:()=>({vendorId:0x35d8,productId:0x1496}),isFreeDsp:()=>true,confirm:()=>true,freeDspOverwriteWarning:'Device EQ Unknown',getEqState:()=>bands,
      attachFreeDsp:()=>({flash:(b:typeof bands)=>session.flash(b,()=>{})}),showSyncing:vi.fn(),hideSyncing:vi.fn(),log:vi.fn(),
      getProtocol:generic,sendConexantReport:generic,getTiltGainAtFreq:tilt,
    });
