@@ -14,7 +14,7 @@ TARGETS = {
  'FreemanSession;': {'executeCommand', 'bldCmdGetEQParamsFromFlash', 'bldCmdGetEQCoefficientList'},
  'FreemanController;': {'getEQParam', 'getEQParamsFromFlash', 'getF3EQCoefficientList'},
  'CafCmdHelper;': {'readDataFromDevice', 'getMsgByCmd', 'getCmd', 'isExecuteSuccess'},
- 'CommonUtil;': {'formatByteToInt', 'formatByteToSingedInt'},
+ 'CommonUtil;': {'formatByteToInt', 'formatByteToSingedInt', 'formatDecimal'},
  'Eq2Coeff;': {'CxAudioConvertCoeffs2EqParams'},
  'UsbDeviceHandler;': {'handleSyGetEqParamsFromFlash'},
 }

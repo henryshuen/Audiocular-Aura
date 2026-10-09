@@ -5313,6 +5313,63 @@
       ]
     },
     {
+      "class": "Lcom/conexant/universalfunction/CommonUtil;",
+      "method": "formatDecimal",
+      "descriptor": "(F)D",
+      "instructions": [
+        {
+          "offset": 0,
+          "op": "float-to-double",
+          "args": "v0, v2"
+        },
+        {
+          "offset": 2,
+          "op": "invoke-static",
+          "args": "v0, v1, Ljava/math/BigDecimal;->valueOf(D)Ljava/math/BigDecimal;"
+        },
+        {
+          "offset": 8,
+          "op": "move-result-object",
+          "args": "v2"
+        },
+        {
+          "offset": 10,
+          "op": "const/4",
+          "args": "v0, 2"
+        },
+        {
+          "offset": 12,
+          "op": "sget-object",
+          "args": "v1, Ljava/math/RoundingMode;->HALF_UP Ljava/math/RoundingMode;"
+        },
+        {
+          "offset": 16,
+          "op": "invoke-virtual",
+          "args": "v2, v0, v1, Ljava/math/BigDecimal;->setScale(I Ljava/math/RoundingMode;)Ljava/math/BigDecimal;"
+        },
+        {
+          "offset": 22,
+          "op": "move-result-object",
+          "args": "v2"
+        },
+        {
+          "offset": 24,
+          "op": "invoke-virtual",
+          "args": "v2, Ljava/math/BigDecimal;->doubleValue()D"
+        },
+        {
+          "offset": 30,
+          "op": "move-result-wide",
+          "args": "v0"
+        },
+        {
+          "offset": 32,
+          "op": "return-wide",
+          "args": "v0"
+        }
+      ]
+    },
+    {
       "class": "Lcom/moondroplab/moondrop/moondrop_app/native/handlers/UsbDeviceHandler;",
       "method": "handleSyGetEqParamsFromFlash",
       "descriptor": "(Lio/flutter/plugin/common/MethodChannel$Result;)V",

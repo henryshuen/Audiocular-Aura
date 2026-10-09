@@ -1,0 +1,164 @@
+{
+  "querySets": 12,
+  "getBuffers": 12,
+  "metadata": [
+    {
+      "band": 1,
+      "sampleRateRaw": 5,
+      "frequency": 60,
+      "qRaw": 180,
+      "q": 0.703125,
+      "officialRoundedQ": 0.7,
+      "typeRaw": 0,
+      "gainDb": 0,
+      "enabled": null,
+      "source": "UNKNOWN"
+    },
+    {
+      "band": 2,
+      "sampleRateRaw": 5,
+      "frequency": 120,
+      "qRaw": 180,
+      "q": 0.703125,
+      "officialRoundedQ": 0.7,
+      "typeRaw": 0,
+      "gainDb": 0,
+      "enabled": null,
+      "source": "UNKNOWN"
+    },
+    {
+      "band": 3,
+      "sampleRateRaw": 5,
+      "frequency": 260,
+      "qRaw": 180,
+      "q": 0.703125,
+      "officialRoundedQ": 0.7,
+      "typeRaw": 0,
+      "gainDb": 0,
+      "enabled": null,
+      "source": "UNKNOWN"
+    },
+    {
+      "band": 4,
+      "sampleRateRaw": 5,
+      "frequency": 530,
+      "qRaw": 180,
+      "q": 0.703125,
+      "officialRoundedQ": 0.7,
+      "typeRaw": 0,
+      "gainDb": 0,
+      "enabled": null,
+      "source": "UNKNOWN"
+    },
+    {
+      "band": 5,
+      "sampleRateRaw": 5,
+      "frequency": 1100,
+      "qRaw": 180,
+      "q": 0.703125,
+      "officialRoundedQ": 0.7,
+      "typeRaw": 0,
+      "gainDb": 0,
+      "enabled": null,
+      "source": "UNKNOWN"
+    },
+    {
+      "band": 6,
+      "sampleRateRaw": 5,
+      "frequency": 2260,
+      "qRaw": 180,
+      "q": 0.703125,
+      "officialRoundedQ": 0.7,
+      "typeRaw": 0,
+      "gainDb": 0,
+      "enabled": null,
+      "source": "UNKNOWN"
+    },
+    {
+      "band": 7,
+      "sampleRateRaw": 5,
+      "frequency": 4680,
+      "qRaw": 180,
+      "q": 0.703125,
+      "officialRoundedQ": 0.7,
+      "typeRaw": 0,
+      "gainDb": 0,
+      "enabled": null,
+      "source": "UNKNOWN"
+    },
+    {
+      "band": 8,
+      "sampleRateRaw": 5,
+      "frequency": 9680,
+      "qRaw": 180,
+      "q": 0.703125,
+      "officialRoundedQ": 0.7,
+      "typeRaw": 0,
+      "gainDb": 0,
+      "enabled": null,
+      "source": "UNKNOWN"
+    },
+    {
+      "band": 9,
+      "sampleRateRaw": 5,
+      "frequency": 20000,
+      "qRaw": 180,
+      "q": 0.703125,
+      "officialRoundedQ": 0.7,
+      "typeRaw": 0,
+      "gainDb": 0,
+      "enabled": null,
+      "source": "UNKNOWN"
+    }
+  ],
+  "failureAnalysis": {
+    "frame": {
+      "reportId": 1,
+      "prefix": 0,
+      "count": 13,
+      "command": 446,
+      "reply": 0,
+      "module": 3006079744,
+      "words": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "capacityWords": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "exactCurrentTxEcho": false,
+    "differsFromCurrentTxAt": [
+      14
+    ],
+    "equalsPreviousTx": false,
+    "equalsPreviousRx": false,
+    "jsonRetainsFailedRx": false
+  },
+  "completeQuerySet": false,
+  "productionEligible": false,
+  "source": "UNKNOWN"
+}
