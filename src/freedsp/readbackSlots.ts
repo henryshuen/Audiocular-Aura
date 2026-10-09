@@ -25,6 +25,7 @@ export class ReadbackSlots {
  get curve(){return this.points;}
  get compared(){return this.mode==='Off'?null:copy((this.mode==='A'?this.working:this.baseline)!);}
  get active(){return this.baseline!==null&&this.mode!=='Off';}
+ draft(editor:EQ){return copy(this.mode==='Off'?editor:this.off??editor);}
  observe(editor:EQ){
   if((this.mode==='A'&&this.baseline&&!equal(editor,this.baseline))||(this.observed&&!equal(editor,this.observed))){
    this.points=null;
