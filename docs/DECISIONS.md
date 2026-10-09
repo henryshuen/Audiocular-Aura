@@ -1,3 +1,21 @@
+## 2026-10-09 — Device EQ readback is a required acceptance gate
+- Henry requires exact-device complete nine-band readback before upstream PR/release, unless he explicitly revises this gate. Existing RAM/Flash/persistence and latest gain/reset/reconnect hardware results remain Henry-reported PASS; they do not prove our getters.
+- Pinned official APK primary DEX confirms Flutter getEQParamsFromFlash→477 nine metadata fields and446 path0 coefficient getter. Q477 is /256; supersedes older derived Q*100 note. Gain metadata is integer dB; coefficient Gain is scaling exponent. SDK persistent getter naming is evidence of intent, not verified firmware provenance.
+- Do not copy generic getEQParam first-connect initialization: it can issue unity190. Isolate only known fixed346[62],477[1..9],446[0,1..9] queries in opt-in readEqEvidence CLI, separate from existing HTTP transport and CONNECT. No mode/enable/reset/EQ writes or arbitrary scans. No Codex device access.
+- Full editor readback and immutable device Slot A / editable copy B are BLOCKED: enabled/source/stereo/freshness are unresolved. Preserve Unknown/local editor and existing race guards. Do not promote synthetic fixture or native inverse output to original Device EQ. Unity inversion is nonunique.
+- FreeDSP graph defaults−20..+9, expands to sampled active/comparison response, explicitly warns nonfinite response. This supersedes symmetric±18 display decision; editing policy−16..+6 and filter mathematics unchanged. Generic graph unchanged.
+- See tests/freedsp/fixtures/freeDspReadbackEvidence.md for field matrix, source offsets, JNI chain and Henry's isolated read-only instructions.
+
+- Offline validation:focused66tests,full29files/289tests,native78mock tests andPowerShell AST parse PASS;nohardwarequeryexecution. Normal write/HTTP allowlists unchanged.
+
+### Research checkpoint
+- Examined: pinned APK selected full Java getters/Flutter handler/service callers, parameter fields, JNI/native inverse disassembly; existing57 helper pairs and current CONNECT/A-B/write plans.
+- Verified facts:477 six parsed words, Q256, no enabled field;446 raw path0 low24 coefficients; dangerous generic initializer; current native identity/transport gates.
+- Hypotheses:477 persistent-intended store;446 active RAM coefficient source. Neither hardware-confirmed.
+- Discarded:unique reconstruction of original disabled/unity parameters; treating exponent as dB; Q100 derived claim.
+- Unresolved:exact device477/446 replies,source/freshness,enabled,stereo,current-rate interpretation and fractional metadata fidelity.
+- Next search target:Henry's fixed read-only capture plus existing official App profile comparison; source-backed missing fields required before production.
+
 # AuraPEQ FreeDSP Decisions
 
 ## 2026-10-09 — Final UX: truthful CONNECT, official App envelope and confirmed RAM Reset

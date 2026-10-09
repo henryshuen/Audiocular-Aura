@@ -1,3 +1,23 @@
+
+### Automated verification / scope — required readback round
+- Focused4files/66tests PASS:static getter/units,synthetic nine replies,malformed/stale band/opaque446/source ambiguity,nonunique unity,actual canvas active/A-B response extension,connection races/no auto writes/gain/reset/RAM/Flash regression.
+- Native isolated build PASS;78offline/mock tests PASS including19fixedqueries,mutation/HTTP allowlist rejection,partial/error/stale477/timeout andwrong-device gate. Initial loopback socket10013 sandbox failure resolved with permission forlocalhost mock/fakechild only;noHID access.
+- PowerShell diagnostic launcher AST parse PASS;launcher hardware execution deliberately not performed.
+- Final verify.ps1 PASS:TypeScript/Vite,29files/289tests. Existing RAM18/Flash56golden plans andgain/reset assertions PASS. Generated dist and isolated .tmp/readback output excluded from delivery.
+- FreeDSP-specific files changed:graphScale/offline readback parser andisolated native ReadbackQuery/CLI registration.
+- Analysis/test files changed:static APK inspection/script,raw evidence/field matrix,read-only launcher,focused TS/native mocks andprior derived Q-unit reference correction.
+- Shared runtime files changed:src/peq.ts,FreeDSP graph-only guard/display transforms. Native Program/SafeRam addfixed opt-in operation;normal HTTP transport andwrite allowlist unchanged.
+- Non-FreeDSP protocol code changed:NO. Coefficient math,RAM190/Flash220serialization and18/56write plans unchanged. No hardware operations,PR orrelease.
+- Production automatic readback/device-derived immutable Slot A andeditable copy B:BLOCKED until enabled/source/stereo/freshness evidence andhardware acceptance;not an implementation PASS.
+
+## 2026-10-09 — Required readback research and isolated offline diagnostic
+- Re-extracted pinned official APK DEX/ARM64 evidence without executing it; saved reproducible inspection script and full selected method/caller/field/native traces. Traced Flutter getEQParamsFromFlash service chain and446 JNI inverse; corrected old derived Q100 note to primary /256.
+- Published freeDspReadbackEvidence.md field/source/encoding/ambiguity matrix and exact Henry read-only diagnostic instructions. Proved canonical unity metadata inversion is nonunique using existing unchanged offline RAM model.
+- Implemented opt-in exact-device fixed19-query evidence capture,1s polling/30s launcher bound, failure STOP/no resend, raw/partial logs/JSON. Normal HTTP transport allowlist and all RAM/Flash write paths unchanged. No hardware access performed.
+- Added offline477/446 decoder preserving UNKNOWN source and unavailable enabled/stereo/freshness; synthetic full-nine fixture explicitly rejects production eligibility. Automatic CONNECT readback and device-baseline A/B were not implemented because evidence gates are incomplete.
+- FreeDSP graph defaults−20..+9 with sampled active/comparison extent expansion and nonfinite indication. Generic plot/gain bounds unchanged; coefficient mathematics unchanged.
+- Henry's reported RAM/Flash/power-cycle/cross-host App/gain/reset/editor persistence results recorded as user hardware evidence; no new readback HARDWARE PASS claimed.
+
 ## 2026-10-09 — Final FreeDSP UX implemented offline
 - Reviewed supplied screenshots, official446/477/442/346 source evidence,57 saved helper pairs and dangerous first-getEQParam unity initializer. Published freeDspFinalUxEvidence.md with precise readback limitations and manual acceptance steps.
 - CONNECT retains local editor and displays Device EQ Unknown — Local Editor; no new readback/auto-write. DISCONNECT preserves local values and labels stale/offline. Saved device name cannot masquerade as readback. Stale metadata/session and late RAM UI completions are guarded.

@@ -599,6 +599,45 @@ Test("Flash first bad response fails immediately without GET polling or SET retr
  var nonzero=NonMatch(220);nonzero[2]=1;using var bad=new MockHid(nonzero);using var badLog=new StringWriter();
  Check(TransportExchange.Run(bad,new(Convert.ToBase64String(tx)),badLog,()=>new FakeClock())==7&&bad.Calls.Count==2,"Unexpected count STOP");
 });
+Test("Readback exact fixed queries exclude every mutation and HTTP write transport",()=>{
+ var plan=ReadbackQuery.Plan();Check(plan.Length==19,"19 fixed queries");
+ foreach(var q in plan){Check(ReadbackQuery.IsAllowed(q.Bytes),"Fixed allowlist");
+  if(q.Command!=346){Check(!SafeRam.IsAllowedReport(q.Bytes),"Old diagnostic allowlist unchanged");Throws(()=>new TransportRequest(Convert.ToBase64String(q.Bytes)).Bytes());}
+  var changed=(byte[])q.Bytes.Clone();changed[61]=1;Check(!ReadbackQuery.IsAllowed(changed),"Padding mutation rejected");}
+ Check(!ReadbackQuery.IsAllowed(SafeRam.Enable())&&!ReadbackQuery.IsAllowed(SafeRam.Bypass()),"No mode enable/bypass");
+ Check(SafeRam.IsOperation(["readEqEvidence"])&&!SafeRam.IsOperation(["readEqEvidence","1"]),"Fixed CLI only");
+});
+byte[] ReadReply(ReadbackQuery.Request q){
+ var rx=(byte[])q.Bytes.Clone();rx[5]|=128;rx[2]=(byte)(q.Command==346?2:q.Command==477?6:8);
+ if(q.Command==346)BinaryPrimitives.WriteInt32LittleEndian(rx.AsSpan(14),5);
+ if(q.Command==477)BinaryPrimitives.WriteInt32LittleEndian(rx.AsSpan(14),q.Wire);
+ return rx;
+}
+Test("Full19 read-only synthetic capture sends each query once and never writes EQ",()=>{
+ var plan=ReadbackQuery.Plan();using var hid=new MockHid(ReadReply(plan[^1]));
+ foreach(var q in plan)hid.Responses.Enqueue(ReadReply(q));using var log=new StringWriter();
+ Check(ReadbackQuery.Run(hid,log,()=>new FakeClock())==0,"All query responses accepted");
+ Check(hid.Transmissions.Count==19&&hid.Transmissions.Zip(plan).All(pair=>pair.First.SequenceEqual(pair.Second.Bytes)),"Exact sequence once");
+ Check(log.ToString().Contains("\"completeQuerySet\":true")&&log.ToString().Contains("\"productionEligible\":false"),"Not production readback");
+});
+Test("Readback malformed/partial/stale/wrong module replies stop and retain partial JSON",()=>{
+ var plan=ReadbackQuery.Plan();var good=ReadReply(plan[0]);
+ var partial=ReadReply(plan[1]);partial[2]=5;
+ var stale=ReadReply(plan[1]);stale[14]=9;
+ var module=ReadReply(plan[1]);module[6]=1;
+ var error=ReadReply(plan[1]);error[2]=255;error[3]=255;
+ foreach(var bad in new[]{partial,stale,module,error}){
+  using var hid=new MockHid(bad);hid.Responses.Enqueue(good);using var log=new StringWriter();
+  Check(ReadbackQuery.Run(hid,log,()=>new FakeClock())==7&&hid.Transmissions.Count==2,"Stop first failure no later wire");
+  Check(log.ToString().Contains("\"completeQuerySet\":false"),"Partial capture retained");
+ }
+});
+Test("Readback wrong-command timeout never resends and retains local state by isolation",()=>{
+ using var hid=new MockHid(NonMatch(190));using var log=new StringWriter();
+ Check(ReadbackQuery.Run(hid,log,()=>new FakeClock())==7&&hid.Transmissions.Count==1,"Bounded GET only, no SET resend");
+ Check(hid.Calls.Count<=202,"1sec bound");
+});
+Test("Readback invalid device rejected by same mandatory discovery gate",()=>Throws(()=>HidCollection.SelectUnique([Target() with {ProductId=1}])));
 Console.WriteLine($"Native offline tests: {passed} passed; SYNTHETIC / MOCK ONLY; no hardware access.");
 return 0;
 

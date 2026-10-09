@@ -1,5 +1,12 @@
 # AuraPEQ FreeDSP Development Rules
 
+## 2026-10-09 — Device EQ readback is a required upstream PR gate
+- Henry now requires reliable exact-device nine-band readback before PR/release. Do not weaken this requirement without his explicit decision. Source fields, RAM/persistent origin, enabled state and stereo semantics must be verified; a syntactically complete reply is not sufficient.
+- Preserve Unknown/local editor on incomplete or unverified data. Never partially replace the editor, initialize a hardware Slot A from cached/local data, or use the official destructive first-getEQParam initializer. Future verified Slot A is an immutable local baseline, Slot B starts as its editable copy; switching stays local and applying remains explicit.
+- This round permits only source-backed read-only queries in an opt-in diagnostic; query SET_REPORT is allowed only as a documented getter request. No190/220/mode changes/reset, no undocumented scanning and no hardware access by Codex. Automatic CONNECT readback stays blocked until acceptance.
+- FreeDSP graph default now−20..+9dB, superseding the prior±18 display rule; plotted aggregate exceeding the extent must expand or show an unmistakable warning. Per-band App policy stays−16..+6; other DAC display unchanged. No coefficient/filter changes.
+- Henry reports completed Reset Defaults/Flat, disconnect/reconnect local persistence and same persisted EQ visible/audible on another host via official App. Preserve these as user-reported tested-session hardware evidence; not proof which App getter/source produced the display.
+
 ## 2026-10-09 — Final connection, gain and Reset UX rule
 This rule supersedes earlier gain recommendations, local-only FreeDSP resets and the proposed nine 1kHz Flat reconstruction. Historical hardware evidence stays valid.
 - Exact FreeDSP35D8:1496 uses the official App per-band policy −16..+6 dB. Henry's supplied gain modal and cached APK strings support an application restriction, not a firmware maximum or clipping-safety guarantee. Other DAC gain policies stay unchanged.

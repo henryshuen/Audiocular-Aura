@@ -1,5 +1,6 @@
 import {isFreeDsp} from './freedsp/webHid.ts';
 import {gainRangeFor,freeDspGainRange} from './freedsp/capabilities.ts';
+import {defaultFreeDspGraphBounds,freeDspGraphBounds} from './freedsp/graphScale.ts';
 import type { Band } from "./main.ts";
 import {isExperimentalFreeDspActive} from './freedsp/graphicalRam.ts';
 import {nativePeakFloat} from '../scripts/freedsp/ram-semantics.mjs';
@@ -25,6 +26,7 @@ let hoveredIndex: number | null = null;
 let onUpdateCallback:
 	| ((index: number, key: string, value: number | string | boolean) => void)
 	| null = null;
+let freeDspPlotBounds:{min:number;max:number;nonFinite:boolean}={...defaultFreeDspGraphBounds,nonFinite:false};
 
 // DOM Elements
 let canvas: HTMLCanvasElement | null = null;
@@ -57,15 +59,31 @@ function xToFreq(x: number, width: number) {
  * MATHEMATICS: Gain to Y Coordinate
  */
 function gainToY(gain: number, height: number) {
-	return height / 2 - (gain / graphGainRange()) * (height / 2 - CONFIG.padding);
+	if(!isFreeDspGraph())return height / 2 - (gain / CONFIG.gainRange) * (height / 2 - CONFIG.padding);
+ const range=graphBounds();return CONFIG.padding+(range.max-gain)/(range.max-range.min)*(height-2*CONFIG.padding);
 }
-function graphGainRange(){return isExperimentalFreeDspActive()||isFreeDsp((window as any).device??null)?18:CONFIG.gainRange;}
+function isFreeDspGraph(){return isExperimentalFreeDspActive()||isFreeDsp((window as any).device??null);}
+function graphBounds(){return isFreeDspGraph()?freeDspPlotBounds:{min:-CONFIG.gainRange,max:CONFIG.gainRange,nonFinite:false};}
 
 /**
  * MATHEMATICS: Y Coordinate to Gain
  */
 function yToGain(y: number, height: number) {
-	return (-(y - height / 2) * graphGainRange()) / (height / 2 - CONFIG.padding);
+	if(!isFreeDspGraph())return (-(y - height / 2) * CONFIG.gainRange) / (height / 2 - CONFIG.padding);
+ const range=graphBounds();return range.max-(y-CONFIG.padding)/(height-2*CONFIG.padding)*(range.max-range.min);
+}
+
+// Sample exactly the displayed curve grid, plus handles and local A/B curve.
+// This bounds the drawn points, not a certified continuous or hardware response.
+function updateFreeDspGraphBounds(width:number){
+ const samples=localBands.map(b=>b.gain);
+ const compared=(window as any).getComparedEqState?.() as Band[]|null;
+ const sets=[localBands,...(compared?[compared]:[])].map(bands=>bands.map(b=>calculateBiquad(b)));
+ for(let i=0;i<=width-2*CONFIG.padding;i++){
+  const freq=xToFreq(CONFIG.padding+i,width),tilt=(window as any).getTiltGainAtFreq?.(freq)||0;
+  samples.push(tilt,...sets.map(coeffs=>getMagnitude(freq,coeffs)+tilt));
+ }
+ freeDspPlotBounds=freeDspGraphBounds(samples);
 }
 
 /**
@@ -206,7 +224,9 @@ function drawGrid(c: CanvasRenderingContext2D, width: number, height: number) {
 	c.textAlign = "right";
 
 	// Horizontal Gain lines
-	for (let g = -graphGainRange(); g <= graphGainRange(); g += 6) {
+	const range=graphBounds();
+ const ticks=isFreeDspGraph()?[range.min,...Array.from({length:Math.max(0,Math.floor(range.max/6)-Math.ceil(range.min/6)+1)},(_,i)=>(Math.ceil(range.min/6)+i)*6).filter(g=>g>range.min&&g<range.max),range.max]:[-12,-6,0,6,12];
+	for (const g of ticks) {
 		const y = gainToY(g, height);
 		c.beginPath();
 		c.moveTo(CONFIG.padding, y);
@@ -494,12 +514,14 @@ export function draw() {
 	if (!canvas || !ctx) return;
 	const width = (canvas as any).logicalWidth || canvas.width;
 	const height = (canvas as any).logicalHeight || canvas.height;
+	if(isFreeDspGraph())updateFreeDspGraphBounds(width);
 
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	drawGrid(ctx, width, height);
 	drawCurve(ctx, width, height);
 	drawHandles(ctx, width, height);
 	drawTooltip(ctx, width, height);
+	if(isFreeDspGraph() && freeDspPlotBounds.nonFinite){ctx.fillStyle='#ff665c';ctx.font='bold 12px sans-serif';ctx.textAlign='left';ctx.fillText('Response unavailable / non-finite — cannot fit graph range',CONFIG.padding+8,CONFIG.padding+16);}
 }
 
 /**

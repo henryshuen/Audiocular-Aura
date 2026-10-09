@@ -11,12 +11,22 @@ import {showFreeDspDeviceState,freeDspUnknown,freeDspStale} from '../../src/free
 import {connectFreeDsp,disconnectFreeDsp,getFreeDspSession} from '../../src/freedsp/session.ts';
 import {selectCafDevice} from '../../src/freedsp/webHid.ts';
 import {henryM2ADescriptor} from './fixtures/henryM2ADescriptor.ts';
+import {freeDspGraphBounds} from '../../src/freedsp/graphScale.ts';
+import {nativePeakFloat} from '../../scripts/freedsp/ram-semantics.mjs';
 function extract(name:string,source=fnSource){
  const ast=ts.createSourceFile('s.ts',source,ts.ScriptTarget.ES2022,true);
  const node=ast.statements.find(n=>ts.isFunctionDeclaration(n)&&n.name?.text===name)!;
  return ts.transpileModule(node.getText(ast).replace('export ',''),{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
 }
 describe('Final FreeDSP UX: DOM/event/HTTP mocks only; no hardware',()=>{
+ it('actual graph response grid expands for nine overlapping bands and A/B comparison',()=>{
+  const bands=freeDspDefaultBands().map(b=>({...b,freq:1000,gain:6,q:1}));
+  const context={localBands:bands,freeDspPlotBounds:{min:-20,max:9,nonFinite:false},freeDspGraphBounds,nativePeakFloat,isFreeDsp,isExperimentalFreeDspActive:()=>false,
+   CONFIG:{padding:40,minFreq:20,maxFreq:20000,gainRange:12},window:{device:{vendorId:0x35d8,productId:0x1496},getComparedEqState:()=>bands.map(b=>({...b,gain:-16}))}};
+  runInNewContext(['updateFreeDspGraphBounds','xToFreq','calculateBiquad','getMagnitude'].map(n=>extract(n,peqSource)).join('\n')+'\nupdateFreeDspGraphBounds(800)',context);
+  expect(context.freeDspPlotBounds.max).toBeGreaterThan(50);expect(context.freeDspPlotBounds.min).toBeLessThan(-100);
+  expect(bands.every(b=>b.gain===6)).toBe(true);
+ });
  it('actual CONNECT preserves custom local nine bands, ignores saved device profile name, and DISCONNECT marks stale',async()=>{
   const d={...henryM2ADescriptor,opened:false,open:vi.fn(),close:vi.fn(),sendReport:vi.fn()} as unknown as HIDDevice;
   const nodes=Object.fromEntries(['lastAppliedEqDisplay','freeDspRamStatus','statusBadge'].map(id=>[id,{textContent:'',innerText:'',hidden:true,classList:{add:vi.fn(),remove:vi.fn()}}]));
@@ -74,15 +84,15 @@ describe('Final FreeDSP UX: DOM/event/HTTP mocks only; no hardware',()=>{
    for(const r of rows){expect(r.innerHTML).toContain(`min="${min}" max="${max}" step="0.1"`);expect(r.innerHTML).toContain(`step="0.1" min="${min}" max="${max}"`);}
   }
  });
- it('real canvas mouse drag clamps FreeDSP−16/+6 while plot stays symmetric±18; generic stays±12',()=>{
-  for(const [pid,bound] of [[0x1496,18],[1,12]]){
+ it('real canvas mouse drag clamps FreeDSP−16/+6 while plot defaults−20/+9; generic stays±12',()=>{
+  for(const [pid,min,max] of [[0x1496,-20,9],[1,-12,12]]){
    const events=new Map<string,(e:{clientX:number;clientY:number})=>void>(),update=vi.fn();
    const canvas={logicalWidth:800,logicalHeight:400,parentElement:null,getContext:()=>null,getBoundingClientRect:()=>({left:0,top:0,width:800,height:400}),addEventListener:vi.fn()};
    const ctx={canvas:null,ctx:null,localBands:[],onUpdateCallback:null,draggingIndex:0,selectedIndex:null,hoveredIndex:null,
-    CONFIG:{padding:40,minFreq:20,maxFreq:20000,gainRange:12},isExperimentalFreeDspActive:()=>false,isFreeDsp,gainRangeFor,freeDspGainRange,
+    freeDspPlotBounds:{min:-20,max:9,nonFinite:false},CONFIG:{padding:40,minFreq:20,maxFreq:20000,gainRange:12},isExperimentalFreeDspActive:()=>false,isFreeDsp,gainRangeFor,freeDspGainRange,
     window:{device:{vendorId:0x35d8,productId:pid},addEventListener:(name:string,f:(e:{clientX:number;clientY:number})=>void)=>events.set(name,f)},document:{getElementById:()=>canvas},ResizeObserver:class{},resizeCanvas:vi.fn(),draw:vi.fn(),handleUpdate:update,xToFreq:()=>1000};
-   const names=['gainToY','yToGain','graphGainRange','renderPEQ'];const f=runInNewContext(names.map(n=>extract(n,peqSource)).join('\n')+'\n({'+names.join(',')+'})',ctx);
-   expect(f.graphGainRange()).toBe(bound);expect(f.gainToY(bound,400)).toBe(40);expect(f.gainToY(-bound,400)).toBe(360);
+   const names=['gainToY','yToGain','isFreeDspGraph','graphBounds','renderPEQ'];const f=runInNewContext(names.map(n=>extract(n,peqSource)).join('\n')+'\n({'+names.join(',')+'})',ctx);
+   expect(f.graphBounds()).toMatchObject({min,max});expect(f.gainToY(max,400)).toBe(40);expect(f.gainToY(min,400)).toBe(360);
    f.renderPEQ({},freeDspDefaultBands(),vi.fn());events.get('mousemove')!({clientX:400,clientY:0});expect(update).toHaveBeenLastCalledWith(0,'gain',pid===0x1496?6:12);
    events.get('mousemove')!({clientX:400,clientY:400});expect(update).toHaveBeenLastCalledWith(0,'gain',pid===0x1496?-16:-12);
   }

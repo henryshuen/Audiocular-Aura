@@ -1,4 +1,42 @@
-## Latest checkpoint — Final FreeDSP UX (2026-10-09)
+
+### Automated verification / scope — required readback round
+- Focused4files/66tests PASS:static getter/units,synthetic nine replies,malformed/stale band/opaque446/source ambiguity,nonunique unity,actual canvas active/A-B response extension,connection races/no auto writes/gain/reset/RAM/Flash regression.
+- Native isolated build PASS;78offline/mock tests PASS including19fixedqueries,mutation/HTTP allowlist rejection,partial/error/stale477/timeout andwrong-device gate. Initial loopback socket10013 sandbox failure resolved with permission forlocalhost mock/fakechild only;noHID access.
+- PowerShell diagnostic launcher AST parse PASS;launcher hardware execution deliberately not performed.
+- Final verify.ps1 PASS:TypeScript/Vite,29files/289tests. Existing RAM18/Flash56golden plans andgain/reset assertions PASS. Generated dist and isolated .tmp/readback output excluded from delivery.
+- FreeDSP-specific files changed:graphScale/offline readback parser andisolated native ReadbackQuery/CLI registration.
+- Analysis/test files changed:static APK inspection/script,raw evidence/field matrix,read-only launcher,focused TS/native mocks andprior derived Q-unit reference correction.
+- Shared runtime files changed:src/peq.ts,FreeDSP graph-only guard/display transforms. Native Program/SafeRam addfixed opt-in operation;normal HTTP transport andwrite allowlist unchanged.
+- Non-FreeDSP protocol code changed:NO. Coefficient math,RAM190/Flash220serialization and18/56write plans unchanged. No hardware operations,PR orrelease.
+- Production automatic readback/device-derived immutable Slot A andeditable copy B:BLOCKED until enabled/source/stereo/freshness evidence andhardware acceptance;not an implementation PASS.
+
+### Problem / hypothesis / next action
+Observed problem:CONNECT cannot reconstruct existing device EQ; screenshot Flat is local state, not device readback. Readback is now a required PR/release gate.
+Verified facts:pinned Flutter/service getter→477 six metadata words;Q/256,integer gain;446 path0 signed24 coefficients and JNI inverse;no enabled/stereo/source/freshness proof. Existing57 captures have no477/446.
+Possible causes:477 serves persistent metadata rather than active RAM;446 provides transfer coefficients without original editor parameters;App may combine stored metadata/cache. Source label requires exact-device confirmation.
+Ruled out / weakened:unique editable reconstruction from unity;Gain exponent=dB;Q100;copying destructive first-getEQParam initialization.
+Next validation:Henry invokes isolated19-query read-only script, preserves full log/JSON and compares existing official App nine fields. No Sync/Restore/Flash/reset. Same RAM/Flash values alone do not distinguish provenance.
+Possible fix direction:only after source/enabled/stereo/freshness gates pass, atomic9band CONNECT replacement with race protection and immutable local device Slot A / editable copy B; no automatic writes. Until then Unknown/local editor and A/B device baseline BLOCKED.
+
+### Research checkpoint — implementation
+- Examined:exact pinned getter/handler/native bodies;normal native HTTP allowlist;editor/A-B connection paths;drawn graph sampling.
+- Verified facts:fixed query capture/parser implemented offline;wrong frames/counts/477 band/error/timeout stops;query19 max/no SET retry;normal HTTP queries still rejected;graph default/extent and gain clamps tested.
+- Hypotheses:477 persistent intent and446 RAM-active intent require hardware source validation.
+- Discarded hypotheses:complete synthetic frames imply a complete Device EQ baseline;write path1 proves read path1.
+- Unresolved fields:enabled,source,stereo,same-command freshness;477 sampleRate raw units and fractional gain fidelity.
+- Next search target:separately invoked source-backed diagnostic capture, then exact-device evidence for missing semantics. No PR/release yet.
+
+## Latest checkpoint — required device EQ readback gate (2026-10-09)
+Research phase: rehashed and statically extracted the cached official APK, including getters, JNI inverse path, service/controller call sites and parameter structs. Reproduction: scripts/freedsp/inspect-readback.py; generated officialReadbackStaticEvidence.json. No APK/native execution or hardware access.
+
+### Research checkpoint
+- Verified: getEQParamsFromFlash calls getEQMode then477 getEQParamList and assigns PersistEQParams. Direct getF3EQCoefficientList loops446 selector0/raw1..9. Java/native inverse exists; neither EQParam nor BandEQCoefficient has a per-band enabled field. Source477 is persistent-intended, but exact firmware source after unsaved RAM changes is unconfirmed.
+- Verified: raw477 frequency/gain/Q/type fields differ from446 coefficient exponent and coefficients. First generic getEQParam calls setDefaultAvailable; do not call its initialization path.
+- Hypotheses:446 reflects current coefficients;477 reflects persisted editable metadata. These require independent1496 readback validation. Official Dart connection-event ordering is not recovered by DEX call-site tracing.
+- Discarded: a complete coefficient list uniquely recovers all original editor values; unity proves enabled/disabled; a snapshot on another host identifies the exact getter; an SDK method name proves firmware store selection.
+- Unresolved: actual446/477 replies, enabled state, source/coherence, stereo query selector1, fractional precision, stale same-command correlation. Next target: fixed read-only diagnostic with raw preservation and fail-closed editor gate, plus graph display change. No production readback or Slot baseline yet.
+
+## Previous checkpoint — Final FreeDSP UX (2026-10-09)
 Scope is limited to CONNECT/DISCONNECT truthfulness, gain policy and two Reset actions. Prior stereo RAM PASS and Henry-reported56/56 Flash acknowledgments plus persistence after USB reconnection remain valid. No hardware operation or Flash algorithm rework.
 
 ### Research checkpoint
@@ -21,6 +59,17 @@ Next validation: manual UX acceptance, without automatic CONNECT writes. Reset w
 Possible fix direction: keep truthful local/device state separation and exact-device guards; extend readback only after full field/source proof. Preserve frozen controls and proven RAM/Flash algorithms.
 
 ## Evidence for upstream / Issue #3
+
+### Required readback gate — current 2026-10-09 evidence
+- Physical exact-device CAF collection remains35D8:1496 MI03,consumer usage0x0c/1,ID1/output61data bytes/native62;Windows Input GET_REPORT transport requirement unchanged.
+- Henry reports stereo RAM18 andFlash56/power-cycle/cross-host official App EQ PASS;that does not establish our getter implementation.
+- Pinned APK SHA04756b49acfea523758d86101c96c1824b7b209ae3a8836c07837088e795d2d5:Flutter handleSyGetEqParamsFromFlash→IEqualizer/service/session→Freeman getEQParamsFromFlash→mode query+477 bands1..9. Returned arrays band/freq/gain/Q/filter, no enabled array.
+- 477 response native offsets10/14/18/22/26/30:rawrate/band/Hz/Q256/type/integerdB. Corrected earlier derived Q100 claim against DEX float256. 446 [0,wire] returns scalingbyte18 and signed24 coeffs22..38;native inverse derives parameters and loses fractionaldB, cannot uniquely recover unity originals.
+- Getter generic first-connect unity190 initialization must never be copied. Bare fixed477/446 queries are source-backed read-only;no source-backed path1 getter inferred from write symmetry.
+- No existing57helper capture contains477/446. Enabled/source/stereo/same-command freshness remain blockers;SDK persistent naming is intent, not hardware provenance. Full CONNECT/device-baseline A/B BLOCKED.
+- Opt-in fixed19query diagnostic/offline decoder ready;normal HTTP/write paths unchanged. Need complete raw capture vs existing official App nine fields, plus exact-device evidence for remaining semantics. No automatic writes,PR orrelease.
+- Detailed copyable field matrix/JNI/source trace:tests/freedsp/fixtures/freeDspReadbackEvidence.md.
+
 FreeDSP35D8:1496 remains native Input GET_REPORT transport with ID1/61 data bytes. Prior stereo RAM18 writes and Henry's56/56 Flash acknowledgments plus reconnect persistence PASS are preserved. Official source446 provides coefficients and477 parses parameter entries, but current evidence lacks complete enabled/source/stereo semantics and actual exact-device replies; the57 saved helper pairs contain neither query. Official first-getEQParam may clear slots0..9 on both paths with190, so no automatic getter transplant. CONNECT now preserves local editor and says `Device EQ Unknown — Local Editor`; disconnect marks stale, stale async completions are ignored, explicit overwrite warns. Official supplied gain modal and cachedAPK support exact-FreeDSP−16..+6 App policy; no firmware or safe gain inference. Existing sliders/numbers/drag/import/native guards align, other DACs unchanged. Defaults9 PK/Q.7 expected frequencies; Flat9 keeps frequency/Q/type/enabled, all gains0; both confirmed stereo RAM Sync, noFlash. No coefficient/serializer/packet order/transport API change. Offline evidence and manual acceptance: tests/freedsp/fixtures/freeDspFinalUxEvidence.md. Readback remains blocked at the verified evidence boundary; no release/PR.
 
 ### Automated verification
