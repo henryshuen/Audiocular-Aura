@@ -75,7 +75,7 @@
 
           <!-- Last Applied EQ Display -->
           <div class="active-eq-group">
-            <span class="active-eq-label" data-i18n="last_applied_eq_label">Last Applied EQ to DAC:</span>
+            <span id="lastAppliedEqLabel" class="active-eq-label" data-i18n="last_applied_eq_label">Last Applied EQ to DAC:</span>
             <span id="lastAppliedEqDisplay" class="active-eq-value">Flat Profile (Default)</span>
           </div>
 
@@ -118,11 +118,11 @@
               <span id="infoFirmware" class="info-value">-</span>
             </div>
             <div class="info-item">
-              <span class="info-label">DSP Sample Rate:</span>
+              <span id="infoSampleRateLabel" class="info-label">DSP Sample Rate:</span>
               <span id="infoSampleRate" class="info-value">-</span>
             </div>
             <div class="info-item">
-              <span class="info-label">PEQ Slots Active:</span>
+              <span id="infoSlotsLabel" class="info-label">PEQ Slots Active:</span>
               <span id="infoSlots" class="info-value">0 / 10</span>
             </div>
             <div class="info-item">
@@ -308,17 +308,15 @@
 
             <button id="btnFlash" class="btn btn-highlight action" disabled aria-label="Write current EQ settings permanently to DAC Flash" data-i18n="btn_save_flash">SAVE TO FLASH (PERMANENT)</button>
           </div>
-          <p id="freeDspStorageNote" hidden>LOCAL EDITOR：拖曳、輸入、RESET TO FLAT、Slot A/B/OFF只改本地，不是硬體slots。FREEDSP RAM：明確SYNC／RESTORE，9 wires × LEFT/RIGHT共18次190。FREEDSP FLASH：另按SAVE永久寫入，五個rate banks／55次220含commit；USB斷電持久性尚未硬體驗證。需Windows原生HID helper；Restore RAM不修改editor，也不還原Flash。沒有PEQ讀回。</p>
-          <p id="freeDspRamStatus" hidden role="status" aria-live="polite">FREEDSP RAM：狀態未讀回；尚未執行本次Sync／Restore。</p>
+          <p id="freeDspStorageNote" hidden>FreeDSP edits and OFF/A/B selection are local. Sync, Restore and confirmed Reset actions update RAM; only Save to Flash is permanent. Readback is a snapshot, not exact active RAM or a hardware backup. Windows native HID helper required.</p>
+          <p id="freeDspRamStatus" hidden role="status" aria-live="polite">FreeDSP active RAM state unknown; local edits require explicit Sync.</p>
         </section>
       </div>
 
       <!-- Device Utility Controls Card -->
       <section class="control-card utility-card-full">
         <p id="freeDspControlNote" hidden role="status" style="line-height:1.6; color:var(--text-secondary)">
-          FreeDSP：全域增益／Auto Preamp、左右平衡、麥克風增益／監聽／電平皆尚未驗證，已停用。
-          Bass／Treble 目前未支援，不占用九段 PEQ。電平動畫不是實際量測。
-          九段 PK 仍使用明確的 SYNC TO RAM；Flash 停用。
+          FreeDSP supports nine-band PK EQ. Preamp, Tone Tilt and DAC/microphone utilities are unavailable in this production interface. Generic microphone meters are simulated, not hardware telemetry.
         </p>
         <div class="card-header">
           <h2 class="card-title" data-i18n="device_utilities_title">⚙️ Device Utility Controls</h2>

@@ -224,10 +224,11 @@ export async function importProfile(e: Event) {
 			}
 
 			if(!isFreeDsp(getDevice()))setEqState(importedBands);
-			setGlobalGainState(profile.globalGain);
+			if(isFreeDsp(getDevice()) && profile.globalGain!==0)log("FreeDSP: imported preamp ignored; global gain is unavailable.");
+			setGlobalGainState(isFreeDsp(getDevice())?0:profile.globalGain);
 
-			// Update UI and send preamp packet
-			updateGlobalGain(profile.globalGain);
+			// Generic devices retain preamp; FreeDSP imports only supported PEQ settings.
+			updateGlobalGain(isFreeDsp(getDevice())?0:profile.globalGain);
 			renderUI(importedBands);
 
 			const name = `Imported: ${file.name.replace(/\.[^/.]+$/, "")}`;
@@ -237,7 +238,8 @@ export async function importProfile(e: Event) {
 			}
 
 			const device = getDevice();
-			if (device && !isFreeDsp(device)) {
+			if(isFreeDsp(device)){log(`Profile loaded in Local Editor: ${name}; no RAM or Flash write.`);}
+			else if (device) {
 				log(`Syncing imported profile to DAC...`);
 				await syncToDevice();
 				log(`Synced: ${name}`);
@@ -296,7 +298,10 @@ export async function loadProfileFromText(content: string, presetName?: string) 
 		(window as any).resetTiltState?.();
 		
 		const autoPreamp = (window as any).getAutoPreampEnabled?.();
-		if (autoPreamp) {
+		if(isFreeDsp(getDevice())){
+   setGlobalGainState(0);await updateGlobalGain(0);
+   if(profile.globalGain!==0)log("FreeDSP: imported preamp ignored; global gain is unavailable.");
+  } else if (autoPreamp) {
 			(window as any).setManualPreampState?.(profile.globalGain);
 			await (window as any).recalculateAutoPreamp?.();
 		} else {
@@ -312,7 +317,8 @@ export async function loadProfileFromText(content: string, presetName?: string) 
 		}
 
 		const device = getDevice();
-		if (device && !isFreeDsp(device)) {
+		if(isFreeDsp(device)){log(`Profile loaded in Local Editor: ${name}; no RAM or Flash write.`);}
+		else if (device) {
 			log(`Syncing preset "${name}" to DAC...`);
 			await syncToDevice();
 			log(`Synced: ${name}`);

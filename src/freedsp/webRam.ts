@@ -12,24 +12,24 @@ export const positiveMultiPreset=():Band[]=>unityPreset().map(b=>[1,4,7].include
 export const mixedPreset=():Band[]=>positiveMultiPreset().map(b=>b.index===0?{...b,freq:100,gain:-3,q:1}:b);
 export const M2R_GATE_KEY='aura_freedsp_m2r_gate';
 export const uiToWire = (index:number) => {
-  if (!Number.isInteger(index) || index<0 || index>8) throw new Error('UI index 必須是0–8');
+  if (!Number.isInteger(index) || index<0 || index>8) throw new Error('UI band index must be 0-8');
   return index+1;
 };
 export function validateBands(value:unknown):Band[] {
-  if (!Array.isArray(value) || value.length!==9) throw new Error('必須完整九列；不截斷、不跳過');
+  if (!Array.isArray(value) || value.length!==9) throw new Error('All nine bands are required; no truncation or skipped bands');
   return value.map((b:Band,i)=>{
     if (!b || b.index!==i || b.type!=='PK' || typeof b.enabled!=='boolean' ||
         ![b.freq,b.gain,b.q].every(Number.isFinite) || b.freq<20 || b.freq>20000 || b.gain<freeDspGainRange.min || b.gain>freeDspGainRange.max || b.q<.1 || b.q>10)
-      throw new Error(`UI Band${i+1} 無效；僅支持PK、20–20000Hz、官方App政策−16..+6dB、Q0.1–10`);
+      throw new Error(`UI Band${i+1} is invalid; requires PK, 20-20000 Hz, official App policy -16..+6 dB and Q 0.1-10`);
     return {index:i,freq:b.freq,gain:b.gain,q:b.q,type:'PK',enabled:b.enabled};
   });
 }
 // Independent offline parity model for the native executor, never a WebHID sender.
 export function modelWebBand(b:Band,sampleIndex:number,restore=false,path=0) {
-  if(path!==0 && path!==1)throw new Error('M2Q path 必須是0或1');
+  if(path!==0 && path!==1)throw new Error('FreeDSP path must be 0 or 1');
   validateBands(Array.from({length:9},(_,index)=>({...b,index})));
   const wire=uiToWire(b.index);
-  if (!Number.isInteger(sampleIndex) || sampleIndex<4 || sampleIndex>8) throw new Error('未知sample rate；不fallback');
+  if (!Number.isInteger(sampleIndex) || sampleIndex<4 || sampleIndex>8) throw new Error('Unknown sample rate; no fallback');
   const hz=officialRateHz[sampleIndex];
   if (b.freq>=hz/2) throw new Error('Nyquist violation');
   const f=restore || !b.enabled ? [1,0,0,0,0] : nativePeakFloat({frequency:b.freq,gainDb:b.gain,q:b.q,sampleHz:hz}).coefficients;

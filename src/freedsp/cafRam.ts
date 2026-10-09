@@ -18,7 +18,7 @@ export class CafRamSession {
    try{const r=await this.transport.readback();if(this.disposed)throw new Error('Stale readback');return r;}finally{this.busy=false;}
  }
  async flash(value:Band[],save=saveFlashRecovery){
-   if(this.busy || this.disposed || this.stopped)throw new Error('FreeDSP BUSY／STOP；Flash不可重試，請重新連線。');
+   if(this.busy || this.disposed || this.stopped)throw new Error('FreeDSP BUSY or STOP; Flash cannot retry. Reconnect first.');
    if(this.transport.supportsFlash!==true)throw new Error('Native Flash transport required');
    const plan=buildFlashPlan(value);
    save(plan); // Exact local editor + known unity plan retained before first hardware SET.
@@ -27,9 +27,9 @@ export class CafRamSession {
    try{await executeFlashPlan(this.transport,plan,this.log);}catch(e){this.stopped=true;throw e;}finally{this.busy=false;}
  }
  async sync(value:Band[],restore=false){
-   if(this.busy || this.disposed || (this.stopped && !restore))throw new Error('FreeDSP BUSY／STOP；明確Restore或重新連線，不自動重試。');
+   if(this.busy || this.disposed || (this.stopped && !restore))throw new Error('FreeDSP BUSY or STOP; explicitly Restore or reconnect. No automatic retry.');
    const bands=restore?unityPreset():validateBands(value);
-   if(!restore){const s=analyzeSafety(bands);this.log(`FreeDSP官方App政策${freeDspGainRange.min}..+${freeDspGainRange.max}dB；非安全保證；合成峰值估計=${s.peakDb.toFixed(3)}dB 正增益預算=${s.positiveSumDb.toFixed(3)}dB`);}
+   if(!restore){const s=analyzeSafety(bands);this.log(`FreeDSP official App policy ${freeDspGainRange.min}..+${freeDspGainRange.max} dB; not a safety guarantee. Estimated combined peak=${s.peakDb.toFixed(3)} dB; positive gain sum=${s.positiveSumDb.toFixed(3)} dB`);}
    // Snapshot and precompute ALL packets for every known rate before initialization SET.
    const plans=new Map(rates.map(rate=>[rate,bands.flatMap(b=>[0,1].map(path=>({wire:b.index+1,path,report:modelWebBand(b,rate,restore,path).bytes.slice(1)})))]));
    this.busy=true;
@@ -39,7 +39,7 @@ export class CafRamSession {
      const r=await this.transport.exchange(346,encodeCaf(346,[62,...Array(12).fill(0)]).data);
      if(!plans.has(r.words[1]))throw new Error("Unknown matching346rate; no fallback/no190");
      for(const p of plans.get(r.words[1])!){await this.transport.exchange(190,p.report);this.log(`WIRE${p.wire} ${p.path===0?'LEFT':'RIGHT'} PASS`);}
-     this.stopped=false;this.log('FreeDSP RAM protocol complete:18 command190；非readback／非Flash，聽感另行確認。');
-   }catch(e){this.stopped=true;this.log('FreeDSP STOP：可能部分完成；無自動retry／rollback。'+String(e));throw e;}finally{this.busy=false;}
+     this.stopped=false;this.log('FreeDSP RAM protocol complete: 18 stereo band updates acknowledged. This is not readback or a Flash save.');
+   }catch(e){this.stopped=true;this.log('FreeDSP STOP: possibly partially applied; no automatic retry or rollback. '+String(e));throw e;}finally{this.busy=false;}
  }
 }

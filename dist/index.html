@@ -55,6 +55,7 @@
       </div>
     </div>
 
+
     <!-- Dashboard Grid Container -->
     <main class="dashboard-grid">
       
@@ -76,7 +77,7 @@
 
           <!-- Last Applied EQ Display -->
           <div class="active-eq-group">
-            <span class="active-eq-label" data-i18n="last_applied_eq_label">Last Applied EQ to DAC:</span>
+            <span id="lastAppliedEqLabel" class="active-eq-label" data-i18n="last_applied_eq_label">Last Applied EQ to DAC:</span>
             <span id="lastAppliedEqDisplay" class="active-eq-value">Flat Profile (Default)</span>
           </div>
 
@@ -119,11 +120,11 @@
               <span id="infoFirmware" class="info-value">-</span>
             </div>
             <div class="info-item">
-              <span class="info-label">DSP Sample Rate:</span>
+              <span id="infoSampleRateLabel" class="info-label">DSP Sample Rate:</span>
               <span id="infoSampleRate" class="info-value">-</span>
             </div>
             <div class="info-item">
-              <span class="info-label">PEQ Slots Active:</span>
+              <span id="infoSlotsLabel" class="info-label">PEQ Slots Active:</span>
               <span id="infoSlots" class="info-value">0 / 10</span>
             </div>
             <div class="info-item">
@@ -302,16 +303,23 @@
             <h2 class="card-title" data-i18n="hardware_controls_title">Hardware Memory Controls</h2>
             <p class="card-subtitle" data-i18n="hardware_controls_subtitle">Apply settings in real-time or flash them permanently.</p>
           </div>
-          <div class="sync-actions">
+          <div id="hardwareMemoryActions" class="sync-actions">
             <button id="btnSync" class="btn btn-accent action" disabled aria-label="Sync current EQ settings to DAC RAM" data-i18n="btn_sync_ram">SYNC TO RAM (APPLY)</button>
             <button id="btnSendToDevice" class="btn btn-primary action" disabled aria-label="Send current EQ settings to device" data-i18n="btn_send_device">SEND TO DEVICE</button>
+            <button id="btnFreeDspRestore" hidden style="display:none" class="btn btn-secondary">RESTORE FREEDSP RAM TO UNITY</button>
+
             <button id="btnFlash" class="btn btn-highlight action" disabled aria-label="Write current EQ settings permanently to DAC Flash" data-i18n="btn_save_flash">SAVE TO FLASH (PERMANENT)</button>
           </div>
+          <p id="freeDspStorageNote" hidden>FreeDSP edits and OFF/A/B selection are local. Sync, Restore and confirmed Reset actions update RAM; only Save to Flash is permanent. Readback is a snapshot, not exact active RAM or a hardware backup. Windows native HID helper required.</p>
+          <p id="freeDspRamStatus" hidden role="status" aria-live="polite">FreeDSP active RAM state unknown; local edits require explicit Sync.</p>
         </section>
       </div>
 
       <!-- Device Utility Controls Card -->
       <section class="control-card utility-card-full">
+        <p id="freeDspControlNote" hidden role="status" style="line-height:1.6; color:var(--text-secondary)">
+          FreeDSP supports nine-band PK EQ. Preamp, Tone Tilt and DAC/microphone utilities are unavailable in this production interface. Generic microphone meters are simulated, not hardware telemetry.
+        </p>
         <div class="card-header">
           <h2 class="card-title" data-i18n="device_utilities_title">⚙️ Device Utility Controls</h2>
           <p class="card-subtitle" data-i18n="device_utilities_subtitle">Configure advanced hardware-level DAC parameters, amplifier states, and microphone gain.</p>

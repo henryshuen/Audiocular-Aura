@@ -21,5 +21,5 @@ export async function connectFreeDsp(device:HIDDevice,log:(s:string)=>void){
    const session=new CafRamSession(transport,log);sessions.set(device,session);return session;
  }catch(e){transport.dispose();throw e;}finally{if(pending.get(device)===transport)pending.delete(device);}
 }
-export function getFreeDspSession(device:HIDDevice){const s=sessions.get(device);if(!s)throw new Error('FreeDSP native session未連線；請重新用CONNECT DAC。');return s;}
+export function getFreeDspSession(device:HIDDevice){const s=sessions.get(device);if(!s)throw new Error('FreeDSP native session unavailable; reconnect with CONNECT DAC.');return s;}
 export function disconnectFreeDsp(device:HIDDevice){versions.set(device,++serial);pending.get(device)?.dispose();pending.delete(device);sessions.get(device)?.dispose();sessions.delete(device);}

@@ -45,7 +45,7 @@ describe('gain audit offline evidence, never opens a device',()=>{
  });
  it('new official App policy rejects +12 import unchanged and accepts -16; offline matrix remains historical math evidence',()=>{
   const bands=freeDspDefaultBands(),logs:string[]=[];bands[0].gain=12;bands[1].gain=13;bands[2].gain=-16;
-  expect(()=>normalizeFreeDspEditor(bands,s=>logs.push(s))).toThrow('沒有自動夾限');
+  expect(()=>normalizeFreeDspEditor(bands,s=>logs.push(s))).toThrow('rejected without automatic clamping');
   expect(bands.slice(0,3).map(b=>b.gain)).toEqual([12,13,-16]);
   bands[0].gain=-16;bands[1].gain=6;expect(validateBands(bands)[0].gain).toBe(-16);
  });

@@ -1,4 +1,5 @@
 import { setDeviceGlobalGain, getActiveProtocol } from "./dsp.ts";
+import {isFreeDsp} from './freedsp/capabilities.ts';
 import type { EQ } from "./main.ts";
 
 /**
@@ -65,7 +66,10 @@ export function updateGlobalGainUI(val: number) {
 	const isCompare = typeof (window as any).isCompareActive === "function" && (window as any).isCompareActive();
 	const preampAppliedNote = document.getElementById("preampAppliedNote") as HTMLElement;
 	if (preampAppliedNote) {
-		if (isCompare) {
+		if (isFreeDsp((window as any).device ?? null)) {
+			preampAppliedNote.innerText = '';
+			preampAppliedNote.style.display = 'none';
+		} else if (isCompare) {
 			const gA = (window as any).getSlotAGain?.() ?? 0;
 			const gB = (window as any).getSlotBGain?.() ?? 0;
 			const matchedVal = Math.min(gA, gB);

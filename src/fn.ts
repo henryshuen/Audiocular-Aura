@@ -182,10 +182,10 @@ export function identifyConnectedDac(dev: HIDDevice) {
 	const sampleRateStr = (isSavitech || isMoondrop || isJa11 || isFiio10Band) ? "96 kHz" : "48 kHz";
 
 	const infoSampleRate = document.getElementById("infoSampleRate");
-	if (infoSampleRate) infoSampleRate.innerText = sampleRateStr;
+	if (infoSampleRate) infoSampleRate.innerText = isFreeDsp(dev)?'Unknown':sampleRateStr;
 
 	const infoFirmware = document.getElementById("infoFirmware");
-	if (infoFirmware) infoFirmware.innerText = "Active";
+	if (infoFirmware) infoFirmware.innerText = isFreeDsp(dev)?'Unknown':"Active";
 
 	const infoVid = document.getElementById("infoVid");
 	if (infoVid) infoVid.innerText = `0x${dev.vendorId.toString(16).toUpperCase().padStart(4, '0')}`;
@@ -298,7 +298,7 @@ export function getEqState() {
 
 export function setEqState(eq: EQ) {
 	try{eqState = isFreeDsp(device)?normalizeFreeDspEditor(eq,log):eq;}
- catch(e){log(String(e)+' LOCAL EDITOR保持原值。');throw e;}
+ catch(e){log(String(e)+' Local Editor preserved.');throw e;}
 }
 
 export function setEQ(
@@ -445,7 +445,7 @@ export async function setABCompareState(state: "Off" | "A" | "B") {
 				eqName: lastAppliedEqName
 			};
 			slotB = {
-				eqState: isFreeDsp(device)?freeDspDefaultBands():defaultEqState(),
+				eqState: defaultEqState(),
 				globalGainState: 0,
 				eqName: t("flat_profile_default") || "Flat Profile (Default)"
 			};
@@ -471,7 +471,7 @@ export async function setABCompareState(state: "Off" | "A" | "B") {
 				eqName: lastAppliedEqName
 			};
 			slotB = {
-				eqState: isFreeDsp(device)?freeDspDefaultBands():defaultEqState(),
+				eqState: defaultEqState(),
 				globalGainState: 0,
 				eqName: t("flat_profile_default") || "Flat Profile (Default)"
 			};
@@ -644,7 +644,7 @@ export function defaultEqState(): EQ {
  */
 export function renderUI(eqState: EQ) {
 	if(isFreeDsp(device)){
-  eqState=getEqState();freeDspReadbackSlots.observe(eqState);updateSlotLabel();
+  eqState=getEqState();freeDspReadbackSlots.observe(eqState);configureFreeDspControlNotes(true);updateSlotLabel();
  } // Rendering never clamps retained local values.
 	const gainRange=gainRangeFor(device);
 	// Save current active state to localStorage
@@ -749,7 +749,7 @@ export async function connectToDevice() {
 	const attempt=++connectAttempt;
 	let freeDspAttempt=false;
 	try {
-		if(isExperimentalFreeDspActive()){log('先結束 FreeDSP 實驗圖形模式，再連線其他 DAC。');return;}
+		if(isExperimentalFreeDspActive()){log('Close the FreeDSP diagnostic session before connecting another DAC.');return;}
 		// Build filters dynamically from activeDacs database to include all supported VIDs
 		const vendorIds = new Set<number>([
 			VID_AUDIOCULAR,
@@ -895,7 +895,7 @@ export async function connectToDevice() {
         } else if (protocol === "SAVITECH" || protocol === "FIIO_JA11" || protocol === "MOONDROP") {
 			await readDeviceParams(device);
 		} else {
-			log(isFreeDsp(dev)?"FreeDSP native HID adapter已連線；沒有PEQ讀回，editor為本地值，RAM須明確Sync。":"Note: Parameter reading is only supported for Savitech, FiiO JA11, and Moondrop devices. Starting with a flat profile.");
+			log("Note: Parameter reading is only supported for Savitech, FiiO JA11, and Moondrop devices. Starting with a flat profile.");
 			renderUI(eqState);
 		}
 
@@ -982,12 +982,12 @@ async function finishFreeDspLocalReset(bands:EQ,name:string){
  try{
    await syncToDevice(true,true); // One explicit confirmation covers this intentional RAM operation.
    if(attempt!==connectAttempt)return;
-   log('FreeDSP Reset：九段雙聲道RAM Sync協定完成；沒有保存Flash，非讀回。');
- }catch(e){if(attempt===connectAttempt)log('FreeDSP Reset RAM未完成；本地editor已重設，裝置狀態未知。'+String(e));}
+   log('FreeDSP Reset: nine stereo bands acknowledged in RAM; Flash unchanged. This is not readback.');
+ }catch(e){if(attempt===connectAttempt)log('FreeDSP Reset incomplete: Local Editor reset; active RAM state unknown. '+String(e));}
 }
 export async function resetToDefaults() {
  if(isFreeDsp(device)){
-  if(!confirm(freeDspOverwriteWarning+'\nReset Defaults：九段31–8000Hz、0dB、Q0.7、PK、全部啟用，並覆寫雙聲道RAM EQ；不保存Flash。繼續？'))return;
+  if(!confirm(freeDspOverwriteWarning+'\nReset Defaults: restore nine enabled PK bands at 31/62/125/250/500/1000/2000/4000/8000 Hz, 0 dB, Q 0.7. Overwrite both channels in RAM; do not save Flash. Continue?'))return;
   await finishFreeDspLocalReset(freeDspDefaultBands(),'Flat Profile (Default)');return;
  }
 	if (
@@ -1030,7 +1030,7 @@ export async function resetToDefaults() {
 	initSlots();
 
 	if(!isFreeDsp(device))await syncToDevice();
-	log(isFreeDsp(device)?"FreeDSP defaults只更新本地；尚未Sync RAM。":"Defaults applied and synced.");
+	log("Defaults applied and synced.");
 	pushHistory();
 }
 
@@ -1039,7 +1039,7 @@ export async function resetToDefaults() {
  */
 export async function resetToFlat() {
  if(isFreeDsp(device)){
-  if(!confirm(freeDspOverwriteWarning+'\nReset To Flat：九段gain全部設0，保留頻率／Q／type／enabled，並覆寫雙聲道RAM EQ；不保存Flash。繼續？'))return;
+  if(!confirm(freeDspOverwriteWarning+'\nReset To Flat: set all nine gains to 0 dB; preserve frequency, Q, type and local enabled switches. Overwrite both channels in RAM; do not save Flash. Continue?'))return;
   await finishFreeDspLocalReset(normalizeFreeDspEditor(eqState,log,false).map(b=>({...b,gain:0})),'Flat Profile (Neutral)');return;
  }
 	log("[System] Resetting all bands to flat neutral values...");
@@ -1069,7 +1069,7 @@ export async function resetToFlat() {
 	if (device) {
 		if(!isFreeDsp(device))await syncToDevice();
 	}
-	log(isFreeDsp(device)?"FreeDSP Flat只重設本地editor；硬體Restore請用獨立unity按鈕。":"Flat neutral profile applied and synced.");
+	log("Flat neutral profile applied and synced.");
 	pushHistory();
 }
 
@@ -1154,7 +1154,7 @@ export async function autoConnectDevice() {
 
 		if (!dev) return;
 
-		// M2S FreeDSP requires explicit original CONNECT during event-transport validation; no auto TX.
+		// FreeDSP uses explicit CONNECT; automatic discovery must not trigger hardware reads or writes.
 		if (import.meta.env.DEV && dev.vendorId === 0x35d8 && dev.productId === 0x1496) return;
 		if(isFreeDsp(dev))return; // Production build must not silently use the legacy unvalidated sender.
 		if(isExperimentalFreeDspActive())return; // Recheck after getDevices resolves.
@@ -1408,7 +1408,10 @@ export async function loadCustomProfile(name: string) {
 
 	if(!isFreeDsp(device))setEqState(importedBands);
 	resetTiltState();
-	if (autoPreampEnabled) {
+	if(isFreeDsp(device)){
+  globalGainState=0;updateGlobalGainUI(0);
+  if(profile.globalGain!==0)log('FreeDSP: imported preamp ignored; global gain is unavailable.');
+ } else if (autoPreampEnabled) {
 		manualPreampState = profile.globalGain;
 		await recalculateAutoPreamp();
 	} else {
@@ -1422,9 +1425,11 @@ export async function loadCustomProfile(name: string) {
 		initSlots();
 	}
 
-	if (device) {
+	if (isFreeDsp(device)) {
+		log(`Profile loaded in Local Editor: ${profile.name}; no RAM or Flash write.`);
+	} else if (device) {
 		log(`Syncing profile to DAC...`);
-		if(!isFreeDsp(device))await syncToDevice();
+		await syncToDevice();
 		log(`Synced: ${profile.name}`);
 	} else {
 		log("Profile loaded successfully. Connect DAC and click SYNC to apply.");
@@ -1683,7 +1688,7 @@ export async function toggleAutoPreamp(enabled: boolean, skipWrite = false) {
 		autoPreampEnabled = false;
 		const checkbox = document.getElementById('checkAutoPreamp') as HTMLInputElement | null;
 		if (checkbox) checkbox.checked = false;
-		log('FreeDSP Auto Preamp 停用：全域增益命令尚未確認；沒有送出。');
+		log('FreeDSP Auto Preamp disabled: global gain is unverified. No hardware command sent.');
 		return;
 	}
 	autoPreampEnabled = enabled;
@@ -1745,7 +1750,7 @@ export async function reduceGainsSafely() {
   const bands=normalizeFreeDspEditor(eqState,log,false).map(b=>({...b,gain:b.enabled?Math.min(freeDspGainRange.max,b.gain):b.gain}));
   const sum=bands.reduce((n,b)=>n+(b.enabled?Math.max(0,b.gain):0),0);
   if(sum>12)for(const b of bands)if(b.enabled && b.gain>0)b.gain*=12/sum;
-  setEqState(bands);renderUI(eqState);pushHistory();log('FreeDSP AUTO REDUCE只調整LOCAL EDITOR正gain；不寫RAM、不使用preamp。請重新Sync確認。');return;
+  setEqState(bands);renderUI(eqState);pushHistory();log('FreeDSP Auto Reduce changes positive gains in the Local Editor only; no RAM write or preamp. Review before explicit Sync.');return;
  }
 	let changed = false;
 
@@ -1828,11 +1833,11 @@ export function configureFreeDspUI(active:boolean){
  (window as any).stopFreeDspMicDisplay?.();
  for(const id of ['globalGainSlider','checkAutoPreamp','slideBassTilt','slideTrebleTilt']){const e=document.getElementById(id) as HTMLInputElement|null;if(e)e.disabled=true;}
  document.querySelectorAll<HTMLInputElement|HTMLButtonElement|HTMLSelectElement>('.utility-card-full input, .utility-card-full select, .utility-card-full button').forEach(e=>e.disabled=true);
- const send=document.getElementById('btnSendToDevice') as HTMLButtonElement|null;if(send){send.disabled=true;send.title='FreeDSP 此通用操作尚未驗證；請用SYNC TO RAM。';}
- const flash=document.getElementById('btnFlash') as HTMLButtonElement|null;if(flash){flash.disabled=false;flash.textContent='SAVE FREEDSP TO FLASH (PERMANENT)';flash.title='READY：協定候選，USB斷電持久性尚未硬體驗證';flash.removeAttribute('data-i18n');}
+ const send=document.getElementById('btnSendToDevice') as HTMLButtonElement|null;if(send){send.disabled=true;send.title='FreeDSP: this generic action is unsupported. Use SYNC TO RAM.';}
+ const flash=document.getElementById('btnFlash') as HTMLButtonElement|null;if(flash){flash.disabled=false;flash.textContent='SAVE FREEDSP TO FLASH (PERMANENT)';flash.title='Save the current nine-band profile permanently. RAM Restore does not undo Flash.';flash.removeAttribute('data-i18n');}
  const actions=document.getElementById('hardwareMemoryActions');if(actions)actions.style.flexWrap='wrap';
  const note=document.getElementById('freeDspStorageNote');if(note)note.hidden=false;
- const ramStatus=document.getElementById('freeDspRamStatus');if(ramStatus){ramStatus.hidden=false;ramStatus.textContent='FREEDSP RAM：已連線，狀態未讀回；LOCAL EDITOR尚未由本次Sync送出。';}
+ const ramStatus=document.getElementById('freeDspRamStatus');if(ramStatus){ramStatus.hidden=false;ramStatus.textContent='FreeDSP connected; active RAM state unknown. Local edits require explicit Sync.';}
  showFreeDspDeviceState(true);
  const restore=document.getElementById('btnFreeDspRestore') as HTMLButtonElement|null;if(restore){restore.hidden=false;restore.style.display='flex';restore.disabled=false;}
 }

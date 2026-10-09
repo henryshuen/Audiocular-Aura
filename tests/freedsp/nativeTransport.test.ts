@@ -27,7 +27,7 @@ describe('normal FreeDSP native transport; mocked HTTP only, no hardware',()=>{
  it('valid+6 bands and composite above+6 retain existing packet algorithm; +12 host profile rejected',async()=>{
    const f=mock();await f.t.connect();const b=unityPreset().map(x=>({...x,freq:1000,gain:6,q:1}));await f.c.sync(b);
    expect(f.reports).toHaveLength(21);for(let i=0;i<9;i++)expect([...f.reports[3+i*2]]).toEqual([...modelWebBand(b[i],5,false,0).bytes]);
-   await expect(f.c.sync(b.map(x=>({...x,gain:12})))).rejects.toThrow('無效');expect(f.reports).toHaveLength(21);f.c.dispose();
+   await expect(f.c.sync(b.map(x=>({...x,gain:12})))).rejects.toThrow('invalid');expect(f.reports).toHaveLength(21);f.c.dispose();
  });
  it('metadata Connect sends no CAF; shared plan sends prerequisites then18 identical stereo packets',async()=>{
    const f=mock();await f.t.connect();expect(f.reports).toHaveLength(0);await f.c.sync(mixedPreset());
@@ -50,7 +50,7 @@ describe('normal FreeDSP native transport; mocked HTTP only, no hardware',()=>{
    }finally{disconnectFreeDsp(d);vi.unstubAllGlobals();}
  });
  it('unsafe editor blocks all transport packets; invalid final band blocks before initialization',async()=>{
-   const f=mock();await f.t.connect();const b=unityPreset();b[8].gain=13;await expect(f.c.sync(b)).rejects.toThrow('無效');b[8].q=NaN;await expect(f.c.sync(b)).rejects.toThrow();expect(f.reports).toHaveLength(0);f.c.dispose();
+   const f=mock();await f.t.connect();const b=unityPreset();b[8].gain=13;await expect(f.c.sync(b)).rejects.toThrow('invalid');b[8].q=NaN;await expect(f.c.sync(b)).rejects.toThrow();expect(f.reports).toHaveLength(0);f.c.dispose();
  });
  it('unknown current rate stops before190 with no fallback',async()=>{const f=mock();f.setRate(9);await f.t.connect();await expect(f.c.sync(unityPreset())).rejects.toThrow('Unknown');expect(f.reports).toHaveLength(3);f.c.dispose();});
  it('first failure stops without retry/rollback; explicit Restore may recover',async()=>{

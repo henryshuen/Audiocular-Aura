@@ -208,7 +208,7 @@ async function setMasterGainJa11(device: HIDDevice, gain: number) {
  * Updates state and transmits over the wire
  */
 export async function setDeviceGlobalGain(gain: number, skipBandSync = false) {
- if(isFreeDsp(getDevice())){log("FreeDSP preamp未實作；沒有送出。");return;}
+ if(isFreeDsp(getDevice())){log("FreeDSP preamp unsupported; no hardware command sent.");return;}
 	setGlobalGain(gain);
 	const device = getDevice();
 	if (!device) return;
@@ -387,7 +387,7 @@ async function readMoondropParams(device: HIDDevice): Promise<{ preamp: number; 
  * @param device The WebHID device
  */
 export async function readDeviceParams(device: HIDDevice) {
- if(isFreeDsp(device)){log("FreeDSP無PEQ readback；保留本地editor。");return;}
+ if(isFreeDsp(device)){log("FreeDSP readback uses CONNECT capture; generic parameter reader skipped. Local Editor preserved.");return;}
 	if (!device) return;
 	showSyncing();
 	try {
@@ -770,8 +770,8 @@ export async function syncToDevice(explicit=false,overwriteConfirmed=false) {
 
  if(isFreeDsp(device)){
    if(!explicit)return; // profile/import/undo/edit are local only for FreeDSP.
-   if(getGlobalGainState()!==0 || getAutoPreampEnabled() || getBassTiltState()!==0 || getTrebleTiltState()!==0)throw new Error('FreeDSP preamp/tilt未實作；請將本地值設0，勿當作已套用。');
-   if(!overwriteConfirmed && !confirm(freeDspOverwriteWarning+'\nSync九段雙聲道RAM EQ；不保存Flash。繼續？'))return false;
+   if(getGlobalGainState()!==0 || getAutoPreampEnabled() || getBassTiltState()!==0 || getTrebleTiltState()!==0)throw new Error('FreeDSP preamp/Tone Tilt unsupported; local values must be zero, not treated as applied.');
+   if(!overwriteConfirmed && !confirm(freeDspOverwriteWarning+'\nSync nine-band stereo EQ to RAM; do not save Flash. Continue?'))return false;
    showSyncing();try{await attachFreeDsp(device).sync(eqState);localStorage.setItem(`last_eq_state_${device.vendorId}_${device.productId}`,JSON.stringify(eqState));}finally{hideSyncing();}return true;
  }
 
@@ -861,9 +861,9 @@ export async function flashToFlash() {
 	const device = getDevice();
 	if (!device) return;
  if(isFreeDsp(device)){
-   if(!confirm(freeDspOverwriteWarning+'\nFreeDSP 永久寫入：完整9段／五個rate banks，55次command220含commit。失敗可能部分完成，無自動retry／rollback。繼續？'))return false;
+   if(!confirm(freeDspOverwriteWarning+'\nSave all nine EQ bands permanently. A failure may leave a partial save; no automatic retry or rollback. Continue?'))return false;
    const editor=getEqState();if(!editor)throw new Error('FreeDSP editor unavailable');
-   showSyncing();try{await attachFreeDsp(device).flash(editor);log('FreeDSP Flash協定完成；請以USB完全斷電重接且不RAM Sync驗證持久性。');}finally{hideSyncing();}return true;
+   showSyncing();try{await attachFreeDsp(device).flash(editor);log('FreeDSP Flash save acknowledged; not an independent readback or power-cycle check.');}finally{hideSyncing();}return true;
  }
 	if (!confirm("Save to permanent memory? The settings will load automatically when you power on the DAC.")) return;
 
@@ -1505,7 +1505,7 @@ function encodeToByteArray(coeffs: number[]) {
  * Advanced settings commands (Savitech CB5100 DSP)
  */
 export async function setDacFilter(device: HIDDevice, filterType: string) {
- if(isFreeDsp(device)){log("FreeDSP 此utility UNKNOWN／停用；沒有送出。");return;}
+ if(isFreeDsp(device)){log("FreeDSP utility excluded from production support; no hardware command sent.");return;}
 	let r = 1;
 	switch (filterType) {
 		case "FAST-LL": r = 1; break;
@@ -1521,7 +1521,7 @@ export async function setDacFilter(device: HIDDevice, filterType: string) {
 }
 
 export async function setDacWorkMode(device: HIDDevice, isClassAB: boolean) {
- if(isFreeDsp(device)){log("FreeDSP 此utility UNKNOWN／停用；沒有送出。");return;}
+ if(isFreeDsp(device)){log("FreeDSP utility excluded from production support; no hardware command sent.");return;}
 	const r = isClassAB ? 1 : 0;
 	log(`Setting Amp Mode: ${isClassAB ? "Class AB" : "Class H"}`);
 	await sendPacketSavitech(device, [1, 29, 1, r]);
@@ -1529,7 +1529,7 @@ export async function setDacWorkMode(device: HIDDevice, isClassAB: boolean) {
 }
 
 export async function setDacOutputGain(device: HIDDevice, isHighGain: boolean) {
- if(isFreeDsp(device)){log("FreeDSP 此utility UNKNOWN／停用；沒有送出。");return;}
+ if(isFreeDsp(device)){log("FreeDSP utility excluded from production support; no hardware command sent.");return;}
 	const r = isHighGain ? 1 : 0;
 	log(`Setting DAC Output Gain Mode: ${isHighGain ? "HIGH" : "LOW"}`);
 	await sendPacketSavitech(device, [1, 25, 1, r]);
@@ -1537,7 +1537,7 @@ export async function setDacOutputGain(device: HIDDevice, isHighGain: boolean) {
 }
 
 export async function setDacBalance(device: HIDDevice, balance: number) {
- if(isFreeDsp(device)){log("FreeDSP 此utility UNKNOWN／停用；沒有送出。");return;}
+ if(isFreeDsp(device)){log("FreeDSP utility excluded from production support; no hardware command sent.");return;}
 	log(`Setting DAC Balance: ${balance}`);
 	const he = balance <= 0 ? Math.abs(balance) : 0;
 	const ne = balance > 0 ? balance : 0;
@@ -1561,7 +1561,7 @@ export async function setDacBalance(device: HIDDevice, balance: number) {
 }
 
 export async function setMicVolume(device: HIDDevice, volume: number) {
- if(isFreeDsp(device)){log("FreeDSP 此utility UNKNOWN／停用；沒有送出。");return;}
+ if(isFreeDsp(device)){log("FreeDSP utility excluded from production support; no hardware command sent.");return;}
 	log(`Setting Microphone Gain: ${volume} dB`);
 	await sendPacketSavitech(device, [1, 2, 2, 128, volume]);
 	await delay(50);
@@ -1571,7 +1571,7 @@ export async function setMicVolume(device: HIDDevice, volume: number) {
 let refreshTimeoutId: any = null;
 
 export async function refreshToFlash(device: HIDDevice) {
- if(isFreeDsp(device)){log("FreeDSP 此utility UNKNOWN／停用；沒有送出。");return;}
+ if(isFreeDsp(device)){log("FreeDSP utility excluded from production support; no hardware command sent.");return;}
 	if (refreshTimeoutId) {
 		clearTimeout(refreshTimeoutId);
 	}
@@ -1646,7 +1646,7 @@ export function queueRealtimeBandWrite(device: HIDDevice, band: Band) {
 }
 
 export async function executeFactoryReset(device: HIDDevice) {
- if(isFreeDsp(device)){log("FreeDSP 此utility UNKNOWN／停用；沒有送出。");return;}
+ if(isFreeDsp(device)){log("FreeDSP utility excluded from production support; no hardware command sent.");return;}
 	log("Executing Factory Reset...");
 	showSyncing();
 	try {
@@ -1660,6 +1660,6 @@ export async function executeFactoryReset(device: HIDDevice) {
 
 export async function restoreFreeDspUnity(){
  const d=getDevice();if(!d || !isFreeDsp(d))return;
- if(!confirm(freeDspOverwriteWarning+'\n將全九段雙聲道RAM覆寫為unity，不修改LOCAL EDITOR、不保存Flash。繼續？'))return false;
+ if(!confirm(freeDspOverwriteWarning+'\nRestore all nine bands on both channels to unity in RAM. Local Editor and Flash remain unchanged. Continue?'))return false;
  showSyncing();try{await attachFreeDsp(d).sync([],true);}finally{hideSyncing();}return true;
 }
