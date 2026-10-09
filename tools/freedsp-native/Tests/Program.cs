@@ -557,6 +557,20 @@ async Task RunTransportBridgeMock(){
   using var response=System.Text.Json.JsonDocument.Parse(await result.Content.ReadAsStringAsync());Check(response.RootElement.GetProperty("reply").GetString()==Convert.ToBase64String(NonMatch(188)),"Raw response passed through");
  }finally{cancellation.Cancel();await server;}
 }
+
+Test("Readback HTTP authenticated fixed pollNineEq; no mutation/request commands; busy gate",()=>RunReadbackBridgeMock().GetAwaiter().GetResult());
+async Task RunReadbackBridgeMock(){
+ using var cancellation=new CancellationTokenSource();var ready=new TaskCompletionSource<string>(TaskCreationOptions.RunContinuationsAsynchronously);var hold=new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);var calls=new System.Collections.Concurrent.ConcurrentQueue<string>();
+ var server=DebugBridge.RunAsync(async(operation,json)=>{calls.Enqueue(operation);Check(json=="","No caller command data");await hold.Task;return new {ok=true,exitCode=0,readback=new{completeQuerySet=true},log="FAKE READ ONLY CHILD"};},cancellation.Token,0,url=>ready.SetResult(url),diagnostics:false);
+ try{using var client=new HttpClient();var url=await ready.Task.WaitAsync(TimeSpan.FromSeconds(10));client.DefaultRequestHeaders.Add("Origin",DebugBridge.Origin);
+  Check((int)(await client.PostAsync(url+"/readback",null)).StatusCode==403&&calls.Count==0,"Token required");using var handshake=System.Text.Json.JsonDocument.Parse(await client.GetStringAsync(url+"/session"));client.DefaultRequestHeaders.Add("X-AuraPEQ-Session",handshake.RootElement.GetProperty("token").GetString());
+  var first=client.PostAsync(url+"/readback",null);for(int i=0;i<100&&calls.Count==0;i++)await Task.Delay(5);
+  Check((int)(await client.PostAsync(url+"/readback",null)).StatusCode==409&&calls.Count==1,"No overlapping read/write child");
+  hold.SetResult();Check((await first).IsSuccessStatusCode&&calls.Single()=="pollNineEq","Only fixed nine known read query operation");
+  client.DefaultRequestHeaders.Remove("Origin");client.DefaultRequestHeaders.Add("Origin","https://evil.example");Check((int)(await client.PostAsync(url+"/readback",null)).StatusCode==403&&calls.Count==1,"Foreign request rejected");
+ }finally{hold.TrySetResult();cancellation.Cancel();await server;}
+}
+
 if(args.Length==2 && args[0]=="--export-m2s")File.WriteAllText(args[1],System.Text.Json.JsonSerializer.Serialize(M2sVectors(),new System.Text.Json.JsonSerializerOptions{WriteIndented=true}));
 byte[] FlashPacket(int command,int[] words){
  var b=new byte[62];b[0]=1;BinaryPrimitives.WriteUInt32LittleEndian(b.AsSpan(2),13u|((uint)command<<16));

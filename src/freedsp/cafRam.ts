@@ -6,12 +6,17 @@ import type {CafResponse} from './cafCodec.ts';
 import {modelWebBand,validateBands,analyzeSafety,unityPreset} from './webRam.ts';
 import {buildFlashPlan,executeFlashPlan,saveFlashRecovery} from './flash.ts';
 export type CafCommand=188|187|346|190|90|220;
-export interface CafTransport{readonly supportsFlash?:boolean;exchange(command:CafCommand,data:Uint8Array):Promise<CafResponse>;dispose():void;}
+export interface CafTransport{readonly supportsFlash?:boolean;exchange(command:CafCommand,data:Uint8Array):Promise<CafResponse>;readback?():Promise<unknown>;dispose():void;}
 const rates=[4,5,6,7,8];
 export class CafRamSession {
  private busy=false;private stopped=false;private disposed=false;
  constructor(private transport:CafTransport,private log:(s:string)=>void){}
  dispose(){this.disposed=true;this.transport.dispose();}
+ async readback(){
+   if(this.busy || this.disposed || !this.transport.readback)throw new Error('FreeDSP readback BUSY/unavailable');
+   this.busy=true;
+   try{const r=await this.transport.readback();if(this.disposed)throw new Error('Stale readback');return r;}finally{this.busy=false;}
+ }
  async flash(value:Band[],save=saveFlashRecovery){
    if(this.busy || this.disposed || this.stopped)throw new Error('FreeDSP BUSY／STOP；Flash不可重試，請重新連線。');
    if(this.transport.supportsFlash!==true)throw new Error('Native Flash transport required');
