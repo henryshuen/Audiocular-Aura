@@ -8,11 +8,14 @@ export const freeDspControlEvidence = {
 
 const originalTitles = new Map<HTMLElement, string | null>();
 const originalLabels = new Map<HTMLElement, {text: string; i18n: string | null}>();
+const originalDisplays = new Map<HTMLElement,string>();
 /** Called only when entering/leaving the exact FreeDSP UI. Other DACs keep their UI. */
 export function configureFreeDspControlNotes(active: boolean, doc: Document = document) {
   const note = doc.getElementById('freeDspControlNote');
   if (note) note.hidden = !active;
   if (!active) {
+    for(const [element,display] of originalDisplays)element.style.display=display;
+    originalDisplays.clear();
     for (const [element, title] of originalTitles) {
       if (title === null) element.removeAttribute('title'); else element.setAttribute('title', title);
     }
@@ -23,6 +26,8 @@ export function configureFreeDspControlNotes(active: boolean, doc: Document = do
     originalTitles.clear(); originalLabels.clear();
     return;
   }
+  const preamp=doc.getElementById('preampControls');
+  if(preamp){if(!originalDisplays.has(preamp))originalDisplays.set(preamp,preamp.style.display);preamp.style.display='none';}
   for (const [ids, reason] of [
     [['globalGainSlider', 'checkAutoPreamp'], freeDspControlEvidence.preamp.reason],
     [['sliderBalance'], freeDspControlEvidence.balance.reason],

@@ -29,6 +29,10 @@ class Element {
  classList={add:vi.fn(),remove:vi.fn()};
 }
 describe('Final production UX — offline only',()=>{
+ it('hides only FreeDSP preamp space, restoring the original display for other devices',()=>{
+  const preamp=new Element();preamp.style.display='flex';const doc={getElementById:(id:string)=>id==='preampControls'?preamp:null} as unknown as Document;
+  configureFreeDspControlNotes(true,doc);expect(preamp.style.display).toBe('none');configureFreeDspControlNotes(true,doc);configureFreeDspControlNotes(false,doc);expect(preamp.style.display).toBe('flex');
+ });
  it('relabels editor/readback and local counter, English under retranslation, then restores original other-DAC labels',()=>{
   const nodes=Object.fromEntries(['lastAppliedEqLabel','infoSlotsLabel','infoSampleRateLabel','preampStepIndicator','micMonitorStatus'].map(id=>[id,new Element()]));
   const doc={getElementById:(id:string)=>nodes[id]??null} as unknown as Document;
