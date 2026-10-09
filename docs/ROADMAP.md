@@ -1,4 +1,31 @@
 
+### Offline verification / scope — controlled wire2 polling
+- Isolated native testbuild PASS;86offline/mock tests PASS(7newwire2 groups). IncludesexistingRAM18/Flash56/normalHTTP/oldreadbackgolden/mock regressions;nohardwareaccess.
+- Initialnewwrong-commandtest changedonly446'slowbyte(also190);corrected tofullcommandfield. Rerun86testsPASS. No production defect inferred from that test-fixture mistake.
+- PowerShelllauncherAST parse andpartialJSON/StreamWriterroundtrip PASS. Actualhardwarelauncher notexecuted;no devserver/buildrelease/PR/release.
+- FreeDSP-specific files changed:isolatedWire2Polling andnewlauncher;nativeProgram/SafeRam onlyopt-in fixedCLI registration/conditionaldiagnosticbanner.
+- Analysis/test files changed:7nativewire2mockgroups andfreeDspWire2Polling.md;fourdocs/Issue3pack updated.
+- Sharedfrontend/runtime files changed:NONE. Native normalHTTP/CAFparser/oldreadback/transportexchange/RAM190/Flash220/writealgorithms unchanged.
+- Non-FreeDSP protocol code changed:NO. FullReadback/source/enabled/stereo/freshness/CONNECTbaseline remainBLOCKED. READY FOR SINGLE HARDWARE QUERY only.
+
+## Latest — Controlled446 path0 / wire2 polling ready (2026-10-09)
+### Problem / hypothesis / next action
+Observed problem:Henry'sactual446wire2GETreturnedreply0/clearedslot andoldreadbackdiagnosticstoppedfirstGET;noevidencewhetherlaterGETcompletes.
+Verified facts:officialSDKGET-onlywaiting isbounded;newisolatedfixedquerynowimplementsstrictboundedwaitingandraw/timing/API/correlationcapture. Allotherqueries/transports/writesunchanged.
+Possible causes:firmwarepending/intermediatebuffer orcached/partialreport;currentcapturedoesnotidentifysource. Same-tuplefreshnessremainsunverifiable.
+Ruled out / weakened:exactcurrentTXecho/earlierloggedreplyreplayalreadyexcluded;newtestsensurewrong/stalewire1/path/command/module andunsupportedformatsneveraccepted. Syntheticdelayedmatchisnotactualhardwareevidence.
+Next validation:Henryexecutes scripts/query-freedsp-446-wire2.ps1 once;exact35D8:1496 CAFgate,one446[path0,wire2]SET,boundedGET-only. RecordknownEQ/actionhistory,closeotherreaders,preservelog/final/partialJSON,noauto-repeatorchanges.
+Possible fix direction:matchingdelayedreplywouldsupportpendinginterpretationonly;retainBLOCKEDuntilsource/enabled/stereo/freshnessandremainingbandsresolved. NoautomaticCONNECT/readbackbaseline.
+
+### Research checkpoint
+- Examined:prioractualwire2reply,pinnedSDKpolling,nativeidentity/scopedallowlist,oldCAFdiagnosticandlauncher.
+- Verified facts:singlequeryimplementation andoffline7newtestgroups;oneSET,boundedGET,timestampedrawrecords,stricttuple/formatSTOP,partialJSON persisted.
+- Hypotheses:GET-onlywaitingmayallow446tofinish;notprovedonhardware.
+- Discarded:pendingreply0ascoefficientdata;GETwaitrequiresresendingSET;matchingframeprovescurrentRAM/stereo/freshness.
+- Unresolved:actualnextGETresponse andslot-clearingorigin,source/enabled/stereo/same-tuplefreshness.
+- Next search target:Henry'sseparateonequerytracewithoperationtimeline. READY FOR SINGLE HARDWARE QUERY,notReadbackPASS.
+
+
 ### Offline verification / scope — physical capture analysis
 - Focused3files/30tests PASS(capture8,staticreadback8,Flash14);complete npm test PASS:TypeScript test check and30files/297tests. Native isolated testbuild/79mock tests PASS including actual-capture replay;localhostHTTPmock/fakechild only,noHID access.
 - Initial analysis-tool/test integration exposed Windows newline normalization andtest-extension discovery issues;normalizedredactedlog/matchedconfigured.test.ts pattern. Hash/TX/RX consistency,redaction andall8capturetests subsequentlyPASS.
@@ -87,6 +114,14 @@ Next validation: manual UX acceptance, without automatic CONNECT writes. Reset w
 Possible fix direction: keep truthful local/device state separation and exact-device guards; extend readback only after full field/source proof. Preserve frozen controls and proven RAM/Flash algorithms.
 
 ## Evidence for upstream / Issue #3
+
+### Controlled single446 wire2 waiting — offline ready
+- Added opt-in fixed446[path0,wire2] CLI/launcher:exact35D8:1496 MI03CAF,oneSET,max1sGET-only/5ms/max201GET,ownedchild30s hardstop. No346/477/190/220/mode/reset/additionalSET;normalHTTP/CONNECT/RAM/Flash unchanged.
+- Knownrequest-shapedreply0 ispendingonly;completedreplyrequires446/CTRL/reply1/path0/wire2/count8/knownsigned24format. Wrong/stalewire1/unrelated/malformed/APIerror/disconnect stop;latecompletioncannotPASS.
+- Everybuffer/time/API/correlationrecordsstreamedlog/partialJSON;finalJSONexplicitfreshnessVerified=false/productionEligible=false. Same-tupleoldreplieslackrecoverednonce;matchingframeNOTcompleteDeviceEQorhardwarePASS.
+- Actualreply0→syntheticmatchingreply testedoffline,notphysicalcompletionevidence. Henry'sonce-onlyinvocationandcapturepathsdocumented in tests/freedsp/fixtures/freeDspWire2Polling.md.
+- READY FOR SINGLE HARDWARE QUERY. FullReadback/source/enabled/stereo/automaticCONNECT/deviceA-B remainBLOCKED;noPR/release.
+
 
 ### Henry first physical readback — offline analysis update
 - Actual exact35D8:1496 nativecapture:346success,9matching477replies,446wire1unity,446wire2reply0STOP;12querySET/12loggedGETbuffers,noqueryresend. OriginalJSON/loghashesretained;failedrawRXonlyinlog.

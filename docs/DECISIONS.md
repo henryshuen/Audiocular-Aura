@@ -1,3 +1,11 @@
+## 2026-10-09 — Isolate single446 wire2 GET-only polling
+- Offlinevalidation:86native/mock tests,isolatedbuild,PowerShellAST/partialJSONroundtrip anddiffcheck PASS. NoCodexhardwareaccess.
+- Implement poll446Wire2 / scripts/query-freedsp-446-wire2.ps1 separatelyfromold19querydiagnosticandnormalCAFHTTPtransport. Exactdevicegate/scopedbyte-equal446[path0,wire2] allowlist,no arbitraryarguments orothercommands. Normaloperationbranches unchanged.
+- Classifyonlyknownreply0 count13/path0/slot0-or2/zeroremainingpayload aspending. Do notparseitaseffect/coefficients. Reply1requirespath0/wire2/count8/supportedscaling0..25/signed24containers;conservativevalidationboundsarenotfirmwarelimits. Anywrongframe/error/disconnect STOP,noGETcontinuationexceptpending,noSETretry.
+- Deadline1s includesSET andGET,5ms wait/max201GET;latecompletedreplyrecordedbutrejected. ExistinguncancellableWin32callhasownedlauncher30s limit. AutoFlushedlog andstreamedpartialobservations/finalJSON retainraw/timing/API/correlationevidence.
+- Exit0/matchingframe doesnotprovefreshnessorDeviceEQsource. RecoveredCAFhasnoverifiednonce;samepath/wire stale replycannotbeuniquelydistinguished. Reportthisexplicitly;fullReadback/automaticCONNECT/deviceA-BstillBLOCKED.
+- Henry invokesonceafterclosingotherreadersandrecordingknownEQ/history. NoCodexhardwareexecution,noApp/Editorupdate,mode/EQ/Flash/resetoperations. See tests/freedsp/fixtures/freeDspWire2Polling.md.
+
 ## 2026-10-09 — Henry first physical readback analysis
 - Validation:297TS/Vitest tests,79native mocktests anddiffcheck PASS;onlyoffline/test/docs changes,fullReadbackBLOCKED.
 - Save hash-provenanced capture JSON andTX/RX-preserving instance-path-redacted log;retain failed446 raw RX from log because original JSON storesrx:null. Offline analyzer cross-checks both andseparates actual/synthetic cases.

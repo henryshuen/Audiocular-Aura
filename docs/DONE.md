@@ -1,4 +1,20 @@
 
+### Offline verification / scope — controlled wire2 polling
+- Isolated native testbuild PASS;86offline/mock tests PASS(7newwire2 groups). IncludesexistingRAM18/Flash56/normalHTTP/oldreadbackgolden/mock regressions;nohardwareaccess.
+- Initialnewwrong-commandtest changedonly446'slowbyte(also190);corrected tofullcommandfield. Rerun86testsPASS. No production defect inferred from that test-fixture mistake.
+- PowerShelllauncherAST parse andpartialJSON/StreamWriterroundtrip PASS. Actualhardwarelauncher notexecuted;no devserver/buildrelease/PR/release.
+- FreeDSP-specific files changed:isolatedWire2Polling andnewlauncher;nativeProgram/SafeRam onlyopt-in fixedCLI registration/conditionaldiagnosticbanner.
+- Analysis/test files changed:7nativewire2mockgroups andfreeDspWire2Polling.md;fourdocs/Issue3pack updated.
+- Sharedfrontend/runtime files changed:NONE. Native normalHTTP/CAFparser/oldreadback/transportexchange/RAM190/Flash220/writealgorithms unchanged.
+- Non-FreeDSP protocol code changed:NO. FullReadback/source/enabled/stereo/freshness/CONNECTbaseline remainBLOCKED. READY FOR SINGLE HARDWARE QUERY only.
+
+## 2026-10-09 — Controlled single446 wire2 diagnostic implemented offline
+- Added Wire2Polling fixedquery/classifier/GET-only loop andexactCLI registration. Preservedexistingexactdevice nativeHIDgate,oldreadback,normalHTTP,CONNECT andRAM190/Flash220 flows.
+- Added separate no-argumentPowerShelllauncher withisolatedhelperbuild,ownedchildtimeout,AutoFlushlog,incrementalpartialJSON andfinalJSONpaths. Actualscript/hardwarequerynotexecutedbyCodex.
+- Added7nativeoffline testgroups coveringactualpending→syntheticmatch,repeatedpendingtimeout,strictincorrect/stale tuple/format rejection,disconnect/API/exception/latecompletion,byte-exactallowlist andnormalHTTP rejection. NohardwareReadbackPASSclaim.
+- Status:READY FOR SINGLE HARDWARE QUERY;fullReadback remainsBLOCKED. Fourdocs/Issue3pack updated.
+
+
 ### Offline verification / scope — physical capture analysis
 - Focused3files/30tests PASS(capture8,staticreadback8,Flash14);complete npm test PASS:TypeScript test check and30files/297tests. Native isolated testbuild/79mock tests PASS including actual-capture replay;localhostHTTPmock/fakechild only,noHID access.
 - Initial analysis-tool/test integration exposed Windows newline normalization andtest-extension discovery issues;normalizedredactedlog/matchedconfigured.test.ts pattern. Hash/TX/RX consistency,redaction andall8capturetests subsequentlyPASS.

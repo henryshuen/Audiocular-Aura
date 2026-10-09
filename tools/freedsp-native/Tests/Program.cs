@@ -653,6 +653,64 @@ Test("Henry real readback capture replay: first replybit0 stops12th query; no ex
  Check(hid.Transmissions.Count==12&&hid.Calls.Count(c=>c=="GET")==12&&hid.Responses.Count==1,"No retry or secondGET");
  Check(log.ToString().Contains("Malformed reply: Reply bit is not 1"),"Exact observed failure reproduced");
 });
+byte[] Wire2Pending()=>Convert.FromHexString(File.ReadLines("tests/freedsp/fixtures/henryReadback20261009.log").Last(line=>line.StartsWith("RX "))[3..].Replace(" ",""));
+byte[] Wire2Reply(){var rx=ReadReply(ReadbackQuery.Plan()[11]);BinaryPrimitives.WriteInt32LittleEndian(rx.AsSpan(18),3);BinaryPrimitives.WriteInt32LittleEndian(rx.AsSpan(22),4194304);return rx;}
+Test("Wire2 fixed CLI/query allowlist exact bytes only; normalHTTP unchanged",()=>{
+ Check(SafeRam.IsOperation(["poll446Wire2"])&&!SafeRam.IsOperation(["poll446Wire2","1"]),"Opt-in fixed operation");
+ Check(Wire2Polling.Query().SequenceEqual(ReadbackQuery.Plan()[11].Bytes),"Source query exact446 path0 wire2");
+ var mutated=Wire2Polling.Query();mutated[14]=1;Check(!Wire2Polling.IsAllowed(mutated),"No other wire");
+ mutated=Wire2Polling.Query();mutated[10]=1;Check(!Wire2Polling.IsAllowed(mutated),"No other path");
+ mutated=Wire2Polling.Query();BinaryPrimitives.WriteUInt32LittleEndian(mutated.AsSpan(2),13u|(190u<<16));Check(!Wire2Polling.IsAllowed(mutated),"No EQ writes");
+ Throws(()=>new TransportRequest(Convert.ToBase64String(Wire2Polling.Query())).Bytes());
+ Throws(()=>HidCollection.SelectUnique([Target() with {ProductId=1}]));
+});
+Test("Wire2 actual reply0 followed by synthetic matching reply: oneSET twoGET, captures all",()=>{
+ using var hid=new MockHid(Wire2Reply());hid.Responses.Enqueue(Wire2Pending());var clock=new FakeClock();using var log=new StringWriter();
+ Check(Wire2Polling.Run(hid,log,clock)==0,"Matching frame only, no hardwarePASS");
+ Check(hid.Transmissions.Count==1&&hid.Calls.SequenceEqual(new[]{"SET","GET","GET"}),"OneSET no resend");
+ var line=log.ToString().Split('\n').Single(l=>l.StartsWith("WIRE2_POLL_JSON="));using var json=System.Text.Json.JsonDocument.Parse(line["WIRE2_POLL_JSON=".Length..]);
+ var root=json.RootElement;Check(!root.GetProperty("freshnessVerified").GetBoolean()&&!root.GetProperty("productionEligible").GetBoolean(),"No same-tuple freshness claim");
+ var observations=root.GetProperty("observations");Check(observations.GetArrayLength()==2&&observations[0].GetProperty("RawBase64").GetString()==Convert.ToBase64String(Wire2Pending()),"Failed/pending raw retained");
+ Check(observations[0].GetProperty("ElapsedMs").GetInt64()==0&&observations[1].GetProperty("ElapsedMs").GetInt64()==5,"Elapsed timings captured");
+ Check(log.ToString().Contains("fullReadback=BLOCKED"),"No readbackPASS");
+});
+Test("Wire2 repeated pending reaches bounded deadline with oneSET; exact query echo also pending",()=>{
+ foreach(var pending in new[]{Wire2Pending(),Wire2Polling.Query()}){
+  using var hid=new MockHid(pending);using var log=new StringWriter();var clock=new FakeClock();
+  Check(Wire2Polling.Run(hid,log,clock)==7&&hid.Transmissions.Count==1,"Timeout noSETretry");
+  Check(clock.TimeMs==1000&&hid.Calls.Count(c=>c=="GET")==200,"5ms deadline bound");
+  Check(log.ToString().Contains("RESULT TIMEOUT"),"STOP incomplete");
+ }
+});
+Test("Wire2 wrong command/module/path/wire, stale wire1 and malformed format STOP without further GET",()=>{
+ var variants=new List<byte[]>();
+ var b=Wire2Reply();BinaryPrimitives.WriteUInt32LittleEndian(b.AsSpan(2),0x80000008u|(190u<<16));variants.Add(b);b=Wire2Reply();b[6]=1;variants.Add(b);
+ b=Wire2Reply();b[10]=1;variants.Add(b);b=Wire2Reply();b[14]=1;variants.Add(b);
+ b=Wire2Reply();b[2]=7;variants.Add(b);b=Wire2Reply();b[2]=13;variants.Add(b);
+ b=Wire2Reply();b[18]=26;variants.Add(b);b=Wire2Reply();b[25]=1;variants.Add(b);
+ b=Wire2Reply();b[0]=2;variants.Add(b);b=Wire2Reply();b[1]=1;variants.Add(b);
+ b=Wire2Pending();b[14]=1;variants.Add(b);b=Wire2Pending();b[10]=1;variants.Add(b);
+ b=Wire2Pending();b[18]=3;variants.Add(b);
+ foreach(var rx in variants){using var hid=new MockHid(Wire2Reply());hid.Responses.Enqueue(rx);using var log=new StringWriter();
+  Check(Wire2Polling.Run(hid,log,new FakeClock())==7&&hid.Calls.SequenceEqual(new[]{"SET","GET"}),"StrictSTOP no laterGET/SET");}
+ Check(Wire2Polling.Classify(new byte[61]).Result=="STOP","Wrong API buffer size");
+});
+Test("Wire2 signed24 and zero-extended negative containers decode domain only",()=>{
+ foreach(int word in new[]{-8388608,-1,8388607,0xffffff}){var b=Wire2Reply();BinaryPrimitives.WriteInt32LittleEndian(b.AsSpan(26),word);Check(Wire2Polling.Classify(b).Result=="MATCH","Supported signed24 container");}
+});
+Test("Wire2 device disconnect and API errors preserve raw/error and STOP without SET retry",()=>{
+ using var hid=new MockHid(Wire2Reply());hid.GetResult=new(false,1167);using var log=new StringWriter();
+ Check(Wire2Polling.Run(hid,log,new FakeClock())==7&&hid.Calls.Count==2,"DisconnectSTOP");
+ Check(log.ToString().Contains("1167")&&log.ToString().Contains("buffer unconfirmed"),"Failure provenance");
+ using var failedSet=new MockHid(Wire2Reply());failedSet.SetResult=new(false,5);using var setLog=new StringWriter();
+ Check(Wire2Polling.Run(failedSet,setLog,new FakeClock())==7&&failedSet.Calls.SequenceEqual(new[]{"SET"}),"SETfailure noGET");
+});
+Test("Wire2 unexpected exception retains observation; late valid reply never accepted",()=>{
+ using var hid=new MockHid(Wire2Reply());hid.OnGet=()=>throw new InvalidOperationException("synthetic disconnect exception");using var log=new StringWriter();
+ Check(Wire2Polling.Run(hid,log,new FakeClock())==7&&hid.Calls.Count==2&&log.ToString().Contains("WIRE2_OBSERVATION_JSON="),"Exception partial capture no retry");
+ using var late=new MockHid(Wire2Reply());var clock=new FakeClock();late.OnGet=()=>clock.TimeMs=1001;using var lateLog=new StringWriter();
+ Check(Wire2Polling.Run(late,lateLog,clock)==7&&late.Calls.Count==2&&lateLog.ToString().Contains("RESULT TIMEOUT"),"GET blocked beyond budget rejected");
+});
 Console.WriteLine($"Native offline tests: {passed} passed; SYNTHETIC / MOCK ONLY; no hardware access.");
 return 0;
 

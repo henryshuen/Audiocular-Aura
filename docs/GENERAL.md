@@ -1,3 +1,8 @@
+## 2026-10-09 — Controlled446 wire2 waiting rule
+- Add only a separate opt-in poll446Wire2 diagnostic:fixed446/path0/wire2,oneSET,noadditionalqueries/resend. ProductionCONNECT/HTTP/writepaths/oldreadback behavior remainunchanged.
+- Known request-shapedreply0 maywaitGET-only,1s totalbudget/5msinterval/max201GET,ownedchild30s hardbound. Onlystrictmatchingreply1/path0/wire2/count8/knowncoefficientformat is a matchingframe;wrong/malformed/error/timeout stops.
+- Preserveeveryrawresponse,timing,APIerror/correlationandpartialJSON. Same-tuplefreshnesscannotbeprovenwithoutatransactiontoken;allresultsretainfreshnessVerified=false/productionEligible=false andfullReadbackBLOCKED. READY FOR SINGLE HARDWARE QUERY isoffline readiness,notReadbackPASS.
+
 ## 2026-10-09 — Physical readback evidence interpretation rule
 - Preserve full Readback BLOCKED:477 reply success is not active/stereo/source/enable confirmation. Henry's12-query capture confirms nine six-word477 rows andone unity446wire1 reply;wire2 is incomplete reply0,not EQ data.
 - A later official App nonflat screenshot with incomplete intervening history cannot establish stale/wrong-store replies. Require a recorded no-edit controlled comparison andactual nine App values,not a curve alone.
