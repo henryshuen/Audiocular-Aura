@@ -1,4 +1,32 @@
 
+### Offline verification / scope — physical capture analysis
+- Focused3files/30tests PASS(capture8,staticreadback8,Flash14);complete npm test PASS:TypeScript test check and30files/297tests. Native isolated testbuild/79mock tests PASS including actual-capture replay;localhostHTTPmock/fakechild only,noHID access.
+- Initial analysis-tool/test integration exposed Windows newline normalization andtest-extension discovery issues;normalizedredactedlog/matchedconfigured.test.ts pattern. Hash/TX/RX consistency,redaction andall8capturetests subsequentlyPASS.
+- No verify.ps1/buildrelease/devserver/hardware operation performed in this analysis round. Existing RAM18/Flash56goldens passed;no new hardware readback/source PASS claimed.
+- FreeDSP-specific files changed:static evidence extractor andoffline capture analyzer/declaration only.
+- Analysis/test files changed:primary hashedJSON,TX/RX-preserving redactedlog/provenance/derivedanalysis,detailedreport,capture8tests andnative mockreplay.
+- Shared runtime files changed:NONE. Native/diagnostic/HTTP transport,CAFparser,RAM190,Flash220 andproductionUI unchanged.
+- Non-FreeDSP protocol code changed:NO. Fourdocs/Issue3pack updated;fullReadback/automaticCONNECT/device-baselineA-B remainBLOCKED. NoPR/release.
+
+## Latest — Henry physical Readback capture offline analysis (2026-10-09)
+### Problem / hypothesis / next action
+Observed problem:477 nine complete replies are all0dB at a differentfrequencylayout;Henry reports nonflat savedEQ/later09:37officialApp. 446wire2 firstGET reply0/slot0 stopsdiagnostic.
+Verified facts:12SET/12loggedGETbuffers;477sixlogicalwordsforall9,matchingband1..9,rateRaw5,Hz60/120/260/530/1100/2260/4680/9680/20000,Qraw180/256=0.703125→App0.70,type0,gain0;446wire1unity. Failed446notexactecho/anypriorloggedframe,onlybyte14differsfromcurrentTX. SDKGETpollsreply0;oursfirstinvalidSTOP.Nativeofflinecapture replayconfirmsdifference.
+Possible causes:477persistent/custom/default-likebank distinctfromactivecoefficients;pending/cached/intermediate446buffer;shorttransferorunknownstale/concurrentreader/slot2behavior. Source/currentstateunconfirmed.
+Ruled out / weakened:exactcurrentTXecho,previousloggedwire1replyreplay,untouchedclientRXbuffer,obviousrequestslot/ID/endiannesserror,general446unsupported,Q100/Q1.8,currentfullreadbackPASS. LaterAppscreenshotwithouttimelinecannotprovestale477.
+Next validation:futurecontrolledknownnonflat/noeditstate;one446[path0,wire2]SETandstrictboundedGET-only,timestamps/raw/APIresults,neverSETresend. Thenfixedreadonly346[62]/346[90]/nine477/single446wire2vsactualAppninevalues withcompleteoperationhistory. No mode selection/190/220/reset;notrunthisround.
+Possible fix direction:isolatedopt-inreadonlydiagnosticmayeventuallytreatstructurallysoundreply0aspendingandwaitGET-only;neverchangevalidatedRAM/Flashoracceptpendingdata. Missingenabled/stereo/source/freshnessandremaining446retainBLOCKED.
+
+### Research checkpoint
+- Examined:actualJSONandlog,SDK477/getEQParamsFromFlash/getEQMode/readDataFromDevice/getMsgByCmd/isExecuteSuccess/formatDecimal;nativefreshbuffer/interop/CAFparser/diagnosticvsnormaltransport;existingwriteplans.
+- Verified facts:fieldmatrix/wholecapturecomparisonandoriginalhashes;Q2decimalHALF_UP;exactfailedbyte14;nativefailfastreproduced,safeboundedGETcandidateonlyoffline.
+- Hypotheses:477othermetadata/defaultbank,446activecoefficients,firmwarependingbuffer. Nosourceproven.
+- Discarded:wholepacketexactechoofcurrentorpreviousrecordedframe;Qdivider100;unityuniquelyrevealsoriginalmetadata;assuminglater09:37image issynchronous.
+- Unresolved:slotclearingphysicalorigin,actualtransferlength,nextGETbehavior,savedmode/store,currentratebanksemantics,enabled,stereo,freshness andoperationtimeline.
+- Next search target:controllednext-roundreadonlycomparison,timestampedtracesandoriginalAppparameters. NoPR/release/fullReadbackPASS.
+- Detailed evidence:tests/freedsp/fixtures/freeDspReadbackCaptureAnalysis.md;offlineonlytool scripts/freedsp/analyze-readback.mjs.
+
+
 ### Automated verification / scope — required readback round
 - Focused4files/66tests PASS:static getter/units,synthetic nine replies,malformed/stale band/opaque446/source ambiguity,nonunique unity,actual canvas active/A-B response extension,connection races/no auto writes/gain/reset/RAM/Flash regression.
 - Native isolated build PASS;78offline/mock tests PASS including19fixedqueries,mutation/HTTP allowlist rejection,partial/error/stale477/timeout andwrong-device gate. Initial loopback socket10013 sandbox failure resolved with permission forlocalhost mock/fakechild only;noHID access.
@@ -59,6 +87,16 @@ Next validation: manual UX acceptance, without automatic CONNECT writes. Reset w
 Possible fix direction: keep truthful local/device state separation and exact-device guards; extend readback only after full field/source proof. Preserve frozen controls and proven RAM/Flash algorithms.
 
 ## Evidence for upstream / Issue #3
+
+### Henry first physical readback — offline analysis update
+- Actual exact35D8:1496 nativecapture:346success,9matching477replies,446wire1unity,446wire2reply0STOP;12querySET/12loggedGETbuffers,noqueryresend. OriginalJSON/loghashesretained;failedrawRXonlyinlog.
+- 477 count6/nativeoffsets10/14/18/22/26/30→rateRaw5/band1..9/frequencies60,120,260,530,1100,2260,4680,9680,20000/Qraw180/type0/gain0. PrimarySDKQ/256plus2decimalHALF_UP→0.70. Rawfieldsverified;active/current/stereo/enabled/sourceNOTverified.
+- 446wire1 `[0,1,3,4194304,0,0,0,0]` isunity. Failedwire2count13/reply0/allzerowords;onlybyte14(slot2→0)differsfromcurrentTX. Notexactechooranypriorloggedreply. Pending/cached/shorttransfer/unknownstalecausesunresolved.
+- SDKreadDataFromDevicecontinuesboundedGETwhenreply0,noSETresend. CurrentReadbackQueryabortsfirstinvalidreply;existingnormaltransport/writepathsunchanged. Nativecapturemockreproducesfailure;GET-onlycandidateisofflinefeasibility,nothardwarefixPASS.
+- SDKgetEQParamsFromFlashqueries savedmode346[90] then477;no477bankargument/modesetter. Separatepersistentmetadata/activecoefficients/defaultbankarehypotheses. Henry'slater09:37nonflatAppscreenshothasincompletetimeline,sodoesnotproveoutdated477.
+- Nextcontrolledreadonlyexperiment:knownnonflat/recordedhistory,single446wire2SETandboundedGET-only,thenmode/rate/477vsAppvalueswithoutedits;no190/220/mode/reset. FullReadback/automaticCONNECT/deviceA-BstillBLOCKED;noPR.
+- Fullmatrix/candidateexclusions/proposedcontrols:tests/freedsp/fixtures/freeDspReadbackCaptureAnalysis.md.
+
 
 ### Required readback gate — current 2026-10-09 evidence
 - Physical exact-device CAF collection remains35D8:1496 MI03,consumer usage0x0c/1,ID1/output61data bytes/native62;Windows Input GET_REPORT transport requirement unchanged.

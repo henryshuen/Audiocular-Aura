@@ -1,4 +1,20 @@
 
+### Offline verification / scope — physical capture analysis
+- Focused3files/30tests PASS(capture8,staticreadback8,Flash14);complete npm test PASS:TypeScript test check and30files/297tests. Native isolated testbuild/79mock tests PASS including actual-capture replay;localhostHTTPmock/fakechild only,noHID access.
+- Initial analysis-tool/test integration exposed Windows newline normalization andtest-extension discovery issues;normalizedredactedlog/matchedconfigured.test.ts pattern. Hash/TX/RX consistency,redaction andall8capturetests subsequentlyPASS.
+- No verify.ps1/buildrelease/devserver/hardware operation performed in this analysis round. Existing RAM18/Flash56goldens passed;no new hardware readback/source PASS claimed.
+- FreeDSP-specific files changed:static evidence extractor andoffline capture analyzer/declaration only.
+- Analysis/test files changed:primary hashedJSON,TX/RX-preserving redactedlog/provenance/derivedanalysis,detailedreport,capture8tests andnative mockreplay.
+- Shared runtime files changed:NONE. Native/diagnostic/HTTP transport,CAFparser,RAM190,Flash220 andproductionUI unchanged.
+- Non-FreeDSP protocol code changed:NO. Fourdocs/Issue3pack updated;fullReadback/automaticCONNECT/device-baselineA-B remainBLOCKED. NoPR/release.
+
+## 2026-10-09 — Physical readback analyzed offline
+- Located Henry'sactualreadback files,hashedoriginalJSON/log,preservedJSONbytes,redacteddeviceinstancepaths onlyandnormalizedloglineendings. Cross-checked12TX/12GETbuffers,extracted failedRX omittedbyJSON.
+- Added deterministic offline captureanalyzer/typedinterface/savedanalysisand8capturetests;extendedpinnedstaticextractorwithofficialQdecimalroundingmethod. Verified477ninefullrows,446wire1unity,andfailed446byte14difference againsteveryloggedTX/RX.
+- Added native mockreplayofactualcapture;reproducesSTOPat12thquery/firstreply0,withsyntheticlaterreplyleftunread. Nohardwarecommandsorproduction/diagnostic runtimechanges.
+- Recorded Henry'snonflatstate/later09:37Appscreenshotasuserobservationwithtimingconfound. UpdatedfourdocsandIssue3pack;fullReadback/DeviceA-Bgate remainsBLOCKED.
+
+
 ### Automated verification / scope — required readback round
 - Focused4files/66tests PASS:static getter/units,synthetic nine replies,malformed/stale band/opaque446/source ambiguity,nonunique unity,actual canvas active/A-B response extension,connection races/no auto writes/gain/reset/RAM/Flash regression.
 - Native isolated build PASS;78offline/mock tests PASS including19fixedqueries,mutation/HTTP allowlist rejection,partial/error/stale477/timeout andwrong-device gate. Initial loopback socket10013 sandbox failure resolved with permission forlocalhost mock/fakechild only;noHID access.

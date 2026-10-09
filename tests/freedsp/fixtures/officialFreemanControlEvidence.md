@@ -1,3 +1,5 @@
+> 2026-10-09 unit correction: pinned DEX getter divisor1132462080 is float256; saved metadata multiplier4643211215818981376 is double256. Historical Q*100 table text was derived incorrectly. This corrects documentation only; validated write algorithms are unchanged.
+
 # Control Research Round 3/4 — bounded Freeman/CAF closure
 
 Pinned official APK: v2.25.0c-260813ai102034, retrieved2026-10-07;
@@ -30,12 +32,12 @@ Zero-initialized array capacity/tail is not additional control evidence.
 |187|setEQCFGIsBypass setter|one word[0], getCmd at32|EQ bypass configuration in source; other values unproven, not master mute|
 |188|setFreeman3EQEnabled setter|[1,0...] getCmd at34; send result assigned local enabled flag|EQ enable prerequisite, not attenuation; no independent188 getter in recovered class|
 |190|setDefaultAvailable and setFreeman3EQ setters|[path,slot,coefficientExponent,B0,B1,B2,A0,A1,0...]|per-slot coefficient writes; paths0/1 physical LEFT/RIGHT from Henry, not global gain|
-|220|saveEQParamsToFlash setter|metadata[0,band,frequency,trunc(Q*100),filterType,trunc(bandGain),0...]; coefficient[rateIndex,band,exponent,B0,B1,B2,A0,A1,0...]; commit[255,0...]|EQ persistence; no global section. Noncustom branch skips coefficient loops and reaches commit; not gain|
+|220|saveEQParamsToFlash setter|metadata[0,band,frequency,trunc(Q*256),filterType,trunc(bandGain),0...]; coefficient[rateIndex,band,exponent,B0,B1,B2,A0,A1,0...]; commit[255,0...]|EQ persistence; no global section. Noncustom branch skips coefficient loops and reaches commit; not gain|
 |259|getDeviceChipCode / getFwVersion getters|chip query[1,0,0,0] -> int at10; firmware query13zero words -> four ints10/14/18/22|identity/version, no gain capability declaration|
 |346|getCurSampleRate/getEQMode/getFeatureConfigFM3 getters|word0 subkey62/90/84/64; return at14|rate, saved mode, availability/enabled flags respectively; unknown bits/tail stay unknown|
 |442|getFreeman3EQConfig getter|13zero words -> int at10 -> SAMPLE_RATE_ARRAY -> DEFAULT_FREEMAN3_SAMPLERATE|only sample-rate index interpreted; other returned words unknown, no named gain|
 |446|getFreeman3EQParam and getF3EQCoefficientList getters|[0,slot,0...]; exponent byte18, B0/B1/B2/A0/A1 ints22/26/30/34/38|per-band coefficients. List enumerates raw1..9; single SDK getter uses band+5; feedback/24-bit conversions are coefficient semantics|
-|477|getEQParamList getter|request[band1..9,0...]; response sampleRate10,band14,freq18,Q*100 at22,filterType26,signed bandGain30|nine EQParam entries; no master/global gain section|
+|477|getEQParamList getter|request[band1..9,0...]; response sampleRate10,band14,freq18,Q*256 at22,filterType26,signed bandGain30|nine EQParam entries; no master/global gain section|
 
 getFreeman3EQParam feeds returned coefficients into CxAudioConvertCoeffs2EqParams
 and derives filterType/frequency/Q/bandGain. getF3EQCoefficientList obtains

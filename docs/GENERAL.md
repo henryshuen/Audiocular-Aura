@@ -1,3 +1,9 @@
+## 2026-10-09 — Physical readback evidence interpretation rule
+- Preserve full Readback BLOCKED:477 reply success is not active/stereo/source/enable confirmation. Henry's12-query capture confirms nine six-word477 rows andone unity446wire1 reply;wire2 is incomplete reply0,not EQ data.
+- A later official App nonflat screenshot with incomplete intervening history cannot establish stale/wrong-store replies. Require a recorded no-edit controlled comparison andactual nine App values,not a curve alone.
+- Future read-only waiting may add strictly bounded GET_REPORTs for the original fixedquery,never resend SET. Do not weaken identity/CTRL/command/count/slot candidate checks,modify RAM190/Flash220,or copy SDK first-connect initialization. No diagnostic/production transport change in this offline round.
+- Frequency/Q are returned metadata;180/256 rounds to0.70 in official App. Do not confuse nominalQ display,coefficient scaling,enabled state,preset identity orhardware wire frequency. Original metadata/raw values stay distinct.
+
 # AuraPEQ FreeDSP Development Rules
 
 ## 2026-10-09 — Device EQ readback is a required upstream PR gate

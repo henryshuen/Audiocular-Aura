@@ -1,3 +1,13 @@
+## 2026-10-09 — Henry first physical readback analysis
+- Validation:297TS/Vitest tests,79native mocktests anddiffcheck PASS;onlyoffline/test/docs changes,fullReadbackBLOCKED.
+- Save hash-provenanced capture JSON andTX/RX-preserving instance-path-redacted log;retain failed446 raw RX from log because original JSON storesrx:null. Offline analyzer cross-checks both andseparates actual/synthetic cases.
+- Confirmed physical rows:477 all9 reply1/count6/band echo,Hz60/120/260/530/1100/2260/4680/9680/20000,Qraw180,type0,gain0,rateRaw5. New primary CommonUtil.formatDecimal is2decimal HALF_UP,soQ0.703125→0.70. These are returned field values,not full current/stereo Device EQ HARDWARE PASS.
+- Confirmed446wire1 unity;failedwire2 reply0/count13/allzero payload differs fromcurrentTX onlybyte14(slot2→0),not equal toanylogged earlierTX/RX. Exactecho/previousrecordedreply replay excluded;pending/cached/short transfer/unknownstale/concurrent-reader/slot-specific causes unresolved.
+- Official SDK waits for replybit1 with GET-only polling;currentdiagnostic aborts first invalidCAF,whileexisting normaltransport has its own boundedpolling. Native mock reproduces first-failure STOP. Leave allruntime unchanged;simulate prospective GET-only waiting offline withstrictguards,notSDK'sweakmatching.
+- 477 SDKpersistent/custommetadata versus446 activecoefficients remains leading sourcehypothesis. SDKqueries savedmode346[90] before477 butdoesnotpassmode/bank orissueanysetter;missingmodequery isobservabilitygap,notpermissiontoselectmode. NoFlashfailure/persistence regressionclaim.
+- Henry reports nonflat savedstate/later09:37Appscreenshot,butinterveningoperationhistoryincomplete. No synchronized mismatch proof orstaleness conclusion. Nextminimaltest proposal:knownnonflat/recordedhistory,single446wire2SET,boundedGET-only;thencontrolledmode/rate/477comparison,noedits/writes. Notimplementedorrunthisround.
+- Automatic CONNECT / device-derived immutableA/editableB stillBLOCKED. See tests/freedsp/fixtures/freeDspReadbackCaptureAnalysis.md.
+
 ## 2026-10-09 — Device EQ readback is a required acceptance gate
 - Henry requires exact-device complete nine-band readback before upstream PR/release, unless he explicitly revises this gate. Existing RAM/Flash/persistence and latest gain/reset/reconnect hardware results remain Henry-reported PASS; they do not prove our getters.
 - Pinned official APK primary DEX confirms Flutter getEQParamsFromFlash→477 nine metadata fields and446 path0 coefficient getter. Q477 is /256; supersedes older derived Q*100 note. Gain metadata is integer dB; coefficient Gain is scaling exponent. SDK persistent getter naming is evidence of intent, not verified firmware provenance.

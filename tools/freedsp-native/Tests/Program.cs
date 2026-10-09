@@ -638,6 +638,21 @@ Test("Readback wrong-command timeout never resends and retains local state by is
  Check(hid.Calls.Count<=202,"1sec bound");
 });
 Test("Readback invalid device rejected by same mandatory discovery gate",()=>Throws(()=>HidCollection.SelectUnique([Target() with {ProductId=1}])));
+Test("Henry real readback capture replay: first replybit0 stops12th query; no extra GET/SET",()=>{
+ using var json=System.Text.Json.JsonDocument.Parse(File.ReadAllText("tests/freedsp/fixtures/henryReadback20261009.json"));
+ var lastRx=File.ReadLines("tests/freedsp/fixtures/henryReadback20261009.log").Last(line=>line.StartsWith("RX "));
+ var failed=Convert.FromHexString(lastRx[3..].Replace(" ",""));
+ var parsed=Caf346.Parse(failed);Check(!parsed.Valid&&parsed.Command==446&&parsed.Count==13&&parsed.CapacityWords.All(w=>w==0),"Actual failure semantics");
+ using var hid=new MockHid(failed);
+ foreach(var record in json.RootElement.GetProperty("records").EnumerateArray()){
+  var rx=record.GetProperty("rx");hid.Responses.Enqueue(rx.ValueKind==System.Text.Json.JsonValueKind.Null?failed:Convert.FromBase64String(rx.GetString()!));
+ }
+ // Synthetic possible later reply is deliberately NOT fetched by current code.
+ hid.Responses.Enqueue(ReadReply(ReadbackQuery.Plan()[11]));using var log=new StringWriter();
+ Check(ReadbackQuery.Run(hid,log,()=>new FakeClock())==7,"Current diagnostic STOP");
+ Check(hid.Transmissions.Count==12&&hid.Calls.Count(c=>c=="GET")==12&&hid.Responses.Count==1,"No retry or secondGET");
+ Check(log.ToString().Contains("Malformed reply: Reply bit is not 1"),"Exact observed failure reproduced");
+});
 Console.WriteLine($"Native offline tests: {passed} passed; SYNTHETIC / MOCK ONLY; no hardware access.");
 return 0;
 

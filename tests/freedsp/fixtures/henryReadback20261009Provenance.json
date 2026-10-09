@@ -1,0 +1,8 @@
+{
+  "captureDate": "2026-10-09",
+  "sourceDirectory": "C:\\Users\\Henry\\AppData\\Local\\Temp\\AuraPEQ\\readback-3d3edbdaae6445949be15964a29f29af",
+  "jsonSha256": "0ba9edf4fa67101c87b0a9513e77b73101213be7175af6724f3771df6e9bf8fa",
+  "originalLogSha256": "c5016a0dc79e417fd0455fd81827a7c04a5aeddb2449ef8abd892c10d6cb1a76",
+  "logRedaction": "Device path lines only; line endings normalized; no TX/RX alteration",
+  "source": "Henry-invoked physical diagnostic; Codex did not access hardware"
+}
