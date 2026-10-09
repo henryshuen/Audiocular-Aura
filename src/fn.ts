@@ -113,7 +113,7 @@ export function setLastAppliedEqName(name: string) {
 
 export function updateLastAppliedEqUI() {
  if(isFreeDsp(device)){
-  const status=document.getElementById("freeDspRamStatus");if(status)status.textContent=freeDspReadbackSlots.status;
+  const status=document.getElementById("freeDspRamStatus");if(status){status.textContent=freeDspReadbackSlots.status;status.title=freeDspReadbackSlots.details;}
   const badge=document.getElementById("lastAppliedEqDisplay");if(badge)badge.textContent=freeDspReadbackSlots.curve?"Device EQ Readback — Snapshot":`LOCAL EDITOR · ${freeDspReadbackSlots.mode}`;
   return;
  }
@@ -402,7 +402,7 @@ export async function setABCompareState(state: "Off" | "A" | "B") {
    const selected=freeDspReadbackSlots.select(state,eqState,message=>window.confirm(message));
    if(!selected)return;
    eqState=selected;renderUI(eqState);updateSlotLabel();
-  }catch(error){log(String(error));}
+  }catch(error){log(String(error));window.alert?.(String(error));}
   return;
  }
 
@@ -1824,8 +1824,7 @@ export function resetTiltState() {
 export function configureFreeDspUI(active:boolean){
  configureFreeDspControlNotes(active);
  if(!active){
-   for(const id of ['freeDspStorageNote','freeDspRamStatus','btnFreeDspRestore']){const e=document.getElementById(id);if(e){e.hidden=true;if(id==='btnFreeDspRestore')e.style.display='none';}}
-   const actions=document.getElementById('hardwareMemoryActions');if(actions)actions.style.flexWrap='';
+   for(const id of ['freeDspStorageNote','freeDspRamStatus']){const e=document.getElementById(id);if(e)e.hidden=true;}
    const send=document.getElementById('btnSendToDevice') as HTMLButtonElement|null;if(send){send.disabled=true;send.removeAttribute('title');}
    const flash=document.getElementById('btnFlash');if(flash){flash.setAttribute('data-i18n','btn_save_flash');flash.textContent=t('btn_save_flash');}return;
  }
@@ -1834,10 +1833,8 @@ export function configureFreeDspUI(active:boolean){
  for(const id of ['globalGainSlider','checkAutoPreamp','slideBassTilt','slideTrebleTilt']){const e=document.getElementById(id) as HTMLInputElement|null;if(e)e.disabled=true;}
  document.querySelectorAll<HTMLInputElement|HTMLButtonElement|HTMLSelectElement>('.utility-card-full input, .utility-card-full select, .utility-card-full button').forEach(e=>e.disabled=true);
  const send=document.getElementById('btnSendToDevice') as HTMLButtonElement|null;if(send){send.disabled=true;send.title='FreeDSP: this generic action is unsupported. Use SYNC TO RAM.';}
- const flash=document.getElementById('btnFlash') as HTMLButtonElement|null;if(flash){flash.disabled=false;flash.textContent='SAVE FREEDSP TO FLASH (PERMANENT)';flash.title='Save the current nine-band profile permanently. RAM Restore does not undo Flash.';flash.removeAttribute('data-i18n');}
- const actions=document.getElementById('hardwareMemoryActions');if(actions)actions.style.flexWrap='wrap';
+ const flash=document.getElementById('btnFlash') as HTMLButtonElement|null;if(flash){flash.disabled=false;flash.textContent='SAVE TO FLASH (PERMANENT)';flash.title='Save the current nine-band profile permanently. RAM Reset does not undo Flash.';flash.removeAttribute('data-i18n');}
  const note=document.getElementById('freeDspStorageNote');if(note)note.hidden=false;
  const ramStatus=document.getElementById('freeDspRamStatus');if(ramStatus){ramStatus.hidden=false;ramStatus.textContent='FreeDSP connected; active RAM state unknown. Local edits require explicit Sync.';}
  showFreeDspDeviceState(true);
- const restore=document.getElementById('btnFreeDspRestore') as HTMLButtonElement|null;if(restore){restore.hidden=false;restore.style.display='flex';restore.disabled=false;}
 }

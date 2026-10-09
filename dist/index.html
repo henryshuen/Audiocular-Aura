@@ -82,7 +82,7 @@
           </div>
 
           <!-- Preamp Gain -->
-          <div class="preamp-group">
+          <div id="preampControls" class="preamp-group">
             <div class="preamp-labels" style="display: flex; justify-content: space-between; align-items: center;">
               <div class="preamp-title-col">
                 <span class="preamp-title" data-i18n="preamp_title">Pre-Amp Gain</span>
@@ -306,11 +306,10 @@
           <div id="hardwareMemoryActions" class="sync-actions">
             <button id="btnSync" class="btn btn-accent action" disabled aria-label="Sync current EQ settings to DAC RAM" data-i18n="btn_sync_ram">SYNC TO RAM (APPLY)</button>
             <button id="btnSendToDevice" class="btn btn-primary action" disabled aria-label="Send current EQ settings to device" data-i18n="btn_send_device">SEND TO DEVICE</button>
-            <button id="btnFreeDspRestore" hidden style="display:none" class="btn btn-secondary">RESTORE FREEDSP RAM TO UNITY</button>
 
             <button id="btnFlash" class="btn btn-highlight action" disabled aria-label="Write current EQ settings permanently to DAC Flash" data-i18n="btn_save_flash">SAVE TO FLASH (PERMANENT)</button>
           </div>
-          <p id="freeDspStorageNote" hidden>FreeDSP edits and OFF/A/B selection are local. Sync, Restore and confirmed Reset actions update RAM; only Save to Flash is permanent. Readback is a snapshot, not exact active RAM or a hardware backup. Windows native HID helper required.</p>
+          <p id="freeDspStorageNote" hidden>Edits and A/B are local. Sync and confirmed Reset update RAM; Save to Flash is permanent.</p>
           <p id="freeDspRamStatus" hidden role="status" aria-live="polite">FreeDSP active RAM state unknown; local edits require explicit Sync.</p>
         </section>
       </div>

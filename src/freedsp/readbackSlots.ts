@@ -1,7 +1,7 @@
 import type {EQ} from '../main.ts';
 import type {ReadbackPreview} from './readbackPreview.ts';
 
-export const readbackConfirmation = 'Load device readback into local A/B slots? Gain precision is limited to 1 dB; enabled states, active RAM source and stereo are unverified. Local band switches will start ON as an editable assumption, not a hardware reading. Your unsaved local edits will be kept in OFF; the visible editor will change. Editing A starts a separate local B copy. No device write will occur.';
+export const readbackConfirmation = 'Load readback parameters into local A/B slots? Gain is integer dB; Q is raw/256. Enabled states, active RAM source, stereo and freshness are unverified. The editable reconstruction may differ from the raw coefficient snapshot. Band switches start ON as a local assumption. OFF keeps your local edits. Editing A starts B. No device write will occur.';
 const copy=(bands:EQ):EQ=>bands.map(b=>({...b}));
 const equal=(a:EQ,b:EQ)=>JSON.stringify(a)===JSON.stringify(b);
 
@@ -18,7 +18,7 @@ export class ReadbackSlots {
  capture(p:ReadbackPreview,points:Array<{frequency:number;db:number}>,editor:EQ){
   this.latest=p;
   // Reconnect must not replace an established A/B workspace or unsaved edits.
-  this.points=points;
+  this.points=this.mode==='Off'?points:null;
   this.observed=copy(editor);
  }
  disconnect(){this.latest=null;this.points=null;}
@@ -37,7 +37,7 @@ export class ReadbackSlots {
  select(mode:'Off'|'A'|'B',editor:EQ,confirm:(message:string)=>boolean):EQ|null{
   if(mode!=='Off'&&!this.baseline){
    const p=this.latest;
-   if(!p||!p.sameEffectiveModel.every(Boolean)||p.bands.some(b=>b.filterTypeRaw!==0))throw Error('Readback unavailable or unsupported — Local Editor preserved; no hardware baseline created.');
+   if(!p||p.bands.length!==9||p.bands.some(b=>b.filterTypeRaw!==0||!Number.isFinite(b.gainDb)||b.gainDb<-16||b.gainDb>6||!Number.isFinite(b.frequency)||b.frequency<20||b.frequency>20000||!Number.isFinite(b.q)||b.q<.1||b.q>10))throw Error('Readback unavailable or unsupported — Local Editor preserved; no hardware baseline created.');
    if(!confirm(readbackConfirmation))return null;
    this.baseline=p.bands.map((b,index)=>({index,freq:b.frequency,gain:b.gainDb,q:b.q,type:'PK',enabled:true}));
    this.working=copy(this.baseline);this.baselineUtc=p.capturedUtc;
@@ -49,9 +49,10 @@ export class ReadbackSlots {
   this.observed=copy(result);return result;
  }
  get status(){
-  if(this.points)return 'Device EQ Readback — 9 Bands · path0 coefficient snapshot at metadata rate; saved-profile source, active RAM/stereo and freshness unverified. Local Editor preserved; select OFF to edit. Gain: integer dB; Q: raw/256; enabled unavailable.';
-  if(this.mode!=='Off')return `LOCAL SLOT ${this.mode} · readback-derived ${this.baselineUtc} · Gain: integer dB; Q: raw/256; switches are local assumptions, hardware enabled unknown. Active RAM/stereo unverified. Editing A starts B; edits and slot selection do not write hardware.`;
-  return this.latest?'LOCAL EDITOR · readback available for A/B; existing baseline is preserved. No automatic device write.':'Readback unavailable — Local Editor; existing local A/B snapshots preserved.';
+  if(this.points)return 'Readback snapshot shown; select OFF for local edits or A/B to confirm a local copy.';
+  if(this.mode!=='Off')return `Local ${this.mode}: readback-derived copy; edits and selection do not write the device.`;
+  return this.latest?'Local Editor; readback available for A/B.':'Readback unavailable; Local Editor and existing A/B preserved.';
  }
+ get details(){return `Snapshot: ${this.latest?.capturedUtc??'unavailable'}; A/B baseline: ${this.baselineUtc||'not initialized'}. Gain: integer dB; Q: raw/256. Enabled switches are local assumptions; path1, active RAM/Flash source and freshness are unverified. Parameter reconstruction may differ from raw coefficients; not an exact hardware backup.`;}
 }
 export const freeDspReadbackSlots=new ReadbackSlots();

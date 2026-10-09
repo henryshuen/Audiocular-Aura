@@ -1,7 +1,7 @@
 import "./style.css";
 import {isFreeDsp} from './freedsp/webHid.ts';
 import {
-	flashToFlash, restoreFreeDspUnity,
+	flashToFlash,
 	syncToDevice,
 	setDacFilter,
 	setDacWorkMode,
@@ -1377,11 +1377,3 @@ window.addEventListener("keydown", (e: KeyboardEvent) => {
 
 
 function setFreeDspRamStatus(message:string){const e=document.getElementById('freeDspRamStatus');if(e)e.textContent=message;}
-document.getElementById('btnFreeDspRestore')?.addEventListener('click',async()=>{
- if(!isFreeDsp(getDevice()))return;
- const attempt=getConnectionAttempt();
- const button=document.getElementById('btnFreeDspRestore') as HTMLButtonElement|null;if(button)button.disabled=true;
- try{setFreeDspRamStatus('FreeDSP RAM: waiting for nine-band stereo unity Restore...');const result=await restoreFreeDspUnity();if(attempt!==getConnectionAttempt())return;setFreeDspRamStatus(result===false?'Restore canceled; no RAM write. Active RAM state remains unverified.':'FreeDSP RAM: stereo unity Restore acknowledged; Local Editor and Flash unchanged.');}
- catch(e){if(attempt===getConnectionAttempt()){setFreeDspRamStatus('FreeDSP RAM: Restore incomplete; active state unknown. STOP, no automatic retry or rollback.');log(String(e));}}
- finally{if(button && attempt===getConnectionAttempt())button.disabled=!isFreeDsp(getDevice());}
-});
