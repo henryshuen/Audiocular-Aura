@@ -58,14 +58,6 @@ export type Band = {
 };
 export type EQ = Band[];
 
-// FreeDSP-only development entry; the isolated page does not auto-connect.
-if (import.meta.env.DEV) {
-	const link = document.createElement("a");
-	link.href = "./freedsp-ram-debug.html";
-	link.textContent = "FreeDSP M2R RAM debug（正增益／雙聲道／瞬變）";
-	document.querySelector(".logo-area")?.appendChild(link);
-}
-
 // Initialize state and render PEQ on page load
 initState();
 setTimeout(async () => {

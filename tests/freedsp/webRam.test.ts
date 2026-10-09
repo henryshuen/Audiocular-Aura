@@ -128,7 +128,7 @@ describe('M2N Web/native RAM contract; no physical HID',()=>{
    expect(page).toContain('import.meta.env.DEV');expect(page).toContain("location.hostname==='localhost'");
    expect(page).not.toMatch(/syncToDevice|queueRealtimeBandWrite|exchangeCaf|navigator.hid/);
    expect(nativeDebug).not.toMatch(/Encode\((?:90|220)|ReadDevice|FlashTo/);
-   expect(main).toContain('./freedsp-ram-debug.html');expect(main).not.toContain("from './freedsp/webRam");
+   expect(main).not.toContain('./freedsp-ram-debug.html');expect(main).not.toContain("from './freedsp/webRam");
    expect(stateSource).toContain('import.meta.env.DEV && dev.vendorId === 0x35d8 && dev.productId === 0x1496');
    expect(dev).toContain('-WindowStyle Hidden');expect(dev).toContain('Stop-AuraOwnedBridge -OwnedProcess $ownedBridge');
  });

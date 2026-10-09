@@ -77,6 +77,7 @@ function yToGain(y: number, height: number) {
 // This bounds the drawn points, not a certified continuous or hardware response.
 function updateFreeDspGraphBounds(width:number){
  const samples=localBands.map(b=>b.gain);
+ const snapshot=(window as any).getFreeDspReadbackCurve?.();if(snapshot)samples.push(...snapshot.map((p:{db:number})=>p.db));
  const compared=(window as any).getComparedEqState?.() as Band[]|null;
  const sets=[localBands,...(compared?[compared]:[])].map(bands=>bands.map(b=>calculateBiquad(b)));
  for(let i=0;i<=width-2*CONFIG.padding;i++){
@@ -268,6 +269,15 @@ function drawGrid(c: CanvasRenderingContext2D, width: number, height: number) {
  * Trace out the cumulative EQ filter curve on the canvas
  */
 function drawCurve(c: CanvasRenderingContext2D, width: number, height: number) {
+ const snapshot=(window as any).getFreeDspReadbackCurve?.() as Array<{frequency:number;db:number}>|null;
+ if(snapshot){
+  const gradient=c.createLinearGradient(CONFIG.padding,0,width-CONFIG.padding,0);
+  gradient.addColorStop(0,'#a78bfa');gradient.addColorStop(.5,'#ec4899');gradient.addColorStop(1,'#8b5cf6');
+  c.beginPath();c.strokeStyle=gradient;c.lineWidth=3.5;
+  snapshot.forEach((p,i)=>{const x=freqToX(p.frequency,width),y=gainToY(p.db,height);if(i===0)c.moveTo(x,y);else c.lineTo(x,y);});
+  c.stroke();return;
+ }
+
 	const activeCoeffs = localBands.map((b) => calculateBiquad(b));
 	const endX = width - CONFIG.padding;
 	const startX = CONFIG.padding;
@@ -364,6 +374,7 @@ function drawHandles(
 	width: number,
 	height: number,
 ) {
+	if((window as any).getFreeDspReadbackCurve?.())return;
 	localBands.forEach((band) => {
 		const x = freqToX(band.freq, width);
 		const y = gainToY(band.gain, height);
@@ -443,6 +454,7 @@ function drawRoundedRect(
  * Draw a glassmorphic floating tooltip near the active/hovered band
  */
 function drawTooltip(c: CanvasRenderingContext2D, width: number, height: number) {
+ if((window as any).getFreeDspReadbackCurve?.())return;
 	const targetIndex = draggingIndex !== null ? draggingIndex : (hoveredIndex !== null ? hoveredIndex : selectedIndex);
 	if (targetIndex === null || !localBands[targetIndex]) return;
 
@@ -552,6 +564,7 @@ export function renderPEQ(
 
 		// MOUSE DRAGGING ON CANVAS
 		canvas.addEventListener("mousedown", (e) => {
+ if((window as any).getFreeDspReadbackCurve?.())return;
 			const rect = canvas!.getBoundingClientRect();
 			const scaleX = (canvas as any).logicalWidth / rect.width;
 			const scaleY = (canvas as any).logicalHeight / rect.height;
@@ -587,6 +600,7 @@ export function renderPEQ(
 
 		// Canvas Hover Detection
 		canvas.addEventListener("mousemove", (e) => {
+ if((window as any).getFreeDspReadbackCurve?.())return;
 			if (draggingIndex !== null) return;
 			const rect = canvas!.getBoundingClientRect();
 			const w = (canvas as any).logicalWidth || rect.width;
@@ -625,7 +639,7 @@ export function renderPEQ(
 		});
 
 		window.addEventListener("mousemove", (e) => {
-			if (draggingIndex === null || !canvas) return;
+			if (draggingIndex === null || !canvas || (window as any).getFreeDspReadbackCurve?.()) return;
 
 			const rect = canvas.getBoundingClientRect();
 			const w = (canvas as any).logicalWidth || rect.width;

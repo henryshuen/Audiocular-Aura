@@ -4,7 +4,7 @@ import repeat from './fixtures/codexNineReadback20261009.json';
 import api from './fixtures/codexApiReadback20261009.json';
 import sdk from './fixtures/officialReadbackStaticEvidence.json';
 import {decodeReadbackReply,signed24Container} from '../../src/freedsp/readback.ts';
-import {validateReadbackPreview,previewResponse,loadReadbackPreview,clearReadbackPreview} from '../../src/freedsp/readbackPreview.ts';
+import {validateReadbackPreview,previewResponse,loadReadbackPreview} from '../../src/freedsp/readbackPreview.ts';
 import {NativeCafTransport} from '../../src/freedsp/nativeTransport.ts';
 import {CafRamSession} from '../../src/freedsp/cafRam.ts';
 import {nativePeakFloat,nativeScaling} from '../../scripts/freedsp/ram-semantics.mjs';
@@ -33,15 +33,15 @@ describe('live captured readback and CONNECT preview — offline replay only',()
    (r:any)=>{const b=Uint8Array.from(atob(r.records[9].observations[0].RawBase64),c=>c.charCodeAt(0));b[6]=1;r.records[9].observations[0].RawBase64=btoa(String.fromCharCode(...b));}]){const r=clone();mutate(r);expect(()=>validateReadbackPreview(r)).toThrow();}
   const raw=Uint8Array.from(atob(capture.records[0].observations[0].RawBase64),c=>c.charCodeAt(0));raw[2]=9;expect(()=>decodeReadbackReply(raw,446,1)).toThrow();
  });
- it('rendersread-onlynonflatnine rows atomically andneverchangeslocalunsavededitor/storage',async()=>{
+ it('publishes validated snapshot to existing UI without duplicate graph or local edits',async()=>{
   const {nodes,doc}=documentStub(),local=[{gain:-3.5,freq:999}],before=structuredClone(local),read=vi.fn(async()=>capture),log=vi.fn();
-  await loadReadbackPreview(read,()=>true,log,doc);expect(nodes.freeDspReadbackPreview.hidden).toBe(false);expect(nodes.freeDspReadbackPreview.innerHTML.match(/<tr>/g)).toHaveLength(10);expect(nodes.freeDspReadbackPreview.innerHTML).toContain('220 Hz');expect(nodes.freeDspReadbackPreview.innerHTML).toContain('1.796875');expect(nodes.freeDspReadbackPreview.innerHTML).toContain('<svg');expect(local).toEqual(before);expect(read).toHaveBeenCalledOnce();
-  expect(nodes.lastAppliedEqDisplay.textContent).toContain('not Active RAM');clearReadbackPreview(doc);expect(nodes.freeDspReadbackPreview.hidden).toBe(true);
+  const p=await loadReadbackPreview(read,()=>true,log,doc);expect(p?.bands).toHaveLength(9);expect(nodes.freeDspReadbackPreview.innerHTML).toBe('');expect(local).toEqual(before);expect(read).toHaveBeenCalledOnce();
+  expect(nodes.lastAppliedEqDisplay.textContent).toContain('not Active RAM');expect(nodes.freeDspRamStatus.textContent).toContain('enabled unavailable');
  });
  it('disconnect/reconnect race discards old results; failed read preservesUnknown andlocaleditor',async()=>{
   const {nodes,doc}=documentStub();let resolve!:(x:unknown)=>void,current=true;const old=loadReadbackPreview(()=>new Promise(r=>{resolve=r;}),()=>current,vi.fn(),doc);
-  current=false;clearReadbackPreview(doc);resolve(capture);await old;expect(nodes.freeDspReadbackPreview.hidden).toBe(true);
-  await loadReadbackPreview(async()=>({...capture,records:[]}),()=>true,vi.fn(),doc);expect(nodes.lastAppliedEqDisplay.textContent).toBe('Device EQ Unknown — Local Editor');expect(nodes.freeDspReadbackPreview.hidden).toBe(true);
+  current=false;resolve(capture);await old;expect(nodes.freeDspReadbackPreview.hidden).toBe(true);
+  await loadReadbackPreview(async()=>({...capture,records:[]}),()=>true,vi.fn(),doc);expect(nodes.lastAppliedEqDisplay.textContent).toBe('Readback unavailable — Local Editor');expect(nodes.freeDspReadbackPreview.hidden).toBe(true);
  });
  it('nativepreviewonlycallsfixedauthenticatedreadbackendpoint,noRAM/Flash/modeexchange',async()=>{
   const requests:string[]=[],fetcher=vi.fn(async(url:unknown,init?:RequestInit)=>{const path=String(url).split('5174')[1];requests.push(path);if(path==='/session')return Response.json({token:'A'.repeat(64),mode:'M2S CAF TRANSPORT'});expect(init?.headers).toMatchObject({'X-AuraPEQ-Session':'A'.repeat(64)});return Response.json({ok:true,exitCode:0,readback:capture});});

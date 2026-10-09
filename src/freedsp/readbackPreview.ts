@@ -52,24 +52,14 @@ export function previewResponse(p:ReadbackPreview){
   return {frequency,db};
  });
 }
-export function clearReadbackPreview(doc:Document=document){const e=doc.getElementById('freeDspReadbackPreview');if(e){e.hidden=true;e.style.display='none';e.innerHTML='';}}
-export function renderReadbackPreview(p:ReadbackPreview,doc:Document=document){
- const e=doc.getElementById('freeDspReadbackPreview');if(!e)return;
- const rows=p.bands.map(b=>`<tr><td>${b.wire}</td><td>${b.frequency} Hz</td><td>${b.gainDb} dB</td><td>${b.q.toFixed(6)} (${b.qRaw}/256)</td><td>${b.filterTypeRaw===0?'PK':`Raw ${b.filterTypeRaw}`}</td><td>Unavailable</td></tr>`).join('');
- let graph='Curve unavailable; raw parameters remain visible.';
- try{const points=previewResponse(p),min=Math.min(-12,...points.map(x=>x.db))-1,max=Math.max(6,...points.map(x=>x.db))+1;
-  const y=(db:number)=>20+(max-db)*200/(max-min),line=points.map((v,i)=>`${40+i*820/256},${y(v.db)}`).join(' ');
-  graph=`<svg viewBox="0 0 900 250" role="img" aria-label="FreeDSP path0 coefficient response projected at metadata sample rate" style="width:100%;background:var(--bg-primary,#101014)"><line x1="40" x2="860" y1="${y(0)}" y2="${y(0)}" stroke="#666"/><polyline points="${line}" fill="none" stroke="#b87bea" stroke-width="3"/><text x="40" y="240" fill="#aaa">20 Hz</text><text x="805" y="240" fill="#aaa">20 kHz</text><text x="5" y="20" fill="#aaa">${max.toFixed(1)}</text><text x="5" y="220" fill="#aaa">${min.toFixed(1)}</text></svg>`;
- }catch{/* Keep parameter preview if response projection cannot be justified. */}
- e.innerHTML=`<h2>FreeDSP Device EQ — Readback Preview</h2><p>READ ONLY SNAPSHOT · ${new Date(p.capturedUtc).toISOString()} · 9/9 parameters + 9/9 path0 coefficients · SDK saved-profile getter · physical RAM/Flash source and same-tuple freshness unconfirmed.</p><p>Gain: integer dB only. Q: raw /256; official App rounds to two decimals. Enabled and path1 are unavailable. ${p.sameEffectiveModel.every(Boolean)?'All nine coefficient sets agree with the parameter model within native quantization neighbors.':'Some coefficient sets differ from the parameter model; do not assume synchronized EQ.'}</p>${graph}<p>446 path0 response projected at 477 metadata rate (${officialRateHz[p.bands[0].sampleRateRaw]} Hz); current active rate and stereo are unverified.</p><div style="overflow-x:auto"><table style="width:100%;text-align:left"><thead><tr><th>Band</th><th>Frequency</th><th>Gain</th><th>Q</th><th>Type</th><th>Enabled</th></tr></thead><tbody>${rows}</tbody></table></div><p>LOCAL EDITOR below is preserved separately. No RAM Sync or Flash write occurred. This captured snapshot is not live monitoring; reconnect to read again. Full precision readback remains BLOCKED.</p>`;
- e.hidden=false;e.style.display='block';
+// UI uses the existing canvas; this module only validates and publishes a snapshot.
+export function renderReadbackPreview(_p:ReadbackPreview,doc:Document=document){
+ const status=doc.getElementById('freeDspRamStatus');if(status)status.textContent='Device EQ Readback — 9 Bands · Gain: integer dB; Q: raw/256; enabled unavailable. Saved-profile source; active RAM/stereo unverified.';
+ const badge=doc.getElementById('lastAppliedEqDisplay');if(badge)badge.textContent='Device EQ Readback (not Active RAM proof)';
 }
 export async function loadReadbackPreview(read:()=>Promise<unknown>,current:()=>boolean,log:(s:string)=>void,doc:Document=document){
  if(!current())return;
- clearReadbackPreview(doc);
- try{const p=validateReadbackPreview(await read());if(!current())return;renderReadbackPreview(p,doc);
-  const status=doc.getElementById('freeDspRamStatus');if(status)status.textContent='Device EQ Readback Preview — 477 integer parameters / 446 path0; source unconfirmed — Local Editor preserved';
-  const badge=doc.getElementById('lastAppliedEqDisplay');if(badge)badge.textContent='Device EQ — Readback Preview (not Active RAM proof)';
-  log('FreeDSP read-only preview loaded atomically; source/fractional Gain/enabled/stereo unresolved. No editor replacement or writes.');
- }catch(error){if(current()){clearReadbackPreview(doc);for(const id of ['lastAppliedEqDisplay','freeDspRamStatus']){const e=doc.getElementById(id);if(e)e.textContent='Device EQ Unknown — Local Editor';}log('Device EQ Unknown — Local Editor: Readback STOP, no retry. '+String(error));}}
+ try{const p=validateReadbackPreview(await read());previewResponse(p);if(!current())return;renderReadbackPreview(p,doc);
+  log('FreeDSP read-only snapshot loaded; source/fractional Gain/enabled/stereo unresolved. No editor replacement or writes.');return p;
+ }catch(error){if(current()){for(const id of ['lastAppliedEqDisplay','freeDspRamStatus']){const e=doc.getElementById(id);if(e)e.textContent='Readback unavailable — Local Editor';}log('Readback unavailable — Local Editor: STOP, no retry. '+String(error));}}
 }

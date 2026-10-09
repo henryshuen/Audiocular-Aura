@@ -1,3 +1,4 @@
+import {ReadbackSlots} from '../../src/freedsp/readbackSlots.ts';
 import {describe,it,expect,vi} from 'vitest';
 import {freeDspDefaultBands,freeDspEditorGain,normalizeFreeDspEditor} from '../../src/freedsp/editor.ts';
 import {isFreeDsp} from '../../src/freedsp/webHid.ts';
@@ -11,7 +12,7 @@ import {runInNewContext} from 'node:vm';
 function extract(name:string,source=fnSource){const ast=ts.createSourceFile('s.ts',source,ts.ScriptTarget.ES2022,true);const node=ast.statements.find(n=>ts.isFunctionDeclaration(n)&&n.name?.text===name)!;return ts.transpileModule(node.getText(ast).replace('export ',''),{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;}
 function editor(){
  const ctx={device:{vendorId:0x35d8,productId:0x1496},connectAttempt:0,eqState:freeDspDefaultBands(),globalGainState:0,bassTiltState:0,trebleTiltState:0,manualPreampState:0,autoPreampEnabled:false,
-   isFreeDsp,gainRangeFor,freeDspGainRange,freeDspOverwriteWarning,freeDspDefaultBands,freeDspEditorGain,normalizeFreeDspEditor,log:vi.fn(),window:{},document:{getElementById:()=>null,querySelector:()=>null},localStorage:{setItem:vi.fn()},
+   freeDspReadbackSlots:new ReadbackSlots(),isFreeDsp,gainRangeFor,freeDspGainRange,freeDspOverwriteWarning,freeDspDefaultBands,freeDspEditorGain,normalizeFreeDspEditor,log:vi.fn(),window:{},document:{getElementById:()=>null,querySelector:()=>null},localStorage:{setItem:vi.fn()},
    setLastAppliedEqName:vi.fn(),initSlots:vi.fn(),pushHistory:vi.fn(),queueRealtimeBandWrite:vi.fn(),syncToDevice:vi.fn(),setGlobalGain:vi.fn(),updateUndoRedoButtons:vi.fn(),confirm:()=>true,
    undoStack:[] as {eqState:ReturnType<typeof freeDspDefaultBands>;globalGainState:number}[],redoStack:[] as {eqState:ReturnType<typeof freeDspDefaultBands>;globalGainState:number}[],slotA:null,slotB:null,activeSlot:'A',lastAppliedEqName:'test',getProtocol:()=> 'CONEXANT',updateSlotLabel:vi.fn(),t:()=> 'Flat'};
  const names=['getEqState','getDevice','setEqState','setEQ','renderUI','updateState','finishFreeDspLocalReset','resetToFlat','resetToDefaults','undo','redo','setABCompareState','reduceGainsSafely'];
@@ -46,10 +47,10 @@ describe('FreeDSP main editor UX; local-only tests',()=>{
    await load({target:{result:'{}'}});expect(ctx.eqState[0].gain).toBe(gain===12?0:-16);expect(strips.innerHTML).toBe(gain===12?'prior rows':'');expect(ctx.syncToDevice).not.toHaveBeenCalled();expect(fileTarget.value).toBe('');
   }
  });
- it('valid undo/redo/Slot snapshots retain exact gain; Slot defaults9 are local states',async()=>{
+ it('valid undo/redo retain exact gain; unavailable readback preserves editor instead of fabricating slots',async()=>{
   const {ctx,f}=editor();const high=freeDspDefaultBands();high[0].gain=6;const low=freeDspDefaultBands();low[0].gain=-15;
   ctx.undoStack=[{eqState:high,globalGainState:0},{eqState:low,globalGainState:0}];await f.undo();expect(ctx.eqState[0].gain).toBe(6);await f.redo();expect(ctx.eqState[0].gain).toBe(-15);
-  await f.setABCompareState('B');expect(ctx.eqState.map(b=>b.freq)).toEqual([31,62,125,250,500,1000,2000,4000,8000]);await f.setABCompareState('A');expect(ctx.eqState[0].gain).toBe(-15);await f.setABCompareState('Off');expect(ctx.eqState[0].gain).toBe(-15);expect(ctx.syncToDevice).not.toHaveBeenCalled();
+  await f.setABCompareState('B');expect(ctx.eqState.map(b=>b.freq)).toEqual([31,62,125,250,500,1000,2000,4000,8000]);await f.setABCompareState('A');expect(ctx.eqState[0].gain).toBe(-15);await f.setABCompareState('Off');expect(ctx.eqState[0].gain).toBe(-15);expect(ctx.syncToDevice).not.toHaveBeenCalled();expect(ctx.log.mock.calls.join()).toContain('no hardware baseline created');
  });
  it('Defaults nine PK/Q.7; Flat preserves structure/enabled but zeros every gain; both explicitly Sync RAM',async()=>{
   const {ctx,f}=editor();ctx.eqState[0]={...ctx.eqState[0],freq:400,q:2,type:'LSQ',gain:-3};ctx.eqState[1]={...ctx.eqState[1],enabled:false,gain:-5};const before=ctx.eqState.map(b=>({...b}));await f.resetToFlat();

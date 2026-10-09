@@ -1,3 +1,30 @@
+## Latest — Final Readback UX integration (2026-10-09)
+### Problem / hypothesis / next action
+Observed problem: a large duplicate readback graph/table separated the captured EQ from the original curve; generic A/B initialized B to Flat and OFF cleared snapshots.
+Verified facts: existing 9/9 477 + 9/9 path0 446 hardware captures agree within native quantization. This round reuses their parser and fixed CONNECT capture unchanged. The existing canvas now displays raw coefficient projection first; local editor is preserved. Explicit confirmation creates integer-dB metadata A and independent B, with local ON switches explicitly assumed rather than read from hardware. Editing A detaches B. OFF restores local work and retains snapshots. Existing FreeDSP editing already excludes automatic realtime writes.
+Possible causes: prior UX used generic comparison semantics rather than a device-derived baseline. Remaining information loss is a protocol evidence limitation, not something this UI can fix.
+Ruled out / weakened: a new preview page/button, generic Flat B, silently replacing local work or existing A, interpreting unknown enabled as hardware true, and automatic slot-selection writes.
+Next validation: Henry uses localhost normal CONNECT, confirms existing curve snapshot, enters A with confirmation, edits B, switches A/B/OFF and reconnects without Sync/Save. Cancel must keep local work. No hardware operations by Codex in this round.
+Possible fix direction: retain the minimal FreeDSP-only guards and local workspace. Do not reopen protocol research or claim exact active RAM/source/path1/fractional Gain reconstruction. Full precision readback remains BLOCKED; useful approximate local A/B is ready for manual UX acceptance.
+
+### Research checkpoint
+- Examined: existing CONNECT generation guard, strict capture decoder, canvas, A/B/history/edit callbacks, and fixed write regression tests.
+- Verified offline: 41 focused tests and 93 native mocks; unchanged native RAM18/Flash56 goldens. Final verify.ps1 PASS: TypeScript/production build and 32 files / 314 tests.
+- Hypotheses: no new protocol hypotheses introduced. ON is a confirmed local editing convention, not a hardware fact.
+- Discarded: duplicate preview card and debug main-page entry; overwrite baseline on reconnect or edits.
+- Unresolved: active RAM/Flash source, original fractional Gain, hardware enabled, path1 and same-tuple freshness.
+- Next target: final automated verification, then Henry's existing-UI manual acceptance. No hardware writes, PR or release.
+
+### Final offline verification / scope
+- 41 initial focused tests PASS; expanded editor/reset/import focused suite 68 tests PASS; final verify.ps1 PASS (32 files / 314 tests). Native isolated build zero warnings/errors, 93 synthetic/mock tests PASS including RAM18/Flash56. No hardware accessed.
+- First full run found old VM harnesses missing the new workspace dependency and an obsolete assertion requiring the removed debug link. Updated harness/expected UX and reran successfully; no protocol regression inferred.
+- FreeDSP-specific files: readbackSlots.ts; readbackPreview.ts presentation only. Analysis/test changes: focused local workspace/canvas tests and existing frontend harness updates.
+- Shared UI files: index.html removes one duplicate card; main.ts removes FreeDSP debug link; fn.ts and peq.ts add exact-device local state/canvas guards. Non-FreeDSP protocol code changed: NO. Native transport/RAM190/Flash220/coefficients untouched.
+- Manual browser/hardware acceptance remains Henry's task; automated checks do not establish source, enabled, stereo or same-tuple freshness. Optional direct HTTP smoke could not run because no Vite listener was active; no new server or native endpoint was started/called. Use scripts/dev.ps1 for manual acceptance.
+
+## Evidence for upstream / Issue #3 — Final Readback UX
+The same verified exact-device fixed read-only capture now projects path0 coefficients at metadata sample rate into the existing PEQ canvas. No protocol/transport/coefficient changes. Nine-band 477 integer Gain and raw/256 Q can seed approximate local A/B only after explicit English confirmation; local ON switches are declared assumptions, independent hardware enabled unavailable. A remains immutable; editing A detaches B, B initially copies A, OFF restores unsaved normal local editor and retains A/B. CONNECT/reconnect preserves established slots. Slot selection and edits send no commands; deliberate Sync/Save keep the verified implementations. Separate graph/table and main-page debug link removed. Precise active RAM/source/stereo/freshness readback remains BLOCKED; no PR/release.
+
 
 ### Localhost smoke — Round1
 - dev.ps1 running: Vite at http://localhost:5173/ andnativehelper127.0.0.1:5174. BrowsernavigationAccept:text/html rootHTTP200,previewmountpresent,fn/readbackPreview/nativeTransportmodulesHTTP200;sessionM2S CAF TRANSPORT/tokenshapePASS. NoGUIbrowserautomation;visualmanualconfirmationpendingHenry.

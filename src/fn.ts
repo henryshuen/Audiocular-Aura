@@ -1,4 +1,5 @@
-import {loadReadbackPreview,clearReadbackPreview} from './freedsp/readbackPreview.ts';
+import {freeDspReadbackSlots} from './freedsp/readbackSlots.ts';
+import {loadReadbackPreview,previewResponse} from './freedsp/readbackPreview.ts';
 import {freeDspDefaultBands,freeDspEditorGain,normalizeFreeDspEditor} from './freedsp/editor.ts';
 import {gainRangeFor,freeDspGainRange} from './freedsp/capabilities.ts';
 import {showFreeDspDeviceState,freeDspOverwriteWarning} from './freedsp/deviceState.ts';
@@ -59,14 +60,17 @@ let slotA: { eqState: EQ; globalGainState: number; eqName: string } | null = nul
 let slotB: { eqState: EQ; globalGainState: number; eqName: string } | null = null;
 
 export function isCompareActive(): boolean {
+ if(isFreeDsp(device))return freeDspReadbackSlots.active;
 	return slotA !== null && slotB !== null;
 }
 
 export function getSlotAGain(): number {
+ if(isFreeDsp(device))return 0;
 	return slotA ? slotA.globalGainState : 0;
 }
 
 export function getSlotBGain(): number {
+ if(isFreeDsp(device))return 0;
 	return slotB ? slotB.globalGainState : 0;
 }
 
@@ -75,12 +79,15 @@ export function getSlotBGain(): number {
 (window as any).getSlotBGain = getSlotBGain;
 
 export function getComparedEqState(): EQ | null {
+ if(isFreeDsp(device))return freeDspReadbackSlots.compared;
 	if (!slotA || !slotB) return null;
 	return activeSlot === "A" ? slotB.eqState : slotA.eqState;
 }
 (window as any).getComparedEqState = getComparedEqState;
+(window as any).getFreeDspReadbackCurve=()=>isFreeDsp(device)?freeDspReadbackSlots.curve:null;
 
 export function updateBaselineFromActive() {
+ if(isFreeDsp(device))return;
 	if (slotA && slotB) {
 		if (activeSlot === "B") {
 			slotA.eqState = JSON.parse(JSON.stringify(slotB.eqState)) as EQ;
@@ -105,7 +112,12 @@ export function setLastAppliedEqName(name: string) {
 }
 
 export function updateLastAppliedEqUI() {
- if(isFreeDsp(device) || (!device && freeDspStateStale)){showFreeDspDeviceState(!!device);return;}
+ if(isFreeDsp(device)){
+  const status=document.getElementById("freeDspRamStatus");if(status)status.textContent=freeDspReadbackSlots.status;
+  const badge=document.getElementById("lastAppliedEqDisplay");if(badge)badge.textContent=freeDspReadbackSlots.curve?"Device EQ Readback — Snapshot":`LOCAL EDITOR · ${freeDspReadbackSlots.mode}`;
+  return;
+ }
+ if(!device && freeDspStateStale){showFreeDspDeviceState(!!device);return;}
 	const lastEqEl = document.getElementById("lastAppliedEqDisplay");
 	if (lastEqEl) {
 		let displayName = lastAppliedEqName;
@@ -385,6 +397,15 @@ export function initSlots() {
 }
 
 export async function setABCompareState(state: "Off" | "A" | "B") {
+ if(isFreeDsp(device)){
+  try{
+   const selected=freeDspReadbackSlots.select(state,eqState,message=>window.confirm(message));
+   if(!selected)return;
+   eqState=selected;renderUI(eqState);updateSlotLabel();
+  }catch(error){log(String(error));}
+  return;
+ }
+
 	const protocol = device ? getProtocol(device) : null;
 
 	// Moondrop uses host-side coefficient calculation; A/B baseline updates and device sync are bypassed to prevent memory corruption.
@@ -481,6 +502,8 @@ export async function setABCompareState(state: "Off" | "A" | "B") {
 }
 
 export async function toggleABCompare() {
+ if(isFreeDsp(device)){await setABCompareState(freeDspReadbackSlots.mode==='Off'?'B':freeDspReadbackSlots.mode==='B'?'A':'Off');return;}
+
 	// Cycle: Off -> B -> A -> Off
 	if (!slotA && !slotB) {
 		await setABCompareState("B");
@@ -501,7 +524,10 @@ function updateSlotLabel() {
 		btnA.classList.remove("active");
 		btnB.classList.remove("active");
 
-		if (slotA && slotB) {
+		if(isFreeDsp(device)){
+   if(freeDspReadbackSlots.mode==='Off')btnOff.classList.add('active-off');
+   else (freeDspReadbackSlots.mode==='A'?btnA:btnB).classList.add('active');
+  } else if (slotA && slotB) {
 			if (activeSlot === "A") {
 				btnA.classList.add("active");
 			} else {
@@ -617,7 +643,9 @@ export function defaultEqState(): EQ {
  * Trigger UI updates and EQ graph re-render
  */
 export function renderUI(eqState: EQ) {
-	if(isFreeDsp(device))eqState=getEqState(); // Rendering never clamps retained local values.
+	if(isFreeDsp(device)){
+  eqState=getEqState();freeDspReadbackSlots.observe(eqState);updateSlotLabel();
+ } // Rendering never clamps retained local values.
 	const gainRange=gainRangeFor(device);
 	// Save current active state to localStorage
 	localStorage.setItem("aura_active_eq_state", JSON.stringify(eqState));
@@ -860,8 +888,9 @@ export async function connectToDevice() {
 		// Support parameter reading for Savitech-based DACs (including FiiO JA11 and Moondrop)
 		const protocol = getProtocol(device);
         if(isFreeDsp(dev)){
-            renderUI(eqState);
-            await loadReadbackPreview(()=>getFreeDspSession(dev).readback(),()=>attempt===connectAttempt && device===dev,log);
+            freeDspReadbackSlots.disconnect();renderUI(eqState);
+            const snapshot=await loadReadbackPreview(()=>getFreeDspSession(dev).readback(),()=>attempt===connectAttempt && device===dev,log);
+            if(snapshot && attempt===connectAttempt && device===dev){freeDspReadbackSlots.capture(snapshot,previewResponse(snapshot),eqState);renderUI(eqState);}
             if(attempt!==connectAttempt || device!==dev)return;
         } else if (protocol === "SAVITECH" || protocol === "FIIO_JA11" || protocol === "MOONDROP") {
 			await readDeviceParams(device);
@@ -896,7 +925,7 @@ export async function disconnectDevice() {
 	const wasFreeDsp=isFreeDsp(device);
 	const protocol = getProtocol(device);
 	try {
-		if(isFreeDsp(device)){disconnectFreeDsp(device);clearReadbackPreview();configureFreeDspUI(false);}
+		if(isFreeDsp(device)){disconnectFreeDsp(device);freeDspReadbackSlots.disconnect();configureFreeDspUI(false);}
 		log(`Disconnecting from: ${device.productName || "DAC"}`);
 		if(!isFreeDsp(device) || device.opened)await device.close();
 	} catch (err) {

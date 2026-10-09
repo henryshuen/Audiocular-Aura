@@ -1,3 +1,10 @@
+## 2026-10-09 — Final Readback UX implementation / offline checkpoint
+- Removed the main-page duplicate preview card/graph/table and development debug link; retained original curve and OFF/A/B controls.
+- Integrated fixed CONNECT readback into existing canvas using raw path0 coefficient projection. Preserved local editor and rejected stale/failing capture.
+- Added confirmed nine-band approximate local A/B with explicit local ON assumption; immutable A, B copy/edit detachment, OFF preservation and reconnect preservation.
+- New UI strings are English. No protocol/native transport/RAM190/Flash220/coefficient changes; no hardware operations, PR or release this round.
+- Focused 41 tests PASS, native 93 synthetic/mock tests PASS, isolated native build zero warnings/errors. Final verify.ps1 PASS: TypeScript/production build and 32 files / 314 tests; git diff --check PASS. Expanded editor/reset/import focused tests: 68 PASS. Manual UI acceptance remains pending Henry; no new hardware PASS inferred.
+
 
 ### Localhost smoke — Round1
 - dev.ps1 running: Vite at http://localhost:5173/ andnativehelper127.0.0.1:5174. BrowsernavigationAccept:text/html rootHTTP200,previewmountpresent,fn/readbackPreview/nativeTransportmodulesHTTP200;sessionM2S CAF TRANSPORT/tokenshapePASS. NoGUIbrowserautomation;visualmanualconfirmationpendingHenry.
