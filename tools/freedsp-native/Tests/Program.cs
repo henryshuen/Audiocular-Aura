@@ -711,6 +711,53 @@ Test("Wire2 unexpected exception retains observation; late valid reply never acc
  using var late=new MockHid(Wire2Reply());var clock=new FakeClock();late.OnGet=()=>clock.TimeMs=1001;using var lateLog=new StringWriter();
  Check(Wire2Polling.Run(late,lateLog,clock)==7&&late.Calls.Count==2&&lateLog.ToString().Contains("RESULT TIMEOUT"),"GET blocked beyond budget rejected");
 });
+
+byte[] NineReply(ReadbackQuery.Request q){
+ var rx=ReadReply(q);
+ if(q.Command==446){BinaryPrimitives.WriteInt32LittleEndian(rx.AsSpan(18),3);BinaryPrimitives.WriteInt32LittleEndian(rx.AsSpan(22),4194304);}
+ else{foreach(var item in new[]{(0,5),(2,400),(3,256),(4,0),(5,-6)})BinaryPrimitives.WriteInt32LittleEndian(rx.AsSpan(10+4*item.Item1),item.Item2);}
+ return rx;
+}
+Test("Nine fixed plan exact18 known reads and CLI no arguments; no writes/path1/346",()=>{
+ var plan=NineReadbackPolling.Plan();Check(plan.Length==18,"18 queries");
+ Check(plan.Take(9).Select(q=>q.Wire).SequenceEqual(Enumerable.Range(1,9))&&plan.Take(9).All(q=>q.Command==446),"446 ordered1..9");
+ Check(plan.Skip(9).All(q=>q.Command==477)&&plan.Skip(9).Select(q=>q.Wire).SequenceEqual(Enumerable.Range(1,9)),"477 ordered1..9");
+ Check(SafeRam.IsOperation(["pollNineEq"])&&!SafeRam.IsOperation(["pollNineEq","1"]),"Fixed opt-in");
+ foreach(var q in plan){Check(NineReadbackPolling.IsAllowed(q.Bytes)&&q.Bytes.SequenceEqual(ReadbackQuery.Plan().Single(old=>old.Command==q.Command&&old.Wire==q.Wire).Bytes),"Existing query exact");Throws(()=>new TransportRequest(Convert.ToBase64String(q.Bytes)).Bytes());}
+ Check(!NineReadbackPolling.IsAllowed(SafeRam.Enable())&&!NineReadbackPolling.IsAllowed(Caf346.CreateQuery()),"No mode or346");
+ var b=plan[0].Bytes.ToArray();b[10]=1;Check(!NineReadbackPolling.IsAllowed(b),"No path1");
+});
+Test("Nine matching18 responses preserves every raw/timing/tuple without source claim",()=>{
+ var plan=NineReadbackPolling.Plan();using var hid=new MockHid(NineReply(plan[^1]));foreach(var q in plan)hid.Responses.Enqueue(NineReply(q));using var log=new StringWriter();
+ Check(NineReadbackPolling.Run(hid,log,()=>new FakeClock())==0,"Complete matching set only");
+ Check(hid.Transmissions.Count==18&&hid.Calls.Count(c=>c=="GET")==18,"Exactlyonce each");
+ var line=log.ToString().Split('\n').Single(l=>l.StartsWith("NINE_POLL_JSON="));using var json=System.Text.Json.JsonDocument.Parse(line["NINE_POLL_JSON=".Length..]);var root=json.RootElement;
+ Check(root.GetProperty("records").GetArrayLength()==18&&!root.GetProperty("freshnessVerified").GetBoolean()&&!root.GetProperty("productionEligible").GetBoolean()&&root.GetProperty("fullReadback").GetString()=="BLOCKED","Evidence only");
+ Check(log.ToString().Contains("gainDb=-6")&&log.ToString().Contains("rawWords=[0,9,3,4194304"),"Raw coefficient and metadata display");
+});
+Test("Nine reply0 thenmatch and repeatedpending timeout no resend/no later bands",()=>{
+ var plan=NineReadbackPolling.Plan();using var hid=new MockHid(NineReply(plan[^1]));hid.Responses.Enqueue(plan[0].Bytes);foreach(var q in plan)hid.Responses.Enqueue(NineReply(q));using var log=new StringWriter();
+ Check(NineReadbackPolling.Run(hid,log,()=>new FakeClock())==0&&hid.Transmissions.Count==18&&hid.Calls.Count(c=>c=="GET")==19,"Pending only GET");
+ using var timeout=new MockHid(plan[0].Bytes);using var timeoutLog=new StringWriter();
+ Check(NineReadbackPolling.Run(timeout,timeoutLog,()=>new FakeClock())==7&&timeout.Transmissions.Count==1&&timeout.Calls.Count(c=>c=="GET")==200,"Timeout ends entire plan");
+});
+Test("Nine stalewire/wrongmodule/command/path stop first failure and retain earlier records",()=>{
+ var plan=NineReadbackPolling.Plan();var variants=new List<byte[]> {NineReply(plan[0])};
+ var b=NineReply(plan[1]);b[6]=1;variants.Add(b);b=NineReply(plan[1]);b[10]=1;variants.Add(b);b=NineReply(plan[1]);b[4]=1;variants.Add(b);b=NineReply(plan[1]);b[2]=7;variants.Add(b);
+ foreach(var rx in variants){using var hid=new MockHid(NineReply(plan[1]));hid.Responses.Enqueue(NineReply(plan[0]));hid.Responses.Enqueue(rx);using var log=new StringWriter();Check(NineReadbackPolling.Run(hid,log,()=>new FakeClock())==7&&hid.Transmissions.Count==2&&hid.Calls.Count(c=>c=="GET")==2&&log.ToString().Contains("STOP_INCOMPLETE"),"First failure stops");}
+});
+Test("Nine477 strictband/count/module pending and stop; no gain zero assumption",()=>{
+ var plan=NineReadbackPolling.Plan();
+ foreach(int bad in new[]{1,2,3,4}){using var hid=new MockHid(NineReply(plan[^1]));foreach(var q in plan.Take(9))hid.Responses.Enqueue(NineReply(q));var b=NineReply(plan[9]);if(bad==1)b[14]=2;if(bad==2)b[2]=5;if(bad==3)b[6]=1;if(bad==4)b[4]=1;hid.Responses.Enqueue(b);using var log=new StringWriter();Check(NineReadbackPolling.Run(hid,log,()=>new FakeClock())==7&&hid.Transmissions.Count==10,"477 first mismatch STOP");}
+ using var pending=new MockHid(NineReply(plan[^1]));foreach(var q in plan.Take(9))pending.Responses.Enqueue(NineReply(q));pending.Responses.Enqueue(plan[9].Bytes);foreach(var q in plan.Skip(9))pending.Responses.Enqueue(NineReply(q));using var pendingLog=new StringWriter();Check(NineReadbackPolling.Run(pending,pendingLog,()=>new FakeClock())==0&&pending.Calls.Count(c=>c=="GET")==19,"477 echo only pending");
+});
+Test("Nine disconnect/failedSET/exception/late response stop plan immediately",()=>{
+ var plan=NineReadbackPolling.Plan();using var disconnected=new MockHid(NineReply(plan[0]));disconnected.GetResult=new(false,1167);using var log=new StringWriter();Check(NineReadbackPolling.Run(disconnected,log,()=>new FakeClock())==7&&disconnected.Calls.Count==2,"Disconnect");
+ using var failed=new MockHid(NineReply(plan[0]));failed.SetResult=new(false,5);using var f=new StringWriter();Check(NineReadbackPolling.Run(failed,f,()=>new FakeClock())==7&&failed.Calls.SequenceEqual(new[]{"SET"}),"FailedSET");
+ using var error=new MockHid(NineReply(plan[0]));error.OnGet=()=>throw new InvalidOperationException("mock");using var e=new StringWriter();Check(NineReadbackPolling.Run(error,e,()=>new FakeClock())==7&&error.Transmissions.Count==1,"Exception");
+ using var late=new MockHid(NineReply(plan[0]));var clock=new FakeClock();late.OnGet=()=>clock.TimeMs=1001;using var l=new StringWriter();Check(NineReadbackPolling.Run(late,l,()=>clock)==7&&late.Transmissions.Count==1,"Late frame rejected");
+});
+
 Console.WriteLine($"Native offline tests: {passed} passed; SYNTHETIC / MOCK ONLY; no hardware access.");
 return 0;
 

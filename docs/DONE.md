@@ -1,3 +1,9 @@
+## 2026-10-09 — Controlled nine-band read-only tool ready
+- Implementedisolated scripts/query-freedsp-nine-eq.ps1 / pollNineEq withfixed446path0wire1..9 then477band1..9,max18SETonceeach,strictper-querymatching/pendingGET-onlydeadline,firstfailureSTOP. Exactdevice/CAFgateandbyteallowlist,no mode/writes/productionCONNECTchanges.
+- Addedraw/timing/API/correlation/query-contextcapturewithpartial/finalJSON,source/freshness/stereo/productionflagsunverified. ProvidedcontrolledAppcomparisonmanualguide,includingoperationtimelineandlaunchconfounds.
+- Henry-reportedone446wire2nonunitymatchingframeSET1/GET1recordedassingle-sessionevidence,notpollingfixorfullReadbackPASS. Newrawcapture not supplied here.
+- Offlinebuildzeroerrors/warnings;92native/mocktestsPASSincluding6newninegroupsandexistingWire2/RAM18/Flash56regressions;PowerShellAST/diffcheckPASS. NoCodexhardwareoperations. FullReadbackandCONNECTautomaticloadingBLOCKED. NoPR/release.
+
 
 ### Offline verification / scope — controlled wire2 polling
 - Isolated native testbuild PASS;86offline/mock tests PASS(7newwire2 groups). IncludesexistingRAM18/Flash56/normalHTTP/oldreadbackgolden/mock regressions;nohardwareaccess.

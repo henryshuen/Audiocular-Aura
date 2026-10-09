@@ -1,4 +1,33 @@
 
+## Controlled nine-band read-only comparison (2026-10-09)
+
+### Research checkpoint
+- Examined existingWire2Polling/Caf346/ReadbackQuery,actual earliercapture,477SDKfield assignments andfixedquerybytes;no protocol re-research.
+- Henry reportsWire2SET1/GET1/reply1/count8/nonunity,matching446/path0/wire2. FirstGETsuccess doesnotproveboundedpolling repairedtheearlierreply0;newrawcapture not supplied here.
+- Addedisolated pollNineEq / scripts/query-freedsp-nine-eq.ps1:446path0wire1..9 then477band1..9,max18SET,oneeach,strictmatching1sGET-onlywaiting/5ms,firstfailureSTOP. ExactFreeDSPCAFgate/scopedallowlist;no346/mode/190/220/reset/path1/scan/editorloading. ExistingWire2entryremainsfixedwire2;normaltransport/writesunchanged.
+- Verifiedoffline:92native/mocktestsPASS,6newnine-plan groups,zero-warningtestbuild,PowerShellAST anddiffcheckPASS. Sandboxsocketrestriction requiredlocalhostmocktestoutside sandbox;fakechildonly,noHID/deviceaccess. Nohardwarequery executed byCodex.
+- Hypotheses:446activecoefficients versus477persistent/default/custommetadata;neitherstoreproven. Same-tuplefreshness,currentrate/enabled/mode/stereoandatomicityunresolved.
+- Discarded:singleWire2successprovespollingfix;477zeroGainmeansFlashbroken;matchingpacketprovescurrentRAM;Appcurvewithouttimelineisdecisive.
+- Nexttarget:onecontrolledread-onlysessionwithAppindividualninevalues/timestamps,lastknownprofile/rate/actionhistory;fullguide tests/freedsp/fixtures/freeDspNineReadbackPolling.md. Do not manufacture RAM/Flashdifferencewithwrites thisround.
+
+### Problem / hypothesis / next action
+Observed problem:477 previouslyallzeroGainwhilelaterAppnonflat;firstcapture446incomplete. Wire2nowmatched once butfullninecoefficients/sourcecross-checkabsent.
+Verified facts:existing477logicalfieldsrate/band/frequency/Q256/type/gain;existing446eightwords/path/wire/scaling/fivecoefficients. Newfixed18-querytoolrecordsallrawbuffers/time/correlationandsourcesUNKNOWN,partial/finalJSON.
+Possible causes:distinctmetadata/activecoefficientstores,otherbank/cache,Appstate/timing/launchwrites;pending446 remainspossible,notconfirmedpollingrepair.
+Ruled out / weakened:generalwire2unsupported weakenedbyHenry'snewmatch;noautomaticRAM/Flashsource/freshnessinference. Wrong/staleotherbandreplySTOP offlineverified.
+Next validation:Henryrunsquery-freedsp-nine-eq.ps1once,read-only,nootherreaders/noedits;preservelog/JSONandbefore/afterAppvalues/actiontimeline. CompareagainstexistingknownRAMsnapshotandFlashmetadataofflineonly. Unknownrate/history oridenticalactive/persistentprofileslimitsdiscrimination.
+Possible fix direction:onlyafterphysicalcross-validationconsiderreadbacksource/activationmodel;do notmodifyverifiedRAM190/Flash220orproductionCONNECT. CompleteReadbackandCONNECTauto-loadremainBLOCKED.
+
+## Evidence for upstream / Issue #3 — controlled nine-band increment
+Henry reports446path0wire2matchingnonunityframeSET1/GET1;thisdoesnotdemonstrateGETpollingrepair orfreshness. Forkaddsopt-infixednine446then nine477capture,max18one-shotSETs,strictreply/CTRL/command/path/wire/count/formatmatching,SDK-styleboundedGET-onlypendingwait,noSETresend;firstfailurestopsplan. Exact35D8:1496CAFonly. RawTX/RX,UTC/elapsed/API/correlation,allcoefficients/metadataretained;RAM/Flashsource/freshness/stereo/enabledstillUNKNOWN. Official477getterpersistentintentisnotfirmwarestorageproof. ComparewithAppindividualvaluesandrecordedlastknownRAM/Flashprofile/rate/history,avoidApplaunchwriteconfound. NohardwareaccessbyCodex/noPR/release;fullReadback/automaticCONNECTBLOCKED.
+
+### Scope / regression check
+- FreeDSP-specific files changed:isolatedNineReadbackPolling,read-onlyWire2pollingreuse,newPowerShelllauncher;nativeCLIregistrationonly.
+- Analysis/testfiles changed:native6mockgroups,manualcaptureguide;GENERAL/ROADMAP/DECISIONS/DONEupdated.
+- Sharedproductionfrontend/runtimefiles changed:NONE. Native productionCONNECT/HTTPtransport/CAFparser/RAM190/Flash220unchanged.
+- Non-FreeDSPprotocolcodechanged:NO. READY FOR CONTROLLED READ-ONLY VALIDATION,notReadbackPASS.
+
+
 ### Offline verification / scope — controlled wire2 polling
 - Isolated native testbuild PASS;86offline/mock tests PASS(7newwire2 groups). IncludesexistingRAM18/Flash56/normalHTTP/oldreadbackgolden/mock regressions;nohardwareaccess.
 - Initialnewwrong-commandtest changedonly446'slowbyte(also190);corrected tofullcommandfield. Rerun86testsPASS. No production defect inferred from that test-fixture mistake.
