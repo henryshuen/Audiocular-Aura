@@ -7,6 +7,6 @@ export function gainRangeFor(device:Pick<HIDDevice,'vendorId'|'productId'>|null)
 }
 export function validateFreeDspGain(value:number,index:number){
  if(!Number.isFinite(value)||value<freeDspGainRange.min||value>freeDspGainRange.max)
-   throw new Error(`FreeDSP Band${index+1} gain ${value} dB 超出官方App政策 −16..+6 dB；未接受設定，沒有自動夾限。`);
+   throw new Error(`FreeDSP Band${index+1} gain ${value} dB is outside official App policy -16..+6 dB; setting rejected without automatic clamping.`);
  return value;
 }

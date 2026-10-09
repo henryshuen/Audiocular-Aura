@@ -37,7 +37,7 @@ describe('Final FreeDSP UX: DOM/event/HTTP mocks only; no hardware',()=>{
   const ctx={device:null as HIDDevice|null,connectAttempt:0,freeDspStateStale:false,eqState:freeDspDefaultBands().map(b=>({...b,gain:-3,q:1.2})),globalGainState:0,autoPreampEnabled:false,
    window:{},document:doc,navigator:{hid:{requestDevice:vi.fn(async()=>[d])}},activeDacs:[],VID_AUDIOCULAR:1,VID_SAVITECH_OFFICIAL:2,VID_SAVITECH:3,VID_SAVITECH_ALT:4,VID_COMTRUE:5,VID_FIIO:6,
    isExperimentalFreeDspActive:()=>false,isFreeDsp,selectCafDevice,normalizeFreeDspEditor,showFreeDspDeviceState:(online:boolean)=>showFreeDspDeviceState(online,doc as unknown as Document),
-   freeDspReadbackSlots:new ReadbackSlots(),previewResponse,loadReadbackPreview:vi.fn(async()=>{}),clearReadbackPreview:vi.fn(),connectFreeDsp:vi.fn(async()=>({})),disconnectFreeDsp:vi.fn(),log:vi.fn(),console:{debug:vi.fn()},localStorage:{getItem:vi.fn(()=> 'Stored nonflat device name'),setItem:vi.fn()},
+   freeDspReadbackSlots:new ReadbackSlots(),configureFreeDspControlNotes:vi.fn(),previewResponse,loadReadbackPreview:vi.fn(async()=>{}),clearReadbackPreview:vi.fn(),connectFreeDsp:vi.fn(async()=>({})),disconnectFreeDsp:vi.fn(),log:vi.fn(),console:{debug:vi.fn()},localStorage:{getItem:vi.fn(()=> 'Stored nonflat device name'),setItem:vi.fn()},
    identifyConnectedDac:vi.fn(),getProtocol:()=> 'CONEXANT',enableControls:vi.fn(),configureFreeDspUI:(online:boolean)=>{if(online)showFreeDspDeviceState(true,doc as unknown as Document);},
    configurePreampUI:vi.fn(),setupListener:vi.fn(),setLastAppliedEqName:vi.fn(),renderUI:vi.fn(),lastAppliedEqName:'Flat Profile (Default)',t:()=> 'Last applied'};
   const names=['connectToDevice','disconnectDevice','adjustBandsForDevice','updateLastAppliedEqUI'];
@@ -74,7 +74,7 @@ describe('Final FreeDSP UX: DOM/event/HTTP mocks only; no hardware',()=>{
  it('cancel/disconnect while chooser is pending prevents an old selection from connecting',async()=>{
   let choose!:(d:HIDDevice[])=>void;const metadata=vi.fn();const d={...henryM2ADescriptor,opened:false} as unknown as HIDDevice;
   const ctx={device:null,connectAttempt:0,activeDacs:[],VID_AUDIOCULAR:1,VID_SAVITECH_OFFICIAL:2,VID_SAVITECH:3,VID_SAVITECH_ALT:4,VID_COMTRUE:5,VID_FIIO:6,
-   isExperimentalFreeDspActive:()=>false,isFreeDsp,selectCafDevice,freeDspReadbackSlots:new ReadbackSlots(),previewResponse,loadReadbackPreview:vi.fn(async()=>{}),clearReadbackPreview:vi.fn(),connectFreeDsp:metadata,log:vi.fn(),console:{debug:vi.fn()},document:{getElementById:()=>null},navigator:{hid:{requestDevice:()=>new Promise<HIDDevice[]>(r=>{choose=r;})}}};
+   isExperimentalFreeDspActive:()=>false,isFreeDsp,selectCafDevice,freeDspReadbackSlots:new ReadbackSlots(),configureFreeDspControlNotes:vi.fn(),previewResponse,loadReadbackPreview:vi.fn(async()=>{}),clearReadbackPreview:vi.fn(),connectFreeDsp:metadata,log:vi.fn(),console:{debug:vi.fn()},document:{getElementById:()=>null},navigator:{hid:{requestDevice:()=>new Promise<HIDDevice[]>(r=>{choose=r;})}}};
   const f=runInNewContext(extract('connectToDevice')+extract('disconnectDevice')+'\n({connectToDevice,disconnectDevice})',ctx);
   const p=f.connectToDevice();await f.disconnectDevice();choose([d]);await p;expect(metadata).not.toHaveBeenCalled();expect(ctx.device).toBeNull();
  });
@@ -86,7 +86,7 @@ describe('Final FreeDSP UX: DOM/event/HTTP mocks only; no hardware',()=>{
  it('actual slider and numeric HTML use exact-device limits; another PID keeps generic±12',()=>{
   for(const [pid,min,max] of [[0x1496,-16,6],[1,-12,12]]){
    const rows:{innerHTML:string}[]=[],strips={children:[],innerHTML:'',appendChild:(n:{innerHTML:string})=>rows.push(n)};
-   const ctx={device:{vendorId:0x35d8,productId:pid},getEqState:freeDspDefaultBands,freeDspReadbackSlots:new ReadbackSlots(),updateSlotLabel:vi.fn(),isFreeDsp,gainRangeFor,localStorage:{setItem:vi.fn()},globalGainState:0,bassTiltState:0,trebleTiltState:0,manualPreampState:0,
+   const ctx={device:{vendorId:0x35d8,productId:pid},getEqState:freeDspDefaultBands,freeDspReadbackSlots:new ReadbackSlots(),configureFreeDspControlNotes:vi.fn(),updateSlotLabel:vi.fn(),isFreeDsp,gainRangeFor,localStorage:{setItem:vi.fn()},globalGainState:0,bassTiltState:0,trebleTiltState:0,manualPreampState:0,
     document:{getElementById:(id:string)=>id==='eqStrips'?strips:null,querySelector:()=>null,createElement:()=>({innerHTML:'',addEventListener:vi.fn()})},
     window:{scrollY:0,scrollTo:vi.fn()},focusedBandIndex:0,DEFAULT_LABELS:Array(9).fill('Band'),t:()=>'',isExperimentalFreeDspActive:()=>false};
    runInNewContext(extract('renderUI')+'\nrenderUI(bands)',{...ctx,bands:freeDspDefaultBands()});expect(rows).toHaveLength(9);

@@ -1,3 +1,10 @@
+## 2026-10-09 — Final upstream UI cleanup / offline checkpoint
+- Recorded Henry's manual acceptance of CONNECT readback in original curve, OFF/A/B retention, gain/reset workflow at05a8368; retained previously reported stereo RAM and Flash persistence hardware PASS. No new hardware operations in this round.
+- Changed misleading Last Applied/local counter/rate/firmware labels to accurate English FreeDSP status; hid false Level Matched claim. Kept accepted slot/editor/reset/gain/graph behavior.
+- Translated FreeDSP dialogs/tooltips/errors/results, removed obsolete development descriptions. Supported profile imports stay local and explicitly ignore unsupported preamp; other DAC preamp/sync retained. Protected Flash status against stale connection callbacks.
+- Audited refreshed upstream/main af0bcf7 production changes and retained necessary exact-device guards/native GET_REPORT exception. Native/RAM/Flash numeric algorithms and readback decoder unchanged.
+- Final verify.ps1 PASS: TypeScript, production build and 33 test files / 322 tests, including eight new release UX tests. Native93 offline mocks PASS; native build zero errors/warnings. git diff --check PASS. Identified concrete upstream deployment blocker: helper accepts only localhost5173 and static deployment does not install/distribute it. No PR/release submitted.
+
 ## 2026-10-09 — Final Readback UX implementation / offline checkpoint
 - Removed the main-page duplicate preview card/graph/table and development debug link; retained original curve and OFF/A/B controls.
 - Integrated fixed CONNECT readback into existing canvas using raw path0 coefficient projection. Preserved local editor and rejected stale/failing capture.

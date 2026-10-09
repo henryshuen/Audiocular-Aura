@@ -2,6 +2,17 @@
 
 > **A premium, browser-based hardware DSP equalizer controller.** Configure the integrated 10-band Parametric Equalizer (PEQ) on your Audiocular Aura, Moondrop, FiiO, and other compatible USB DACs directly over WebHID. No background drivers or desktop app installs required!
 
+
+### Moondrop FreeDSP support in this fork
+
+FreeDSP (`35D8:1496`, Conexant/Freeman DSP) is an exception to the browser-only description above. It requires Windows, a Chromium browser with WebHID, and the local native HID helper: the browser cannot request the device's Input GET_REPORT replies. Other DACs retain their upstream WebHID workflow.
+
+For this checkout, install Node.js with npm and the .NET 10 SDK, then run `scripts/setup.ps1` once and `scripts/dev.ps1` to start both the app at `http://localhost:5173/` and the helper. Keep that PowerShell session running. The helper currently permits only the app origin `http://localhost:5173` and listens at `127.0.0.1:5174`. A static build alone does not start or distribute the helper, and the upstream GitHub Pages site is not an allowed helper origin. Standalone browser-only FreeDSP support is unavailable. `scripts/verify.ps1` builds the app and runs offline tests; it performs no hardware operations.
+
+FreeDSP supports nine PK bands with the official App gain policy of -16..+6 dB. Editing and OFF/A/B switching are local; Sync RAM, Restore, confirmed resets and Save to Flash are deliberate device operations. Henry has verified stereo RAM EQ and persistence after USB power removal. Preamp, Tone Tilt and DAC/microphone utilities are excluded; the gain range is not a clipping-safety guarantee.
+
+CONNECT captures a readback snapshot. A/B reconstruction uses integer dB Gain and Q raw/256 after confirmation; local enabled switches are assumptions. Active RAM/Flash origin, path1, same-tuple freshness and original fractional Gain are not established. The UI does not claim a complete hardware backup or bit-exact restoration.
+
 [![License](https://img.shields.io/badge/License-GPL%20v3-blue.svg?style=flat-square)](LICENSE)
 [![Live App](https://img.shields.io/badge/Live%20App-Launch-brightgreen?style=flat-square)](https://mandy321.github.io/Audiocular-Aura/)
 [![Stars](https://badgen.net/github/stars/mandy321/Audiocular-Aura?color=yellow)](https://github.com/mandy321/Audiocular-Aura/stargazers)

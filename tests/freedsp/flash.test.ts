@@ -97,7 +97,7 @@ describe('FreeDSP Flash evidence/plan; offline mocks only',()=>{
  });
  it('exact56 ACKs including commit complete; no RAM190/prerequisites/other utilities',async()=>{
    const f=mock();await executeFlashPlan(f.transport,buildFlashPlan(flashTestPreset()),f.log);
-   expect(f.reports).toHaveLength(56);expect(f.logs.at(-1)).toContain('NOT YET HARDWARE PASS');
+   expect(f.reports).toHaveLength(56);expect(f.logs.at(-1)).toContain('not independently checked');
    expect(f.reports.every(p=>[90,220].includes(parse(p).command))).toBe(true);
  });
  it('failure at any request stops exactly there; no automatic retry/rollback/commit after failure',async()=>{

@@ -49,5 +49,5 @@ export async function executeFlashPlan(transport:CafTransport,plan:FlashPlan,log
       throw e;
     }
   }
-  log('FreeDSP Flash protocol complete:90 + 55 command220 including COMMIT255 PASS; persistence NOT YET HARDWARE PASS. Full USB power-cycle without RAM Sync is required.');
+  log('FreeDSP Flash save acknowledged, including commit. This operation has not independently checked the stored profile after power cycling.');
 }

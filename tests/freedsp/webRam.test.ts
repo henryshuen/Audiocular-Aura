@@ -21,7 +21,7 @@ function fakeBridge(){
 }
 describe('M2N Web/native RAM contract; no physical HID',()=>{
  it('positive coefficients remain finite/stable/representable and identical for both paths',()=>{
-   expect(()=>modelWebBand({...bands()[4],gain:12},5)).toThrow('官方App政策');
+   expect(()=>modelWebBand({...bands()[4],gain:12},5)).toThrow('official App policy');
    for(const gain of [1,3,6])for(const freq of [400,1000,6000])for(const q of [.3,1,4])for(const rate of [4,5,6,7,8]){
      const b={...bands()[4],gain,freq,q};const left=modelWebBand(b,rate,false,0),right=modelWebBand(b,rate,false,1);
      expect(left.payload.slice(1)).toEqual(right.payload.slice(1));

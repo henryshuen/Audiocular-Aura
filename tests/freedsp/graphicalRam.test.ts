@@ -58,7 +58,7 @@ describe('FreeDSP M2R graphical session; mocks only',()=>{
  });
  it('invalid/unsafe editor blocks Sync before transport but explicit emergency Restore remains possible',async()=>{
    const f=mock();f.setGate();await f.c.connect();const bad=unityPreset();bad[4].gain=13;
-   await expect(f.c.sync(bad)).rejects.toThrow('無效');expect(f.actions).toEqual(['metadata']);
+   await expect(f.c.sync(bad)).rejects.toThrow('invalid');expect(f.actions).toEqual(['metadata']);
    bad[0].freq=NaN;await expect(f.c.sync(bad)).rejects.toThrow();await f.c.restore();expect(f.actions).toEqual(['metadata','restoreNine']);f.c.disconnect();
  });
  it('protocol failure locks Apply without auto retry/rollback; explicit unity recovery is available',async()=>{

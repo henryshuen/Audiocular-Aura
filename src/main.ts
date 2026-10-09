@@ -129,10 +129,10 @@ let safetyActionPending: "sync" | "flash" | null = null;
 
 async function syncFreeDspRam(){
  const attempt=getConnectionAttempt();
- try{setFreeDspRamStatus('FREEDSP RAM：等待明確Sync回應…');const result=await syncToDevice(true);
+ try{setFreeDspRamStatus('FreeDSP RAM: waiting for explicit Sync acknowledgments...');const result=await syncToDevice(true);
    if(attempt!==getConnectionAttempt())return;
-   setFreeDspRamStatus(result===false?'Device EQ Unknown — Local Editor：已取消Sync，未改寫RAM。':'FREEDSP RAM：Sync協定完成；非讀回，本次LOCAL EDITOR快照已送出。');
- }catch(e){if(attempt===getConnectionAttempt()){setFreeDspRamStatus('FREEDSP RAM：Sync未完成／狀態未確認；請查看log。');log(String(e));}}
+   setFreeDspRamStatus(result===false?'Sync canceled; no RAM write. Active RAM state remains unverified.':'FreeDSP RAM: Sync acknowledged for the submitted Local Editor snapshot; not device readback.');
+ }catch(e){if(attempt===getConnectionAttempt()){setFreeDspRamStatus('FreeDSP RAM: Sync incomplete; active state unknown. See log.');log(String(e));}}
 }
 
 async function safeSyncToDevice() {
@@ -158,11 +158,13 @@ async function safeFlashToFlash() {
 }
 
 async function saveFreeDspFlash(){
+  const attempt=getConnectionAttempt();
   const button=document.getElementById('btnFlash') as HTMLButtonElement|null;if(button)button.disabled=true;
-  try{setFreeDspRamStatus('FREEDSP FLASH：等待明確Save／ACK；非RAM Sync。');const saved=await flashToFlash();
-    setFreeDspRamStatus(saved===true?'FREEDSP FLASH：56次matching回應含commit完成；持久性尚未硬體PASS。':'FREEDSP FLASH：Save已取消，沒有Flash寫入。');}
-  catch(e){setFreeDspRamStatus('FREEDSP FLASH：未完成／可能部分保存；STOP，不重試。請查看逐封包log。');log(String(e));}
-  finally{if(button)button.disabled=!isFreeDsp(getDevice());}
+  try{setFreeDspRamStatus('FreeDSP Flash: waiting for explicit Save acknowledgments; separate from RAM Sync.');const saved=await flashToFlash();
+    if(attempt!==getConnectionAttempt())return;
+    setFreeDspRamStatus(saved===true?'FreeDSP Flash: Save acknowledged, including commit; this session has not verified a power cycle.':'FreeDSP Flash: Save canceled; no Flash write.');}
+  catch(e){if(attempt===getConnectionAttempt()){setFreeDspRamStatus('FreeDSP Flash: Save incomplete; possibly partially stored. STOP, no retry. See log.');log(String(e));}}
+  finally{if(button && attempt===getConnectionAttempt())button.disabled=!isFreeDsp(getDevice());}
 }
 
 function showSafetyModal(action: "sync" | "flash") {
@@ -223,7 +225,7 @@ btnSync?.addEventListener("click", async () => safeSyncToDevice());
 
 const btnSendToDevice = document.getElementById("btnSendToDevice");
 btnSendToDevice?.addEventListener("click", async () => {
- if(isFreeDsp(getDevice())){log("FreeDSP SEND TO DEVICE停用；請用SYNC TO RAM。");return;}
+ if(isFreeDsp(getDevice())){log("FreeDSP SEND TO DEVICE disabled; use SYNC TO RAM.");return;}
 	log("[System] Force-sending entire EQ profile to device...");
 	await safeSyncToDevice();
 });
@@ -263,7 +265,7 @@ btnSafetyAutoReduce?.addEventListener("click", async () => {
  */
 const globalSlider = document.getElementById("globalGainSlider");
 globalSlider?.addEventListener("input", async (e) => {
-	if (isFreeDsp(getDevice())) { log('FreeDSP 全域增益命令尚未確認；沒有送出。'); return; }
+	if (isFreeDsp(getDevice())) { log('FreeDSP global gain unavailable; no hardware command sent.'); return; }
 	await setGlobalGain(e);
 });
 
@@ -305,7 +307,7 @@ if (slideBassTilt && slideTrebleTilt && lblBassTilt && lblTrebleTilt && tiltText
 	const updateTiltUI = async () => {
 		if (isFreeDsp(getDevice())) {
 			(window as any).resetTiltState?.();
-			log('FreeDSP Tone Tilt 未支援：不占用九段 PEQ；沒有送出。');
+			log('FreeDSP Tone Tilt unsupported; nine PEQ bands unchanged. No hardware command sent.');
 			return;
 		}
 		const bass = parseFloat(slideBassTilt.value);
@@ -659,7 +661,7 @@ function stopFreeDspMicDisplay() {
 	if (micMonitorStatus) {
 		micMonitorStatus.classList.remove('active');
 		micMonitorStatus.removeAttribute('data-i18n');
-		micMonitorStatus.innerText = 'FreeDSP 監聽／電平：未驗證';
+		micMonitorStatus.innerText = 'FreeDSP microphone monitoring / levels: unavailable';
 	}
 }
 (window as any).stopFreeDspMicDisplay = stopFreeDspMicDisplay;
@@ -686,7 +688,7 @@ function animateMicMeters() {
 }
 
 toggleMicMonitor?.addEventListener("change", () => {
-	if (isFreeDsp(getDevice())) { stopFreeDspMicDisplay(); log('FreeDSP 麥克風監聽／電平未驗證；沒有送出。'); return; }
+	if (isFreeDsp(getDevice())) { stopFreeDspMicDisplay(); log('FreeDSP microphone monitoring / levels unavailable; no hardware command sent.'); return; }
 	const isOn = toggleMicMonitor.checked;
 	if (micMonitorStatus) {
 		micMonitorStatus.setAttribute("data-i18n", isOn ? "monitoring_on" : "monitoring_off");
@@ -1379,7 +1381,7 @@ document.getElementById('btnFreeDspRestore')?.addEventListener('click',async()=>
  if(!isFreeDsp(getDevice()))return;
  const attempt=getConnectionAttempt();
  const button=document.getElementById('btnFreeDspRestore') as HTMLButtonElement|null;if(button)button.disabled=true;
- try{setFreeDspRamStatus('FREEDSP RAM：等待全九段雙聲道unity Restore…');const result=await restoreFreeDspUnity();if(attempt!==getConnectionAttempt())return;setFreeDspRamStatus(result===false?'Device EQ Unknown — Local Editor：已取消Restore，未改寫RAM。':'FREEDSP RAM：unity Restore協定完成（18次190）；LOCAL EDITOR未修改。');}
- catch(e){if(attempt===getConnectionAttempt()){setFreeDspRamStatus('FREEDSP RAM：Restore未完成／狀態未確認；STOP，無自動retry或rollback。');log(String(e));}}
+ try{setFreeDspRamStatus('FreeDSP RAM: waiting for nine-band stereo unity Restore...');const result=await restoreFreeDspUnity();if(attempt!==getConnectionAttempt())return;setFreeDspRamStatus(result===false?'Restore canceled; no RAM write. Active RAM state remains unverified.':'FreeDSP RAM: stereo unity Restore acknowledged; Local Editor and Flash unchanged.');}
+ catch(e){if(attempt===getConnectionAttempt()){setFreeDspRamStatus('FreeDSP RAM: Restore incomplete; active state unknown. STOP, no automatic retry or rollback.');log(String(e));}}
  finally{if(button && attempt===getConnectionAttempt())button.disabled=!isFreeDsp(getDevice());}
 });
