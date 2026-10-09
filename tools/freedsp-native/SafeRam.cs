@@ -14,7 +14,7 @@ public static class SafeRam
 {
     public static IReadOnlyList<int> Rates { get; } = Array.AsReadOnly(new[] {44100, 48000, 96000, 192000, 384000});
     public static bool IsOperation(string[] args) => args.Length == 1 &&
-        (args[0] is "readEqEvidence" or "query346" or "debugInspect" or "debugRam" or "serveDebug" or "serveTransport" or "transportExchange" || TryRemainingOperation(args[0], out _, out _) || TryCandidateOperation(args[0], out _, out _) || ChannelProbe.TryOperation(args[0], out _, out _));
+        (args[0] is "poll446Wire2" or "readEqEvidence" or "query346" or "debugInspect" or "debugRam" or "serveDebug" or "serveTransport" or "transportExchange" || TryRemainingOperation(args[0], out _, out _) || TryCandidateOperation(args[0], out _, out _) || ChannelProbe.TryOperation(args[0], out _, out _));
     public static bool TryRemainingOperation(string operation, out int sdkBand, out bool restore)
     {
         (sdkBand, restore) = operation switch {

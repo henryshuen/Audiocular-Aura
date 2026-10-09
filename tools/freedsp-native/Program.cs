@@ -26,7 +26,7 @@ Console.WriteLine($"FreeDSP Native CAF diagnostic — {args[0]}");
 Console.WriteLine("VID/PID: 0x35D8 / 0x1496; explicit scoped transport only; no driver changes");
 if (args[0] == "query346") Console.WriteLine($"TX preview ({Caf346.ReportBytes} bytes): {Caf346.Hex(Caf346.CreateQuery())}");
 Console.WriteLine("Discovery access=0; query access=GENERIC_READ|GENERIC_WRITE (0xC0000000), share=READ|WRITE (3), synchronous flags=0");
-Console.WriteLine("HidD calls have no timeout parameter. Launcher limits process to30s; each exchange bounded1000ms,346 initial GET precedes clock; no SET resend.");
+Console.WriteLine(args[0] == "poll446Wire2" ? "Single446 query:1s total polling budget including SET;5ms wait;max201GET;launcher30s hard stop. No SET resend." : "HidD calls have no timeout parameter. Launcher limits process to30s; each exchange bounded1000ms,346 initial GET precedes clock; no SET resend.");
 Console.Out.Flush();
 try
 {
@@ -44,6 +44,11 @@ try
     Console.WriteLine("Input1/Output1 confirmed by HidP_InitializeReportForID (preparsed data only)");
     Console.Out.Flush();
     if (args[0] == "debugInspect") { Console.WriteLine("CONNECTED: exact FreeDSP CAF collection verified; metadata only, no SET/GET"); return 0; }
+    if (args[0] == "poll446Wire2")
+    {
+        using var scoped = NativeHid.OpenScoped(target, Wire2Polling.IsAllowed);
+        return Wire2Polling.Run(scoped, Console.Out);
+    }
     if (args[0] == "readEqEvidence")
     {
         using var scoped = NativeHid.OpenScoped(target, ReadbackQuery.IsAllowed);
