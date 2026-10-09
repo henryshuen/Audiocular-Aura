@@ -647,8 +647,8 @@ export function renderUI(eqState: EQ) {
   eqState=getEqState();freeDspReadbackSlots.observe(eqState);configureFreeDspControlNotes(true);updateSlotLabel();
  } // Rendering never clamps retained local values.
 	const gainRange=gainRangeFor(device);
-	// Save current active state to localStorage
-	localStorage.setItem("aura_active_eq_state", JSON.stringify(eqState));
+	// FreeDSP slots must not overwrite the persisted OFF editor draft.
+	localStorage.setItem("aura_active_eq_state", JSON.stringify(isFreeDsp(device)?freeDspReadbackSlots.draft(eqState):eqState));
 	localStorage.setItem("aura_active_preamp_gain", globalGainState.toString());
 	localStorage.setItem("aura_active_bass_tilt", bassTiltState.toString());
 	localStorage.setItem("aura_active_treble_tilt", trebleTiltState.toString());
@@ -936,6 +936,7 @@ export async function disconnectDevice() {
 			console.debug("[DEBUG] A/B state reset to Off on Moondrop disconnect");
 		}
 
+		if(wasFreeDsp)eqState=freeDspReadbackSlots.select('Off',eqState,()=>false)!;
 		device = null;
 		freeDspStateStale=wasFreeDsp;
 		(window as any).device = null;

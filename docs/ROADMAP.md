@@ -1,3 +1,35 @@
+## Latest — OFF draft persistence and manual static staging (2026-10-09)
+
+### Problem / hypothesis / next action
+Observed problem: A/B rendering saved the selected slot into the generic active-editor localStorage field, replacing the OFF draft on reload. The public-site product gate remains unmet.
+Verified facts: exact-device OFF draft is now copied separately for persistence; disconnect selects OFF before generic rendering. Confirmed A/B stay independent across switches/reconnect, with no implicit writes. Full offline verification passes. Existing native RAM190 stereo/Flash220/readback algorithms are untouched.
+Possible causes: a saved local draft may explain returning Band4 values after reload; that is not a hardware readback claim. Browser output submission alone cannot establish a matching CAF response.
+Ruled out / weakened: native mocks establish browser-only PASS; sendReport resolution is ACK; Feature GET can substitute for Input GET on this CAF collection; local asset HTTP200 proves public deployment.
+Next validation: optional local UI check of OFF -> confirmed A -> edited B -> OFF -> reload, without Sync/Reset/Flash. No additional physical protocol experiment is justified for the missing browser API. Henry may separately authorize fork Pages setup and workflow registration.
+Possible fix direction: retain working native fallback and stop browser transport work at BLOCKED. Prepare static staging without presenting it as a verified FreeDSP website.
+
+### Static staging setup and evidence
+- Added .github/workflows/pages-staging.yml: workflow_dispatch only; exact henryshuen/Audiocular-Aura and fix/freedsp-conexant guards; explicit static-only acknowledgement. Existing generic Vite base is unchanged; staging build explicitly uses /Audiocular-Aura/.
+- Production build and staging subdirectory build PASS. scripts/verify-pages.mjs checks nine static files through local HTTP under the correct prefix, manifest paths and asset presence. LOCAL_STATIC_ASSET_PASS; public deployment UNVERIFIED; browser-only FreeDSP BLOCKED.
+- Read-only GitHub API returned Pages HTTP404 (no confirmed accessible deployment); fork default branch is main. GitHub requires workflow_dispatch registration on the default branch. The prepared workflow on the feature branch is not yet dispatchable by itself.
+- Minimum authorized setup: put this workflow on fork main without merging feature runtime changes; Settings -> Pages -> Source: GitHub Actions; allow fix/freedsp-conexant in github-pages environment deployment policy if restricted. Then manually choose that branch and acknowledge static-only deployment. These settings/main changes and dispatch were NOT performed. No public staging URL is confirmed.
+- Sources: https://docs.github.com/en/actions/how-tos/manage-workflow-runs/manually-run-a-workflow and https://vite.dev/guide/static-deploy.html#github-pages . Five action commit pins were checked through GitHub's read-only API.
+
+### Research checkpoint
+- Examined existing exact-device descriptor/capture evidence and current official browser API contracts; reused the prior BLOCKED finding without speculative commands.
+- Verified OFF persistence/reload, confirmed independent A/B, generic persistence and disconnect with actual handler/render code tests. Hypothesis that local reload values prove readback is rejected.
+- Unresolved: browser Input GET_REPORT capability, physical readback source/precision/stereo/freshness, and unperformed public deployment. Next target is authorized staging setup, not unknown CAF commands.
+
+## Evidence for upstream / Issue #3 — final browser and local-state gate
+Exact FreeDSP 35D8:1496 CAF Input1/Output1 carries61 data bytes; native62-byte reports include ID1. SDK/native matching responses use Input GET_REPORT (A1/01, value0101, interface3). Current WebHID has no corresponding Input GET method; the validated collection lacks Feature reports, and WebUSB protects the HID interface. Prior exact-device output tests produced no matching inputreport event. Browser-only release remains BLOCKED; native fallback is retained, not relabeled as browser hardware PASS. OFF/A/B selection remains local; storing the OFF draft separately prevents approximate readback slots from overwriting local editor persistence. Native stereo RAM18 and Flash56/power-cycle evidence remains Henry-reported PASS; no new hardware operations this round. Prepared manual fork-only static staging is not deployed or hardware validated.
+
+### Scope / regression check
+- FreeDSP-specific files changed: src/freedsp/readbackSlots.ts.
+- Shared runtime files changed: src/fn.ts exact-FreeDSP persistence/disconnect guards only; tracked production bundle regenerated.
+- Analysis/test/deployment files: tests/freedsp/draftAndPages.test.ts, scripts/verify-pages.mjs, .github/workflows/pages-staging.yml.
+- Non-FreeDSP protocol code changed: NO. Native transport, RAM190/Flash220 packets/math, nine bands, -16..+6 dB, reset semantics and existing memory controls preserved.
+- Focused31 tests PASS; full verify.ps1 production build/337 tests in35 files PASS; native93 synthetic/mock tests PASS, isolated build zero warnings/errors. No physical queries/writes, Pages dispatch, PR or release.
+
 ## Latest — Browser-only gate / final UI corrections (2026-10-09)
 ### Problem / hypothesis / next action
 Observed problem: Henry reports a Snapshot label over a Flat curve and unusable A/B; extra Restore button, wrapped memory layout and disabled Preamp occupy production space. Public HTTPS/no-install is mandatory.

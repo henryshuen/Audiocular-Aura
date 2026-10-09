@@ -1,3 +1,10 @@
+## 2026-10-09 — OFF draft persistence / static staging offline checkpoint
+- Fixed exact-FreeDSP rendering so confirmed A/B no longer overwrites persisted OFF editor data. Tested original Band4 draft restored on reload without capture or hardware write; disconnect restores OFF and retains independent confirmed A/B in the page session. Generic persistence unchanged.
+- Added manually triggered exact-fork/branch Pages workflow with blocked-feature acknowledgement and explicit /Audiocular-Aura/ build base. Checked all five pinned action commits through read-only GitHub API; no Pages/main/settings/deployment changes performed.
+- Production build and subdirectory staging build PASS. Local HTTP static smoke validated nine nonempty assets at the project prefix and manifest paths: LOCAL_STATIC_ASSET_PASS, public deployment UNVERIFIED. Read-only Pages API returned404; fork default branch verified main. Remote workflow execution remains untested.
+- Focused31 tests across4 files PASS; final verify.ps1 PASS: TypeScript, production build and337 tests across35 files. Isolated native test build zero warnings/errors;93 synthetic/mock tests PASS after permitting localhost mock networking outside the sandbox. git diff --check PASS.
+- No hardware operations, protocol/coefficients/RAM190/Flash220/reset changes, non-FreeDSP protocol changes, PR or release. Existing hardware evidence retained; no new hardware PASS recorded.
+
 ## 2026-10-09 — Browser feasibility / final UI corrections offline checkpoint
 - Rechecked current official WebHID/WebUSB specifications and existing exact-device descriptors, SDK control request and WebHID timeout records. Documented browser-only BLOCKED; no native mock or packet acceptance promoted to browser hardware PASS.
 - Removed production Restore Unity button and FreeDSP-only event listener, retained maintenance recovery and confirmed nine-band Reset paths. Restored three-button memory layout, shortened English notes, and hid/restored preamp space per exact device.
