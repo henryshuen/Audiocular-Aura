@@ -10,12 +10,12 @@ Scope: exact VID35D8/PID1496 connection state, per-band App gain policy, two Res
 
 ## Readback boundary
 
-Sources: `officialFreemanControlEvidence.md`, `officialRamEvidence.md`, `officialSerializerEvidence.md`, and the existing official 57 helper TX/RX pairs. These are pinned SDK/APK source reconstructions and derived fixture reports, not new physical GET_REPORT responses.
+Sources: `officialFreemanControlEvidence.md`, `officialRamEvidence.md`, `officialApkEvidence.md` / `officialResponseStaticEvidence.json`, and the existing official 57 helper TX/RX pairs. These are pinned SDK/APK source reconstructions and derived fixture reports, not new physical GET_REPORT responses.
 
 | Source | Verified source behavior | Missing evidence |
 |---|---|---|
 | 446 getFreeman3EQParam / getF3EQCoefficientList | request [0,slot,…]; exponent byte18; coefficients ints22/26/30/34/38; list raw slots1..9, single SDK getter band+5; native inverse conversion derives EQ parameters | actual exact-device reply, complete stereo interpretation, enabled state, RAM/persistent source, reliable inverse filter identification |
-| 477 getEQParamList | requests band1..9; source parses rate10, band14, frequency18, Q*100 at22, type26, signed gain30 | actual exact-device response, per-band enabled state and configuration source; fidelity of fractional gain |
+| 477 getEQParamList | requests band1..9; source parses rate10, band14, frequency18, Q*256 at22 (corrected by pinned DEX208, 1132462080 = float256), type26, signed gain30 | actual exact-device response, per-band enabled state and configuration source; fidelity of fractional gain |
 | 442 getFreeman3EQConfig | source interprets sample-rate index at10 | remaining response semantics and complete nine-band schema |
 | 346 feature subkeys84/64 | source names global feature availability/enabled bits | no per-band enabled or current profile source mapping |
 | 57 saved helper pairs | 90, nine220 metadata,45 coefficient writes,220 commit255,259 firmware | no446/477 replies at all |

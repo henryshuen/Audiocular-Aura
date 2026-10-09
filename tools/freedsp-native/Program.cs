@@ -44,6 +44,11 @@ try
     Console.WriteLine("Input1/Output1 confirmed by HidP_InitializeReportForID (preparsed data only)");
     Console.Out.Flush();
     if (args[0] == "debugInspect") { Console.WriteLine("CONNECTED: exact FreeDSP CAF collection verified; metadata only, no SET/GET"); return 0; }
+    if (args[0] == "readEqEvidence")
+    {
+        using var scoped = NativeHid.OpenScoped(target, ReadbackQuery.IsAllowed);
+        return ReadbackQuery.Run(scoped, Console.Out);
+    }
     if(transportRequest is not null){
       var tx=transportRequest.Bytes();using var scoped=NativeHid.OpenScoped(target,b=>b.AsSpan().SequenceEqual(tx));
       return TransportExchange.Run(scoped,transportRequest,Console.Out);
