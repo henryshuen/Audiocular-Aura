@@ -30,5 +30,6 @@ export class NativeCafTransport implements CafTransport {
    const reply=parseCaf(rx[0],new DataView(rx.buffer,rx.byteOffset+1,61));
    if(reply.command!==command || reply.reply!==1 || reply.module!==tx.module || (command===346 && reply.count<2))throw new Error('Native RX CAF mismatch；STOP');return reply;
  }
+ async readback(){const r=await this.post('/readback',null);if(!r.readback)throw new Error('Missing readback evidence');return r.readback as unknown;}
  dispose(){this.disposed=true;this.token='';this.controller?.abort();}
 }

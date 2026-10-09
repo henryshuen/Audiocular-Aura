@@ -1,3 +1,18 @@
+
+### Localhost smoke — Round1
+- dev.ps1 running: Vite at http://localhost:5173/ andnativehelper127.0.0.1:5174. BrowsernavigationAccept:text/html rootHTTP200,previewmountpresent,fn/readbackPreview/nativeTransportmodulesHTTP200;sessionM2S CAF TRANSPORT/tokenshapePASS. NoGUIbrowserautomation;visualmanualconfirmationpendingHenry.
+- An initialPowerShellHTTPrequestwithoutAcceptreturnedVite404;browsernavigationheaderverified200,notanapplicationroutingdefect. NoViteconfigurationchange.
+
+### Final verification — Readback Round1
+- Focused6files/65tests PASS; finalverify.ps1 PASS:TypeScript/productionbuild and31files/305tests. Nativeisolatedbuild zeroerrors/warnings;93offline/mocktestsPASSincludingfixedread-onlyHTTPtoken/BUSYgatesandexistingRAM18/Flash56goldens.
+- Actualauthenticated/session/connect/readback physical chain PASS with18matchingframes. No190/220/mode/resetwrites. Exactnine-bandvalues replayvalidatedfromthreeactualcaptures;34648kHz confirmed separately.
+- PowerShellsandbox initiallyblockedVitestTEMPrename andmockHTTPsockets;rancheckswithordinaryuser sandboxescape,noadministrator/ACLchange. Generateddist restoredtoHEAD because not a release;onlyown temporarytestbuild removed. gitdiffcheckPASS.
+## 2026-10-09 — Readback Round1 implemented and physically queried
+- Threeactualnine-bandcaptures(Henry+Codexstandalone+authenticatedHTTP)each18matchingframes,allrawRXequal. One346queryconfirmed48kHz. Codexonly37fixedquerySETs,noRAM/Flash/mode/resetwrites.
+- CorrectreadbacknegativeGaincontainerdecoding;SDKsigned-byte getter andactual477fields revalidated. Nineparameter/45coefficientwordsoffline agreewithinmodelquantizationneighbors;Band4matches-1not-1.5. FulloriginalfractionalGain/enabled/source/stereo notclaimed.
+- ImplementautomaticnormalCONNECTread-onlypreview:fixedauthenticated/readback,nativeexactdevicegate,all18raw/correlation/timingvalidation,atomicnine-rowtable/nonflatprojection,localEditor/presets/A-Bpreserved,firstfailureUnknownfallback,race/disconnectguards. NoautomaticSync/Flash;verifiedwritealgorithmsunchanged.
+- HardwareHTTP/session/connect/readbackchainPASS. Focused65testsand93native/mocktestsPASS;zero-warningnativebuild. Finalverify/diffchecktrackedintheverificationappendix. NoComputerUse/PR/release. FullpreciseeditorReadbackBLOCKED;usefulpreviewREADY.
+
 ## 2026-10-09 — Controlled nine-band read-only tool ready
 - Implementedisolated scripts/query-freedsp-nine-eq.ps1 / pollNineEq withfixed446path0wire1..9 then477band1..9,max18SETonceeach,strictper-querymatching/pendingGET-onlydeadline,firstfailureSTOP. Exactdevice/CAFgateandbyteallowlist,no mode/writes/productionCONNECTchanges.
 - Addedraw/timing/API/correlation/query-contextcapturewithpartial/finalJSON,source/freshness/stereo/productionflagsunverified. ProvidedcontrolledAppcomparisonmanualguide,includingoperationtimelineandlaunchconfounds.

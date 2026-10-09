@@ -9,6 +9,8 @@ import {freeDspDefaultBands,normalizeFreeDspEditor} from '../../src/freedsp/edit
 import {isFreeDsp,gainRangeFor,freeDspGainRange} from '../../src/freedsp/capabilities.ts';
 import {showFreeDspDeviceState,freeDspUnknown,freeDspStale} from '../../src/freedsp/deviceState.ts';
 import {connectFreeDsp,disconnectFreeDsp,getFreeDspSession} from '../../src/freedsp/session.ts';
+import capture from './fixtures/henryNineReadback20261009.json';
+import {loadReadbackPreview} from '../../src/freedsp/readbackPreview.ts';
 import {selectCafDevice} from '../../src/freedsp/webHid.ts';
 import {henryM2ADescriptor} from './fixtures/henryM2ADescriptor.ts';
 import {freeDspGraphBounds} from '../../src/freedsp/graphScale.ts';
@@ -34,7 +36,7 @@ describe('Final FreeDSP UX: DOM/event/HTTP mocks only; no hardware',()=>{
   const ctx={device:null as HIDDevice|null,connectAttempt:0,freeDspStateStale:false,eqState:freeDspDefaultBands().map(b=>({...b,gain:-3,q:1.2})),globalGainState:0,autoPreampEnabled:false,
    window:{},document:doc,navigator:{hid:{requestDevice:vi.fn(async()=>[d])}},activeDacs:[],VID_AUDIOCULAR:1,VID_SAVITECH_OFFICIAL:2,VID_SAVITECH:3,VID_SAVITECH_ALT:4,VID_COMTRUE:5,VID_FIIO:6,
    isExperimentalFreeDspActive:()=>false,isFreeDsp,selectCafDevice,normalizeFreeDspEditor,showFreeDspDeviceState:(online:boolean)=>showFreeDspDeviceState(online,doc as unknown as Document),
-   connectFreeDsp:vi.fn(async()=>({})),disconnectFreeDsp:vi.fn(),log:vi.fn(),console:{debug:vi.fn()},localStorage:{getItem:vi.fn(()=> 'Stored nonflat device name'),setItem:vi.fn()},
+   loadReadbackPreview:vi.fn(async()=>{}),clearReadbackPreview:vi.fn(),connectFreeDsp:vi.fn(async()=>({})),disconnectFreeDsp:vi.fn(),log:vi.fn(),console:{debug:vi.fn()},localStorage:{getItem:vi.fn(()=> 'Stored nonflat device name'),setItem:vi.fn()},
    identifyConnectedDac:vi.fn(),getProtocol:()=> 'CONEXANT',enableControls:vi.fn(),configureFreeDspUI:(online:boolean)=>{if(online)showFreeDspDeviceState(true,doc as unknown as Document);},
    configurePreampUI:vi.fn(),setupListener:vi.fn(),setLastAppliedEqName:vi.fn(),renderUI:vi.fn(),lastAppliedEqName:'Flat Profile (Default)',t:()=> 'Last applied'};
   const names=['connectToDevice','disconnectDevice','adjustBandsForDevice','updateLastAppliedEqUI'];
@@ -44,6 +46,11 @@ describe('Final FreeDSP UX: DOM/event/HTTP mocks only; no hardware',()=>{
   expect(nodes.statusBadge.innerText).toBe('ONLINE');expect(ctx.setLastAppliedEqName).not.toHaveBeenCalled();expect(d.sendReport).not.toHaveBeenCalled();expect(d.open).not.toHaveBeenCalled();
   await f.disconnectDevice();expect(ctx.eqState).toEqual(before);expect(ctx.device).toBeNull();expect(nodes.statusBadge.innerText).toBe('OFFLINE');expect(nodes.lastAppliedEqDisplay.textContent).toBe(freeDspStale);
   await f.connectToDevice();expect(ctx.eqState).toEqual(before);expect(nodes.lastAppliedEqDisplay.textContent).toBe(freeDspUnknown);expect(d.sendReport).not.toHaveBeenCalled();
+  const preview={hidden:true,innerHTML:'',style:{display:'none'}};(nodes as any).freeDspReadbackPreview=preview;
+  const readback=vi.fn(async()=>capture);(ctx as any).getFreeDspSession=()=>({readback});
+  (ctx as any).loadReadbackPreview=async(read:()=>Promise<unknown>,current:()=>boolean,logger:(s:string)=>void)=>loadReadbackPreview(read,current,logger,doc as unknown as Document);
+  await f.connectToDevice();expect(readback).toHaveBeenCalledOnce();expect(preview.innerHTML).toContain('220 Hz');expect(preview.innerHTML).toContain('<svg');expect(ctx.eqState).toEqual(before);expect(d.sendReport).not.toHaveBeenCalled();
+
  });
  it('delayed metadata from old CONNECT cannot register over the reconnected session',async()=>{
   let resolveOld!:(r:Response)=>void;let connects=0;
@@ -65,7 +72,7 @@ describe('Final FreeDSP UX: DOM/event/HTTP mocks only; no hardware',()=>{
  it('cancel/disconnect while chooser is pending prevents an old selection from connecting',async()=>{
   let choose!:(d:HIDDevice[])=>void;const metadata=vi.fn();const d={...henryM2ADescriptor,opened:false} as unknown as HIDDevice;
   const ctx={device:null,connectAttempt:0,activeDacs:[],VID_AUDIOCULAR:1,VID_SAVITECH_OFFICIAL:2,VID_SAVITECH:3,VID_SAVITECH_ALT:4,VID_COMTRUE:5,VID_FIIO:6,
-   isExperimentalFreeDspActive:()=>false,isFreeDsp,selectCafDevice,connectFreeDsp:metadata,log:vi.fn(),console:{debug:vi.fn()},document:{getElementById:()=>null},navigator:{hid:{requestDevice:()=>new Promise<HIDDevice[]>(r=>{choose=r;})}}};
+   isExperimentalFreeDspActive:()=>false,isFreeDsp,selectCafDevice,loadReadbackPreview:vi.fn(async()=>{}),clearReadbackPreview:vi.fn(),connectFreeDsp:metadata,log:vi.fn(),console:{debug:vi.fn()},document:{getElementById:()=>null},navigator:{hid:{requestDevice:()=>new Promise<HIDDevice[]>(r=>{choose=r;})}}};
   const f=runInNewContext(extract('connectToDevice')+extract('disconnectDevice')+'\n({connectToDevice,disconnectDevice})',ctx);
   const p=f.connectToDevice();await f.disconnectDevice();choose([d]);await p;expect(metadata).not.toHaveBeenCalled();expect(ctx.device).toBeNull();
  });

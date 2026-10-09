@@ -31,7 +31,7 @@ public static class NineReadbackPolling
                 var words = Caf346.Parse(Convert.FromBase64String(last.GetProperty("RawBase64").GetString()!)).Words;
                 log.WriteLine(query.Command == 446 ?
                     $"446 path0 wire{query.Wire}: rawWords=[{string.Join(",", words)}]; source UNKNOWN" :
-                    $"477 band{query.Wire}: rateRaw={words[0]} frequencyHz={words[2]} qRaw={words[3]} q={words[3]/256.0} typeRaw={words[4]} gainDb={words[5]}; source UNKNOWN");
+                    $"477 band{query.Wire}: rateRaw={words[0]} frequencyHz={words[2]} qRaw={words[3]} q={words[3]/256.0} typeRaw={words[4]} gainRaw={words[5]} gainDb={(words[5]<<8)>>8}; source UNKNOWN");
             }
             code = 0;
             return code;

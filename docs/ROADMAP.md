@@ -1,4 +1,47 @@
 
+### Localhost smoke — Round1
+- dev.ps1 running: Vite at http://localhost:5173/ andnativehelper127.0.0.1:5174. BrowsernavigationAccept:text/html rootHTTP200,previewmountpresent,fn/readbackPreview/nativeTransportmodulesHTTP200;sessionM2S CAF TRANSPORT/tokenshapePASS. NoGUIbrowserautomation;visualmanualconfirmationpendingHenry.
+- An initialPowerShellHTTPrequestwithoutAcceptreturnedVite404;browsernavigationheaderverified200,notanapplicationroutingdefect. NoViteconfigurationchange.
+
+### Final verification — Readback Round1
+- Focused6files/65tests PASS; finalverify.ps1 PASS:TypeScript/productionbuild and31files/305tests. Nativeisolatedbuild zeroerrors/warnings;93offline/mocktestsPASSincludingfixedread-onlyHTTPtoken/BUSYgatesandexistingRAM18/Flash56goldens.
+- Actualauthenticated/session/connect/readback physical chain PASS with18matchingframes. No190/220/mode/resetwrites. Exactnine-bandvalues replayvalidatedfromthreeactualcaptures;34648kHz confirmed separately.
+- PowerShellsandbox initiallyblockedVitestTEMPrename andmockHTTPsockets;rancheckswithordinaryuser sandboxescape,noadministrator/ACLchange. Generateddist restoredtoHEAD because not a release;onlyown temporarytestbuild removed. gitdiffcheckPASS.
+## Readback Round 1 — automatic truthful preview (2026-10-09)
+
+### Problem / hypothesis / next action
+Observed problem: normalCONNECT showed only local flat/editor values; older parser rejected negative477 gain in zero-extended24 containers; complete source/precision/enabled reconstruction was blocked.
+Verified facts: Henrycapture and two Codex read-onlycaptures all18matching446/477 frames,byte-identical.477Hz220/750/1250/2000/3000/4000/6300/60/4500;Gain-1/+1/-2/-1/-2/-2/+1/-7/0;Qraw256/460/640/256/512/512/1280/102/256,divide256;PK0/rate5. SDKuses signedbyteGain parser; all45coefficientwords matchparameter model withinnativequantizationneighbors. One346query confirmed48kHz. Band4matches-1,not-1.5.
+Possible causes: earlierflat477 maydifferentprofile/session/custom bank; notenoughhistoryforstaleness. SDKsaved-profile getterintentknown,physicalRAM/Flash/bank/freshness/path1 unconfirmed.
+Ruled out / weakened: negative477 meanshugepositiveGain; 477alwaysflat; wire2unsupported; metadata/coefficientmismatch inthisstate; firstGETsuccessprovespollingrepair; capturecontainsoriginalfractionalGain/enabled flag.
+Next validation: Henryopenslocalhost/normalCONNECT toverify nineparameterrowsandnonflatread-onlycoefficientprojection,localeditorseparate,noSync/Save. AtmostonefurtherRound2withsynchronizedAppninevalues/exactexistingRAM/Flashhistory andonefixedreadonlycapture;do not manufacture a statecontrast withunauthorizedwrites.
+Possible fix direction: shipautomaticverifiedparameter/coefficientsPREVIEW now; neverclaimActiveRAM/source orreplaceeditorwithinventedenabled/fractionalGain. Fullprecisiondevice-editorreadbackandPRgate remainBLOCKED,automaticread-onlypreview isREADY. See tests/freedsp/fixtures/freeDspReadbackRound1.md.
+
+### Research checkpoint
+- ExaminedexistingSDKgetters/CommonUtil,signed containers,threeactualcaptures,normalCONNECT/nativehelper gates. No repeatedprotocolresearch.
+- Codex37knownquerySETs total thisround:18standalone446/477 +1rate346 +18viaauthenticated/readback. Allreadonly,no190/220/mode/reset. ExistingRAM/Flashalgorithms untouched;noGUI/PR/release.
+- Addedfixedauthenticated/readback endpoint reusingexistingpollNineEq,strictall18browservalidation,atomicread-onlycurve/table,sessionBUSY/dispose/connectiongeneration guards. Preservelocaleditor/presets/A-B andunknownfallback;hidepreviewondisconnect. Snapshotnotlivemonitoring.
+- Hypotheses:SDKsaved/custommetadata mirrorspersistedprofile;446couldactivecopy. Neitherphysicalsourceproven. Missingoriginalfractionalmetadata/enabled/path1/nonce unresolved,notfabricated.
+- Discarded:signed32-onlynegativeGain,automaticpartialEditorreplace,coefficientscalingwordasEQGain,knownSDKgetternamealoneprovesFlashorigin.
+- Nexttarget: UIpreviewmanualconfirmation;onlyoneadditionalnarrowroundifexactsource/editoracceptance remainsrequired.
+
+## Evidence for upstream / Issue #3 — Readback Round1
+ExactFreeDSPquery446path0wire1..9 and477band1..9 nowthreeconsistenthardwarecaptures/all18matchingframes;Codexrate346index5=48kHz. NativeCAFonly/fixedread-onlycapture/noSETretry/firstfailureSTOP. Rawnegative477Gain00FFFFFF/00FFFFFE/00FFFFF9 requires signedcontainerdecodingconsistentwithSDKCommonUtil signedJava-byte getter atoffset30. Qraw/256;GainintegerdB,enabledabsent. Allnine446coefficientsets agree with477PKparams withinnative1LSBquantization;Band4-1vsApphistorical-1.5notcontemporaneous. OfficialgetEQParamsFromFlash chain provesSDKsavedprofileintent,notphysicalsource/currentRAM. ForknormalCONNECTnowautomaticallyshowsseparateread-onlyninebandparameter/curvepreview,strictcompletevalidation,noeditor/preset/A-Boverwrite/no190/220/modewrites. Clearonoffline/race;Unknownfallback. Source/freshness/stereo/fullfractional reconstructionBLOCKED;noPR/release.
+
+### Scope / regression check
+- FreeDSP files:readbackdecoder/newpreview,nativeadapterandread-onlysessionmethod;isolatedhelper/readback endpoint,diagnosticGainlogfix.
+- Shared files:index.htmlonehiddenpreviewsection,src/fn.ts exactFreeDSPCONNECT/disconnectguards only. OtherDACprotocolimplementations unchanged.
+- Non-FreeDSP protocol code changed:NO. RAM190/Flash220packetmath/order unchanged;existingregressions retained.
+- Hardwareoperations:knownread-only446/477/346queries underHenry'sexplicitRound1authorizationonly;zeroEQ/mode/Flash/resetwrites.
+
+## Readback Round1 — live evidence checkpoint (2026-10-09)
+- Henry authorizes bounded known-command hardware READ-ONLY this round; no RAM/Flash/mode/reset writes. No active native/Vite reader found before standalone capture.
+- Henry capture38148... and Codex repeat4d9dfa... each18SET/18GET,18matchingframes; allRX byte-identical. ExactCAF collectiongate passed. Copies/hash-provenance saved as henryNineReadback20261009 and codexNineReadback20261009 fixtures; HIDinstance paths redacted from logs only.
+- Verified477 rawgain negativevalues usezero-extended24bit containers. Existing int32decoder wrongly rejects these; officialgetEQParamList calls CommonUtil.formatByteToSingedInt atoffset30 (signedJava-byteOR). For observed policyvalues this yields -1/-2/-7. Qraw460/256=1.796875,102/256=.3984375; officialdisplay1.80/.40. Enabled unavailable.
+- Offlinecomparison:allnine446 signed24 coefficientwords withinexistingnativePeakFloat/nativeWordIntervals neighbors at477rate5/48kHz;max1LSB. Band4matches-1,not-1.5 (27554LSB max discrepancy). DoesnotestablishcurrentRAM/source/nonce freshness. No coefficient writealgorithm changes.
+- Next:fixed authenticatedread-onlybridge endpoint invokingexistingpollNineEq,automaticCONNECTpreviewwith strict all-ninevalidation,race/disconnectguards,andatomic read-onlycurve/table. Localeditor untouched,fullprecision/stereo/enabled reconstructionBLOCKED. No syntheticenabledflag or fractionalgain invented.
+
+
 ## Controlled nine-band read-only comparison (2026-10-09)
 
 ### Research checkpoint

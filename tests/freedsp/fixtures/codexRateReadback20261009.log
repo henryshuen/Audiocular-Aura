@@ -1,0 +1,40 @@
+Building FreeDSP native Query346 (.NET 10 SDK required; no external packages)...
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:03.22
+FreeDSP Native CAF diagnostic �X query346
+VID/PID: 0x35D8 / 0x1496; explicit scoped transport only; no driver changes
+TX preview (62 bytes): 01 00 0d 00 5a 01 00 23 2d b3 3e 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+Discovery access=0; query access=GENERIC_READ|GENERIC_WRITE (0xC0000000), share=READ|WRITE (3), synchronous flags=0
+HidD calls have no timeout parameter. Launcher limits process to30s; each exchange bounded1000ms,346 initial GET precedes clock; no SET resend.
+Matching VID/PID HID paths: 2
+Device path: [REDACTED HID INSTANCE]
+VID/PID=35d8/1496 usagePage=0x000c usage=0x0001 input=62 output=62 feature=0 CAF gate=True
+Device path: [REDACTED HID INSTANCE]
+VID/PID=35d8/1496 usagePage=0x000c usage=0x0001 input=2 output=0 feature=0 CAF gate=False
+Selected device path: [REDACTED HID INSTANCE]
+Input report bytes: 62
+Output report bytes: 62
+Feature report bytes: 0
+Input1/Output1 confirmed by HidP_InitializeReportForID (preparsed data only)
+TX (62 bytes, report ID included):
+01 00 0d 00 5a 01 00 23 2d b3 3e 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+SET_REPORT: API=HidD_SetOutputReport requestedLength=62; invoking once
+SET_REPORT: HOST SET_REPORT SUCCESS Win32Error=0
+Polling: initial GET then start1000ms budget; repeated GET then sleep5ms. SET is never resent.
+Diagnostic differences: require matching346 instead of any replybit; stop on GET failure; fresh RX per attempt.
+GET #1: API=HidD_GetInputReport requestedLength=62; invoking
+GET #1: SUCCESS Win32Error=0
+RX #1 (entire buffer; actual transferred length not exposed by HidD API):
+01 00 0d 00 5a 81 00 23 2d b3 3e 00 00 00 05 00 00 00 00 00 00 00 20 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+Parsed: reportId=1 prefixHigh=0 packed=0x815a000d
+command=346 reply=1 count=13 module=0xb32d2300
+logical words=[62,5,0,32,0,0,0,0,0,0,0,0,0] capacityWords=[62,5,0,32,0,0,0,0,0,0,0,0,0]
+GET #1: MATCHING CAF346
+sample-rate raw/index=5 Hz=48000
+RESULT: VALID CAF346 RESPONSE / CAF346 QUERY VERIFIED at GET #1
+This is query transport proof, not RAM/EQ or Flash persistence proof.
+Paste the ENTIRE output from Building/FreeDSP Native CAF Query through RESULT.

@@ -1,3 +1,4 @@
+import {loadReadbackPreview,clearReadbackPreview} from './freedsp/readbackPreview.ts';
 import {freeDspDefaultBands,freeDspEditorGain,normalizeFreeDspEditor} from './freedsp/editor.ts';
 import {gainRangeFor,freeDspGainRange} from './freedsp/capabilities.ts';
 import {showFreeDspDeviceState,freeDspOverwriteWarning} from './freedsp/deviceState.ts';
@@ -782,7 +783,7 @@ export async function connectToDevice() {
 		if(isFreeDsp(dev)){
       freeDspAttempt=true;
       if(attempt!==connectAttempt)return;
-      const session=await connectFreeDsp(dev,log); // Metadata only; no verified nine-band readback.
+      const session=await connectFreeDsp(dev,log); // Exact-device metadata gate before read-only preview.
       if(attempt!==connectAttempt){if(getFreeDspSession(dev)===session)disconnectFreeDsp(dev);return;}
     }
 		if(isExperimentalFreeDspActive())return; // Recheck after the asynchronous browser chooser.
@@ -858,7 +859,11 @@ export async function connectToDevice() {
 
 		// Support parameter reading for Savitech-based DACs (including FiiO JA11 and Moondrop)
 		const protocol = getProtocol(device);
-		if (protocol === "SAVITECH" || protocol === "FIIO_JA11" || protocol === "MOONDROP") {
+        if(isFreeDsp(dev)){
+            renderUI(eqState);
+            await loadReadbackPreview(()=>getFreeDspSession(dev).readback(),()=>attempt===connectAttempt && device===dev,log);
+            if(attempt!==connectAttempt || device!==dev)return;
+        } else if (protocol === "SAVITECH" || protocol === "FIIO_JA11" || protocol === "MOONDROP") {
 			await readDeviceParams(device);
 		} else {
 			log(isFreeDsp(dev)?"FreeDSP native HID adapter已連線；沒有PEQ讀回，editor為本地值，RAM須明確Sync。":"Note: Parameter reading is only supported for Savitech, FiiO JA11, and Moondrop devices. Starting with a flat profile.");
@@ -891,7 +896,7 @@ export async function disconnectDevice() {
 	const wasFreeDsp=isFreeDsp(device);
 	const protocol = getProtocol(device);
 	try {
-		if(isFreeDsp(device)){disconnectFreeDsp(device);configureFreeDspUI(false);}
+		if(isFreeDsp(device)){disconnectFreeDsp(device);clearReadbackPreview();configureFreeDspUI(false);}
 		log(`Disconnecting from: ${device.productName || "DAC"}`);
 		if(!isFreeDsp(device) || device.opened)await device.close();
 	} catch (err) {

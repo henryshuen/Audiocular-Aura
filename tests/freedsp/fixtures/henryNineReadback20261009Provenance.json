@@ -1,0 +1,10 @@
+{
+  "sourceDirectory": "C:\\Users\\Henry\\AppData\\Local\\Temp\\AuraPEQ\\nine-eq-38148eeed31c4f69b5a1d2d359fe0f9e",
+  "sha256": {
+    "nine-eq.json": "03f1f7574f0100e43baf9b112303ea0240eb00f697299f4b335febf9954d1f73",
+    "nine-eq.log": "165c354df5de2b08ffa0ab30ff822a439d54a7c67c6d735576fe417b58e397b3",
+    "nine-eq.partial.json": "bc3391b13633cc640c2d6f0e2fa4dcceda7741d3642043359ffb4521c56638b3"
+  },
+  "logRedacted": true,
+  "hardwareReadOnly": true
+}
