@@ -4,6 +4,7 @@ import type {CafCommand,CafTransport} from './cafRam.ts';
 export class NativeCafTransport implements CafTransport {
  readonly supportsFlash=true;
  private token='';private controller:AbortController|null=null;private disposed=false;
+ private finalCommit=false;
  constructor(private log:(s:string)=>void,private fetcher:typeof fetch=globalThis.fetch.bind(globalThis)){}
  async connect(){
    if(this.disposed || this.controller)throw new Error('Native transport BUSY or disposed');
@@ -23,13 +24,16 @@ export class NativeCafTransport implements CafTransport {
    }finally{clearTimeout(timer);this.controller=null;}
  }
  async exchange(command:CafCommand,data:Uint8Array){
+   if(this.disposed||this.controller)throw new Error('Native transport BUSY or disposed');
    const tx=parseCaf(1,new DataView(data.buffer,data.byteOffset,data.byteLength));if(tx.command!==command || tx.reply!==0 || tx.module!==CTRL)throw new Error('CAF TX mismatch');
    const helper=new Uint8Array(62);helper[0]=1;helper.set(data,1); // Framing only; preserve shared serializer bytes exactly.
-   const r=await this.post('/transport',{report:btoa(String.fromCharCode(...helper))});
+   this.finalCommit=command===220&&tx.words[0]===255;
+   let r;
+   try{r=await this.post('/transport',{report:btoa(String.fromCharCode(...helper))});}finally{this.finalCommit=false;}
    if(typeof r.reply!=='string')throw new Error('Missing native matching response');const rx=Uint8Array.from(atob(r.reply),c=>c.charCodeAt(0));if(rx.length!==62 || rx[0]!==1)throw new Error('Native RX framing mismatch');
    const reply=parseCaf(rx[0],new DataView(rx.buffer,rx.byteOffset+1,61));
-   if(reply.command!==command || reply.reply!==1 || reply.module!==tx.module || (command===346 && reply.count<2))throw new Error('Native reply mismatch; STOP');return reply;
+   if(reply.command!==command || reply.reply!==1 || reply.module!==tx.module || (command===346 && reply.count<2) || ([190,90,220].includes(command)&&reply.count!==0))throw new Error('Native reply mismatch; STOP');return reply;
  }
  async readback(){const r=await this.post('/readback',null);if(!r.readback)throw new Error('Missing readback evidence');return r.readback as unknown;}
- dispose(){this.disposed=true;this.token='';this.controller?.abort();}
+ dispose(){this.disposed=true;this.token='';if(!this.finalCommit)this.controller?.abort();}
 }

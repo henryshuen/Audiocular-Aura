@@ -67,14 +67,14 @@ describe('Final production UX — offline only',()=>{
  it('actual FreeDSP reset confirmation is English, describes RAM-only semantics, and Cancel prevents changes',async()=>{
   const confirm=vi.fn(()=>false),write=vi.fn();const ctx={device:{vendorId:0x35d8,productId:0x1496},isFreeDsp,confirm,freeDspOverwriteWarning,finishFreeDspLocalReset:write};
   for(const name of ['resetToDefaults','resetToFlat'])await runInNewContext(extract(name,fn)+`\n${name}()`,ctx);
-  expect(write).not.toHaveBeenCalled();for(const call of confirm.mock.calls as unknown as [string][]){expect(call[0]).not.toMatch(/[\u3400-\u9fff]/);expect(call[0]).toContain('do not save Flash');expect(call[0]).toContain('Overwrite both channels in RAM');}
+  expect(write).not.toHaveBeenCalled();for(const call of confirm.mock.calls as unknown as [string][]){expect(call[0]).not.toMatch(/[\u3400-\u9fff]/);expect(call[0]).toContain('Flash is unchanged');expect(call[0]).toContain('apply to RAM');}
  });
- it('late successful or failed Flash UI callback cannot replace offline/new-connection status',async()=>{
+ it('late confirmed Flash success survives offline transition; failed/stale callback never invents success',async()=>{
   for(const failed of [false,true]){
    let finish!:(v:boolean)=>void,reject!:(e:Error)=>void,attempt=0;const status={textContent:''},button={disabled:false};
    const ctx={getConnectionAttempt:()=>attempt,getDevice:()=>null,isFreeDsp,document:{getElementById:()=>button},setFreeDspRamStatus:(s:string)=>status.textContent=s,flashToFlash:()=>new Promise<boolean>((r,j)=>{finish=r;reject=j;}),log:vi.fn()};
    const run=runInNewContext(extract('saveFreeDspFlash',main)+'\nsaveFreeDspFlash',ctx);const pending=run();attempt++;status.textContent='Offline';if(failed)reject(Error('late error'));else finish(true);await pending;
-   expect(status.textContent).toBe('Offline');expect(ctx.log).not.toHaveBeenCalled();expect(button.disabled).toBe(true);
+   expect(status.textContent).toBe(failed?'Offline':'Flash save acknowledged; reconnect to read device EQ.');expect(ctx.log).not.toHaveBeenCalled();expect(button.disabled).toBe(true);
   }
  });
  it('profile preamp is ignored only for FreeDSP; imports remain local and generic devices retain gain/sync',async()=>{

@@ -2,7 +2,7 @@ import {freeDspReadbackSlots} from './freedsp/readbackSlots.ts';
 import {loadReadbackPreview,previewResponse} from './freedsp/readbackPreview.ts';
 import {freeDspDefaultBands,freeDspEditorGain,normalizeFreeDspEditor} from './freedsp/editor.ts';
 import {gainRangeFor,freeDspGainRange} from './freedsp/capabilities.ts';
-import {showFreeDspDeviceState,freeDspOverwriteWarning} from './freedsp/deviceState.ts';
+import {showFreeDspDeviceState} from './freedsp/deviceState.ts';
 import {selectCafDevice,isFreeDsp} from './freedsp/webHid.ts';
 import {connectFreeDsp,disconnectFreeDsp,getFreeDspSession} from './freedsp/session.ts';
 import {
@@ -85,6 +85,13 @@ export function getComparedEqState(): EQ | null {
 }
 (window as any).getComparedEqState = getComparedEqState;
 (window as any).getFreeDspReadbackCurve=()=>isFreeDsp(device)?freeDspReadbackSlots.curve:null;
+(window as any).getFreeDspOriginCurve=()=>isFreeDsp(device)?freeDspReadbackSlots.referenceCurve:null;
+(window as any).isFreeDspOriginUnavailable=()=>isFreeDsp(device)&&freeDspReadbackSlots.originUnavailable;
+(window as any).isFreeDspEditorReadOnly=()=>isFreeDsp(device)?freeDspReadbackSlots.readOnly:(!device&&freeDspStateStale);
+(window as any).freeDspWorkspaces=freeDspReadbackSlots;
+(window as any).refreshFreeDspWorkspaceUI=()=>{if(isFreeDsp(device))renderUI(eqState);};
+(window as any).resetFreeDspHistory=()=>initHistory();
+(window as any).restoreGenericComparisonLabels=()=>updateSlotLabel();
 
 export function updateBaselineFromActive() {
  if(isFreeDsp(device))return;
@@ -114,9 +121,10 @@ export function setLastAppliedEqName(name: string) {
 export function updateLastAppliedEqUI() {
  if(isFreeDsp(device)){
   const status=document.getElementById("freeDspRamStatus");if(status){status.textContent=freeDspReadbackSlots.status;status.title=freeDspReadbackSlots.details;}
-  const badge=document.getElementById("lastAppliedEqDisplay");if(badge)badge.textContent=freeDspReadbackSlots.curve?"Device EQ Readback — Snapshot":`LOCAL EDITOR · ${freeDspReadbackSlots.mode}`;
+  const badge=document.getElementById("lastAppliedEqDisplay") as (HTMLElement&{originalFreeDspTitle?:string})|null;if(badge){if(badge.originalFreeDspTitle===undefined)badge.originalFreeDspTitle=badge.title??'';badge.textContent=freeDspReadbackSlots.label??(freeDspReadbackSlots.curve?"Device EQ Readback — Snapshot":`LOCAL EDITOR · ${freeDspReadbackSlots.mode}`);badge.title=freeDspReadbackSlots.details;}
   return;
  }
+ const previousBadge=document.getElementById('lastAppliedEqDisplay') as (HTMLElement&{originalFreeDspTitle?:string})|null;if(previousBadge?.originalFreeDspTitle!==undefined){previousBadge.title=previousBadge.originalFreeDspTitle;delete previousBadge.originalFreeDspTitle;}
  if(!device && freeDspStateStale){showFreeDspDeviceState(!!device);return;}
 	const lastEqEl = document.getElementById("lastAppliedEqDisplay");
 	if (lastEqEl) {
@@ -293,10 +301,12 @@ export function getDevice() {
 }
 
 export function getEqState() {
+ if(isFreeDsp(device)&&freeDspReadbackSlots.readOnly)return freeDspReadbackSlots.view;
 	return eqState;
 }
 
 export function setEqState(eq: EQ) {
+ if((globalThis as any).window?.isFreeDspEditorReadOnly?.())throw Error('ORIGIN is read-only. Select EQ A or EQ B to edit.');
 	try{eqState = isFreeDsp(device)?normalizeFreeDspEditor(eq,log):eq;}
  catch(e){log(String(e)+' Local Editor preserved.');throw e;}
 }
@@ -306,6 +316,7 @@ export function setEQ(
 	key: keyof Band,
 	value: number | boolean | string,
 ) {
+ if((globalThis as any).window?.isFreeDspEditorReadOnly?.())return;
 	if(isFreeDsp(device) && key==="gain"){try{value=freeDspEditorGain(Number(value),index,log);}catch(e){log(String(e));return;}}
 	// @ts-expect-error - Dynamic key assignment
 	eqState[index][key] = value;
@@ -343,6 +354,7 @@ export function pushHistory() {
 (window as any).pushHistory = pushHistory;
 
 export async function undo() {
+ if((globalThis as any).window?.isFreeDspEditorReadOnly?.())return;
 	if (undoStack.length <= 1) return; // Keep the initial baseline state
 
 	const current = undoStack.pop()!;
@@ -361,6 +373,7 @@ export async function undo() {
 }
 
 export async function redo() {
+ if((globalThis as any).window?.isFreeDspEditorReadOnly?.())return;
 	if (redoStack.length === 0) return;
 
 	const next = redoStack.pop()!;
@@ -401,7 +414,7 @@ export async function setABCompareState(state: "Off" | "A" | "B") {
   try{
    const selected=freeDspReadbackSlots.select(state,eqState,message=>window.confirm(message));
    if(!selected)return;
-   eqState=selected;renderUI(eqState);updateSlotLabel();
+   eqState=selected;(window as any).resetFreeDspHistory?.();renderUI(eqState);updateSlotLabel();
   }catch(error){log(String(error));window.alert?.(String(error));}
   return;
  }
@@ -520,6 +533,11 @@ function updateSlotLabel() {
 	const btnB = document.getElementById("btnCompareB");
 
 	if (btnOff && btnA && btnB) {
+  for(const [button,label] of [[btnOff,'ORIGIN'],[btnA,'EQ A'],[btnB,'EQ B']] as const){
+   const el=button as HTMLButtonElement&{originalFreeDspLabel?:string;originalFreeDspI18n?:string|null;originalFreeDspTitle?:string;originalFreeDspDisabled?:boolean};
+   if(isFreeDsp(device)){if(el.originalFreeDspLabel===undefined){el.originalFreeDspLabel=el.textContent??'';el.originalFreeDspI18n=el.getAttribute?.('data-i18n');el.originalFreeDspTitle=el.title??'';el.originalFreeDspDisabled=el.disabled;}el.textContent=label;el.removeAttribute?.('data-i18n');el.title=freeDspReadbackSlots.details;}
+   else if(el.originalFreeDspLabel!==undefined){el.textContent=el.originalFreeDspI18n&&typeof t==='function'?t(el.originalFreeDspI18n):el.originalFreeDspLabel;el.title=el.originalFreeDspTitle??'';el.disabled=el.originalFreeDspDisabled??false;if(el.originalFreeDspI18n)el.setAttribute?.('data-i18n',el.originalFreeDspI18n);delete el.originalFreeDspLabel;delete el.originalFreeDspI18n;delete el.originalFreeDspTitle;delete el.originalFreeDspDisabled;}
+  }
 		btnOff.classList.remove("active-off");
 		btnA.classList.remove("active");
 		btnB.classList.remove("active");
@@ -561,6 +579,7 @@ export function setFocusedBand(index: number) {
 }
 
 export function resetBand(index: number) {
+ if((globalThis as any).window?.isFreeDspEditorReadOnly?.())return;
 	if (index < 0 || index >= eqState.length) return;
 	eqState[index].freq = DEFAULT_FREQS[index] || 1000;
 	eqState[index].gain = 0;
@@ -576,6 +595,7 @@ export function resetBand(index: number) {
 }
 
 export function toggleBandEnabled(index: number) {
+ if((globalThis as any).window?.isFreeDspEditorReadOnly?.())return;
 	if (index < 0 || index >= eqState.length) return;
 	eqState[index].enabled = !eqState[index].enabled;
 
@@ -665,11 +685,12 @@ export function renderUI(eqState: EQ) {
 	// Update PEQ slots count
 	const activeSlots = eqState.filter(b => b.enabled && Math.abs(Number(b.gain)) > 0.001).length;
 	const infoSlots = document.getElementById("infoSlots");
-	if (infoSlots) infoSlots.innerText = `${activeSlots} / ${eqState.length}`;
+	if (infoSlots) infoSlots.innerText = isFreeDsp(device)&&freeDspReadbackSlots.originUnavailable?'Unknown / 9':`${activeSlots} / ${eqState.length}`;
 
 	// 2. Render or Sync the EQ Strips side-by-side
 	const stripsContainer = document.getElementById("eqStrips");
 	if (stripsContainer) {
+  stripsContainer.hidden=isFreeDsp(device)&&!!freeDspReadbackSlots.originUnavailable;
 		if (stripsContainer.children.length === 0) {
 			// Save scroll position before full DOM rebuild to prevent page jump
 			const savedScrollY = window.scrollY;
@@ -739,6 +760,15 @@ export function renderUI(eqState: EQ) {
 			});
 		}
 	}
+ if(isFreeDsp(device)){
+  const locked=!!freeDspReadbackSlots.readOnly;
+  for(const input of document.querySelectorAll?.('#eqStrips input, #eqStrips select')??[])(input as HTMLInputElement).disabled=locked;
+  for(const id of ['btnReset','btnResetFlat','btnImport']){const button=document.getElementById(id) as HTMLButtonElement|null;if(button)button.disabled=locked;}
+  if(locked)for(const id of ['btnUndo','btnRedo']){const button=document.getElementById(id) as HTMLButtonElement|null;if(button)button.disabled=true;}
+  for(const id of ['btnSync','btnFlash']){const button=document.getElementById(id) as HTMLButtonElement|null;if(button)button.disabled=freeDspReadbackSlots.writable===false;}
+  for(const id of ['btnCompareA','btnCompareB']){const button=document.getElementById(id) as HTMLButtonElement|null;if(button)button.disabled=freeDspReadbackSlots.available===false||!!freeDspReadbackSlots.busy;}
+  const originButton=document.getElementById('btnCompareOff') as HTMLButtonElement|null;if(originButton)originButton.disabled=!!freeDspReadbackSlots.busy;
+ }
 }
 
 
@@ -888,9 +918,10 @@ export async function connectToDevice() {
 		// Support parameter reading for Savitech-based DACs (including FiiO JA11 and Moondrop)
 		const protocol = getProtocol(device);
         if(isFreeDsp(dev)){
-            freeDspReadbackSlots.disconnect();renderUI(eqState);
+            freeDspReadbackSlots.disconnect(eqState);renderUI(eqState);
             const snapshot=await loadReadbackPreview(()=>getFreeDspSession(dev).readback(),()=>attempt===connectAttempt && device===dev,log);
-            if(snapshot && attempt===connectAttempt && device===dev){freeDspReadbackSlots.capture(snapshot,previewResponse(snapshot),eqState);renderUI(eqState);}
+            if(snapshot && attempt===connectAttempt && device===dev){const selected=freeDspReadbackSlots.capture(snapshot,previewResponse(snapshot),eqState);if(selected)eqState=selected;renderUI(eqState);}
+            else if(attempt===connectAttempt&&device===dev)renderUI(eqState);
             if(attempt!==connectAttempt || device!==dev)return;
         } else if (protocol === "SAVITECH" || protocol === "FIIO_JA11" || protocol === "MOONDROP") {
 			await readDeviceParams(device);
@@ -925,7 +956,7 @@ export async function disconnectDevice() {
 	const wasFreeDsp=isFreeDsp(device);
 	const protocol = getProtocol(device);
 	try {
-		if(isFreeDsp(device)){disconnectFreeDsp(device);freeDspReadbackSlots.disconnect();configureFreeDspUI(false);}
+		if(isFreeDsp(device)){disconnectFreeDsp(device);freeDspReadbackSlots.disconnect(eqState);configureFreeDspUI(false);}
 		log(`Disconnecting from: ${device.productName || "DAC"}`);
 		if(!isFreeDsp(device) || device.opened)await device.close();
 	} catch (err) {
@@ -936,10 +967,11 @@ export async function disconnectDevice() {
 			console.debug("[DEBUG] A/B state reset to Off on Moondrop disconnect");
 		}
 
-		if(wasFreeDsp)eqState=freeDspReadbackSlots.select('Off',eqState,()=>false)!;
+		if(wasFreeDsp){if(freeDspReadbackSlots.disconnectedDraft)eqState=freeDspReadbackSlots.disconnectedDraft;else if(!freeDspReadbackSlots.busy)eqState=freeDspReadbackSlots.select('Off',eqState,()=>false)!;}
 		device = null;
 		freeDspStateStale=wasFreeDsp;
 		(window as any).device = null;
+		if(wasFreeDsp)(window as any).restoreGenericComparisonLabels?.();
 
 		adjustBandsForDevice(null);
 
@@ -987,8 +1019,9 @@ async function finishFreeDspLocalReset(bands:EQ,name:string){
  }catch(e){if(attempt===connectAttempt)log('FreeDSP Reset incomplete: Local Editor reset; active RAM state unknown. '+String(e));}
 }
 export async function resetToDefaults() {
+ if((globalThis as any).window?.isFreeDspEditorReadOnly?.())return;
  if(isFreeDsp(device)){
-  if(!confirm(freeDspOverwriteWarning+'\nReset Defaults: restore nine enabled PK bands at 31/62/125/250/500/1000/2000/4000/8000 Hz, 0 dB, Q 0.7. Overwrite both channels in RAM; do not save Flash. Continue?'))return;
+  if(!confirm('Reset nine bands to defaults and apply to RAM? Flash is unchanged.'))return;
   await finishFreeDspLocalReset(freeDspDefaultBands(),'Flat Profile (Default)');return;
  }
 	if (
@@ -1039,8 +1072,9 @@ export async function resetToDefaults() {
  * Reset all bands and gain to a flat neutral state (0dB, Freq=1000Hz, Q=1.0) and sync
  */
 export async function resetToFlat() {
+ if((globalThis as any).window?.isFreeDspEditorReadOnly?.())return;
  if(isFreeDsp(device)){
-  if(!confirm(freeDspOverwriteWarning+'\nReset To Flat: set all nine gains to 0 dB; preserve frequency, Q, type and local enabled switches. Overwrite both channels in RAM; do not save Flash. Continue?'))return;
+  if(!confirm('Set all nine gains to zero and apply to RAM? Frequency, Q and type are preserved. Flash is unchanged.'))return;
   await finishFreeDspLocalReset(normalizeFreeDspEditor(eqState,log,false).map(b=>({...b,gain:0})),'Flat Profile (Neutral)');return;
  }
 	log("[System] Resetting all bands to flat neutral values...");
@@ -1082,6 +1116,7 @@ export async function updateState(
 	key: string,
 	value: string | number | boolean,
 ) {
+ if((globalThis as any).window?.isFreeDspEditorReadOnly?.())return;
 	if (key === "freq" || key === "gain" || key === "q")
 		value = parseFloat(value as string);
 	else if (key === "enabled") value = Boolean(value);
@@ -1377,6 +1412,7 @@ export function deleteCustomProfile(name: string) {
 }
 
 export async function loadCustomProfile(name: string) {
+ if((globalThis as any).window?.isFreeDspEditorReadOnly?.())return;
 	const profile = customProfiles.find((p) => p.name === name);
 	if (!profile) return;
 
@@ -1835,7 +1871,7 @@ export function configureFreeDspUI(active:boolean){
  document.querySelectorAll<HTMLInputElement|HTMLButtonElement|HTMLSelectElement>('.utility-card-full input, .utility-card-full select, .utility-card-full button').forEach(e=>e.disabled=true);
  const send=document.getElementById('btnSendToDevice') as HTMLButtonElement|null;if(send){send.disabled=true;send.title='FreeDSP: this generic action is unsupported. Use SYNC TO RAM.';}
  const flash=document.getElementById('btnFlash') as HTMLButtonElement|null;if(flash){flash.disabled=false;flash.textContent='SAVE TO FLASH (PERMANENT)';flash.title='Save the current nine-band profile permanently. RAM Reset does not undo Flash.';flash.removeAttribute('data-i18n');}
- const note=document.getElementById('freeDspStorageNote');if(note)note.hidden=false;
+ const note=document.getElementById('freeDspStorageNote');if(note){note.hidden=false;note.textContent='ORIGIN is read-only. EQ A and EQ B are local editors. Apply updates RAM; Save to Flash replaces saved EQ.';}
  const ramStatus=document.getElementById('freeDspRamStatus');if(ramStatus){ramStatus.hidden=false;ramStatus.textContent='FreeDSP connected; active RAM state unknown. Local edits require explicit Sync.';}
  showFreeDspDeviceState(true);
 }

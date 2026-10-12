@@ -763,7 +763,7 @@ export function setupListener(device: HIDDevice) {
 /**
  * Sync all bands and preamp gain to device RAM
  */
-export async function syncToDevice(explicit=false,overwriteConfirmed=false) {
+export async function syncToDevice(explicit=false,_overwriteConfirmed=false) {
 	const device = getDevice();
 	const eqState = getEqState();
 	if (!device || !eqState) return;
@@ -771,8 +771,10 @@ export async function syncToDevice(explicit=false,overwriteConfirmed=false) {
  if(isFreeDsp(device)){
    if(!explicit)return; // profile/import/undo/edit are local only for FreeDSP.
    if(getGlobalGainState()!==0 || getAutoPreampEnabled() || getBassTiltState()!==0 || getTrebleTiltState()!==0)throw new Error('FreeDSP preamp/Tone Tilt unsupported; local values must be zero, not treated as applied.');
-   if(!overwriteConfirmed && !confirm(freeDspOverwriteWarning+'\nSync nine-band stereo EQ to RAM; do not save Flash. Continue?'))return false;
-   showSyncing();try{await attachFreeDsp(device).sync(eqState);localStorage.setItem(`last_eq_state_${device.vendorId}_${device.productId}`,JSON.stringify(eqState));}finally{hideSyncing();}return true;
+   if((globalThis as any).window?.isFreeDspEditorReadOnly?.())throw Error('ORIGIN is read-only. Select EQ A or EQ B to apply.');
+   const workspace=(globalThis as any).window?.freeDspWorkspaces,revision=workspace?.begin('ram',eqState);(globalThis as any).window?.refreshFreeDspWorkspaceUI?.();showSyncing();
+   try{await attachFreeDsp(device).sync(eqState);workspace?.finish(revision,true);localStorage.setItem(`last_eq_state_${device.vendorId}_${device.productId}`,JSON.stringify(eqState));}
+   catch(error){workspace?.finish(revision,false);throw error;}finally{hideSyncing();(globalThis as any).window?.refreshFreeDspWorkspaceUI?.();}return true;
  }
 
 	showSyncing();
@@ -861,9 +863,12 @@ export async function flashToFlash() {
 	const device = getDevice();
 	if (!device) return;
  if(isFreeDsp(device)){
-   if(!confirm(freeDspOverwriteWarning+'\nSave all nine EQ bands permanently. A failure may leave a partial save; no automatic retry or rollback. Continue?'))return false;
+   if((globalThis as any).window?.isFreeDspEditorReadOnly?.())throw Error('ORIGIN is read-only. Select EQ A or EQ B to save.');
+   if(!confirm('Save this EQ permanently to FreeDSP? This replaces saved settings and may require reconnection.'))return false;
    const editor=getEqState();if(!editor)throw new Error('FreeDSP editor unavailable');
-   showSyncing();try{await attachFreeDsp(device).flash(editor);log('FreeDSP Flash save acknowledged; not an independent readback or power-cycle check.');}finally{hideSyncing();}return true;
+   const workspace=(globalThis as any).window?.freeDspWorkspaces,revision=workspace?.begin('flash',editor);(globalThis as any).window?.refreshFreeDspWorkspaceUI?.();showSyncing();
+   try{await attachFreeDsp(device).flash(editor);workspace?.finish(revision,true);log('Flash save acknowledged; reconnect to read device EQ.');}
+   catch(error){workspace?.finish(revision,false);throw error;}finally{hideSyncing();(globalThis as any).window?.refreshFreeDspWorkspaceUI?.();}return true;
  }
 	if (!confirm("Save to permanent memory? The settings will load automatically when you power on the DAC.")) return;
 
@@ -1659,6 +1664,7 @@ export async function executeFactoryReset(device: HIDDevice) {
 }
 
 export async function restoreFreeDspUnity(){
+ if((globalThis as any).window?.isFreeDspEditorReadOnly?.())throw Error('ORIGIN is read-only. Select EQ A or EQ B first.');
  const d=getDevice();if(!d || !isFreeDsp(d))return;
  if(!confirm(freeDspOverwriteWarning+'\nRestore all nine bands on both channels to unity in RAM. Local Editor and Flash remain unchanged. Continue?'))return false;
  showSyncing();try{await attachFreeDsp(d).sync([],true);}finally{hideSyncing();}return true;

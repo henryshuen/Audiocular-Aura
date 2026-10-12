@@ -124,6 +124,7 @@ export function searchPresets(presets: AutoEqPreset[], query: string, limit = 15
  * Download raw preset content from GitHub and load it into the EQ engine
  */
 export async function loadPreset(preset: AutoEqPreset) {
+ if((globalThis as any).window?.isFreeDspEditorReadOnly?.())return;
 	log(`Downloading preset: ${preset.name}...`);
 	
 	try {

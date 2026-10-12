@@ -129,15 +129,14 @@ let safetyActionPending: "sync" | "flash" | null = null;
 
 async function syncFreeDspRam(){
  const attempt=getConnectionAttempt();
- try{setFreeDspRamStatus('FreeDSP RAM: waiting for explicit Sync acknowledgments...');const result=await syncToDevice(true);
+ try{setFreeDspRamStatus('Applying RAM…');await syncToDevice(true);
    if(attempt!==getConnectionAttempt())return;
-   setFreeDspRamStatus(result===false?'Sync canceled; no RAM write. Active RAM state remains unverified.':'FreeDSP RAM: Sync acknowledged for the submitted Local Editor snapshot; not device readback.');
+   setFreeDspRamStatus((window as any).freeDspWorkspaces?.status??'RAM: submitted EQ acknowledged.');
  }catch(e){if(attempt===getConnectionAttempt()){setFreeDspRamStatus('FreeDSP RAM: Sync incomplete; active state unknown. See log.');log(String(e));}}
 }
 
 async function safeSyncToDevice() {
-	if(isFreeDsp(getDevice()) && (window as any).isConfigurationUnsafe?.()){showSafetyModal("sync");return;}
-	if(isFreeDsp(getDevice())){await syncFreeDspRam();return;}
+	if(isFreeDsp(getDevice())){if((window as any).isConfigurationUnsafe?.())log('FreeDSP warning: EQ boost may clip; no verified preamp attenuation.');await syncFreeDspRam();return;}
 	if ((window as any).isConfigurationUnsafe?.()) {
 		showSafetyModal("sync");
 	} else {
@@ -147,7 +146,6 @@ async function safeSyncToDevice() {
 
 async function safeFlashToFlash() {
 	if(isFreeDsp(getDevice())){
-    if((window as any).isConfigurationUnsafe?.()){showSafetyModal('flash');return;}
     await saveFreeDspFlash();return;
   }
 	if ((window as any).isConfigurationUnsafe?.()) {
@@ -160,11 +158,12 @@ async function safeFlashToFlash() {
 async function saveFreeDspFlash(){
   const attempt=getConnectionAttempt();
   const button=document.getElementById('btnFlash') as HTMLButtonElement|null;if(button)button.disabled=true;
-  try{setFreeDspRamStatus('FreeDSP Flash: waiting for explicit Save acknowledgments; separate from RAM Sync.');const saved=await flashToFlash();
-    if(attempt!==getConnectionAttempt())return;
-    setFreeDspRamStatus(saved===true?'FreeDSP Flash: Save acknowledged, including commit; this session has not verified a power cycle.':'FreeDSP Flash: Save canceled; no Flash write.');}
+  try{setFreeDspRamStatus('Saving Flash…');const saved=await flashToFlash();
+    if(attempt!==getConnectionAttempt()&&getDevice())return;
+    setFreeDspRamStatus(saved===false?'Flash save canceled.':((globalThis as any).window?.freeDspWorkspaces?.status??'Flash save acknowledged; reconnect to read device EQ.'));
+    if(saved===true&&!getDevice()){const status=document.getElementById('freeDspRamStatus');if(status)status.hidden=false;}}
   catch(e){if(attempt===getConnectionAttempt()){setFreeDspRamStatus('FreeDSP Flash: Save incomplete; possibly partially stored. STOP, no retry. See log.');log(String(e));}}
-  finally{if(button && attempt===getConnectionAttempt())button.disabled=!isFreeDsp(getDevice());}
+  finally{if(button && attempt===getConnectionAttempt())button.disabled=!isFreeDsp(getDevice())||(window as any).freeDspWorkspaces?.writable===false;}
 }
 
 function showSafetyModal(action: "sync" | "flash") {

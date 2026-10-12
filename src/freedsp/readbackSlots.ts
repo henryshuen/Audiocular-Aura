@@ -1,6 +1,7 @@
 import type {EQ} from '../main.ts';
 import type {ReadbackPreview} from './readbackPreview.ts';
 import {freeDspFilterName} from './filterTypes.ts';
+import {FreeDspWorkspaces} from './workspaces.ts';
 
 export const readbackConfirmation = 'Load readback parameters into local A/B slots? Gain is integer dB; Q is raw/256. Enabled states, active RAM source, stereo and freshness are unverified. The editable reconstruction may differ from the raw coefficient snapshot. Band switches start ON as a local assumption. OFF keeps your local edits. Editing A starts B. No device write will occur.';
 const copy=(bands:EQ):EQ=>bands.map(b=>({...b}));
@@ -57,4 +58,4 @@ export class ReadbackSlots {
  }
  get details(){return `Snapshot: ${this.latest?.capturedUtc??'unavailable'}; A/B baseline: ${this.baselineUtc||'not initialized'}. Gain: integer dB; Q: raw/256. Enabled switches are local assumptions; path1, active RAM/Flash source and freshness are unverified. Parameter reconstruction may differ from raw coefficients; not an exact hardware backup.`;}
 }
-export const freeDspReadbackSlots=new ReadbackSlots();
+export const freeDspReadbackSlots=new FreeDspWorkspaces();

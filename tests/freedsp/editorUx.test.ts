@@ -59,7 +59,7 @@ describe('FreeDSP main editor UX; local-only tests',()=>{
  for(const order of [['resetToDefaults','resetToFlat'],['resetToFlat','resetToDefaults']])it(`Reset order ${order.join(' then ')} stays nine bands and Syncs only after RAM confirmation`,async()=>{
   const {ctx,f}=editor();const confirm=vi.fn(()=>true);ctx.confirm=confirm;
   for(const name of order){await f[name]();expect(ctx.eqState).toHaveLength(9);expect(ctx.eqState.every(b=>b.gain===0)).toBe(true);}
-  expect(ctx.syncToDevice).toHaveBeenCalledTimes(2);for(const [message] of confirm.mock.calls as unknown as [string][])expect(message).toMatch(/Active RAM state is unverified[\s\S]*Overwrite both channels in RAM[\s\S]*do not save Flash/);
+  expect(ctx.syncToDevice).toHaveBeenCalledTimes(2);for(const [message] of confirm.mock.calls as unknown as [string][])expect(message).toMatch(/apply to RAM[\s\S]*Flash is unchanged/);
  });
  it('cancelled Reset preserves editor, sends nothing; failed explicit Reset does not claim device success',async()=>{
   const {ctx,f}=editor();ctx.eqState[0].gain=-5;const before=ctx.eqState.map(b=>({...b}));ctx.confirm=()=>false;
@@ -75,13 +75,14 @@ describe('FreeDSP main editor UX; local-only tests',()=>{
   const {ctx,f}=editor();await f.updateState(0,'gain','');expect(ctx.eqState[0].gain).toBe(0);expect(ctx.log.mock.calls.join()).toContain('edit rejected');
   ctx.eqState=ctx.eqState.map(b=>({...b,gain:12}));await f.reduceGainsSafely();expect(ctx.eqState.reduce((n,b)=>n+b.gain,0)).toBeLessThanOrEqual(12.000001);expect(ctx.globalGainState).toBe(0);expect(ctx.syncToDevice).not.toHaveBeenCalled();
  });
- it('warning interrupts FreeDSP Sync until explicit Proceed; shared existing modal is used',async()=>{
-  const sync=vi.fn(),warning=vi.fn(),ctx={getDevice:()=>({vendorId:0x35d8,productId:0x1496}),isFreeDsp,window:{isConfigurationUnsafe:()=>true},showSafetyModal:warning,syncFreeDspRam:sync};
-  const safe=runInNewContext(extract('safeSyncToDevice',mainSource)+'\nsafeSyncToDevice',ctx);await safe();expect(warning).toHaveBeenCalledWith('sync');expect(sync).not.toHaveBeenCalled();
+ it('FreeDSP Apply click is sufficient; mathematical preflight remains in sender and other DAC safety modal stays',async()=>{
+  const sync=vi.fn(),warning=vi.fn(),ctx={getDevice:()=>({vendorId:0x35d8,productId:0x1496}),isFreeDsp,window:{isConfigurationUnsafe:()=>true},log:vi.fn(),showSafetyModal:warning,syncFreeDspRam:sync};
+  const safe=runInNewContext(extract('safeSyncToDevice',mainSource)+'\nsafeSyncToDevice',ctx);await safe();expect(warning).not.toHaveBeenCalled();expect(sync).toHaveBeenCalledOnce();
   const clicks=new Map<string,()=>Promise<void>>();const modalCtx={...ctx,safetyActionPending:'sync' as string|null,closeSafetyModal:()=>{modalCtx.safetyActionPending=null;},document:{getElementById:(id:string)=>({addEventListener:(_e:string,fn:()=>Promise<void>)=>clicks.set(id,fn)})}};
   const listeners=mainSource.slice(mainSource.indexOf('const btnCloseSafetyModal'),mainSource.indexOf('const globalSlider'));
-  runInNewContext(ts.transpileModule(listeners,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText,modalCtx);await clicks.get('btnSafetyProceed')!();expect(sync).toHaveBeenCalledOnce();expect(modalCtx.safetyActionPending).toBeNull();
-  ctx.window.isConfigurationUnsafe=()=>false;await safe();expect(sync).toHaveBeenCalledTimes(2);
+  runInNewContext(ts.transpileModule(listeners,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText,modalCtx);await clicks.get('btnSafetyProceed')!();expect(sync).toHaveBeenCalledTimes(2);expect(modalCtx.safetyActionPending).toBeNull();
+  ctx.window.isConfigurationUnsafe=()=>false;await safe();expect(sync).toHaveBeenCalledTimes(3);
+  const generic={...ctx,getDevice:()=>({vendorId:1,productId:1}),window:{isConfigurationUnsafe:()=>true},syncToDevice:vi.fn()};await runInNewContext(extract('safeSyncToDevice',mainSource)+'\nsafeSyncToDevice()',generic);expect(warning).toHaveBeenCalledWith('sync');expect(generic.syncToDevice).not.toHaveBeenCalled();
  });
  it('canonical clickable dev hostname is localhost, including npm dev',()=>{expect(devSource).toContain('--host localhost --port 5173 --strictPort');expect(viteSource).toContain('host: "localhost", port: 5173, strictPort: true');});
 });

@@ -38,6 +38,7 @@ function neutralBand(index: number): Band {
  * Export profile to JSON file
  */
 export async function exportProfile() {
+ if((globalThis as any).window?.isFreeDspOriginUnavailable?.()){log('ORIGIN unavailable. Select a local EQ or reconnect before exporting.');return;}
 	const globalGainState = getGlobalGainState();
 	const eqState = getEqState();
 	
@@ -63,6 +64,7 @@ export async function exportProfile() {
  * Format: Preamp: X dB / Filter N: ON/OFF PK|LSQ|HSQ Fc XXXX Hz Gain X.X dB Q X.XX
  */
 export async function exportProfileAsText() {
+ if((globalThis as any).window?.isFreeDspOriginUnavailable?.()){log('ORIGIN unavailable. Select a local EQ or reconnect before exporting.');return;}
 	const globalGainState = getGlobalGainState();
 	const eqState = getEqState();
 
@@ -172,6 +174,7 @@ function parseTextProfile(content: string): ProfileData {
  * @param e Event object
  */
 export async function importProfile(e: Event) {
+ if((globalThis as any).window?.isFreeDspEditorReadOnly?.())return;
 	const target = e.target as HTMLInputElement;
 	if (!target.files) return;
 	const file = target.files[0];
@@ -264,6 +267,7 @@ export async function importProfile(e: Event) {
  * @param presetName Name of the preset being loaded
  */
 export async function loadProfileFromText(content: string, presetName?: string) {
+ if((globalThis as any).window?.isFreeDspEditorReadOnly?.())return;
 	try {
 		const profile = parseTextProfile(content);
 
