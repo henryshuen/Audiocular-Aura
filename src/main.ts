@@ -919,7 +919,7 @@ function renderSupportedDacsList() {
 }
 
 // Register Progressive Web App Service Worker
-if ("serviceWorker" in navigator) {
+if ("serviceWorker" in navigator && !(window as any).__AURAPEQ_PORTABLE__) {
 	window.addEventListener("load", () => {
 		// Calculate the base path dynamically to handle subfolders and index.html correctly
 		const path = window.location.pathname;

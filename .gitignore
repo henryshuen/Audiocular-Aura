@@ -3,6 +3,8 @@ node_modules/
 
 # Production build artifacts
 dist/
+release-artifacts/
+.tmp/
 
 # System files
 .DS_Store

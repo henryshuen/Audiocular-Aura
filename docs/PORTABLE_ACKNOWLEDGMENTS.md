@@ -1,0 +1,11 @@
+# License and acknowledgments
+
+AuraPEQ FreeDSP Edition is a development fork of [mandy321/Audiocular-Aura](https://github.com/mandy321/Audiocular-Aura), distributed under the GNU GPL version3 (LICENSE.txt). The original application's architecture, appearance and generic DAC behavior are credited to the upstream authors and contributors. FreeDSP integration and Edition packaging live at [henryshuen/Audiocular-Aura](https://github.com/henryshuen/Audiocular-Aura).
+
+Moondrop, Conexant, Freeman, Windows, Chrome and Edge are names/trademarks of their respective owners. This Edition is unofficial and is not endorsed by those vendors.
+
+The self-contained executable embeds Microsoft .NET/ASP.NET Core10.0.12 and the unchanged FreeDspQuery assembly. Microsoft .NET is distributed under its own runtime licenses/notices, provided with this package. No official Moondrop APK or firmware binary is redistributed. Package SOURCE.zip contains corresponding application/build source; build prerequisites are Node/npm and .NET10 SDK, not end-user requirements.
+
+Build the candidate in PowerShell with `scripts/package-freedsp-portable.ps1` after installing Node/npm and the .NET10 SDK. The script runs locked `npm ci`, publishes win-x64 self-contained, untrimmed, single-file, with native runtime extraction, copies Vite production assets, records SHA-256 asset hashes and writes the ZIP/checksum. Git metadata is optional; SOURCE.zip builds without .git. Build dependencies are fetched from npm and official NuGet. The validated SDK is10.0.401; the bundled runtime is pinned10.0.12. Reproducible procedure is not a promise of byte-identical ZIP timestamps across machines. Rebuild the self-contained package to receive future runtime security updates.
+
+Microsoft references: [.NET publishing](https://learn.microsoft.com/en-us/dotnet/core/deploying/), [.NET10 supported OS](https://github.com/dotnet/core/blob/main/release-notes/10.0/supported-os.md), [Windows Job Objects](https://learn.microsoft.com/en-us/windows/win32/procthread/job-objects). The launcher job kills inherited helper children on exit; the default-browser opener explicitly breaks away so closing AuraPEQ does not close the browser. Restrictive outer terminal/job policies remain a manual compatibility gate.
