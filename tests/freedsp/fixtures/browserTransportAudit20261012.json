@@ -1,0 +1,235 @@
+{
+  "date": "2026-10-12",
+  "scope": "Exact FreeDSP Windows11; descriptor-only physical inspection and isolated browser API probes. No CAF SET/GET.",
+  "device": {
+    "configuration": {
+      "capturedUtc": "2026-10-12T10:16:38.4622+08:00",
+      "vid": "0x35D8",
+      "pid": "0x1496",
+      "source": "Windows USB hub IOCTL; exact device verified using enumerated device descriptor",
+      "safety": "Standard configuration GET_DESCRIPTOR only; no CAF/class/vendor/SET requests, no endpoint volume change",
+      "port": 1,
+      "deviceDescriptorHex": "12010002ef020140d8359614060001020001",
+      "currentConfiguration": 1,
+      "configurations": [
+        {
+          "index": 0,
+          "bytes": 422,
+          "sha256": "8e3d5eb45dd0e50ad8fe1763acfc8045260315c3721d3188f7880a14c9465912",
+          "hex": "0902a601040104a032080b00030100200009040000000101200009240100020473000008240a090307000011240201010100090203000000000000001224060201030000000c0000000c000000040c240303020404020900000008240a0a030700000c240306010100050a0000000e24060504030000000c00000006112402040102030a010100000000000000090401000001022000090401010101022000102401010001010000000203000000000624020102100705010dc000010825010000020200090401020101022000102401010001010000000203000000000624020103180705010d2001010825010000020200090401030101022000102401010001010000000203000000000624020104200705010d8001010825010000020200090402000001022000090402010101022000102401060001010000000101000000000624020102100705810d0c00010825010000020200090402020101022000102401060501010000000101000000000624020103180705810d1200010825010000020200080b030103000000090403000103000000092111010001223f0007058303400007"
+        }
+      ],
+      "calls": [
+        {
+          "ioctl": "0x00220448",
+          "requestHex": "01000000",
+          "returnedBytes": 46
+        },
+        {
+          "ioctl": "0x00220410",
+          "requestHex": "01000000800600020000ffff",
+          "returnedBytes": 434
+        }
+      ]
+    },
+    "bindings": {
+      "composite": "usbccgp",
+      "audio": "usbaudio2",
+      "hid": "HidUsb"
+    },
+    "collectionSource": "Existing Native debugInspect; physical HidP_GetCaps, access0, metadata only",
+    "collections": [
+      {
+        "featureBytes": 0,
+        "report1InputOutputValidated": true,
+        "inputBytes": 62,
+        "outputBytes": 62,
+        "collection": 1,
+        "interface": 3,
+        "usage": 1,
+        "usagePage": 12
+      },
+      {
+        "interface": 3,
+        "collection": 2,
+        "usagePage": 12,
+        "inputBytes": 2,
+        "outputBytes": 0,
+        "featureBytes": 0,
+        "usage": 1
+      }
+    ],
+    "vendorId": 13784,
+    "productId": 5270
+  },
+  "browsers": [
+    {
+      "secureContext": true,
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+      "hidAvailable": true,
+      "usbAvailable": true,
+      "hidMethods": [
+        "close",
+        "collections",
+        "constructor",
+        "forget",
+        "oninputreport",
+        "open",
+        "opened",
+        "productId",
+        "productName",
+        "receiveFeatureReport",
+        "sendFeatureReport",
+        "sendReport",
+        "vendorId"
+      ],
+      "usbMethods": [
+        "claimInterface",
+        "clearHalt",
+        "close",
+        "configuration",
+        "configurations",
+        "constructor",
+        "controlTransferIn",
+        "controlTransferOut",
+        "deviceClass",
+        "deviceProtocol",
+        "deviceSubclass",
+        "deviceVersionMajor",
+        "deviceVersionMinor",
+        "deviceVersionSubminor",
+        "forget",
+        "isochronousTransferIn",
+        "isochronousTransferOut",
+        "manufacturerName",
+        "open",
+        "opened",
+        "productId",
+        "productName",
+        "releaseInterface",
+        "reset",
+        "selectAlternateInterface",
+        "selectConfiguration",
+        "serialNumber",
+        "transferIn",
+        "transferOut",
+        "usbVersionMajor",
+        "usbVersionMinor",
+        "usbVersionSubminor",
+        "vendorId"
+      ],
+      "devicePermissionRequested": false,
+      "deviceOpened": false,
+      "deviceTransfers": 0,
+      "limitation": "API surface only; not device discovery, descriptor or browser hardware PASS",
+      "context": "Isolated headless profile on loopback secure context; no permission grant",
+      "capturedUtc": "2026-10-12T02:15:48.691Z"
+    },
+    {
+      "secureContext": true,
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+      "hidAvailable": true,
+      "usbAvailable": true,
+      "hidMethods": [
+        "close",
+        "collections",
+        "constructor",
+        "forget",
+        "oninputreport",
+        "open",
+        "opened",
+        "productId",
+        "productName",
+        "receiveFeatureReport",
+        "sendFeatureReport",
+        "sendReport",
+        "vendorId"
+      ],
+      "usbMethods": [
+        "claimInterface",
+        "clearHalt",
+        "close",
+        "configuration",
+        "configurations",
+        "constructor",
+        "controlTransferIn",
+        "controlTransferOut",
+        "deviceClass",
+        "deviceProtocol",
+        "deviceSubclass",
+        "deviceVersionMajor",
+        "deviceVersionMinor",
+        "deviceVersionSubminor",
+        "forget",
+        "isochronousTransferIn",
+        "isochronousTransferOut",
+        "manufacturerName",
+        "open",
+        "opened",
+        "productId",
+        "productName",
+        "releaseInterface",
+        "reset",
+        "selectAlternateInterface",
+        "selectConfiguration",
+        "serialNumber",
+        "transferIn",
+        "transferOut",
+        "usbVersionMajor",
+        "usbVersionMinor",
+        "usbVersionSubminor",
+        "vendorId"
+      ],
+      "devicePermissionRequested": false,
+      "deviceOpened": false,
+      "deviceTransfers": 0,
+      "limitation": "API surface only; not device discovery, descriptor or browser hardware PASS",
+      "context": "Isolated headless profile on loopback secure context; no permission grant",
+      "capturedUtc": "2026-10-12T02:15:22.265Z"
+    }
+  ],
+  "installedVersions": {
+    "Edge": "155.0.4283.45",
+    "Chrome": "155.0.8059.40"
+  },
+  "officialWebsite": {
+    "peqCount": 8,
+    "storedUtf8TextSha256": "0911f4ce322e484dd1227bcd10da2a8b09408ca055224fb451568d785f7ff12b",
+    "legacyPid5270InInspectedRegistry": false,
+    "otherRegistryPids": [
+      304
+    ],
+    "url": "https://hub.moondroplab.com/assets/index-CIZ2xpvU.js",
+    "models": [
+      "FreeDSP Mini",
+      "FreeDSP Pro"
+    ],
+    "transport": "sendReport / inputreport; no receiveFeatureReport or controlTransferIn reference in inspected bundle",
+    "limitation": "Static published bundle registry; not hardware validation or all possible future/lazy-loaded support",
+    "productionRegistryPids": [
+      283,
+      286,
+      39123,
+      39124,
+      285,
+      284,
+      290,
+      17370,
+      39125,
+      288,
+      298,
+      299,
+      302,
+      301,
+      307,
+      3845,
+      291
+    ],
+    "reportId": 75
+  },
+  "cafSets": 0,
+  "cafGets": 0,
+  "eqWrites": 0,
+  "browserHardwarePass": false,
+  "verdict": "BLOCKED"
+}
