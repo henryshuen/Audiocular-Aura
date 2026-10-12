@@ -1,12 +1,16 @@
+.gitattributes
 .gitignore
 LICENSE
 README.md
+devices.json
 docs/PORTABLE_ACKNOWLEDGMENTS.md
 docs/PORTABLE_QUICK_START.md
 docs/RELEASE_NOTES_FREEDSP_V0_1_1.md
 docs/images/freedsp-eq-a.png
 docs/images/freedsp-eq-b.png
 docs/images/freedsp-origin.png
+freedsp-debug.html
+freedsp-ram-debug.html
 index.html
 package-lock.json
 package.json
@@ -248,6 +252,8 @@ tools/freedsp-portable/Program.cs
 tools/freedsp-portable/StaticSite.cs
 tools/freedsp-portable/Tests/AuraPEQ.Portable.Tests.csproj
 tools/freedsp-portable/Tests/Program.cs
+tools/freedsp-transport-research/Program.cs
+tools/freedsp-transport-research/TransportResearch.csproj
 tsconfig.json
 tsconfig.tests.json
 vite.config.ts
