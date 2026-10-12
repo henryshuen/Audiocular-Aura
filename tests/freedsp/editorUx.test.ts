@@ -12,7 +12,7 @@ import {runInNewContext} from 'node:vm';
 function extract(name:string,source=fnSource){const ast=ts.createSourceFile('s.ts',source,ts.ScriptTarget.ES2022,true);const node=ast.statements.find(n=>ts.isFunctionDeclaration(n)&&n.name?.text===name)!;return ts.transpileModule(node.getText(ast).replace('export ',''),{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;}
 function editor(){
  const ctx={device:{vendorId:0x35d8,productId:0x1496},connectAttempt:0,eqState:freeDspDefaultBands(),globalGainState:0,bassTiltState:0,trebleTiltState:0,manualPreampState:0,autoPreampEnabled:false,
-   freeDspReadbackSlots:new ReadbackSlots(),configureFreeDspControlNotes:vi.fn(),isFreeDsp,gainRangeFor,freeDspGainRange,freeDspOverwriteWarning,freeDspDefaultBands,freeDspEditorGain,normalizeFreeDspEditor,log:vi.fn(),window:{},document:{getElementById:()=>null,querySelector:()=>null},localStorage:{setItem:vi.fn()},
+   freeDspReadbackSlots:new ReadbackSlots(),configureFreeDspControlNotes:vi.fn(),isFreeDsp,gainRangeFor,freeDspGainRange,freeDspOverwriteWarning,freeDspDefaultBands,freeDspEditorGain,normalizeFreeDspEditor,log:vi.fn(),window:{confirmFreeDspReset:()=>true},document:{getElementById:()=>null,querySelector:()=>null},localStorage:{setItem:vi.fn()},
    setLastAppliedEqName:vi.fn(),initSlots:vi.fn(),pushHistory:vi.fn(),queueRealtimeBandWrite:vi.fn(),syncToDevice:vi.fn(),setGlobalGain:vi.fn(),updateUndoRedoButtons:vi.fn(),confirm:()=>true,
    undoStack:[] as {eqState:ReturnType<typeof freeDspDefaultBands>;globalGainState:number}[],redoStack:[] as {eqState:ReturnType<typeof freeDspDefaultBands>;globalGainState:number}[],slotA:null,slotB:null,activeSlot:'A',lastAppliedEqName:'test',getProtocol:()=> 'CONEXANT',updateSlotLabel:vi.fn(),t:()=> 'Flat'};
  const names=['getEqState','getDevice','setEqState','setEQ','renderUI','updateState','finishFreeDspLocalReset','resetToFlat','resetToDefaults','undo','redo','setABCompareState','reduceGainsSafely'];
@@ -57,14 +57,14 @@ describe('FreeDSP main editor UX; local-only tests',()=>{
   expect(ctx.eqState).toEqual(before.map(b=>({...b,gain:0})));await f.resetToDefaults();expect(ctx.eqState).toEqual(freeDspDefaultBands());expect(ctx.syncToDevice).toHaveBeenCalledTimes(2);expect(ctx.syncToDevice).toHaveBeenLastCalledWith(true,true);
  });
  for(const order of [['resetToDefaults','resetToFlat'],['resetToFlat','resetToDefaults']])it(`Reset order ${order.join(' then ')} stays nine bands and Syncs only after RAM confirmation`,async()=>{
-  const {ctx,f}=editor();const confirm=vi.fn(()=>true);ctx.confirm=confirm;
+  const {ctx,f}=editor();const confirm=vi.fn(()=>true);ctx.window.confirmFreeDspReset=confirm;
   for(const name of order){await f[name]();expect(ctx.eqState).toHaveLength(9);expect(ctx.eqState.every(b=>b.gain===0)).toBe(true);}
   expect(ctx.syncToDevice).toHaveBeenCalledTimes(2);for(const [message] of confirm.mock.calls as unknown as [string][])expect(message).toMatch(/apply to RAM[\s\S]*Flash is unchanged/);
  });
  it('cancelled Reset preserves editor, sends nothing; failed explicit Reset does not claim device success',async()=>{
-  const {ctx,f}=editor();ctx.eqState[0].gain=-5;const before=ctx.eqState.map(b=>({...b}));ctx.confirm=()=>false;
+  const {ctx,f}=editor();ctx.eqState[0].gain=-5;const before=ctx.eqState.map(b=>({...b}));ctx.window.confirmFreeDspReset=()=>false;
   await f.resetToDefaults();await f.resetToFlat();expect(ctx.eqState).toEqual(before);expect(ctx.syncToDevice).not.toHaveBeenCalled();
-  ctx.confirm=()=>true;ctx.syncToDevice.mockRejectedValue(new Error('MOCK TIMEOUT'));await f.resetToFlat();expect(ctx.syncToDevice).toHaveBeenCalledOnce();expect(ctx.log.mock.calls.join()).toContain('Reset incomplete');expect(ctx.log.mock.calls.join()).not.toContain('stereo bands acknowledged');
+  ctx.window.confirmFreeDspReset=()=>true;ctx.syncToDevice.mockRejectedValue(new Error('MOCK TIMEOUT'));await f.resetToFlat();expect(ctx.syncToDevice).toHaveBeenCalledOnce();expect(ctx.log.mock.calls.join()).toContain('Reset incomplete');expect(ctx.log.mock.calls.join()).not.toContain('stereo bands acknowledged');
  });
  it('other DAC gain setter keeps original behavior',async()=>{const {ctx,f}=editor();ctx.device={vendorId:1,productId:1};f.setEQ(0,'gain',14);expect(ctx.eqState[0].gain).toBe(14);});
  it('other DAC Defaults and Flat preserve original ten-band/reset-and-Sync semantics',async()=>{

@@ -412,10 +412,10 @@ export function initSlots() {
 export async function setABCompareState(state: "Off" | "A" | "B") {
  if(isFreeDsp(device)){
   try{
-   const selected=freeDspReadbackSlots.select(state,eqState,message=>window.confirm(message));
+   const selected=freeDspReadbackSlots.select(state,eqState);
    if(!selected)return;
    eqState=selected;(window as any).resetFreeDspHistory?.();renderUI(eqState);updateSlotLabel();
-  }catch(error){log(String(error));window.alert?.(String(error));}
+  }catch(error){log(String(error));}
   return;
  }
 
@@ -920,7 +920,7 @@ export async function connectToDevice() {
         if(isFreeDsp(dev)){
             freeDspReadbackSlots.disconnect(eqState);renderUI(eqState);
             const snapshot=await loadReadbackPreview(()=>getFreeDspSession(dev).readback(),()=>attempt===connectAttempt && device===dev,log);
-            if(snapshot && attempt===connectAttempt && device===dev){const selected=freeDspReadbackSlots.capture(snapshot,previewResponse(snapshot),eqState);if(selected)eqState=selected;renderUI(eqState);}
+            if(snapshot && attempt===connectAttempt && device===dev){const selected=freeDspReadbackSlots.capture(snapshot,previewResponse(snapshot),eqState);if(selected)eqState=selected;loadCustomProfilesFromStorage();renderCustomProfiles();renderUI(eqState);log(freeDspReadbackSlots.status+' Unsaved previous drafts, if any, are in Custom Profiles.');}
             else if(attempt===connectAttempt&&device===dev)renderUI(eqState);
             if(attempt!==connectAttempt || device!==dev)return;
         } else if (protocol === "SAVITECH" || protocol === "FIIO_JA11" || protocol === "MOONDROP") {
@@ -944,6 +944,7 @@ export async function connectToDevice() {
 		if(freeDspAttempt && attempt!==connectAttempt)return;
 		if(device && isFreeDsp(device) && !device.opened){disconnectFreeDsp(device);device=null;(window as any).device=null;}
         log(`Connection Error: ${(err as Error).message}`);
+        if(isFreeDsp(device))renderUI(eqState);
 	}
 }
 
@@ -1021,7 +1022,8 @@ async function finishFreeDspLocalReset(bands:EQ,name:string){
 export async function resetToDefaults() {
  if((globalThis as any).window?.isFreeDspEditorReadOnly?.())return;
  if(isFreeDsp(device)){
-  if(!confirm('Reset nine bands to defaults and apply to RAM? Flash is unchanged.'))return;
+  const attempt=connectAttempt,mode=freeDspReadbackSlots.mode;
+  if(!await (window as any).confirmFreeDspReset?.('Reset nine bands to defaults and apply to RAM? Flash is unchanged.')||attempt!==connectAttempt||mode!==freeDspReadbackSlots.mode||(window as any).isFreeDspEditorReadOnly?.())return;
   await finishFreeDspLocalReset(freeDspDefaultBands(),'Flat Profile (Default)');return;
  }
 	if (
@@ -1074,7 +1076,8 @@ export async function resetToDefaults() {
 export async function resetToFlat() {
  if((globalThis as any).window?.isFreeDspEditorReadOnly?.())return;
  if(isFreeDsp(device)){
-  if(!confirm('Set all nine gains to zero and apply to RAM? Frequency, Q and type are preserved. Flash is unchanged.'))return;
+  const attempt=connectAttempt,mode=freeDspReadbackSlots.mode;
+  if(!await (window as any).confirmFreeDspReset?.('Set all nine gains to zero and apply to RAM? Frequency, Q and type are preserved. Flash is unchanged.')||attempt!==connectAttempt||mode!==freeDspReadbackSlots.mode||(window as any).isFreeDspEditorReadOnly?.())return;
   await finishFreeDspLocalReset(normalizeFreeDspEditor(eqState,log,false).map(b=>({...b,gain:0})),'Flat Profile (Neutral)');return;
  }
 	log("[System] Resetting all bands to flat neutral values...");
@@ -1357,7 +1360,7 @@ export function saveCustomProfile(name: string) {
 		log(`[System] Saving custom profile: "${name}"...`);
 		name = name.trim();
 		if (!name) {
-			alert("Please enter a profile name first.");
+			if(isFreeDsp(device))log("Please enter a profile name first.");else alert("Please enter a profile name first.");
 			return;
 		}
 
@@ -1366,11 +1369,12 @@ export function saveCustomProfile(name: string) {
 			customProfiles = [];
 		}
 
+		if(isFreeDsp(device)&&customProfiles.some(p=>p.name.toLowerCase()===name.toLowerCase())){const base=name;let n=2;while(customProfiles.some(p=>p.name.toLowerCase()===name.toLowerCase()))name=`${base} (${n++})`;log(`Existing profile preserved; saving as "${name}".`);}
 		const existingIndex = customProfiles.findIndex(
 			(p) => p.name.toLowerCase() === name.toLowerCase()
 		);
 
-		if (existingIndex > -1) {
+		if (existingIndex > -1 && !isFreeDsp(device)) {
 			const confirmOverwrite = confirm(
 				`A custom profile named "${name}" already exists. Do you want to overwrite it?`
 			);
@@ -1401,8 +1405,8 @@ export function saveCustomProfile(name: string) {
 	}
 }
 
-export function deleteCustomProfile(name: string) {
-	const confirmDelete = confirm(`Are you sure you want to delete "${name}"?`);
+export async function deleteCustomProfile(name: string) {
+	const confirmDelete = isFreeDsp(device)?await (window as any).confirmFreeDspReset?.(`Delete local profile "${name}"? Hardware is unchanged.`):confirm(`Are you sure you want to delete "${name}"?`);
 	if (!confirmDelete) return;
 
 	customProfiles = customProfiles.filter((p) => p.name !== name);

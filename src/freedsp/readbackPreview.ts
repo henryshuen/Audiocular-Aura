@@ -62,6 +62,6 @@ export function renderReadbackPreview(_p:ReadbackPreview,doc:Document=document){
 export async function loadReadbackPreview(read:()=>Promise<unknown>,current:()=>boolean,log:(s:string)=>void,doc:Document=document){
  if(!current())return;
  try{const p=validateReadbackPreview(await read());previewResponse(p);if(!current())return;renderReadbackPreview(p,doc);
-  log('FreeDSP read-only snapshot loaded; source/fractional Gain/enabled/stereo unresolved. No editor replacement or writes.');return p;
+  log('FreeDSP read-only snapshot loaded; source/fractional Gain/enabled/stereo unresolved. No device write.');return p;
  }catch(error){if(current()){for(const id of ['lastAppliedEqDisplay','freeDspRamStatus']){const e=doc.getElementById(id);if(e)e.textContent='Readback unavailable — Local Editor';}log('Readback unavailable — Local Editor: STOP, no retry. '+String(error));}}
 }

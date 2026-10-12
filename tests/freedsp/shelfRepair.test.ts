@@ -40,6 +40,7 @@ describe('device owner 2026-10-12 real nine-band shelf snapshot; offline repair'
   const ast=ts.createSourceFile('fn.ts',source,ts.ScriptTarget.ES2022,true),node=ast.statements.find(n=>ts.isFunctionDeclaration(n)&&n.name?.text==='setABCompareState')!;
   const code=ts.transpileModule(node.getText(ast).replace('export ',''),{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
   const write=vi.fn(),s=workspace(),ctx:any={device:{},isFreeDsp:()=>true,freeDspReadbackSlots:s,eqState:editor(),window:{confirm:()=>true},renderUI:vi.fn(),updateSlotLabel:vi.fn(),log:vi.fn(),syncToDevice:write};
+  const legacySelect=s.select.bind(s);s.select=(m,e,c=ctx.window.confirm)=>legacySelect(m,e,c);
   const select=runInNewContext(code+'\nsetABCompareState',ctx);
   await select('A');expect(ctx.eqState.slice(7).map((b:any)=>b.type)).toEqual(['LSQ','HSQ']);await select('B');await select('Off');expect(ctx.eqState).toEqual(editor());expect(write).not.toHaveBeenCalled();
  });

@@ -1,5 +1,4 @@
 import {isFreeDsp} from './freedsp/webHid.ts';
-import {freeDspOverwriteWarning} from './freedsp/deviceState.ts';
 import {getFreeDspSession as attachFreeDsp} from './freedsp/session.ts';
 import { buildConexantPacket, quantizeConexantCoefficients } from "./freedsp/conexantPacket.ts";
 import { sendConexantReport as sendFreeDSPReport } from "./freedsp/conexantTransport.ts";
@@ -864,7 +863,7 @@ export async function flashToFlash() {
 	if (!device) return;
  if(isFreeDsp(device)){
    if((globalThis as any).window?.isFreeDspEditorReadOnly?.())throw Error('ORIGIN is read-only. Select EQ A or EQ B to save.');
-   if(!confirm('Save this EQ permanently to FreeDSP? This replaces saved settings and may require reconnection.'))return false;
+   log('Saving FreeDSP Flash: replacing saved EQ; reconnection may be required.');
    const editor=getEqState();if(!editor)throw new Error('FreeDSP editor unavailable');
    const workspace=(globalThis as any).window?.freeDspWorkspaces,revision=workspace?.begin('flash',editor);(globalThis as any).window?.refreshFreeDspWorkspaceUI?.();showSyncing();
    try{await attachFreeDsp(device).flash(editor);workspace?.finish(revision,true);log('Flash save acknowledged; reconnect to read device EQ.');}
@@ -1666,6 +1665,6 @@ export async function executeFactoryReset(device: HIDDevice) {
 export async function restoreFreeDspUnity(){
  if((globalThis as any).window?.isFreeDspEditorReadOnly?.())throw Error('ORIGIN is read-only. Select EQ A or EQ B first.');
  const d=getDevice();if(!d || !isFreeDsp(d))return;
- if(!confirm(freeDspOverwriteWarning+'\nRestore all nine bands on both channels to unity in RAM. Local Editor and Flash remain unchanged. Continue?'))return false;
+ if(!await (globalThis as any).window?.confirmFreeDspReset?.('Restore nine stereo bands to unity in RAM? Local Editor and Flash are unchanged.'))return false;
  showSyncing();try{await attachFreeDsp(d).sync([],true);}finally{hideSyncing();}return true;
 }

@@ -1,3 +1,4 @@
+import {confirmFreeDspReset} from './freedsp/inPageConfirm.ts';
 import "./style.css";
 import {isFreeDsp} from './freedsp/webHid.ts';
 import {
@@ -125,6 +126,7 @@ btnResetFlat?.addEventListener("click", async () => {
 /**
  * SYNC LOGIC WITH SAFETY WARNINGS
  */
+(window as any).confirmFreeDspReset=confirmFreeDspReset;
 let safetyActionPending: "sync" | "flash" | null = null;
 
 async function syncFreeDspRam(){
@@ -160,7 +162,7 @@ async function saveFreeDspFlash(){
   const button=document.getElementById('btnFlash') as HTMLButtonElement|null;if(button)button.disabled=true;
   try{setFreeDspRamStatus('Saving Flash…');const saved=await flashToFlash();
     if(attempt!==getConnectionAttempt()&&getDevice())return;
-    setFreeDspRamStatus(saved===false?'Flash save canceled.':((globalThis as any).window?.freeDspWorkspaces?.status??'Flash save acknowledged; reconnect to read device EQ.'));
+    setFreeDspRamStatus((globalThis as any).window?.freeDspWorkspaces?.status??'Flash save acknowledged; reconnect to read device EQ.');
     if(saved===true&&!getDevice()){const status=document.getElementById('freeDspRamStatus');if(status)status.hidden=false;}}
   catch(e){if(attempt===getConnectionAttempt()){setFreeDspRamStatus('FreeDSP Flash: Save incomplete; possibly partially stored. STOP, no retry. See log.');log(String(e));}}
   finally{if(button && attempt===getConnectionAttempt())button.disabled=!isFreeDsp(getDevice())||(window as any).freeDspWorkspaces?.writable===false;}
@@ -362,7 +364,7 @@ function handleSaveProfile() {
 		}
 		const name = customProfileNameInput.value.trim();
 		if (!name) {
-			alert("Please enter a profile name first.");
+			if(isFreeDsp(getDevice()))log("Please enter a profile name first.");else alert("Please enter a profile name first.");
 			return;
 		}
 		saveCustomProfile(name);
@@ -731,6 +733,7 @@ const btnFactoryReset = document.getElementById("btnFactoryReset");
 const btnGetFw = document.getElementById("btnGetFw");
 
 btnFactoryReset?.addEventListener("click", async () => {
+ if(isFreeDsp(getDevice())){log("FreeDSP factory reset is unavailable. No command sent.");return;}
 	if (confirm("Perform full hardware factory reset? This will restore standard filters, AB amplifier modes, center channel balance, and clear local state settings.")) {
 		log("[System] Executing hardware factory reset sequence...");
 		
@@ -1206,7 +1209,7 @@ btnSubmitReport?.addEventListener("click", async () => {
 	
 	modalReportDevice?.classList.add("hidden");
 	
-	alert(`Report and console logs copied to clipboard! Opening pre-filled GitHub issue page...`);
+	if(isFreeDsp(getDevice()))log("Report and console logs copied to clipboard. Opening GitHub issue page.");else alert(`Report and console logs copied to clipboard! Opening pre-filled GitHub issue page...`);
 });
 /**
  * UNDO / REDO / COMPARE BUTTONS

@@ -65,7 +65,7 @@ describe('Final production UX — offline only',()=>{
   runInNewContext(extract('renderUI',fn)+'\nrenderUI([])',context);expect(counter.innerText).toBe('7 / 9');
  });
  it('actual FreeDSP reset confirmation is English, describes RAM-only semantics, and Cancel prevents changes',async()=>{
-  const confirm=vi.fn(()=>false),write=vi.fn();const ctx={device:{vendorId:0x35d8,productId:0x1496},isFreeDsp,confirm,freeDspOverwriteWarning,finishFreeDspLocalReset:write};
+  const confirm=vi.fn(()=>false),write=vi.fn();const ctx={device:{vendorId:0x35d8,productId:0x1496},isFreeDsp,confirm,connectAttempt:0,freeDspReadbackSlots:{mode:'A'},window:{confirmFreeDspReset:confirm},freeDspOverwriteWarning,finishFreeDspLocalReset:write};
   for(const name of ['resetToDefaults','resetToFlat'])await runInNewContext(extract(name,fn)+`\n${name}()`,ctx);
   expect(write).not.toHaveBeenCalled();for(const call of confirm.mock.calls as unknown as [string][]){expect(call[0]).not.toMatch(/[\u3400-\u9fff]/);expect(call[0]).toContain('Flash is unchanged');expect(call[0]).toContain('apply to RAM');}
  });

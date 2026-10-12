@@ -14,7 +14,7 @@ import dsp from '../../src/dsp.ts?raw';
 import peq from '../../src/peq.ts?raw';
 import main from '../../src/main.ts?raw';
 const p=validateReadbackPreview(capture),points=previewResponse(p);
-function ready(storage?:any){const s=new FreeDspWorkspaces(storage);s.capture(p,points,freeDspDefaultBands(),()=>{throw Error('No clean initialization dialog');});return s;}
+function ready(storage?:any){if(!storage){const m=new Map<string,string>();storage={getItem:(k:string)=>m.get(k)??null,setItem:(k:string,v:string)=>m.set(k,v)};}const s=new FreeDspWorkspaces(storage);s.capture(p,points,freeDspDefaultBands(),()=>{throw Error('No clean initialization dialog');});return s;}
 function extract(name:string,source:string){const ast=ts.createSourceFile('x.ts',source,ts.ScriptTarget.ES2022,true);const n=ast.statements.find(n=>ts.isFunctionDeclaration(n)&&n.name?.text===name)!;return ts.transpileModule(n.getText(ast).replace('export ',''),{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;}
 function modelTransport(failAt=0){let n=0;return {supportsFlash:true,dispose:vi.fn(),exchange:vi.fn(async(command:number)=>{if(++n===failAt)throw Error('MOCK FAILED ACK');return {reportId:1,command,reply:1,count:command===346?2:0,module:0xb32d2300,words:command===346?[0,5]:[],capacityWords:[]};})};}
 function actualWrites(s:FreeDspWorkspaces,transport=modelTransport()){
@@ -50,9 +50,9 @@ describe('FreeDSP Edition lifecycle; real capture replay + synthetic writes ONLY
   a[3].gain=-4;s.observe(a);expect(s.status).toContain('edited since Apply');expect(s.select('Off',a)![3].gain).toBe(p.bands[3].gainDb);
  });
  it('confirmed Flash has 56 mock ACKs including commit; next fresh readback refreshes Origin/A and Flat B safely',async()=>{
-  const s=ready(),a=s.select('A',s.view)!;a[3].gain=-3;s.observe(a);const f=actualWrites(s);await f.api.flashToFlash();expect(f.ctx.confirm).toHaveBeenCalledOnce();expect(f.transport.exchange).toHaveBeenCalledTimes(56);
+  const s=ready(),a=s.select('A',s.view)!;a[3].gain=-3;s.observe(a);const f=actualWrites(s);await f.api.flashToFlash();expect(f.ctx.confirm).not.toHaveBeenCalled();expect(f.transport.exchange).toHaveBeenCalledTimes(56);
   expect(s.status).toContain('Flash save acknowledged');s.disconnect();expect(s.status).toContain('reconnect');
-  const q={...p,capturedUtc:'2026-10-12T06:00:00Z',bands:p.bands.map(b=>({...b,gainDb:0}))};s.capture(q,points,a,()=>{throw Error('Saved revision is not unsaved');});
+  const q={...p,capturedUtc:'2026-10-12T06:00:00Z',bands:p.bands.map(b=>({...b,gainDb:0}))};s.capture(q,points.map(x=>({...x,db:0})),a,()=>{throw Error('Saved revision is not unsaved');});
   expect(s.view.every(b=>b.gain===0)).toBe(true);expect(s.select('A',s.view)!.every(b=>b.gain===0)).toBe(true);expect(s.select('B',s.view)).toEqual(freeDspDefaultBands());
  });
  it('failed Flash never marks saved/acknowledged; no retry or rollback; Origin and unsaved draft remain',async()=>{
@@ -60,12 +60,12 @@ describe('FreeDSP Edition lifecycle; real capture replay + synthetic writes ONLY
   await expect(f.api.flashToFlash()).rejects.toThrow('FAILED ACK');expect(f.transport.exchange).toHaveBeenCalledTimes(12);expect(s.status).toContain('unknown');expect(s.status).not.toContain('acknowledged');expect(s.unsaved).toBe(true);
  });
  it('failed Flash protects even an initially clean attempted profile from silent replacement',async()=>{
-  const s=ready();s.select('A',s.view);expect(s.unsaved).toBe(false);const f=actualWrites(s,modelTransport(12));await expect(f.api.flashToFlash()).rejects.toThrow('FAILED ACK');expect(s.unsaved).toBe(true);s.disconnect();const confirm=vi.fn(()=>false);s.capture(p,points,[],confirm);expect(confirm).toHaveBeenCalledOnce();
+  const s=ready();s.select('A',s.view);expect(s.unsaved).toBe(false);const f=actualWrites(s,modelTransport(12));await expect(f.api.flashToFlash()).rejects.toThrow('FAILED ACK');expect(s.unsaved).toBe(true);s.disconnect();const confirm=vi.fn(()=>false);s.capture(p,points,[],confirm);expect(confirm).not.toHaveBeenCalled();
  });
- it('disconnect + reload safely retains unsaved A/B; canceled replacement still refreshes only Origin',()=>{
+ it('disconnect + reload safely retains unsaved A/B; automatic recovery precedes fresh Origin/A/FlatB',()=>{
   const store=new Map<string,string>(),storage={getItem:(k:string)=>store.get(k)??null,setItem:(k:string,v:string)=>store.set(k,v)},s=ready(storage);
   const a=s.select('A',s.view)!;a[0].gain=-4;s.observe(a);const b=s.select('B',a)!;b[2].gain=-6;s.observe(b);s.disconnect();expect(s.curve).toBeNull();expect(s.status).toContain('unknown');
-  const restored=new FreeDspWorkspaces(storage),confirm=vi.fn(()=>false);restored.capture(p,points,b,confirm);expect(confirm).toHaveBeenCalledOnce();expect(restored.select('A',restored.view)![0].gain).toBe(-4);expect(restored.select('B',restored.view)![2].gain).toBe(-6);
+  const restored=new FreeDspWorkspaces(storage),confirm=vi.fn(()=>false);restored.capture(p,points,b,confirm);expect(confirm).not.toHaveBeenCalled();expect(restored.select('A',restored.view)![0].gain).toBe(p.bands[0].gainDb);expect(restored.select('B',restored.view)).toEqual(freeDspDefaultBands());const saved=JSON.parse(store.get('aura_custom_profiles')!);expect(saved.map((x:any)=>x.bands[0].gain)).toContain(-4);expect(saved.map((x:any)=>x.bands[2].gain)).toContain(-6);
  });
  it('failed/partial capture cannot fabricate Origin; stale RAM completion after disconnect cannot update claim',()=>{
   const s=ready();s.select('A',s.view);const token=s.begin('ram',s.view);s.disconnect();s.finish(token,true);expect(s.status).toContain('unknown');expect(s.originUnavailable).toBe(true);
@@ -83,8 +83,8 @@ describe('FreeDSP Edition lifecycle; real capture replay + synthetic writes ONLY
   get()[8].gain=0;expect(state[8].gain).toBe(-16);expect(s.view[8].gain).toBe(-16);
   s.disconnect(state);expect(get()).toEqual([]);expect(s.disconnectedDraft).toHaveLength(9);
  });
- it('unrelated unsaved B survives Flash A and reconnect unless explicitly discarded',()=>{
-  const s=ready();s.select('B',s.view);const b=s.view;b[2].gain=-5;s.observe(b);s.select('A',b);const r=s.begin('flash',s.view);s.finish(r,true);s.disconnect();const confirm=vi.fn(()=>false);s.capture(p,points,[],confirm);expect(confirm).toHaveBeenCalledOnce();expect(s.select('B',s.view)![2].gain).toBe(-5);
+ it('unrelated unsaved B survives Flash A and reconnect in recovery profiles before Flat B replaces it',()=>{
+  const s=ready();s.select('B',s.view);const b=s.view;b[2].gain=-5;s.observe(b);s.select('A',b);const r=s.begin('flash',s.view);s.finish(r,true);s.disconnect();const confirm=vi.fn(()=>false);s.capture(p,points,[],confirm);expect(confirm).not.toHaveBeenCalled();expect(s.select('B',s.view)).toEqual(freeDspDefaultBands());
  });
  it('cached drafts remain local on failed reconnect and cannot reach hardware without a new valid snapshot',async()=>{
   const store=new Map<string,string>(),storage={getItem:(k:string)=>store.get(k)??null,setItem:(k:string,v:string)=>store.set(k,v)},old=ready(storage);old.select('A',old.view);const a=old.view;a[2].gain=-3;old.observe(a);old.disconnect();
@@ -96,8 +96,8 @@ describe('FreeDSP Edition lifecycle; real capture replay + synthetic writes ONLY
   active=false;const q={...p,capturedUtc:'2026-10-12T08:00:00Z'};s.capture(q,points,s.view,()=>true);resolve(capture);const old=await pending;if(old)s.capture(old,previewResponse(old),s.view);
   expect(old).toBeUndefined();expect(log).not.toHaveBeenCalled();expect(s.details).toContain(q.capturedUtc);
  });
- it('Flash cancellation is one short dialog with no pending revision, writes or editor changes',async()=>{
-  const s=ready();s.select('A',s.view);const before=s.view,f=actualWrites(s);f.ctx.confirm.mockReturnValue(false);expect(await f.api.flashToFlash()).toBe(false);expect(f.ctx.confirm).toHaveBeenCalledOnce();expect(f.transport.exchange).not.toHaveBeenCalled();expect(s.view).toEqual(before);expect(s.busy).toBe(false);
+ it('explicit Flash executes without a native dialog, preserving editor and requiring 56 ACKs',async()=>{
+  const s=ready();s.select('A',s.view);const before=s.view,f=actualWrites(s);f.ctx.confirm.mockReturnValue(false);expect(await f.api.flashToFlash()).toBe(true);expect(f.ctx.confirm).not.toHaveBeenCalled();expect(f.transport.exchange).toHaveBeenCalledTimes(56);expect(s.view).toEqual(before);expect(s.busy).toBe(false);
  });
  it('actual canvas uses raw Origin dashed reference independently from the active editor curve; Origin has no handles',()=>{
   const s=ready(),dash=vi.fn(),stroke=vi.fn(),line=vi.fn(),arc=vi.fn(),c:any={createLinearGradient:()=>({addColorStop:vi.fn()}),beginPath:vi.fn(),moveTo:vi.fn(),lineTo:line,stroke,setLineDash:dash,arc};
@@ -126,7 +126,7 @@ describe('FreeDSP Edition lifecycle; real capture replay + synthetic writes ONLY
   Object.assign(f.ctx,{getDevice:()=>device,isFreeDsp:(d:any)=>!!d,getConnectionAttempt:()=>attempt,document:{getElementById:(id:string)=>id==='btnFlash'?button:status},setFreeDspRamStatus:(v:string)=>status.textContent=v,autoConnectDevice:auto});
   const ast=ts.createSourceFile('main.ts',main,ts.ScriptTarget.ES2022,true),events=ast.statements.filter(node=>node.getText(ast).startsWith('const btnFlash')||/^btnFlash.*addEventListener/.test(node.getText(ast))).map(node=>node.getText(ast)).join('\n');
   runInNewContext(extract('saveFreeDspFlash',main)+'\n'+extract('safeFlashToFlash',main)+'\n'+ts.transpileModule(events,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText,f.ctx);
-  await button.click();expect(exchange).toHaveBeenCalledTimes(56);expect(f.ctx.confirm).toHaveBeenCalledOnce();expect(status.textContent).toContain('Flash save acknowledged');expect(status.hidden).toBe(false);expect(auto).not.toHaveBeenCalled();expect(s.curve).toBeNull();
+  await button.click();expect(exchange).toHaveBeenCalledTimes(56);expect(f.ctx.confirm).not.toHaveBeenCalled();expect(status.textContent).toContain('Flash save acknowledged');expect(status.hidden).toBe(false);expect(auto).not.toHaveBeenCalled();expect(s.curve).toBeNull();
  });
 });
 

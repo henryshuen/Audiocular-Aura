@@ -55,9 +55,11 @@ describe('FreeDSP readback local workspace integration — no hardware',()=>{
  });
  it('actual slot handler has zero transport calls for OFF/A/B and Cancel, including keyboard cycle',async()=>{
   const s=ready(),write=vi.fn(),ctx={device:{},isFreeDsp:()=>true,freeDspReadbackSlots:s,eqState:local(),window:{confirm:()=>true},renderUI:vi.fn(),updateSlotLabel:vi.fn(),log:vi.fn(),syncToDevice:write};
+  // Historical model adapter only; Edition production has no native confirmation.
+  const legacySelect=s.select.bind(s);s.select=(m,e,c=ctx.window.confirm)=>legacySelect(m,e,c);
   const f=runInNewContext(['setABCompareState','toggleABCompare'].map(n=>extract(n,fnSource)).join('\n')+'\n({setABCompareState,toggleABCompare})',ctx);
   await f.setABCompareState('A');await f.setABCompareState('B');await f.setABCompareState('Off');await f.toggleABCompare();expect(s.mode).toBe('B');expect(write).not.toHaveBeenCalled();
-  const cancel={...ctx,eqState:local(),freeDspReadbackSlots:ready(),window:{confirm:()=>false},renderUI:vi.fn()};await runInNewContext(extract('setABCompareState',fnSource)+'\nsetABCompareState("A")',cancel);expect(cancel.renderUI).not.toHaveBeenCalled();expect(cancel.eqState).toEqual(local());
+  const cancel={...ctx,eqState:local(),freeDspReadbackSlots:ready(),window:{confirm:()=>false},renderUI:vi.fn()};const canceledSelect=cancel.freeDspReadbackSlots.select.bind(cancel.freeDspReadbackSlots);cancel.freeDspReadbackSlots.select=(m,e,c=cancel.window.confirm)=>canceledSelect(m,e,c);await runInNewContext(extract('setABCompareState',fnSource)+'\nsetABCompareState("A")',cancel);expect(cancel.renderUI).not.toHaveBeenCalled();expect(cancel.eqState).toEqual(local());
  });
  it('delayed old HTTP readback cannot replace a current snapshot; failure leaves source unavailable',async()=>{
   const nodes={lastAppliedEqDisplay:{textContent:''},freeDspRamStatus:{textContent:''}},doc={getElementById:(id:string)=>nodes[id as keyof typeof nodes]??null} as unknown as Document;
@@ -80,6 +82,7 @@ describe('FreeDSP readback local workspace integration — no hardware',()=>{
    document:{getElementById:(id:string)=>buttons[id]??(id==='eqCanvas'?canvas:id==='freeDspRamStatus'?status:id==='lastAppliedEqDisplay'?badge:null),querySelector:(q:string)=>q==='.canvas-wrapper-full'?{}:null},
    configureFreeDspControlNotes:vi.fn(),gainRangeFor:()=>({min:-16,max:6}),localStorage:{setItem:vi.fn()},globalGainState:0,bassTiltState:0,trebleTiltState:0,manualPreampState:0,onUpdateCallback:null,canvas:null,ctx:null,
    getEqState:()=>ctx.eqState,log:vi.fn(),syncToDevice:writes,flashToFlash:writes,CONFIG:{padding:40},freqToX:(x:number)=>x,gainToY:(x:number)=>x,xToFreq:(x:number)=>x,calculateBiquad:(b:any)=>b,getMagnitude:(_f:number,b:any[])=>b.reduce((n,x)=>n+x.gain,0)};
+  const legacySelect=s.select.bind(s);s.select=(m,e,c=ctx.window.confirm)=>legacySelect(m,e,c);
   ctx.draw=()=>functions.drawCurve(c,100,100);
   const names=['setABCompareState','renderUI','updateSlotLabel','updateLastAppliedEqUI'];
   const functions=runInNewContext(names.map(n=>extract(n,fnSource)).join('\n')+'\n'+['drawCurve','renderPEQ'].map(n=>extract(n,peqSource)).join('\n')+'\n({renderUI,drawCurve})',ctx);

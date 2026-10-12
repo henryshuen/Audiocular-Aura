@@ -18,6 +18,8 @@ function context(){
  const store=new Map<string,string>(),write=vi.fn(),slots=new ReadbackSlots();
  const ctx:any={device:{vendorId:0x35d8,productId:0x1496,opened:false},eqState:original,freeDspReadbackSlots:slots,isFreeDsp,gainRangeFor,configureFreeDspControlNotes:vi.fn(),updateSlotLabel:vi.fn(),getEqState:()=>ctx.eqState,
   localStorage:{setItem:(k:string,v:string)=>store.set(k,v),getItem:(k:string)=>store.get(k)??null},document:{querySelector:()=>null,getElementById:()=>null},window:{confirm:()=>true},globalGainState:0,bassTiltState:0,trebleTiltState:0,manualPreampState:0,log:vi.fn(),syncToDevice:write,flashToFlash:write};
+ // Legacy OFF model fixture adapter; new Edition lifecycle is tested separately.
+ const legacySelect=slots.select.bind(slots);slots.select=(m,e,c=ctx.window.confirm)=>legacySelect(m,e,c);
  const api=runInNewContext(['renderUI','setABCompareState'].map(extract).join('\n')+'\n({renderUI,setABCompareState})',ctx);
  return {ctx,api,store,slots,write,original:structuredClone(original)};
 }
