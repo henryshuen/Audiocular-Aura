@@ -1,0 +1,48 @@
+{
+  "schema": 1,
+  "context": "NATIVE_WIN32_CONTROL_EXPERIMENT_NOT_BROWSER",
+  "capturedUtc": "2026-10-12T02:36:15.0139184+00:00",
+  "command": 446,
+  "path": 0,
+  "wire": 2,
+  "outputs": 1,
+  "controlGets": 1,
+  "eqWrites": 0,
+  "browserHardwarePass": false,
+  "freshnessVerified": false,
+  "outcome": "WRITEFILE_THEN_CONTROL_MATCH_STREAM_TIMEOUT",
+  "observations": [
+    {
+      "api": "ReadFile/start-before-output",
+      "elapsedMs": 15,
+      "initial": "PENDING"
+    },
+    {
+      "api": "WriteFile",
+      "elapsedMs": 15,
+      "writeStart": "PENDING",
+      "writeResult": "COMPLETE",
+      "txBase64": "AQANAL4BACMtswAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
+    },
+    {
+      "api": "ReadFile",
+      "elapsedMs": 1028,
+      "result": "TIMEOUT",
+      "bytes": 0,
+      "rawBase64": null
+    },
+    {
+      "api": "HidD_GetInputReport/CONTROL_NOT_BROWSER",
+      "elapsedMs": 1036,
+      "ok": true,
+      "error": 0,
+      "rawBase64": "AQAIAL6BACMtswAAAAACAAAAAwAAAORuQQDwOIQAS\u002BI6ABDHewDRrsMAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+      "verdict": {
+        "Result": "MATCH",
+        "Reason": "446/path0/wire2/count8 coefficient frame; freshness NOT proven",
+        "EnvelopeMatched": true,
+        "PathWireMatched": true
+      }
+    }
+  ]
+}
