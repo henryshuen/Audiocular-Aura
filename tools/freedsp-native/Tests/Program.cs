@@ -604,6 +604,15 @@ Test("FreeDSP App gain policy endpoints; unchanged RAM/Flash bytes, offline only
    Check(new TransportRequest(Convert.ToBase64String(tx)).Bytes().SequenceEqual(tx),"Metadata policy accepts exact bytes without clamping");
  }
 });
+Test("Shelf metadata preserves exact type1/2; unknown type never SET",()=>{
+ foreach(int type in new[]{1,2}){
+  var tx=FlashPacket(220,[0,8,1800,181,type,-16,..new int[7]]);
+  Check(new TransportRequest(Convert.ToBase64String(tx)).Bytes().SequenceEqual(tx),"No shelf-to-Peak coercion");
+ }
+ using var hid=new MockHid(NonMatch(220));using var log=new StringWriter();
+ var bad=FlashPacket(220,[0,8,1800,181,3,-16,..new int[7]]);
+ Throws(()=>TransportExchange.Run(hid,new(Convert.ToBase64String(bad)),log));Check(hid.Transmissions.Count==0,"Unknown type never SET");
+});
 Test("Flash first bad response fails immediately without GET polling or SET retry",()=>{
  var tx=FlashPacket(220,[255,..new int[12]]);
  foreach(var rx in new[]{NonMatch(190),Reply(5),new byte[62]}){

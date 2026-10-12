@@ -78,7 +78,7 @@ describe('M2N Web/native RAM contract; no physical HID',()=>{
  it('validates exactly nine rows with matching indices and explicit PK/enabled',()=>{
    expect(validateBands(bands())).toEqual(bands());
    expect(()=>validateBands(bands().slice(1))).toThrow();expect(()=>validateBands([...bands(),bands()[0]])).toThrow();
-   for(const b of [{index:1},{type:'LSQ'},{type:'NOTCH'},{enabled:undefined},{freq:NaN},{gain:13},{q:0},{freq:65536}]){
+   for(const b of [{index:1},{type:'NOTCH'},{enabled:undefined},{freq:NaN},{gain:13},{q:0},{freq:65536}]){
      const state=bands();Object.assign(state[0],b);expect(()=>validateBands(state)).toThrow();
    }
  });

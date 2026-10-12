@@ -1,5 +1,6 @@
 import {encodeCaf} from './cafCodec.ts';
 import {freeDspGainRange} from './capabilities.ts';
+import {freeDspFilterTypes,freeDspShelfFloat} from './filterTypes.ts';
 import type { Band } from '../main.ts';
 import { nativePeakFloat, nativeScaling, officialRateHz } from '../../scripts/freedsp/ram-semantics.mjs';
 export type RamAction = 'applyBand' | 'restoreBand' | 'syncNine' | 'restoreNine';
@@ -18,10 +19,10 @@ export const uiToWire = (index:number) => {
 export function validateBands(value:unknown):Band[] {
   if (!Array.isArray(value) || value.length!==9) throw new Error('All nine bands are required; no truncation or skipped bands');
   return value.map((b:Band,i)=>{
-    if (!b || b.index!==i || b.type!=='PK' || typeof b.enabled!=='boolean' ||
+    if (!b || b.index!==i || !Object.hasOwn(freeDspFilterTypes,b.type) || typeof b.enabled!=='boolean' ||
         ![b.freq,b.gain,b.q].every(Number.isFinite) || b.freq<20 || b.freq>20000 || b.gain<freeDspGainRange.min || b.gain>freeDspGainRange.max || b.q<.1 || b.q>10)
-      throw new Error(`UI Band${i+1} is invalid; requires PK, 20-20000 Hz, official App policy -16..+6 dB and Q 0.1-10`);
-    return {index:i,freq:b.freq,gain:b.gain,q:b.q,type:'PK',enabled:b.enabled};
+      throw new Error(`FreeDSP Band${i+1} ${b?.type} is invalid: frequency=${b?.freq} Hz, gain=${b?.gain} dB, Q=${b?.q}; requires PK/LSQ/HSQ, 20-20000 Hz, official App policy -16..+6 dB and Q 0.1-10. No settings changed or writes sent.`);
+    return {index:i,freq:b.freq,gain:b.gain,q:b.q,type:b.type,enabled:b.enabled};
   });
 }
 // Independent offline parity model for the native executor, never a WebHID sender.
@@ -31,13 +32,16 @@ export function modelWebBand(b:Band,sampleIndex:number,restore=false,path=0) {
   const wire=uiToWire(b.index);
   if (!Number.isInteger(sampleIndex) || sampleIndex<4 || sampleIndex>8) throw new Error('Unknown sample rate; no fallback');
   const hz=officialRateHz[sampleIndex];
-  if (b.freq>=hz/2) throw new Error('Nyquist violation');
-  const f=restore || !b.enabled ? [1,0,0,0,0] : nativePeakFloat({frequency:b.freq,gainDb:b.gain,q:b.q,sampleHz:hz}).coefficients;
-  if(!f.every(Number.isFinite))throw new Error('Nonfinite coefficients');
+  const context=`FreeDSP Band${b.index+1} ${b.type}: ${b.freq} Hz, ${b.gain} dB, Q=${b.q}, rateIndex=${sampleIndex} (${hz} Hz)`;
+  if (b.freq>=hz/2) throw new Error(`${context}: Nyquist violation; no settings changed or writes sent.`);
+  const f=restore || !b.enabled ? [1,0,0,0,0] : b.type==='PK'
+    ? nativePeakFloat({frequency:b.freq,gainDb:b.gain,q:b.q,sampleHz:hz}).coefficients
+    : freeDspShelfFloat(b.type as 'LSQ'|'HSQ',b.freq,b.gain,b.q,hz);
+  if(!f.every(Number.isFinite))throw new Error(`${context}: Nonfinite coefficients; no settings changed or writes sent.`);
   const scale=nativeScaling(f), words=f.map(c=>Math.round(Math.fround(c*scale.scale)));
-  if(words.some(w=>w<-8388608 || w>8388607))throw new Error('signed24 overflow');
+  if(words.some(w=>w<-8388608 || w>8388607))throw new Error(`${context}: signed24 overflow; scale=${scale.scale}, words=[${words}]; no settings changed or writes sent.`);
   const a1=-words[3]/scale.scale,a2=-words[4]/scale.scale;
-  if(!(Math.abs(a2)<1 && 1+a1+a2>0 && 1-a1+a2>0))throw new Error('quantized instability');
+  if(!(Math.abs(a2)<1 && 1+a1+a2>0 && 1-a1+a2>0))throw new Error(`${context}: quantized instability (nearest-word model, not a firmware verdict); signed24 scale=${scale.scale}, exponent=${scale.gain}, words=[${words}]; Jury |a2|=${Math.abs(a2)} < 1, 1+a1+a2=${1+a1+a2} > 0, 1-a1+a2=${1-a1+a2} > 0. Preflight STOP; no settings changed or writes sent.`);
   const payload=[path,wire,scale.gain,...words,0,0,0,0,0];
   const bytes=encodeCaf(190,payload).helper;
   return {hz,payload,bytes,nativeBitExact:false};

@@ -3,6 +3,7 @@ import type {Band} from '../main.ts';
 import {CTRL,encodeCaf} from './cafCodec.ts';
 import type {CafTransport} from './cafRam.ts';
 import {validateBands,modelWebBand,unityPreset} from './webRam.ts';
+import {freeDspFilterTypes} from './filterTypes.ts';
 
 export type FlashPacket={command:90|220;label:string;data:Uint8Array};
 export type FlashPlan={editor:Band[];packets:FlashPacket[]};
@@ -17,7 +18,7 @@ export function buildFlashPlan(value:unknown):FlashPlan {
       data:encodeCaf(220,[rate,b.index+1,...model.payload.slice(2)]).data};
   }));
   const metadata=effective.map(b=>({command:220 as const,label:`FLASH WIRE${b.index+1} METADATA`,
-    data:encodeCaf(220,[0,b.index+1,Math.trunc(b.freq),Math.trunc(b.q*256),0,Math.trunc(b.gain),...Array(7).fill(0)]).data}));
+    data:encodeCaf(220,[0,b.index+1,Math.trunc(b.freq),Math.trunc(b.q*256),freeDspFilterTypes[b.type as keyof typeof freeDspFilterTypes],Math.trunc(b.gain),...Array(7).fill(0)]).data}));
   return {editor,packets:[
     {command:90,label:'FLASH SELECT CUSTOM0',data:encodeCaf(90,[90,0,...Array(11).fill(0)]).data},
     ...metadata,...coefficients,

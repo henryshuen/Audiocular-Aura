@@ -36,11 +36,11 @@ describe('gain audit offline evidence, never opens a device',()=>{
   const r=inspectFilter('PK',20,-12,1,192000);
   expect(r.quantizedStable).toBe(true);expect(r.centerDb).toBeCloseTo(-7.751,2);expect(r.sampledPeakDb).toBeCloseTo(9.5424,3);
  });
- it('shelf references obey their asymptotic gains; FreeDSP still rejects unsupported types',()=>{
+ it('shelf references obey their asymptotic gains; native-evidenced shelf types are preserved',()=>{
   for(const type of ['LSQ','HSQ']){
    const f=referenceShelf(type,1000,6,.7,48000);
    expect(responseDb(f,type==='LSQ'?0:24000,48000)).toBeCloseTo(6,3);
-   const bands=freeDspDefaultBands();bands[0].type=type;expect(()=>validateBands(bands)).toThrow();
+   const bands=freeDspDefaultBands();bands[0].type=type;expect(validateBands(bands)[0].type).toBe(type);
   }
  });
  it('new official App policy rejects +12 import unchanged and accepts -16; offline matrix remains historical math evidence',()=>{

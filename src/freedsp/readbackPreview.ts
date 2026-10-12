@@ -1,6 +1,7 @@
 import {decodeReadbackReply} from './readback.ts';
 import {encodeCaf} from './cafCodec.ts';
 import {nativePeakFloat,nativeScaling,nativeWordIntervals,officialRateHz} from '../../scripts/freedsp/ram-semantics.mjs';
+import {freeDspFilterName,freeDspShelfFloat} from './filterTypes.ts';
 
 type Metadata = ReturnType<typeof decodeReadbackReply> & {kind:'metadata'};
 type Coefficients = ReturnType<typeof decodeReadbackReply> & {kind:'coefficients'};
@@ -32,8 +33,9 @@ export function validateReadbackPreview(value:unknown):ReadbackPreview{
  });
  const bands=parsed.slice(9) as Metadata[],coefficients=parsed.slice(0,9) as Coefficients[];
  const sameEffectiveModel=bands.map((m,i)=>{
-  if(m.filterTypeRaw!==0)return false;
-  const f=nativePeakFloat({frequency:m.frequency,gainDb:m.gainDb,q:m.q,sampleHz:officialRateHz[m.sampleRateRaw]}).coefficients;
+  const type=freeDspFilterName(m.filterTypeRaw);if(!type)return false;
+  const f=type==='PK'?nativePeakFloat({frequency:m.frequency,gainDb:m.gainDb,q:m.q,sampleHz:officialRateHz[m.sampleRateRaw]}).coefficients
+    :freeDspShelfFloat(type,m.frequency,m.gainDb,m.q,officialRateHz[m.sampleRateRaw]);
   const scale=nativeScaling(f),intervals=nativeWordIntervals(f,scale.scale);
   return coefficients[i].exponentByte===scale.gain&&coefficients[i].coefficients.every((w,k)=>w>=intervals[k].min&&w<=intervals[k].max);
  });

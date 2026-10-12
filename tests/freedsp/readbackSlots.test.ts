@@ -36,7 +36,7 @@ describe('FreeDSP readback local workspace integration — no hardware',()=>{
   expect(()=>new ReadbackSlots().select('A',editor,()=>true)).toThrow('unavailable');
   const mismatch=new ReadbackSlots();mismatch.capture({...p,sameEffectiveModel:Array(9).fill(false)},previewResponse(p),editor);
   const confirm=vi.fn(()=>true);expect(mismatch.select('B',editor,confirm)).toHaveLength(9);expect(confirm).toHaveBeenCalledWith(readbackConfirmation);expect(mismatch.details).toContain('may differ from raw coefficients');
-  const unsupported=new ReadbackSlots();unsupported.capture({...p,bands:p.bands.map(b=>({...b,filterTypeRaw:1}))},previewResponse(p),editor);expect(()=>unsupported.select('A',editor,()=>true)).toThrow('unsupported');
+  const unsupported=new ReadbackSlots();unsupported.capture({...p,bands:p.bands.map(b=>({...b,filterTypeRaw:99}))},previewResponse(p),editor);expect(()=>unsupported.select('A',editor,()=>true)).toThrow('unsupported');
  });
  it('reconnect and failed capture retain A/B and unsaved B, without silently replacing baseline',()=>{
   const s=ready(),a=s.select('A',local(),()=>true)!,b=s.select('B',a,()=>true)!;b[3].gain=-5;s.observe(b);s.disconnect();

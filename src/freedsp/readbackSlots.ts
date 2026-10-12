@@ -1,5 +1,6 @@
 import type {EQ} from '../main.ts';
 import type {ReadbackPreview} from './readbackPreview.ts';
+import {freeDspFilterName} from './filterTypes.ts';
 
 export const readbackConfirmation = 'Load readback parameters into local A/B slots? Gain is integer dB; Q is raw/256. Enabled states, active RAM source, stereo and freshness are unverified. The editable reconstruction may differ from the raw coefficient snapshot. Band switches start ON as a local assumption. OFF keeps your local edits. Editing A starts B. No device write will occur.';
 const copy=(bands:EQ):EQ=>bands.map(b=>({...b}));
@@ -38,9 +39,9 @@ export class ReadbackSlots {
  select(mode:'Off'|'A'|'B',editor:EQ,confirm:(message:string)=>boolean):EQ|null{
   if(mode!=='Off'&&!this.baseline){
    const p=this.latest;
-   if(!p||p.bands.length!==9||p.bands.some(b=>b.filterTypeRaw!==0||!Number.isFinite(b.gainDb)||b.gainDb<-16||b.gainDb>6||!Number.isFinite(b.frequency)||b.frequency<20||b.frequency>20000||!Number.isFinite(b.q)||b.q<.1||b.q>10))throw Error('Readback unavailable or unsupported — Local Editor preserved; no hardware baseline created.');
+   if(!p||p.bands.length!==9||p.bands.some(b=>!freeDspFilterName(b.filterTypeRaw)||!Number.isFinite(b.gainDb)||b.gainDb<-16||b.gainDb>6||!Number.isFinite(b.frequency)||b.frequency<20||b.frequency>20000||!Number.isFinite(b.q)||b.q<.1||b.q>10))throw Error('Readback unavailable or unsupported — Local Editor preserved; no hardware baseline created.');
    if(!confirm(readbackConfirmation))return null;
-   this.baseline=p.bands.map((b,index)=>({index,freq:b.frequency,gain:b.gainDb,q:b.q,type:'PK',enabled:true}));
+   this.baseline=p.bands.map((b,index)=>({index,freq:b.frequency,gain:b.gainDb,q:b.q,type:freeDspFilterName(b.filterTypeRaw)!,enabled:true}));
    this.working=copy(this.baseline);this.baselineUtc=p.capturedUtc;
   }
   if(this.mode==='Off')this.off=copy(editor);
