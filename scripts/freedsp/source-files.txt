@@ -1,4 +1,5 @@
 .gitattributes
+.github/workflows/pages-staging.yml
 .gitignore
 LICENSE
 README.md

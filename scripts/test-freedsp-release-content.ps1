@@ -47,7 +47,7 @@ try {
                 Assert ($sourcePaths.Contains($relative)) "Source archive includes $relative."
             }
         }
-        foreach ($required in @('freedsp-debug.html','freedsp-ram-debug.html','vitest.config.ts','tools/freedsp-transport-research/Program.cs','tools/freedsp-transport-research/TransportResearch.csproj')) {
+        foreach ($required in @('.github/workflows/pages-staging.yml','freedsp-debug.html','freedsp-ram-debug.html','vitest.config.ts','tools/freedsp-transport-research/Program.cs','tools/freedsp-transport-research/TransportResearch.csproj')) {
             Assert ($sourcePaths.Contains($required)) "Corresponding test/diagnostic input $required included."
         }
         Assert ($sourcePaths.Contains('README.md') -and $sourcePaths.Contains('LICENSE') -and $sourcePaths.Contains('package-lock.json')) 'Source includes build inputs and GPL license.'

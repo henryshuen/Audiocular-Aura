@@ -55,7 +55,7 @@ try {
     $paths = Get-Content -LiteralPath 'scripts/freedsp/source-files.txt' | Where-Object { $_ -and -not $_.StartsWith('#') }
     foreach ($path in $paths) {
         if ($path -match '\.(?:log|bundle)$|(?:JOURNAL|ProvenancePrivate)|(?:^|/)(?:DECISIONS|DONE|GENERAL|ROADMAP)\.md$') { throw "Private packaging input: $path" }
-        if ($path -notmatch '^(src/|scripts/|tests/|public/|tools/freedsp-native/|tools/freedsp-portable/|tools/freedsp-transport-research/|docs/images/|docs/PORTABLE_|docs/RELEASE_NOTES_FREEDSP_|package(?:-lock)?\.json$|tsconfig.*\.json$|vitest\.config\.ts$|vite\.config\.ts$|index\.html$|freedsp-(?:ram-)?debug\.html$|devices\.json$|\.gitattributes$|LICENSE$|README\.md$|\.gitignore$)') { continue }
+        if ($path -notmatch '^(src/|scripts/|tests/|public/|tools/freedsp-native/|tools/freedsp-portable/|tools/freedsp-transport-research/|docs/images/|docs/PORTABLE_|docs/RELEASE_NOTES_FREEDSP_|package(?:-lock)?\.json$|tsconfig.*\.json$|vitest\.config\.ts$|vite\.config\.ts$|index\.html$|freedsp-(?:ram-)?debug\.html$|devices\.json$|\.github/workflows/pages-staging\.yml$|\.gitattributes$|LICENSE$|README\.md$|\.gitignore$)') { continue }
         if ($path -match '(^|/)\.\.?/|^[A-Za-z]:|^/') { throw "Unsafe source path: $path" }
         $dest = Join-Path $source $path
         New-Item -ItemType Directory -Path (Split-Path -Parent $dest) -Force | Out-Null
