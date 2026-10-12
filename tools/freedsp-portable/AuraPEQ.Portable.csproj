@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <NuGetAudit>false</NuGetAudit>
-    <Version>0.1.0-freedsp-preview</Version>
+    <Version>0.1.1</Version>
     <RuntimeFrameworkVersion>10.0.12</RuntimeFrameworkVersion>
     <Deterministic>true</Deterministic>
   </PropertyGroup>

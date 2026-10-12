@@ -2,7 +2,7 @@
 
 An independent, FreeDSP-focused fork of [Audiocular-Aura by mandy321](https://github.com/mandy321/Audiocular-Aura). [Download this edition](https://github.com/henryshuen/Audiocular-Aura/releases).
 
-Windows 11 x64 preview: **v0.1.0-freedsp-preview**.
+Windows 11 x64: **v0.1.1**.
 
 1. Download the Windows x64 ZIP and verify its SHA-256 if desired.
 2. Extract the entire ZIP into a normal folder. Do not run from inside the ZIP.
@@ -12,7 +12,7 @@ Windows 11 x64 preview: **v0.1.0-freedsp-preview**.
 6. ORIGIN is a read-only snapshot. EQ A is an editable reconstruction; EQ B starts Flat. Switching is local. Apply changes RAM; Save to Flash explicitly replaces saved EQ.
 7. Finish any write before closing the launcher. Press Enter or close its window to stop both services. Closing the browser alone does not stop the launcher.
 
-No Node.js, .NET runtime/SDK, Python, Git, administrator access or PowerShell knowledge is required to run this package. The .NET runtime and native helper are bundled. If your default browser lacks WebHID, open the same URL in Chrome or Edge; this preview does not install a browser.
+No Node.js, .NET runtime/SDK, Python, Git, administrator access or PowerShell knowledge is required to run this package. The .NET runtime and native helper are bundled. If your default browser lacks WebHID, open the same URL in Chrome or Edge; this edition does not install a browser.
 
 ## Supported hardware
 
@@ -45,3 +45,5 @@ GPL-3.0; see LICENSE.txt and ACKNOWLEDGMENTS.md. Corresponding application/build
 The browser INSTALL APP / PWA control does not replace this launcher. Full usage, approved screenshots and the supported preset example are in [USER_GUIDE.md](USER_GUIDE.md).
 
 The original FreeDSP requires a Windows HID communication method that standard browser WebHID cannot fully access. This edition therefore includes a local helper to read and save EQ reliably. The download is larger because it bundles the required .NET runtime and application components, so users do not need to install developer tools separately.
+
+Before Flash Save, remove earphones and lower output volume. A sudden loud sound has been reported after completion; its cause is unknown. Saving may take about 10–20 seconds. Continue acknowledges this warning; Cancel sends nothing. Progress counts 56 matching acknowledgments, including commit. Do not disconnect or close the launcher until a final result appears.

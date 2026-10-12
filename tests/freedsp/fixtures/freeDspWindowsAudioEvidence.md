@@ -87,7 +87,7 @@ sidetone, loopback/monitor/AGC or persistence claim.
 One manual session, only when convenient:
 1. APO OFF, no test tones, normal music; before starting set a low audible
    unmuted Windows FreeDSP baseline (the captured minimum/muted state cannot
-   qualify). analysis tool does not change this baseline.
+   qualify). The fixture does not imply additional hardware changes.
 2. Run `python -B scripts/freedsp/windows-control-diagnostic.py` in repository.
    Check saved original path and available actions. Any blocked action stays
    blocked; do not test unsupported controls.

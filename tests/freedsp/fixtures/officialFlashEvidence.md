@@ -1,6 +1,6 @@
 # FreeDSP Flash / persistence: READY / NOT YET HARDWARE PASS
 
-2026-10-09. No physical operations performed during evidence collection. Control research stays closed.
+2026-10-09. Offline analysis of captured protocol evidence.
 Primary evidence: pinned official APK SHA256
 04756b49acfea523758d86101c96c1824b7b209ae3a8836c07837088e795d2d5;
 full saved FreemanCnxtUsbDevice.saveEQParamsToFlash/switchEQMode instructions in

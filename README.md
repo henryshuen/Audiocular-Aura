@@ -8,7 +8,7 @@ An unofficial Windows 11 x64 portable application for the **original Moondrop Fr
 
 ## See it in use
 
-Real screenshots supplied by the tester from the packaged application connected to his FreeDSP:
+Screenshots of the portable edition connected to FreeDSP:
 
 <img src="docs/images/freedsp-origin.png" width="960" alt="ORIGIN showing the captured FreeDSP response curve in a read-only view">
 
@@ -24,7 +24,7 @@ Real screenshots supplied by the tester from the packaged application connected 
 
 ## Download and quick start
 
-1. Open this edition's [Releases page](https://github.com/henryshuen/Audiocular-Aura/releases) and download the **Windows x64 ZIP** for `v0.1.0` once published. The existing `v0.1.0-freedsp-preview` remains available unchanged. The accompanying `.sha256` file identifies its checksum.
+1. Open this edition's [Releases page](https://github.com/henryshuen/Audiocular-Aura/releases) and download the **Windows x64 ZIP** for `v0.1.1`. The accompanying `.sha256` file identifies its checksum.
 2. Extract **all** files to a normal folder. Do not run the application from inside the ZIP.
 3. Double-click **Start AuraPEQ FreeDSP Edition.exe** and keep its window running.
 4. Your default browser opens **http://localhost:5173/** after the local services are ready. Use Chrome or Edge with WebHID support; if needed, open that URL in a supported browser yourself.
@@ -57,7 +57,9 @@ Readback has limits: Gain is whole dB, Q is raw/256, and enabled states are assu
 
 ## RAM Apply and Flash Save
 
-**SYNC TO RAM (APPLY)** sends the selected editable nine-band EQ to both stereo paths. It is a temporary change; use Flash Save if persistence is wanted. **SAVE TO FLASH (PERMANENT)** replaces the saved EQ. the tester has verified matching Flash acknowledgments and persistent EQ after physical USB reconnection.
+**SYNC TO RAM (APPLY)** sends the selected editable nine-band EQ to both stereo paths. It is a temporary change; use Flash Save if persistence is wanted. **SAVE TO FLASH (PERMANENT)** replaces the saved EQ. Manual testing has verified matching Flash acknowledgments and persistent EQ after physical USB reconnection.
+
+Remove earphones and lower output volume before saving. A sudden loud sound has been reported after Flash completion; its cause has not been established. Progress counts matching device acknowledgments, including the final commit.
 
 Flash saving may take approximately **10–20 seconds**, based on current observations. Timing can vary. Do not disconnect FreeDSP or close the launcher during the transaction; wait for the final completion or failure message.
 
@@ -112,28 +114,10 @@ Based on [Audiocular-Aura by mandy321](https://github.com/mandy321/Audiocular-Au
 
 The application is distributed under **GPL-3.0**; see [LICENSE](LICENSE). Packages include `LICENSE.txt`, `ACKNOWLEDGMENTS.md`, corresponding buildable `SOURCE.zip`, and Microsoft runtime licenses and third-party notices in `RUNTIME-NOTICES/`. No official APK or firmware binary is included. Product names belong to their owners; this edition is not endorsed by Moondrop, Conexant or the upstream maintainer.
 
-## v0.1.0 archive and source provenance
+## Source and release provenance
 
-The stable v0.1.0 plan retains the exact hardware-tested Preview ZIP bytes; only its external download filename changes to `AuraPEQ-FreeDSP-v0.1.0-win-x64.zip`. Its checksum is unchanged. The internal folder, version strings and package manifest still say `v0.1.0-freedsp-preview`; this is intentional, not a rebuild.
+The v0.1.1 tag identifies the corresponding source revision. The portable package includes SOURCE.zip and a package manifest recording that revision and frontend asset hashes. Native hardware-control source and packet formats are unchanged from the hardware-validated v0.1.0 baseline; this update changes frontend guidance/progress, launcher version metadata and source packaging.
 
-The binary and bundled `SOURCE.zip` originate from commit `13c3e148d1327e61c4f2198698020c321d7c51c6`. The stable tag will select a documentation-only revision with the same executable, frontend and protocol build inputs. GitHub's tag source archive includes those newer online documents; bundled documentation remains the tested Preview version. See corresponding source included in SOURCE.zip for the explicit mapping. No update to the existing Preview release or tag is required.
+Earlier release assets have been withdrawn because their bundled source contained private development provenance. Historical GitHub tags refer to cleaned source revisions. External downloads and cached old commits cannot be recalled.
 
-## For developers
-
-End users do not need these tools. Source builds require Node.js/npm and the .NET 10 SDK; the validated SDK is 10.0.401 and the package pins runtime 10.0.12.
-
-```powershell
-cd C:\Projects\AuraPEQ
-.\scripts\setup.ps1
-.\scripts\dev.ps1
-```
-
-Development also uses http://localhost:5173/ with a separate native service. To verify and package the production build:
-
-```powershell
-.\scripts\verify.ps1
-.\scripts\package-freedsp-portable.ps1
-.\scripts\test-freedsp-portable.ps1
-```
-
-Packaging uses locked npm dependencies, Vite production assets and self-contained Windows publishing. Outputs default to `../AuraPEQ-FreeDSP-releases`, outside the checkout. The procedure is reproducible; ZIP timestamps need not be byte-identical across builds. Rebuild to receive future runtime updates.
+Build from SOURCE.zip using Node/npm and the .NET 10 SDK with scripts/package-freedsp-portable.ps1. These tools are build prerequisites, not requirements to run the portable application.

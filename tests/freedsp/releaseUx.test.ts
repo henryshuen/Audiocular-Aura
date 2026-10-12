@@ -1,3 +1,4 @@
+import {FlashSaveGate,flashSafetyMessage} from '../../src/freedsp/flashUi.ts';
 import {validateFreeDspImport} from '../../src/freedsp/presetImport.ts';
 import {describe,it,expect,vi} from 'vitest';
 import ts from 'typescript';
@@ -70,14 +71,19 @@ describe('Final production UX — offline only',()=>{
   for(const name of ['resetToDefaults','resetToFlat'])await runInNewContext(extract(name,fn)+`\n${name}()`,ctx);
   expect(write).not.toHaveBeenCalled();for(const call of confirm.mock.calls as unknown as [string][]){expect(call[0]).not.toMatch(/[\u3400-\u9fff]/);expect(call[0]).toContain('Flash is unchanged');expect(call[0]).toContain('apply to RAM');}
  });
- it('late confirmed Flash success survives offline transition; failed/stale callback never invents success',async()=>{
-  for(const failed of [false,true]){
-   let finish!:(v:boolean)=>void,reject!:(e:Error)=>void,attempt=0;const status={textContent:''},button={disabled:false};
-   const ctx={getConnectionAttempt:()=>attempt,getDevice:()=>null,isFreeDsp,document:{getElementById:()=>button},setFreeDspRamStatus:(s:string)=>status.textContent=s,flashToFlash:()=>new Promise<boolean>((r,j)=>{finish=r;reject=j;}),log:vi.fn()};
-   const run=runInNewContext(extract('saveFreeDspFlash',main)+'\nsaveFreeDspFlash',ctx);const pending=run();attempt++;status.textContent='Offline';if(failed)reject(Error('late error'));else finish(true);await pending;
-   expect(status.textContent).toBe(failed?'Offline':'Flash save acknowledged; reconnect to read device EQ.');expect(ctx.log).not.toHaveBeenCalled();expect(button.disabled).toBe(true);
-  }
- });
+ it('late confirmed Flash success survives offline transition; failure remains incomplete',async()=>{
+   for(const failed of [false,true]){
+    let finish!:(v:boolean)=>void,reject!:(e:Error)=>void,attempt=0,device:any={vendorId:0x35d8,productId:0x1496};
+    const status={textContent:''},button={disabled:false},gate=new FlashSaveGate();
+    const ctx={freeDspFlashGate:gate,flashSafetyMessage,confirmFreeDspReset:async()=>true,renderUI:vi.fn(),getEqState:freeDspDefaultBands,window:{freeDspWorkspaces:{available:true,mode:'A'}},
+     getConnectionAttempt:()=>attempt,getDevice:()=>device,isFreeDsp,document:{getElementById:()=>button},setFreeDspRamStatus:(s:string)=>status.textContent=s,
+     flashToFlash:()=>new Promise<boolean>((r,j)=>{finish=r;reject=j;}),log:vi.fn()};
+    const run=runInNewContext(extract('saveFreeDspFlash',main)+'\nsaveFreeDspFlash',ctx);
+    const pending=run();await Promise.resolve();device=null;attempt++;status.textContent='Offline';
+    if(failed)reject(Error('late error'));else finish(true);await pending;
+    expect(status.textContent).toContain(failed?'incomplete':'56/56 acknowledged');expect(gate.busy).toBe(false);
+   }
+  });
  it('profile preamp is ignored only for FreeDSP; imports remain local and generic devices retain gain/sync',async()=>{
   for(const exact of [true,false]){
    const set=vi.fn(),update=vi.fn(),sync=vi.fn(),log=vi.fn();

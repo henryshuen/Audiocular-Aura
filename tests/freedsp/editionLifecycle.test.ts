@@ -1,3 +1,4 @@
+import {FlashSaveGate,flashSafetyMessage} from '../../src/freedsp/flashUi.ts';
 import {describe,it,expect,vi} from 'vitest';
 import {FreeDspWorkspaces} from '../../src/freedsp/workspaces.ts';
 import {freeDspDefaultBands} from '../../src/freedsp/editor.ts';
@@ -18,7 +19,7 @@ function ready(storage?:any){if(!storage){const m=new Map<string,string>();stora
 function extract(name:string,source:string){const ast=ts.createSourceFile('x.ts',source,ts.ScriptTarget.ES2022,true);const n=ast.statements.find(n=>ts.isFunctionDeclaration(n)&&n.name?.text===name)!;return ts.transpileModule(n.getText(ast).replace('export ',''),{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;}
 function modelTransport(failAt=0){let n=0;return {supportsFlash:true,dispose:vi.fn(),exchange:vi.fn(async(command:number)=>{if(++n===failAt)throw Error('MOCK FAILED ACK');return {reportId:1,command,reply:1,count:command===346?2:0,module:0xb32d2300,words:command===346?[0,5]:[],capacityWords:[]};})};}
 function actualWrites(s:FreeDspWorkspaces,transport=modelTransport()){
- const session=new CafRamSession(transport,vi.fn()),ctx:any={window:{freeDspWorkspaces:s,isFreeDspEditorReadOnly:()=>s.readOnly},getDevice:()=>({}),isFreeDsp:()=>true,getEqState:()=>s.view,getGlobalGainState:()=>0,getAutoPreampEnabled:()=>false,getBassTiltState:()=>0,getTrebleTiltState:()=>0,attachFreeDsp:()=>({sync:(b:any)=>session.sync(b),flash:(b:any)=>session.flash(b,()=>{})}),showSyncing:vi.fn(),hideSyncing:vi.fn(),localStorage:{setItem:vi.fn()},confirm:vi.fn(()=>true),log:vi.fn()};
+ const session=new CafRamSession(transport,vi.fn()),ctx:any={window:{freeDspWorkspaces:s,isFreeDspEditorReadOnly:()=>s.readOnly||!!ctx.window.freeDspFlashUiBusy},getDevice:()=>({}),isFreeDsp:()=>true,getEqState:()=>s.view,getGlobalGainState:()=>0,getAutoPreampEnabled:()=>false,getBassTiltState:()=>0,getTrebleTiltState:()=>0,attachFreeDsp:()=>({sync:(b:any)=>session.sync(b),flash:(b:any,_save:any,progress:any)=>session.flash(b,()=>{},progress)}),showSyncing:vi.fn(),hideSyncing:vi.fn(),localStorage:{setItem:vi.fn()},confirm:vi.fn(()=>true),log:vi.fn()};
  const api=runInNewContext(extract('syncToDevice',dsp)+'\n'+extract('flashToFlash',dsp)+'\n({syncToDevice,flashToFlash})',ctx);
  return {api,ctx,transport,session};
 }
@@ -101,7 +102,7 @@ describe('FreeDSP Edition lifecycle; real capture replay + synthetic writes ONLY
  });
  it('actual canvas uses raw Origin dashed reference independently from the active editor curve; Origin has no handles',()=>{
   const s=ready(),dash=vi.fn(),stroke=vi.fn(),line=vi.fn(),arc=vi.fn(),c:any={createLinearGradient:()=>({addColorStop:vi.fn()}),beginPath:vi.fn(),moveTo:vi.fn(),lineTo:line,stroke,setLineDash:dash,arc};
-  const ctx:any={window:{getFreeDspReadbackCurve:()=>s.curve,getFreeDspOriginCurve:()=>s.referenceCurve,isFreeDspEditorReadOnly:()=>s.readOnly},CONFIG:{padding:1},freqToX:(x:number)=>x,gainToY:(x:number)=>x,xToFreq:()=>1000,localBands:s.view,calculateBiquad:()=>({}),getMagnitude:()=>0};
+  const ctx:any={window:{getFreeDspReadbackCurve:()=>s.curve,getFreeDspOriginCurve:()=>s.referenceCurve,isFreeDspEditorReadOnly:()=>s.readOnly||!!ctx.window.freeDspFlashUiBusy},CONFIG:{padding:1},freqToX:(x:number)=>x,gainToY:(x:number)=>x,xToFreq:()=>1000,localBands:s.view,calculateBiquad:()=>({}),getMagnitude:()=>0};
   const draw=runInNewContext(extract('drawCurve',peq)+'\n'+extract('drawHandles',peq)+'\n({drawCurve,drawHandles})',ctx);draw.drawCurve(c,6,100);draw.drawHandles(c,6,100);expect(stroke).toHaveBeenCalledOnce();expect(arc).not.toHaveBeenCalled();
   s.select('B',s.view);draw.drawCurve(c,6,100);expect(dash).toHaveBeenCalledWith([6,5]);expect(stroke).toHaveBeenCalledTimes(3);
  });
@@ -123,10 +124,10 @@ describe('FreeDSP Edition lifecycle; real capture replay + synthetic writes ONLY
    return {reportId:1,command,reply:1,count:0,module:0xb32d2300,words:[],capacityWords:[]};
   });
   const f=actualWrites(s,t),button:any={disabled:false,addEventListener(_e:string,cb:()=>Promise<void>){this.click=cb;}},status={textContent:'',hidden:true},auto=vi.fn();
-  Object.assign(f.ctx,{getDevice:()=>device,isFreeDsp:(d:any)=>!!d,getConnectionAttempt:()=>attempt,document:{getElementById:(id:string)=>id==='btnFlash'?button:status},setFreeDspRamStatus:(v:string)=>status.textContent=v,autoConnectDevice:auto});
+  Object.assign(f.ctx,{freeDspFlashGate:new FlashSaveGate(),flashSafetyMessage,confirmFreeDspReset:vi.fn(async()=>true),renderUI:vi.fn(),getEqState:()=>s.view,getDevice:()=>device,isFreeDsp:(d:any)=>!!d,getConnectionAttempt:()=>attempt,document:{getElementById:(id:string)=>id==='btnFlash'?button:status},setFreeDspRamStatus:(v:string)=>status.textContent=v,autoConnectDevice:auto});
   const ast=ts.createSourceFile('main.ts',main,ts.ScriptTarget.ES2022,true),events=ast.statements.filter(node=>node.getText(ast).startsWith('const btnFlash')||/^btnFlash.*addEventListener/.test(node.getText(ast))).map(node=>node.getText(ast)).join('\n');
   runInNewContext(extract('saveFreeDspFlash',main)+'\n'+extract('safeFlashToFlash',main)+'\n'+ts.transpileModule(events,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText,f.ctx);
-  await button.click();expect(exchange).toHaveBeenCalledTimes(56);expect(f.ctx.confirm).not.toHaveBeenCalled();expect(status.textContent).toContain('Flash save acknowledged');expect(status.hidden).toBe(false);expect(auto).not.toHaveBeenCalled();expect(s.curve).toBeNull();
+  await button.click();expect(exchange).toHaveBeenCalledTimes(56);expect(f.ctx.confirm).not.toHaveBeenCalled();expect(status.textContent).toContain('56/56 acknowledged');expect(status.hidden).toBe(false);expect(auto).not.toHaveBeenCalled();expect(s.curve).toBeNull();
  });
 });
 

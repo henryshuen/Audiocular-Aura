@@ -87,7 +87,7 @@ export function getComparedEqState(): EQ | null {
 (window as any).getFreeDspReadbackCurve=()=>isFreeDsp(device)?freeDspReadbackSlots.curve:null;
 (window as any).getFreeDspOriginCurve=()=>isFreeDsp(device)?freeDspReadbackSlots.referenceCurve:null;
 (window as any).isFreeDspOriginUnavailable=()=>isFreeDsp(device)&&freeDspReadbackSlots.originUnavailable;
-(window as any).isFreeDspEditorReadOnly=()=>isFreeDsp(device)?freeDspReadbackSlots.readOnly:(!device&&freeDspStateStale);
+(window as any).isFreeDspEditorReadOnly=()=>isFreeDsp(device)?freeDspReadbackSlots.readOnly||!!(window as any).freeDspFlashUiBusy:(!device&&freeDspStateStale);
 (window as any).freeDspWorkspaces=freeDspReadbackSlots;
 (window as any).refreshFreeDspWorkspaceUI=()=>{if(isFreeDsp(device))renderUI(eqState);};
 (window as any).resetFreeDspHistory=()=>initHistory();
@@ -120,7 +120,7 @@ export function setLastAppliedEqName(name: string) {
 
 export function updateLastAppliedEqUI() {
  if(isFreeDsp(device)){
-  const status=document.getElementById("freeDspRamStatus");if(status){status.textContent=freeDspReadbackSlots.status;status.title=freeDspReadbackSlots.details;}
+  const status=document.getElementById("freeDspRamStatus");if(status){if(!(globalThis as any).window?.freeDspFlashUiBusy)status.textContent=freeDspReadbackSlots.status;status.title=freeDspReadbackSlots.details;}
   const badge=document.getElementById("lastAppliedEqDisplay") as (HTMLElement&{originalFreeDspTitle?:string})|null;if(badge){if(badge.originalFreeDspTitle===undefined)badge.originalFreeDspTitle=badge.title??'';badge.textContent=freeDspReadbackSlots.label??(freeDspReadbackSlots.curve?"Device EQ Readback — Snapshot":`LOCAL EDITOR · ${freeDspReadbackSlots.mode}`);badge.title=freeDspReadbackSlots.details;}
   return;
  }
@@ -761,13 +761,14 @@ export function renderUI(eqState: EQ) {
 		}
 	}
  if(isFreeDsp(device)){
-  const locked=!!freeDspReadbackSlots.readOnly;
+  const confirming=!!(globalThis as any).window?.freeDspFlashUiBusy;
+  const locked=!!freeDspReadbackSlots.readOnly||confirming;
   for(const input of document.querySelectorAll?.('#eqStrips input, #eqStrips select')??[])(input as HTMLInputElement).disabled=locked;
   for(const id of ['btnReset','btnResetFlat','btnImport']){const button=document.getElementById(id) as HTMLButtonElement|null;if(button)button.disabled=locked;}
   if(locked)for(const id of ['btnUndo','btnRedo']){const button=document.getElementById(id) as HTMLButtonElement|null;if(button)button.disabled=true;}
-  for(const id of ['btnSync','btnFlash']){const button=document.getElementById(id) as HTMLButtonElement|null;if(button)button.disabled=freeDspReadbackSlots.writable===false;}
-  for(const id of ['btnCompareA','btnCompareB']){const button=document.getElementById(id) as HTMLButtonElement|null;if(button)button.disabled=freeDspReadbackSlots.available===false||!!freeDspReadbackSlots.busy;}
-  const originButton=document.getElementById('btnCompareOff') as HTMLButtonElement|null;if(originButton)originButton.disabled=!!freeDspReadbackSlots.busy;
+  for(const id of ['btnSync','btnFlash']){const button=document.getElementById(id) as HTMLButtonElement|null;if(button)button.disabled=freeDspReadbackSlots.writable===false||confirming;}
+  for(const id of ['btnCompareA','btnCompareB']){const button=document.getElementById(id) as HTMLButtonElement|null;if(button)button.disabled=freeDspReadbackSlots.available===false||!!freeDspReadbackSlots.busy||confirming;}
+  const originButton=document.getElementById('btnCompareOff') as HTMLButtonElement|null;if(originButton)originButton.disabled=!!freeDspReadbackSlots.busy||confirming;
  }
 }
 
@@ -1876,6 +1877,6 @@ export function configureFreeDspUI(active:boolean){
  const send=document.getElementById('btnSendToDevice') as HTMLButtonElement|null;if(send){send.disabled=true;send.title='FreeDSP: this generic action is unsupported. Use SYNC TO RAM.';}
  const flash=document.getElementById('btnFlash') as HTMLButtonElement|null;if(flash){flash.disabled=false;flash.textContent='SAVE TO FLASH (PERMANENT)';flash.title='Save the current nine-band profile permanently. RAM Reset does not undo Flash.';flash.removeAttribute('data-i18n');}
  const note=document.getElementById('freeDspStorageNote');if(note){note.hidden=false;note.textContent='ORIGIN is read-only. EQ A and EQ B are local editors. Apply updates RAM; Save to Flash replaces saved EQ.';}
- const ramStatus=document.getElementById('freeDspRamStatus');if(ramStatus){ramStatus.hidden=false;ramStatus.textContent='FreeDSP connected; active RAM state unknown. Local edits require explicit Sync.';}
+ const ramStatus=document.getElementById('freeDspRamStatus');if(ramStatus){ramStatus.hidden=false;ramStatus.textContent='FreeDSP connected. Flash saving may take about 10–20 seconds; do not disconnect during a save.';}
  showFreeDspDeviceState(true);
 }

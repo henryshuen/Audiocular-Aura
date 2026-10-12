@@ -17,14 +17,14 @@ export class CafRamSession {
    this.busy=true;
    try{const r=await this.transport.readback();if(this.disposed)throw new Error('Stale readback');return r;}finally{this.busy=false;}
  }
- async flash(value:Band[],save=saveFlashRecovery){
+ async flash(value:Band[],save=saveFlashRecovery,onProgress?:import('./flash.ts').FlashObserver){
    if(this.busy || this.disposed || this.stopped)throw new Error('FreeDSP BUSY or STOP; Flash cannot retry. Reconnect first.');
    if(this.transport.supportsFlash!==true)throw new Error('Native Flash transport required');
    const plan=buildFlashPlan(value);
    save(plan); // Exact local editor + known unity plan retained before first hardware SET.
    this.log('FLASH snapshot/unity recovery plan saved; RAM state not read back. Metadata gain is integer dB (official truncation); no Tone/Preamp.');
    this.busy=true;
-   try{await executeFlashPlan(this.transport,plan,this.log);}catch(e){this.stopped=true;throw e;}finally{this.busy=false;}
+   try{await executeFlashPlan(this.transport,plan,this.log,onProgress);}catch(e){this.stopped=true;throw e;}finally{this.busy=false;}
  }
  async sync(value:Band[],restore=false){
    if(this.busy || this.disposed || (this.stopped && !restore))throw new Error('FreeDSP BUSY or STOP; explicitly Restore or reconnect. No automatic retry.');

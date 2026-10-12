@@ -1,4 +1,4 @@
-param([string]$Zip = '../AuraPEQ-FreeDSP-releases/AuraPEQ-FreeDSP-v0.1.0-freedsp-preview-win-x64.zip')
+param([string]$Zip = '../AuraPEQ-FreeDSP-releases/AuraPEQ-FreeDSP-v0.1.1-win-x64.zip')
 $ErrorActionPreference = 'Stop'
 Set-Location -LiteralPath (Split-Path -Parent $PSScriptRoot)
 $repo = (Get-Location).Path
@@ -13,12 +13,12 @@ function Bytes($entry) {
 }
 function Hash([byte[]]$data) { return [Convert]::ToHexString([Security.Cryptography.SHA256]::HashData($data)) }
 try {
-    $prefix = 'AuraPEQ-FreeDSP-v0.1.0-freedsp-preview-win-x64/'
+    $prefix = 'AuraPEQ-FreeDSP-v0.1.1-win-x64/'
     $entries = @{}; foreach ($entry in $archive.Entries) { $entries[$entry.FullName.Replace('\','/')] = $entry }
     $manifest = [Text.Encoding]::UTF8.GetString((Bytes $entries[($prefix + 'package-manifest.json')])) | ConvertFrom-Json
     Assert ($manifest.baseline -eq (& git rev-parse HEAD)) 'Manifest targets final committed HEAD.'
     Assert (-not (& git status --porcelain --untracked-files=normal)) 'Source worktree is clean before final artifact audit.'
-    foreach ($pair in @(@('README.md','docs/PORTABLE_QUICK_START.md'), @('USER_GUIDE.md','README.md'), @('LICENSE','LICENSE'), @('LICENSE.txt','LICENSE'), @('ACKNOWLEDGMENTS.md','docs/PORTABLE_ACKNOWLEDGMENTS.md'), @('RELEASE_NOTES.md','docs/RELEASE_NOTES_FREEDSP_PREVIEW.md'))) {
+    foreach ($pair in @(@('README.md','docs/PORTABLE_QUICK_START.md'), @('USER_GUIDE.md','README.md'), @('LICENSE','LICENSE'), @('LICENSE.txt','LICENSE'), @('ACKNOWLEDGMENTS.md','docs/PORTABLE_ACKNOWLEDGMENTS.md'), @('RELEASE_NOTES.md','docs/RELEASE_NOTES_FREEDSP_V0_1_1.md'))) {
         Assert ((Hash (Bytes $entries[($prefix + $pair[0])])) -eq (Get-FileHash -LiteralPath $pair[1]).Hash) "Packaged $($pair[0]) matches source."
     }
     foreach ($name in @('freedsp-origin.png','freedsp-eq-a.png','freedsp-eq-b.png')) {

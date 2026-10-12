@@ -2,7 +2,7 @@ param([string]$OutputDirectory = '../AuraPEQ-FreeDSP-releases', [switch]$SkipFro
 $ErrorActionPreference = 'Stop'
 $repo = Split-Path -Parent $PSScriptRoot
 Set-Location -LiteralPath $repo
-$version = 'v0.1.0-freedsp-preview'
+$version = 'v0.1.1'
 $name = "AuraPEQ-FreeDSP-$version-win-x64"
 $out = if ([IO.Path]::IsPathRooted($OutputDirectory)) { [IO.Path]::GetFullPath($OutputDirectory) } else { [IO.Path]::GetFullPath((Join-Path $repo $OutputDirectory)) }
 if ($out -eq $repo -or $out -eq [IO.Path]::GetPathRoot($out)) { throw 'Use a separate artifact output directory.' }
@@ -28,7 +28,7 @@ try {
     foreach ($file in @('manifest.json','icon-192.png','icon-512.png')) { Copy-Item -LiteralPath (Join-Path 'dist' $file) -Destination $www }
     # Production-only edition marker. Keep existing presets/settings at the same origin.
     $html = [IO.File]::ReadAllText((Join-Path $www 'index.html'))
-    $bootstrap = '<script>window.__AURAPEQ_PORTABLE__="v0.1.0-freedsp-preview";if(!localStorage.getItem("aura_lang"))localStorage.setItem("aura_lang","en");if("serviceWorker" in navigator)navigator.serviceWorker.getRegistrations().then(rs=>Promise.all(rs.filter(r=>r.scope===location.origin+"/").map(r=>r.unregister()))).catch(console.error);</script>'
+    $bootstrap = '<script>window.__AURAPEQ_PORTABLE__="v0.1.1";if(!localStorage.getItem("aura_lang"))localStorage.setItem("aura_lang","en");if("serviceWorker" in navigator)navigator.serviceWorker.getRegistrations().then(rs=>Promise.all(rs.filter(r=>r.scope===location.origin+"/").map(r=>r.unregister()))).catch(console.error);</script>'
     [IO.File]::WriteAllText((Join-Path $www 'index.html'), $html.Replace('<head>', '<head>' + $bootstrap), [Text.UTF8Encoding]::new($false))
     # Retire the old cache worker on this loopback origin without clearing localStorage.
     [IO.File]::WriteAllText((Join-Path $www 'sw.js'), "self.addEventListener('install',e=>e.waitUntil(self.skipWaiting()));self.addEventListener('activate',e=>e.waitUntil((async()=>{await self.clients.claim();for(const k of await caches.keys())if(k.startsWith('aurapeq-cache-'))await caches.delete(k);await self.registration.unregister();for(const c of await self.clients.matchAll({type:'window'}))await c.navigate(c.url);})()));", [Text.UTF8Encoding]::new($false))
@@ -38,7 +38,7 @@ try {
     Copy-Item -LiteralPath 'LICENSE' -Destination (Join-Path $package 'LICENSE')
     Copy-Item -LiteralPath 'docs/PORTABLE_QUICK_START.md' -Destination (Join-Path $package 'README.md')
     Copy-Item -LiteralPath 'docs/PORTABLE_ACKNOWLEDGMENTS.md' -Destination (Join-Path $package 'ACKNOWLEDGMENTS.md')
-    Copy-Item -LiteralPath 'docs/RELEASE_NOTES_FREEDSP_PREVIEW.md' -Destination (Join-Path $package 'RELEASE_NOTES.md')
+    Copy-Item -LiteralPath 'docs/RELEASE_NOTES_FREEDSP_V0_1_1.md' -Destination (Join-Path $package 'RELEASE_NOTES.md')
     Copy-Item -LiteralPath 'LICENSE' -Destination (Join-Path $package 'LICENSE.txt')
     $globalPackages = ((& dotnet nuget locals global-packages --list) -replace '^global-packages:\s*','').Trim()
     $notices = Join-Path $package 'RUNTIME-NOTICES'
@@ -52,14 +52,11 @@ try {
     $source = Join-Path $stage 'source'
     New-Item -ItemType Directory -Path $source | Out-Null
     # SOURCE.zip must itself be buildable without .git metadata or Git installed.
-    $paths = @()
-    foreach ($directory in @('src','scripts','tests','public','tools/freedsp-native','tools/freedsp-portable','docs/images')) {
-        $paths += Get-ChildItem -LiteralPath $directory -Recurse -File | ForEach-Object { $_.FullName.Substring($repo.Length + 1).Replace('\','/') } | Where-Object { $_ -notmatch '/(?:bin|obj)/|\.(?:exe|dll|pdb|nupkg)$' }
-    }
-    $paths += Get-ChildItem -LiteralPath $repo -File | ForEach-Object { $_.Name }
-    $paths += Get-ChildItem -LiteralPath 'docs' -File | ForEach-Object { 'docs/' + $_.Name }
+    $paths = Get-Content -LiteralPath 'scripts/freedsp/source-files.txt' | Where-Object { $_ -and -not $_.StartsWith('#') }
     foreach ($path in $paths) {
-        if ($path -notmatch '^(src/|scripts/|tests/|public/|tools/freedsp-native/|tools/freedsp-portable/|docs/images/|docs/PORTABLE_|docs/RELEASE_NOTES_FREEDSP_PREVIEW|package(?:-lock)?\.json$|tsconfig.*\.json$|vite\.config\.ts$|index\.html$|LICENSE$|README\.md$|\.gitignore$)') { continue }
+        if ($path -match '\.(?:log|bundle)$|(?:JOURNAL|ProvenancePrivate)|(?:^|/)(?:DECISIONS|DONE|GENERAL|ROADMAP)\.md$') { throw "Private packaging input: $path" }
+        if ($path -notmatch '^(src/|scripts/|tests/|public/|tools/freedsp-native/|tools/freedsp-portable/|docs/images/|docs/PORTABLE_|docs/RELEASE_NOTES_FREEDSP_|package(?:-lock)?\.json$|tsconfig.*\.json$|vitest\.config\.ts$|vite\.config\.ts$|index\.html$|LICENSE$|README\.md$|\.gitignore$)') { continue }
+        if ($path -match '(^|/)\.\.?/|^[A-Za-z]:|^/') { throw "Unsafe source path: $path" }
         $dest = Join-Path $source $path
         New-Item -ItemType Directory -Path (Split-Path -Parent $dest) -Force | Out-Null
         Copy-Item -LiteralPath $path -Destination $dest

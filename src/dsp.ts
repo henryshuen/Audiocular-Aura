@@ -858,15 +858,17 @@ export async function syncToDevice(explicit=false,_overwriteConfirmed=false) {
 /**
  * Flash settings permanently to device memory
  */
-export async function flashToFlash() {
+export async function flashToFlash(onProgress?:import('./freedsp/flash.ts').FlashObserver) {
 	const device = getDevice();
 	if (!device) return;
  if(isFreeDsp(device)){
-   if((globalThis as any).window?.isFreeDspEditorReadOnly?.())throw Error('ORIGIN is read-only. Select EQ A or EQ B to save.');
+   const ui=(globalThis as any).window;
+   if(ui?.freeDspFlashUiBusy&&!onProgress)throw Error('FreeDSP Flash is busy.');
+   if((onProgress&&ui?.freeDspWorkspaces?ui.freeDspWorkspaces.readOnly:ui?.isFreeDspEditorReadOnly?.()))throw Error('ORIGIN is read-only. Select EQ A or EQ B to save.');
    log('Saving FreeDSP Flash: replacing saved EQ; reconnection may be required.');
    const editor=getEqState();if(!editor)throw new Error('FreeDSP editor unavailable');
    const workspace=(globalThis as any).window?.freeDspWorkspaces,revision=workspace?.begin('flash',editor);(globalThis as any).window?.refreshFreeDspWorkspaceUI?.();showSyncing();
-   try{await attachFreeDsp(device).flash(editor);workspace?.finish(revision,true);log('Flash save acknowledged; reconnect to read device EQ.');}
+   try{await attachFreeDsp(device).flash(editor,undefined,onProgress);workspace?.finish(revision,true);log('Flash save acknowledged; reconnect to read device EQ.');}
    catch(error){workspace?.finish(revision,false);throw error;}finally{hideSyncing();(globalThis as any).window?.refreshFreeDspWorkspaceUI?.();}return true;
  }
 	if (!confirm("Save to permanent memory? The settings will load automatically when you power on the DAC.")) return;

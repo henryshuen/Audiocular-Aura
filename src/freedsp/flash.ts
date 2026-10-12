@@ -5,6 +5,8 @@ import type {CafTransport} from './cafRam.ts';
 import {validateBands,modelWebBand,unityPreset} from './webRam.ts';
 import {freeDspFilterTypes} from './filterTypes.ts';
 
+export type FlashProgress={acknowledged:number;total:56};
+export type FlashObserver=(progress:FlashProgress)=>void;
 export type FlashPacket={command:90|220;label:string;data:Uint8Array};
 export type FlashPlan={editor:Band[];packets:FlashPacket[]};
 export const flashTestPreset=():Band[]=>unityPreset().map(b=>({...b,freq:1000,q:1,gain:b.index===4?-6:0}));
@@ -33,18 +35,20 @@ export function saveFlashRecovery(plan:FlashPlan,storage:Pick<Storage,'setItem'>
     editor:plan.editor,plan:plan.packets.map(p=>({...p,data:[...p.data]})),
     unityEditor:unity.editor,unityPlan:unity.packets.map(p=>({...p,data:[...p.data]}))}));
 }
-export async function executeFlashPlan(transport:CafTransport,plan:FlashPlan,log:(s:string)=>void){
+export async function executeFlashPlan(transport:CafTransport,plan:FlashPlan,log:(s:string)=>void,onProgress?:FlashObserver){
   if(transport.supportsFlash!==true)throw new Error('FreeDSP Flash requires native Input GET_REPORT transport');
   // Rebuild from the saved editor, not caller-supplied mutable packet arrays.
   const packets=buildFlashPlan(plan.editor).packets;
   let completed=0;
+  const notify=()=>{try{onProgress?.({acknowledged:completed,total:56});}catch{/* Presentation must not change protocol execution. */}};
+  notify();
   for(const p of packets){
     log(`${p.label} START (${completed+1}/56)`);
     try{
       const r=await transport.exchange(p.command,p.data);
       if(r.reportId!==1 || r.command!==p.command || r.reply!==1 || r.module!==CTRL || r.count!==0)
         throw new Error('Flash CAF response mismatch');
-      completed++;log(`${p.label} PASS (${completed}/56)`);
+      completed++;notify();log(`${p.label} PASS (${completed}/56)`);
     }catch(e){
       log(`FLASH STOP: ACKED=${completed}/56; FAILED/UNKNOWN=${p.label}; later requests not sent. Partial persistent state UNKNOWN; no retry/rollback/factory reset. ${String(e)}`);
       throw e;

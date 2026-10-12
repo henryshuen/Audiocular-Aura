@@ -1,3 +1,4 @@
+import {FlashSaveGate,flashSafetyMessage} from './freedsp/flashUi.ts';
 import {confirmFreeDspReset} from './freedsp/inPageConfirm.ts';
 import "./style.css";
 import {isFreeDsp} from './freedsp/webHid.ts';
@@ -138,6 +139,7 @@ async function syncFreeDspRam(){
 }
 
 async function safeSyncToDevice() {
+ if(isFreeDsp(getDevice())&&(globalThis as any).window?.freeDspFlashUiBusy)return;
 	if(isFreeDsp(getDevice())){if((window as any).isConfigurationUnsafe?.())log('FreeDSP warning: EQ boost may clip; no verified preamp attenuation.');await syncFreeDspRam();return;}
 	if ((window as any).isConfigurationUnsafe?.()) {
 		showSafetyModal("sync");
@@ -157,15 +159,43 @@ async function safeFlashToFlash() {
 	}
 }
 
+const freeDspFlashGate=new FlashSaveGate();
+window.addEventListener('beforeunload',e=>{if(freeDspFlashGate.busy){e.preventDefault();e.returnValue='';}});
 async function saveFreeDspFlash(){
-  const attempt=getConnectionAttempt();
-  const button=document.getElementById('btnFlash') as HTMLButtonElement|null;if(button)button.disabled=true;
-  try{setFreeDspRamStatus('Saving Flash…');const saved=await flashToFlash();
-    if(attempt!==getConnectionAttempt()&&getDevice())return;
-    setFreeDspRamStatus((globalThis as any).window?.freeDspWorkspaces?.status??'Flash save acknowledged; reconnect to read device EQ.');
-    if(saved===true&&!getDevice()){const status=document.getElementById('freeDspRamStatus');if(status)status.hidden=false;}}
-  catch(e){if(attempt===getConnectionAttempt()){setFreeDspRamStatus('FreeDSP Flash: Save incomplete; possibly partially stored. STOP, no retry. See log.');log(String(e));}}
-  finally{if(button && attempt===getConnectionAttempt())button.disabled=!isFreeDsp(getDevice())||(window as any).freeDspWorkspaces?.writable===false;}
+ if(freeDspFlashGate.busy)return;
+ const attempt=getConnectionAttempt();
+ let acknowledged=0;
+ const snapshot=()=>isFreeDsp(getDevice())&&(window as any).freeDspWorkspaces?.available
+   ?JSON.stringify([getConnectionAttempt(),(window as any).freeDspWorkspaces.mode,getEqState()]):null;
+ const lock=(busy:boolean)=>{
+  (window as any).freeDspFlashUiBusy=busy;
+  renderUI(getEqState());
+  const disconnect=document.getElementById('btnDisconnect') as HTMLButtonElement|null;
+  if(disconnect)disconnect.disabled=busy;
+ };
+ freeDspFlashGate.progress=p=>{
+  acknowledged=p.acknowledged;
+  const button=document.getElementById('btnFlash');
+  if(button)button.textContent=p.acknowledged===55?'Saving Flash · 55/56 · Commit…':`Saving Flash · ${p.acknowledged}/56`;
+  setFreeDspRamStatus(`Saving Flash: ${p.acknowledged}/56 acknowledged. Do not disconnect.`);
+ };
+ try{
+  await freeDspFlashGate.run({snapshot,lock,confirm:()=>confirmFreeDspReset(flashSafetyMessage),save:async progress=>{
+   const saved=await flashToFlash(progress);
+   if(attempt!==getConnectionAttempt()&&getDevice())return;
+   if(saved===true){setFreeDspRamStatus('Flash save complete: 56/56 acknowledged, including commit. Reconnect to read device EQ.');
+    if(!getDevice()){const status=document.getElementById('freeDspRamStatus');if(status)status.hidden=false;}}
+   return saved;
+  }});
+ }catch(e){
+  if(attempt===getConnectionAttempt()||!getDevice()){
+   setFreeDspRamStatus(`Flash save incomplete: ${acknowledged}/56 acknowledged. Device may be partially changed; no automatic retry.`);
+   log(String(e));
+  }
+ }finally{
+  const button=document.getElementById('btnFlash');
+  if(button&&attempt===getConnectionAttempt())button.textContent='SAVE TO FLASH (PERMANENT)';
+ }
 }
 
 function showSafetyModal(action: "sync" | "flash") {
@@ -1331,7 +1361,7 @@ window.addEventListener("keydown", (e: KeyboardEvent) => {
 		} else if (key === "s") {
 			e.preventDefault();
 			if (e.shiftKey) {
-				flashToFlash();
+				if(isFreeDsp(getDevice()))safeFlashToFlash();else flashToFlash();
 			} else {
 				if(isFreeDsp(getDevice()))safeSyncToDevice();else syncToDevice();
 			}
