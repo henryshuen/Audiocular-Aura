@@ -1,3 +1,4 @@
+import {validateFreeDspImport} from '../../src/freedsp/presetImport.ts';
 import {describe,it,expect,vi} from 'vitest';
 import ts from 'typescript';
 // @ts-expect-error Offline VM only.
@@ -80,7 +81,7 @@ describe('Final production UX — offline only',()=>{
  it('profile preamp is ignored only for FreeDSP; imports remain local and generic devices retain gain/sync',async()=>{
   for(const exact of [true,false]){
    const set=vi.fn(),update=vi.fn(),sync=vi.fn(),log=vi.fn();
-   const context={getDevice:()=>({vendorId:0x35d8,productId:exact?0x1496:1}),isFreeDsp,parseTextProfile:()=>({bands:freeDspDefaultBands(),globalGain:-5}),getEqState:freeDspDefaultBands,setEqState:vi.fn(),setGlobalGainState:set,updateGlobalGain:update,renderUI:vi.fn(),setLastAppliedEqName:vi.fn(),isCompareActive:()=>false,initSlots:vi.fn(),syncToDevice:sync,window:{},document:{getElementById:()=>null},log,console:{error:vi.fn()}};
+   const context={validateFreeDspImport,getDevice:()=>({vendorId:0x35d8,productId:exact?0x1496:1}),isFreeDsp,parseTextProfile:()=>({bands:freeDspDefaultBands(),globalGain:-5}),getEqState:freeDspDefaultBands,setEqState:vi.fn(),setGlobalGainState:set,updateGlobalGain:update,renderUI:vi.fn(),setLastAppliedEqName:vi.fn(),isCompareActive:()=>false,initSlots:vi.fn(),syncToDevice:sync,window:{},document:{getElementById:()=>null},log,console:{error:vi.fn()}};
    await runInNewContext(extract('loadProfileFromText',imports)+'\nloadProfileFromText("fixture","Fixture")',context);
    expect(set).toHaveBeenCalledWith(exact?0:-5);expect(update).toHaveBeenCalledWith(exact?0:-5);expect(sync).toHaveBeenCalledTimes(exact?0:1);if(exact){expect(log.mock.calls.join()).toContain('preamp ignored');expect(log.mock.calls.join()).not.toContain('Synced:');}
   }

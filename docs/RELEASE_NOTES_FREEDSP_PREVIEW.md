@@ -1,18 +1,37 @@
-# AuraPEQ FreeDSP Edition v0.1.0-freedsp-preview
+# AuraPEQ FreeDSP Edition — Windows Preview v0.1.0
 
-Windows11x64 portable preview candidate. This is an independent fork release, not an upstream PR or a pure browser-only FreeDSP implementation.
+An independent, FreeDSP-focused fork of [Audiocular-Aura by mandy321](https://github.com/mandy321/Audiocular-Aura). This unofficial preview is maintained at [henryshuen/Audiocular-Aura](https://github.com/henryshuen/Audiocular-Aura); it is not endorsed by the original maintainer or hardware vendors.
 
-- Extract the ZIP and double-click **Start AuraPEQ FreeDSP Edition.exe**. The production website opens in your existing default browser after its loopback-only services are ready.
-- Bundled self-contained .NET10 native transport: no developer tools or separately launched helper required.
-- Original Moondrop FreeDSP VID35D8/PID1496: nine stereo PEQ bands, PK/LS/HS,−16..+6dB policy, verified RAM/Flash transaction formats.
-- ORIGIN readback snapshot, editable EQ A reconstruction, Flat EQ B and dashed Origin comparison. Automatic recovery of replaced unsaved drafts; no unwanted native CONNECT confirmation.
-- Explicit RAM Apply and persistent Flash Save, strict matching ACKs, no automatic retry, rollback or writes on launch.
-- Strict localhost origin/Host/session-token helper checks, operation validation, owned-instance reuse and Windows job protection against orphan helper children.
+## Download and start
 
-## Known limitations
+Download `AuraPEQ-FreeDSP-v0.1.0-freedsp-preview-win-x64.zip`, extract all files, then double-click **Start AuraPEQ FreeDSP Edition.exe**. Keep the launcher running. Your default browser opens **http://localhost:5173/**; use WebHID-capable Chrome or Edge and click **CONNECT DAC**.
 
-Chrome/Edge WebHID support is needed; unsupported default browsers must be switched manually. The helper is Windows-only. Readback precision/source/freshness/enabled/stereo/active RAM remain limited. No independent FreeDSP Preamp, Tone, utility-control or physical A/B-slot support is added. Coefficient updates may click/pop; gain limits do not certify listening safety. The binary is unsigned; SmartScreen/enterprise policy may warn or block it. No administrator requirement has been established.
+The .NET runtime and Windows native helper are bundled. No separate developer tools or runtime installation is needed. The browser INSTALL APP / PWA control does not replace the launcher. A checksum file accompanies the ZIP.
 
-Local extracted-package/loopback tests are not a clean-machine or new packaged-hardware PASS. Final manual Windows/browser/hardware acceptance is required before publication. This round does not publish a Release or tag.
+## Included
 
-License: GPL-3.0 with upstream acknowledgments, corresponding source archive and Microsoft runtime notices. Verify the accompanying SHA-256 checksum before running.
+- Original Moondrop FreeDSP, VID `0x35D8` / PID `0x1496`, on Windows 11 x64.
+- Nine stereo PEQ bands: Peak, Low Shelf and High Shelf, with application gain policy −16 to +6 dB.
+- Read-only ORIGIN device snapshot, editable reconstructed EQ A, and Flat EQ B with ORIGIN comparison.
+- Explicit stereo RAM Apply and persistent Flash Save, with strict acknowledgments and no automatic retry or rollback.
+- Local presets, import/export, graphical editing, undo/redo and the accepted reset workflow.
+- Strict FreeDSP preset parsing: PK/LSQ/HSQ preserved, invalid input rejected before local changes, all-rate coefficient preflight, and no hardware writes on import.
+- Production web assets, loopback services, session/origin validation, owned-instance reuse and cleanup of owned helper children.
+
+device owner confirmed packaged launch, CONNECT and ORIGIN/EQ A/EQ B using an original FreeDSP. Earlier hardware validation established stereo RAM EQ and Flash persistence after USB power removal. Automated offline tests do not validate every imported profile on hardware.
+
+## Limitations
+
+This is a Windows local browser application with a bundled helper, **not** pure browser-only FreeDSP support. Standard Windows browser WebHID cannot provide the required host-initiated Input GET_REPORT replies.
+
+Readback is approximate: integer dB Gain, Q raw/256 and locally assumed enabled state. Its precise RAM/Flash source, freshness, active sample rate and stereo completeness remain unconfirmed. ORIGIN and EQ A are not bit-exact hardware backups.
+
+Global Preamp/Auto Preamp, Tone Tilt and hardware utility modes are excluded. Balance and microphone controls remain outside product scope. Positive boosts can clip without verified independent headroom; gain limits do not establish safe listening volume. Coefficient updates can click/pop. Start at low volume, remove IEMs before the first Apply and do not interrupt a write.
+
+The executable is **unsigned**. SmartScreen or enterprise policy may warn or block it; verify provenance and the SHA-256 checksum rather than disabling security protections. Isolated clean-machine compatibility remains untested. Other FreeDSP revisions and operating systems are not validated release targets.
+
+## Source and license
+
+GPL-3.0. The ZIP includes the quick start, illustrated user guide, GPL license, upstream acknowledgments, corresponding buildable `SOURCE.zip` and Microsoft runtime license/third-party notices. No official APK or firmware is redistributed.
+
+**Release type:** Pre-release · **Version:** `v0.1.0-freedsp-preview` · **Target:** final verified `fix/freedsp-conexant` commit.

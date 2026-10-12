@@ -4,7 +4,7 @@ $repo = Split-Path -Parent $PSScriptRoot
 Set-Location -LiteralPath $repo
 $version = 'v0.1.0-freedsp-preview'
 $name = "AuraPEQ-FreeDSP-$version-win-x64"
-$out = [IO.Path]::GetFullPath((Join-Path $repo $OutputDirectory))
+$out = if ([IO.Path]::IsPathRooted($OutputDirectory)) { [IO.Path]::GetFullPath($OutputDirectory) } else { [IO.Path]::GetFullPath((Join-Path $repo $OutputDirectory)) }
 if ($out -eq $repo -or $out -eq [IO.Path]::GetPathRoot($out)) { throw 'Use a separate artifact output directory.' }
 New-Item -ItemType Directory -Path $out -Force | Out-Null
 $stage = Join-Path $out ('.build-' + [Guid]::NewGuid().ToString('N'))
@@ -32,6 +32,10 @@ try {
     [IO.File]::WriteAllText((Join-Path $www 'index.html'), $html.Replace('<head>', '<head>' + $bootstrap), [Text.UTF8Encoding]::new($false))
     # Retire the old cache worker on this loopback origin without clearing localStorage.
     [IO.File]::WriteAllText((Join-Path $www 'sw.js'), "self.addEventListener('install',e=>e.waitUntil(self.skipWaiting()));self.addEventListener('activate',e=>e.waitUntil((async()=>{await self.clients.claim();for(const k of await caches.keys())if(k.startsWith('aurapeq-cache-'))await caches.delete(k);await self.registration.unregister();for(const c of await self.clients.matchAll({type:'window'}))await c.navigate(c.url);})()));", [Text.UTF8Encoding]::new($false))
+    Copy-Item -LiteralPath 'README.md' -Destination (Join-Path $package 'USER_GUIDE.md')
+    New-Item -ItemType Directory -Path (Join-Path $package 'docs') | Out-Null
+    Copy-Item -LiteralPath 'docs/images' -Destination (Join-Path $package 'docs') -Recurse
+    Copy-Item -LiteralPath 'LICENSE' -Destination (Join-Path $package 'LICENSE')
     Copy-Item -LiteralPath 'docs/PORTABLE_QUICK_START.md' -Destination (Join-Path $package 'README.md')
     Copy-Item -LiteralPath 'docs/PORTABLE_ACKNOWLEDGMENTS.md' -Destination (Join-Path $package 'ACKNOWLEDGMENTS.md')
     Copy-Item -LiteralPath 'docs/RELEASE_NOTES_FREEDSP_PREVIEW.md' -Destination (Join-Path $package 'RELEASE_NOTES.md')
@@ -49,13 +53,13 @@ try {
     New-Item -ItemType Directory -Path $source | Out-Null
     # SOURCE.zip must itself be buildable without .git metadata or Git installed.
     $paths = @()
-    foreach ($directory in @('src','scripts','tests','public','tools/freedsp-native','tools/freedsp-portable')) {
+    foreach ($directory in @('src','scripts','tests','public','tools/freedsp-native','tools/freedsp-portable','docs/images')) {
         $paths += Get-ChildItem -LiteralPath $directory -Recurse -File | ForEach-Object { $_.FullName.Substring($repo.Length + 1).Replace('\','/') } | Where-Object { $_ -notmatch '/(?:bin|obj)/|\.(?:exe|dll|pdb|nupkg)$' }
     }
     $paths += Get-ChildItem -LiteralPath $repo -File | ForEach-Object { $_.Name }
     $paths += Get-ChildItem -LiteralPath 'docs' -File | ForEach-Object { 'docs/' + $_.Name }
     foreach ($path in $paths) {
-        if ($path -notmatch '^(src/|scripts/|tests/|public/|tools/freedsp-native/|tools/freedsp-portable/|docs/PORTABLE_|docs/RELEASE_NOTES_FREEDSP_PREVIEW|package(?:-lock)?\.json$|tsconfig.*\.json$|vite\.config\.ts$|index\.html$|LICENSE$|README\.md$|\.gitignore$)') { continue }
+        if ($path -notmatch '^(src/|scripts/|tests/|public/|tools/freedsp-native/|tools/freedsp-portable/|docs/images/|docs/PORTABLE_|docs/RELEASE_NOTES_FREEDSP_PREVIEW|package(?:-lock)?\.json$|tsconfig.*\.json$|vite\.config\.ts$|index\.html$|LICENSE$|README\.md$|\.gitignore$)') { continue }
         $dest = Join-Path $source $path
         New-Item -ItemType Directory -Path (Split-Path -Parent $dest) -Force | Out-Null
         Copy-Item -LiteralPath $path -Destination $dest

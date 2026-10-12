@@ -1,148 +1,131 @@
-# 🎧 AuraPEQ — USB DAC EQ & Hardware Parametric Equalizer (PEQ) Controller
+# AuraPEQ FreeDSP Edition
 
-> **A premium, browser-based hardware DSP equalizer controller.** Configure the integrated 10-band Parametric Equalizer (PEQ) on your Audiocular Aura, Moondrop, FiiO, and other compatible USB DACs directly over WebHID. No background drivers or desktop app installs required!
+AuraPEQ FreeDSP Edition is an independent, FreeDSP-focused fork of Audiocular-Aura by mandy321.
 
+[Original project](https://github.com/mandy321/Audiocular-Aura) · [This edition](https://github.com/henryshuen/Audiocular-Aura) · **[Download the Windows preview](https://github.com/henryshuen/Audiocular-Aura/releases)**
 
-### Moondrop FreeDSP support in this fork
+An unofficial Windows 11 x64 portable application for the **original Moondrop FreeDSP**. Edit nine stereo EQ bands in your browser, apply them to RAM, or save them to the device. The upstream author does not maintain or endorse this edition.
 
-FreeDSP (`35D8:1496`, Conexant/Freeman DSP) is an exception to the browser-only description above. It requires Windows, a Chromium browser with WebHID, and the local native HID helper: the browser cannot request the device's Input GET_REPORT replies. Other DACs retain their upstream WebHID workflow. The required public HTTPS/no-install FreeDSP product remains BLOCKED; installing or distributing this fallback does not meet that release gate.
+## See it in use
 
-For this checkout, install Node.js with npm and the .NET 10 SDK, then run `scripts/setup.ps1` once and `scripts/dev.ps1` to start both the app at `http://localhost:5173/` and the helper. Keep that PowerShell session running. The helper currently permits only the app origin `http://localhost:5173` and listens at `127.0.0.1:5174`. A static build alone does not start or distribute the helper, and the upstream GitHub Pages site is not an allowed helper origin. Standalone browser-only FreeDSP support is unavailable. `scripts/verify.ps1` builds the app and runs offline tests; it performs no hardware operations.
+Real screenshots supplied by the tester from the packaged application connected to his FreeDSP:
 
-FreeDSP supports nine PK bands with the official App gain policy of -16..+6 dB. Editing and OFF/A/B switching are local; Sync RAM, confirmed resets and Save to Flash are deliberate device operations. the tester has verified stereo RAM EQ and persistence after USB power removal. Preamp, Tone Tilt and DAC/microphone utilities are excluded; the gain range is not a clipping-safety guarantee.
+<img src="docs/images/freedsp-origin.png" width="960" alt="ORIGIN showing the captured FreeDSP response curve in a read-only view">
 
-CONNECT captures a readback snapshot. A/B reconstruction uses integer dB Gain and Q raw/256 after confirmation; local enabled switches are assumptions. Active RAM/Flash origin, path1, same-tuple freshness and original fractional Gain are not established. The UI does not claim a complete hardware backup or bit-exact restoration.
+**ORIGIN:** the captured device response, kept as a read-only reference.
 
-[![License](https://img.shields.io/badge/License-GPL%20v3-blue.svg?style=flat-square)](LICENSE)
-[![Live App](https://img.shields.io/badge/Live%20App-Launch-brightgreen?style=flat-square)](https://mandy321.github.io/Audiocular-Aura/)
-[![Stars](https://badgen.net/github/stars/mandy321/Audiocular-Aura?color=yellow)](https://github.com/mandy321/Audiocular-Aura/stargazers)
-[![Tech Stack](https://img.shields.io/badge/Stack-TypeScript%20%7C%20CSS-blueviolet?style=flat-square)](#-tech-stack)
+<img src="docs/images/freedsp-eq-a.png" width="960" alt="EQ A showing editable reconstructed Peak and Shelf bands with the ORIGIN reference">
 
----
+**EQ A:** an editable reconstruction of the available device profile, with ORIGIN for comparison.
 
-## 🚀 What is AuraPEQ?
+<img src="docs/images/freedsp-eq-b.png" width="960" alt="EQ B starting Flat with nine editable bands and a dashed ORIGIN response">
 
-Normally, software equalizers run as background processes on your computer or phone, which consumes CPU resources and can degrade audio quality. **AuraPEQ communicates directly with the DSP chip inside your DAC hardware.**
+**EQ B:** a Flat workspace with the dashed ORIGIN reference.
 
-When you save your custom EQ settings, they are written permanently to the DAC's internal flash memory. **Your custom tuning persists when plugged into any device** (iPhone, Android, Nintendo Switch, PlayStation, iPad, etc.)—completely app-free and driverless!
+## Download and quick start
 
----
+1. Open this edition's [Releases page](https://github.com/henryshuen/Audiocular-Aura/releases) and download the **Windows x64 ZIP** for `v0.1.0-freedsp-preview` when published. The accompanying `.sha256` file identifies its checksum.
+2. Extract **all** files to a normal folder. Do not run the application from inside the ZIP.
+3. Double-click **Start AuraPEQ FreeDSP Edition.exe** and keep its window running.
+4. Your default browser opens **http://localhost:5173/** after the local services are ready. Use Chrome or Edge with WebHID support; if needed, open that URL in a supported browser yourself.
+5. Plug in the original FreeDSP, click **CONNECT DAC**, and grant the browser device permission.
+6. Select **EQ A** or **EQ B** to edit. Use **SYNC TO RAM (APPLY)** to test the result; use **SAVE TO FLASH (PERMANENT)** only when you intend to replace the saved EQ.
+7. Wait for any device operation to finish. Press Enter in the launcher, or close its window, to stop the application. Closing only the browser does not stop the services.
 
-## ✨ Features
+No separate Node.js, .NET runtime or SDK, Python, Git, administrator privileges, or PowerShell knowledge is required to run the package. It does not install a browser. The browser's **INSTALL APP** / PWA control is not a FreeDSP installer and does not replace the launcher or bundled helper.
 
-*   🔊 **Hardware-Level DSP**: RBJ cookbook filters (Peak, Low Shelf, High Shelf, and Notch) processed directly on the DAC.
-*   🛡️ **Ear Protection Alerts**: Automated warning prompts for unsafe volume/gain sync thresholds with a one-click real-time correction engine.
-*   📉 **Global Bass/Treble Tilt**: Layered low-shelf and high-shelf global tilt sliders with active dashed indicators convolved mathematically on top of the physical bands.
-*   📐 **Auto Preamp Headroom**: Real-time combined EQ curve analysis to dynamically apply clipping prevention headroom depending on device protocol precision.
-*   ⭐ **Harman Preference Scores**: On-demand rankings index lookup from the official AutoEq index database with stars indicator (with race-condition protection to ensure accurate scores on load).
-*   📝 **Preset Ratings & Notes**: Apply star ratings and persist customized notes to presets and custom profiles locally.
-*   ⚡ **Instant Real-Time Sync**: Smooth visualizer edits (Gain, Freq, Q) are throttled and pushed instantly to the device, with a real-time rotating sync indicator showing connection status.
-*   🔄 **EQ A/B Comparison**: Swap between slot configurations to easily compare presets.
-*   ↩️ **Undo/Redo History**: Debounced state-based history traversal (up to 50 snapshots depth) with hardware sync.
-*   🌐 **Translation System (i18n)**: Fully localized UI in English, Spanish, German, and Simplified Chinese.
-*   ⌨️ **Power-User Shortcuts**: Dedicated keyboard mappings for Windows/Mac (Ctrl/Cmd) to control the visualizer, reset bands, and sync settings.
-*   📂 **Preset Import & Database**: Load AutoEq parametric text profiles or search thousands of IEM/headphone models from the online database.
+## Supported device and system
 
-<details>
-<summary><b>🔍 View Full Features Checklist</b></summary>
+| Item | Preview support |
+|---|---|
+| Device | Original Moondrop FreeDSP, Conexant / Freeman DSP |
+| USB identity | VID `0x35D8`, PID `0x1496`, matching CAF HID collection |
+| System | Windows 11 x64 |
+| Browser | WebHID-capable Chrome or Edge |
+| PEQ | Nine stereo bands: Peak (`PK`), Low Shelf (`LSQ`), High Shelf (`HSQ`) |
+| Band gain | Application policy **−16 to +6 dB**, matching the official app |
 
-*   **PWA Support**: Installable offline-first web app using a stale-while-revalidate service worker cache.
-*   **Dual-Display Preamp**: Preserves decimal user values in UI while handling integer-rounding constraints for Savitech hardware.
-*   **Persistent USB Overrides**: Enter manual hex VIDs and PIDs for custom DAC revisions.
-*   **Frictionless Bug Reporting**: Pre-filled GitHub issue page generator with console logs.
-*   **Offline Cached Database**: Remote database list cached locally (24h) with automatic fallback.
-*   **Verbose USB Packet Console**: View outgoing (`[TX]`) and incoming (`[RX]`) raw WebHID reports.
-</details>
+Other FreeDSP revisions, other operating systems, and generic DACs are not validated targets of this release. Existing other-DAC source behavior is retained. The gain policy is not a guarantee of DSP headroom, freedom from clipping, or safe listening volume.
 
----
+## ORIGIN, EQ A and EQ B
 
-## 🔌 Hardware Compatibility & Chipsets
+CONNECT reads an available device snapshot without applying EQ. **ORIGIN** displays its captured coefficient response and cannot be edited. **EQ A** starts from its approximate parameter reconstruction; **EQ B** starts Flat. A and B show ORIGIN as a dashed reference. Switching workspaces or editing does not write to hardware; they are local workspaces, not hardware storage slots.
 
-AuraPEQ features a multi-protocol hardware communication layer that automatically adapts based on your device's Vendor ID (VID):
+A new successful CONNECT refreshes the snapshot and initializes A/B. Replaced unsaved drafts are preserved in Custom Profiles with names such as `FreeDSP recovered EQ A ...`. Failed or incomplete readback does not silently create a Flat ORIGIN or pretend to recover a profile. Browser settings and presets depend on the same localhost origin and browser profile; export important presets.
 
-| Protocol | Preamp Precision | Officially Supported DAC Models |
-| :--- | :--- | :--- |
-| **Savitech (Walkplay)** | 1.0 dB steps | Audiocular Aura (CB5100), Fosi Audio DS2, JCally JM20/JM20 Pro, TRN Black Pearl |
-| **Moondrop / Comtrue** | 0.1 dB steps | Moondrop Dawn Pro/Dawn Pro 2, May, Tanchjim Space Lite |
-| **Conexant (Freeman)** | 0.1 dB steps | Moondrop FreeDSP (9-band configuration) |
-| **FiiO** | 0.1 dB steps | FiiO BTR17, KA17, KA15, KB1, etc. |
-| **FiiO JA11 (KT02H20)** | 0.1 dB steps | FiiO JadeAudio JA11 (5-band configuration) |
+Readback has limits: Gain is whole dB, Q is raw/256, and enabled states are assumed ON locally. The captured curve is path0 at the metadata sample rate. Its precise RAM/Flash source, freshness, current active rate and other stereo path are unconfirmed. EQ A may differ from raw ORIGIN. This is neither a bit-exact backup nor a guarantee of exact restoration.
 
-> [!NOTE]
-> **Moondrop / Conexant Protocol Notes:** Since Moondrop and Conexant devices rely on host-side coefficient calculations, A/B comparison level-matching is bypassed automatically to prevent gain packet corruption. A/B comparison switches active slots normally.
->
-> **Dawn Pro 2 (VID `0x35D8`, PID `0x011D`):** All HID read/write operations (EQ bands, preamp gain, flash save) use Report ID `0x4B` — the same as Comtrue CT7601-based devices. The payload size must be restricted to exactly 63 bytes.
->
-> **FreeDSP (VID `0x35D8`, PID `0x1496`):** Powered by a Conexant (Freeman) DSP core. The application automatically renders a custom 9-band PEQ layout and communicates via Conexant's modular `Caf` package format. Coefficient updates are scaled using Q22 fixed-point math (`2^22`) and pushed to the DSP RAM (command `190`) for instant real-time tuning, or saved permanently to Flash (command `220` + commit sequence).
+## RAM Apply and Flash Save
 
-Please do not use for JM98 MAX 2 , JM98 MAX (Cirrus Logic chips as it can cause irreversible problems in these devices)
----
+**SYNC TO RAM (APPLY)** sends the selected editable nine-band EQ to both stereo paths. It is a temporary change; use Flash Save if persistence is wanted. **SAVE TO FLASH (PERMANENT)** replaces the saved EQ. the tester has verified matching Flash acknowledgments and persistent EQ after physical USB reconnection.
 
-## 🛠️ Quick Start (Local Development)
+CONNECT, workspace selection and import do not trigger writes. Reset actions use an in-page confirmation and can reset RAM; they do not save Flash. A write failure stops immediately without automatic retry or rollback. An interrupted operation may have partially changed the device. Completion means matching protocol acknowledgments, not a new readback proof.
 
-To run the project locally, ensure you have **Node.js (16+)** installed.
+Listen at low volume and take IEMs out before the first Apply. Updates may produce click/pop transients. Positive or overlapping boosts can clip; independently verified preamp attenuation is unavailable. Do not unplug the device or close the launcher during a write.
 
-```bash
-# 1. Clone the repository
-git clone https://github.com/mandy321/Audiocular-Aura.git
-cd Audiocular-Aura
+## Import a preset
 
-# 2. Install dependencies
-npm install
+Select editable **EQ A** or **EQ B**, then use **IMPORT PRESET** with a text file in this format:
 
-# 3. Start the dev server
-npm run dev
-
-# 4. Build for production
-npm run build
+```text
+Filter 1: ON PK Fc 76 Hz Gain 2 dB Q 1.01
+Filter 2: ON PK Fc 712 Hz Gain 5 dB Q 1.18
+Filter 3: ON PK Fc 4901 Hz Gain -2 dB Q 2.37
+Filter 4: ON PK Fc 6591 Hz Gain 4 dB Q 2.20
+Filter 5: ON PK Fc 11147 Hz Gain 2 dB Q 0.44
+Filter 6: ON PK Fc 9952 Hz Gain -4 dB Q 6.35
+Filter 7: ON PK Fc 14788 Hz Gain 0 dB Q 0.73
+Filter 8: ON LSQ Fc 1800 Hz Gain -16 dB Q 0.71
+Filter 9: ON HSQ Fc 1800 Hz Gain -16 dB Q 0.71
 ```
 
----
+`ON` / `OFF` controls local band enable state. Filter numbers identify bands 1–9; frequency is Hz, Gain is dB, and Q is dimensionless. `PK`, `LSQ` and `HSQ` preserve Peak, Low Shelf and High Shelf respectively; supported shelf aliases `LS`/`LSC` and `HS`/`HSC` normalize to those types. Missing bands use neutral local bands. Unknown types, malformed lines, duplicate or extra bands, invalid ranges and unstable/overflowing coefficient models are rejected without changing the editor. Comments beginning with `#` are allowed.
 
-## 📖 How to Use
+The example is user-provided reference data, not a bit-exact readback or hardware backup. Rounded text exports lose precision. JSON profiles are also supported with valid band fields. A `Preamp:` value is ignored for FreeDSP and reported; it does not provide headroom. Import changes only the selected local workspace, preserves ORIGIN and performs no RAM/Flash write. Review the result before explicit Apply or Save.
 
-Follow these simple steps to configure your USB DAC hardware equalizer:
+## Included and excluded controls
 
-### 1. Prerequisite Browser Check
-*   Ensure you are using a desktop **Chromium-based browser** (Google Chrome, Microsoft Edge, Opera, or Brave).
-*   *Note: Apple Safari, Mozilla Firefox, and mobile browsers do not support WebHID communications.*
+Included: nine-band PEQ, the response curve and graphical/numeric editor, stereo RAM Apply, Flash Save, local presets/import/export/undo/redo, and the accepted Reset Defaults / Reset to Flat workflow.
 
-### 2. Connect Your Hardware
-1. Connect your compatible USB DAC to your computer.
-2. Open the **[AuraPEQ Web App](https://mandy321.github.io/Audiocular-Aura/)**.
-3. Click the **CONNECT DAC** button at the top and select your device in the browser pop-up.
+FreeDSP production excludes Global Preamp / Auto Preamp, Global Tone Tilt, DAC utility Filter Type, Amp/Gain modes, Channel Balance, Microphone Gain and Loopback Monitor. Independent preamp and tone behavior is unverified; Balance and microphone UAC controls were manually validated but intentionally excluded from this product. This does not mean the hardware physically lacks every such capability. Generic utility controls must not be mistaken for FreeDSP implementations.
 
-### 3. Configure Your EQ Settings
-*   🎵 **AutoEq Database**: Search from thousands of pre-calculated headphone and IEM profiles and apply them instantly.
-*   🎛️ **Interactive Visualizer**: Drag the frequency control points on the response curve graph to adjust **Gain**, **Frequency**, and **Q-factor** in real-time.
-*   ⌨️ **Manual Adjustment**: Refine parameters using the sliders or numerical inputs for each of the 10 DSP bands.
+## Why a download is required
 
-### 4. Sync & Store
-*   ⚡ **SYNC TO RAM (APPLY)**: Instantly pushes parameters to the DAC's active memory to test adjustments. *Settings will reset if the DAC is disconnected.*
-*   💾 **SAVE TO FLASH (PERMANENT)**: Writes your preset permanently to the DAC's onboard storage. **Your EQ settings will now persist automatically on any player** (iPhone, Android, Nintendo Switch, PlayStation, iPad, etc.) without running any software.
+The original FreeDSP requires a Windows HID communication method that standard browser WebHID cannot fully access. This edition therefore includes a local helper to read and save EQ reliably. The download is larger because it bundles the required .NET runtime and application components, so users do not need to install developer tools separately.
 
----
+This is a local browser interface backed by a bundled Windows helper, **not** a public browser-only hardware controller. Services bind only to loopback, validate the trusted origin and session token, and restrict operations and device identity. No LAN service or cloud USB proxy is used.
 
-## ⭐ Star the Project
+## Limitations and troubleshooting
 
-If you find AuraPEQ helpful, please consider giving this repository a star! It helps more people discover the project and supports continued open-source development.
+- **Unsigned preview:** Windows SmartScreen or enterprise policy may warn or block the executable. Check its source and checksum; do not disable security protections. Clean-machine compatibility has not been tested in an isolated dependency-free Windows environment.
+- **Package evidence:** the tester confirmed packaged launch, CONNECT and ORIGIN/A/B with the original device. Offline regression tests do not establish additional hardware results for every imported preset.
+- **Launch fails:** extract the complete ZIP again if files are missing or changed. Close your previous AuraPEQ/dev launcher if ports 5173/5174 are occupied. The launcher never kills unrelated processes; a second launch reuses its verified owned instance.
+- **No browser permission:** open http://localhost:5173/ in Chrome or Edge and check the selected device. Keep the launcher running. Do not use the upstream public website for this edition.
+- **Storage/runtime:** writable Temp and LocalAppData directories are needed. Presets use browser storage. Logs are under `%TEMP%\AuraPEQ\freedsp-portable-*.log`.
+- **Internet:** online catalog/database features require internet. Local editing and device communication use loopback.
 
-[![GitHub stars](https://badgen.net/github/stars/mandy321/Audiocular-Aura?icon=github&label=Star)](https://github.com/mandy321/Audiocular-Aura/stargazers)
+## Source, license and credits
 
----
+Based on [Audiocular-Aura by mandy321](https://github.com/mandy321/Audiocular-Aura). Its original design, architecture and generic DAC work are credited to the upstream authors and contributors. FreeDSP integration and portable packaging are maintained in [this independent fork](https://github.com/henryshuen/Audiocular-Aura).
 
-## 🏷️ Search & Indexing Keywords
+The application is distributed under **GPL-3.0**; see [LICENSE](LICENSE). Packages include `LICENSE.txt`, `ACKNOWLEDGMENTS.md`, corresponding buildable `SOURCE.zip`, and Microsoft runtime licenses and third-party notices in `RUNTIME-NOTICES/`. No official APK or firmware binary is included. Product names belong to their owners; this edition is not endorsed by Moondrop, Conexant or the upstream maintainer.
 
-If you are looking for resources on equalizers or DAC configuration, this project covers:
-*   **DAC EQ / USB DAC Equalizer**: Configure audio tuning for Audiocular Aura, Fosi Audio, JCally, Moondrop, and FiiO.
-*   **Parametric Equalizer (PEQ) Equalizer**: Set up precise 10-band audio filter configurations (Gain, Freq, Q-factor) on hardware.
-*   **Hardware DSP Tuning**: Process high-fidelity audio filter math (peaking and shelving biquad filters) directly inside the DAC chip.
-*   **WebHID Equalizer**: Connect, read, and write device parameters directly from your web browser without installing local desktop apps.
-*   **Onboard Flash Flashing**: Save custom presets permanently to the internal memory of the USB audio controller.
+## For developers
 
----
+End users do not need these tools. Source builds require Node.js/npm and the .NET 10 SDK; the validated SDK is 10.0.401 and the package pins runtime 10.0.12.
 
+```powershell
+cd C:\Projects\AuraPEQ
+.\scripts\setup.ps1
+.\scripts\dev.ps1
+```
 
-## 🛡️ License
+Development also uses http://localhost:5173/ with a separate native service. To verify and package the production build:
 
-This project is licensed under the GNU General Public License v3.0 (GPL-3.0). See the [LICENSE](LICENSE) file for details.
+```powershell
+.\scripts\verify.ps1
+.\scripts\package-freedsp-portable.ps1
+.\scripts\test-freedsp-portable.ps1
+```
+
+Packaging uses locked npm dependencies, Vite production assets and self-contained Windows publishing. Outputs default to `../AuraPEQ-FreeDSP-releases`, outside the checkout. The procedure is reproducible; ZIP timestamps need not be byte-identical across builds. Rebuild to receive future runtime updates.

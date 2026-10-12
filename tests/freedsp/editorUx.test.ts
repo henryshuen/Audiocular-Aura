@@ -1,3 +1,4 @@
+import {validateFreeDspImport} from '../../src/freedsp/presetImport.ts';
 import {ReadbackSlots} from '../../src/freedsp/readbackSlots.ts';
 import {describe,it,expect,vi} from 'vitest';
 import {freeDspDefaultBands,freeDspEditorGain,normalizeFreeDspEditor} from '../../src/freedsp/editor.ts';
@@ -11,7 +12,7 @@ import ts from 'typescript';
 import {runInNewContext} from 'node:vm';
 function extract(name:string,source=fnSource){const ast=ts.createSourceFile('s.ts',source,ts.ScriptTarget.ES2022,true);const node=ast.statements.find(n=>ts.isFunctionDeclaration(n)&&n.name?.text===name)!;return ts.transpileModule(node.getText(ast).replace('export ',''),{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;}
 function editor(){
- const ctx={device:{vendorId:0x35d8,productId:0x1496},connectAttempt:0,eqState:freeDspDefaultBands(),globalGainState:0,bassTiltState:0,trebleTiltState:0,manualPreampState:0,autoPreampEnabled:false,
+ const ctx={validateFreeDspImport,device:{vendorId:0x35d8,productId:0x1496},connectAttempt:0,eqState:freeDspDefaultBands(),globalGainState:0,bassTiltState:0,trebleTiltState:0,manualPreampState:0,autoPreampEnabled:false,
    freeDspReadbackSlots:new ReadbackSlots(),configureFreeDspControlNotes:vi.fn(),isFreeDsp,gainRangeFor,freeDspGainRange,freeDspOverwriteWarning,freeDspDefaultBands,freeDspEditorGain,normalizeFreeDspEditor,log:vi.fn(),window:{confirmFreeDspReset:()=>true},document:{getElementById:()=>null,querySelector:()=>null},localStorage:{setItem:vi.fn()},
    setLastAppliedEqName:vi.fn(),initSlots:vi.fn(),pushHistory:vi.fn(),queueRealtimeBandWrite:vi.fn(),syncToDevice:vi.fn(),setGlobalGain:vi.fn(),updateUndoRedoButtons:vi.fn(),confirm:()=>true,
    undoStack:[] as {eqState:ReturnType<typeof freeDspDefaultBands>;globalGainState:number}[],redoStack:[] as {eqState:ReturnType<typeof freeDspDefaultBands>;globalGainState:number}[],slotA:null,slotB:null,activeSlot:'A',lastAppliedEqName:'test',getProtocol:()=> 'CONEXANT',updateSlotLabel:vi.fn(),t:()=> 'Flat'};

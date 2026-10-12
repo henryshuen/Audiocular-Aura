@@ -4,6 +4,7 @@ import {CafRamSession} from '../../src/freedsp/cafRam.ts';
 import {NativeCafTransport} from '../../src/freedsp/nativeTransport.ts';
 import {encodeCaf,parseCaf} from '../../src/freedsp/cafCodec.ts';
 import {modelWebBand,unityPreset} from '../../src/freedsp/webRam.ts';
+import {parseFreeDspTextProfile} from '../../src/freedsp/presetImport.ts';
 import analysis from './fixtures/officialAppDumpAnalysis.json';
 import source from './fixtures/officialFreemanControlStaticEvidence.json';
 import mainSource from '../../src/main.ts?raw';
@@ -29,7 +30,7 @@ describe('FreeDSP Flash evidence/plan; offline mocks only',()=>{
    expect(analyzeFlash()).toEqual(savedFlashEvidence);
    const ast=ts.createSourceFile('import.ts',importSource,ts.ScriptTarget.ES2022,true);
    const bodies=ast.statements.filter(n=>ts.isFunctionDeclaration(n)&&['neutralBand','parseTextProfile'].includes(n.name?.text||'')).map(n=>n.getText(ast)).join('\n');
-   const parse=runInNewContext(ts.transpileModule(bodies,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText+'\nparseTextProfile',{getEqState:flashTestPreset});
+   const parse=runInNewContext(ts.transpileModule(bodies,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText+'\nparseTextProfile',{getEqState:flashTestPreset,getDevice:()=>({vendorId:0x35d8,productId:0x1496}),isFreeDsp:()=>true,parseFreeDspTextProfile});
    expect(parse(profileText)).toEqual({globalGain:0,bands:flashTestPreset()});
  });
  it('real FreeDSP Save dispatch never composes Tone/preamp or falls through generic sender',async()=>{

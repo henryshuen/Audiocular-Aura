@@ -1,4 +1,5 @@
 import {isFreeDsp} from './freedsp/webHid.ts';
+import {parseFreeDspTextProfile,validateFreeDspImport} from './freedsp/presetImport.ts';
 import {
 	getDevice,
 	getEqState,
@@ -113,6 +114,7 @@ function parseJsonProfile(content: string): ProfileData {
  * Parse Text profile data (AutoEq format: Preamp: ... Filter X: ...)
  */
 function parseTextProfile(content: string): ProfileData {
+ if(isFreeDsp(getDevice()))return parseFreeDspTextProfile(content);
 	const lines = content.split(/\r?\n/);
 	const currentBandsCount = getEqState().length;
 	// Start from a clean neutral baseline — never inherit current active EQ values
@@ -201,6 +203,7 @@ export async function importProfile(e: Event) {
 			// Update internal state and handle variable band count
 			let importedBands = profile.bands;
 			const currentBandsCount = getEqState().length;
+			if(isFreeDsp(getDevice()) && importedBands.length>9)throw Error('FreeDSP supports nine bands; import rejected without truncation.');
 			if (importedBands.length > currentBandsCount) {
 				log(`Note: Imported profile has ${importedBands.length} bands but current device only supports ${currentBandsCount} bands. Keeping the first ${currentBandsCount} bands.`);
 				importedBands = importedBands.slice(0, currentBandsCount);
@@ -219,7 +222,7 @@ export async function importProfile(e: Event) {
 			});
 
 			// Reject the entire FreeDSP import before touching editor/DOM on invalid gain.
-			if(isFreeDsp(getDevice()))setEqState(importedBands);
+			if(isFreeDsp(getDevice())){importedBands=validateFreeDspImport(importedBands);setEqState(importedBands);}
 			// Re-create DOM elements for strips to ensure correct bands count
 			const stripsContainer = document.getElementById("eqStrips");
 			if (stripsContainer) {
@@ -274,6 +277,7 @@ export async function loadProfileFromText(content: string, presetName?: string) 
 		// Update internal state and handle variable band count
 		let importedBands = profile.bands;
 		const currentBandsCount = getEqState().length;
+		if(isFreeDsp(getDevice()) && importedBands.length>9)throw Error('FreeDSP supports nine bands; import rejected without truncation.');
 		if (importedBands.length > currentBandsCount) {
 			importedBands = importedBands.slice(0, currentBandsCount);
 		} else if (importedBands.length < currentBandsCount) {
@@ -290,7 +294,7 @@ export async function loadProfileFromText(content: string, presetName?: string) 
 			band.index = idx;
 		});
 
-		if(isFreeDsp(getDevice()))setEqState(importedBands);
+		if(isFreeDsp(getDevice())){importedBands=validateFreeDspImport(importedBands);setEqState(importedBands);}
 		// Re-create DOM elements for strips to ensure correct bands count
 		const stripsContainer = document.getElementById("eqStrips");
 		if (stripsContainer) {

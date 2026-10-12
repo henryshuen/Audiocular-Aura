@@ -1,5 +1,7 @@
 # AuraPEQ FreeDSP Edition
 
+An independent, FreeDSP-focused fork of [Audiocular-Aura by mandy321](https://github.com/mandy321/Audiocular-Aura). [Download this edition](https://github.com/henryshuen/Audiocular-Aura/releases).
+
 Windows 11 x64 preview: **v0.1.0-freedsp-preview**.
 
 1. Download the Windows x64 ZIP and verify its SHA-256 if desired.
@@ -26,7 +28,7 @@ Original **Moondrop FreeDSP**, USB **VID35D8 / PID1496**, Conexant / Freeman DSP
 - Online device database/AutoEQ catalog features need internet. Local editing, presets and loopback services do not require a cloud USB service.
 - The executable is unsigned. Windows SmartScreen or enterprise policy may warn/block it. Verify provenance and checksum; do not disable security protections. Code signing and clean-machine/browser acceptance remain future work.
 - A writable user Temp and LocalAppData directory is required for bundled runtime extraction, logs and launcher ownership. Restrictive enterprise policies may block this preview; no administrator workaround is prescribed.
-- This candidate was tested locally, not on a dependency-free clean Windows machine. Browser permission and hardware acceptance of the packaged app still need manual verification.
+- This candidate was tested locally, not on a dependency-free clean Windows machine. device owner has confirmed packaged launch, CONNECT and ORIGIN/EQ A/EQ B on the original FreeDSP. This does not establish clean-machine compatibility or validate every imported preset.
 
 ## Troubleshooting
 
@@ -39,3 +41,7 @@ Helper logs are under `%TEMP%\AuraPEQ\freedsp-portable-*.log`. Launcher ownershi
 ## License and source
 
 GPL-3.0; see LICENSE.txt and ACKNOWLEDGMENTS.md. Corresponding application/build source is supplied in SOURCE.zip. The bundled Microsoft .NET runtime's licenses/notices are in RUNTIME-NOTICES/.
+
+The browser INSTALL APP / PWA control does not replace this launcher. Full usage, approved screenshots and the supported preset example are in [USER_GUIDE.md](USER_GUIDE.md).
+
+The original FreeDSP requires a Windows HID communication method that standard browser WebHID cannot fully access. This edition therefore includes a local helper to read and save EQ reliably. The download is larger because it bundles the required .NET runtime and application components, so users do not need to install developer tools separately.
