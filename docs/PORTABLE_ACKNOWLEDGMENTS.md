@@ -1,6 +1,6 @@
 # License and acknowledgments
 
-AuraPEQ FreeDSP Edition is a development fork of [mandy321/Audiocular-Aura](https://github.com/mandy321/Audiocular-Aura), distributed under the GNU GPL version3 (LICENSE.txt). The original application's architecture, appearance and generic DAC behavior are credited to the upstream authors and contributors. FreeDSP integration and Edition packaging live at [henryshuen/Audiocular-Aura](https://github.com/henryshuen/Audiocular-Aura).
+AuraPEQ FreeDSP Edition is a development fork of [mandy321/Audiocular-Aura](https://github.com/mandy321/Audiocular-Aura), distributed under the GNU GPL version3 (LICENSE.txt). The original application's architecture, appearance and generic DAC behavior are credited to the upstream authors and contributors. FreeDSP integration and Edition packaging live at [henryshuen/AuraPEQ-FreeDSP-Edition](https://github.com/henryshuen/AuraPEQ-FreeDSP-Edition).
 
 Moondrop, Conexant, Freeman, Windows, Chrome and Edge are names/trademarks of their respective owners. This Edition is unofficial and is not endorsed by those vendors.
 

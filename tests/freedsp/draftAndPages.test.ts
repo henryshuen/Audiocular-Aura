@@ -46,12 +46,12 @@ describe('OFF draft persistence and fork-only static staging',()=>{
   const f=context();f.ctx.device={vendorId:1,productId:1};f.api.renderUI(f.ctx.eqState);expect(JSON.parse(f.store.get('aura_active_eq_state')!)).toEqual(f.ctx.eqState);
  });
  it('subdirectory assets resolve while root escapes and missing built modules fail',()=>{
-  const html='<script src="/Audiocular-Aura/assets/index.js"></script><link href="./assets/index.css"><link href="./manifest.json?v=4">';
+  const html='<script src="/AuraPEQ-FreeDSP-Edition/assets/index.js"></script><link href="./assets/index.css"><link href="./manifest.json?v=4">';
   expect(localPageAssets(html)).toEqual(['assets/index.js','assets/index.css','manifest.json']);expect(()=>localPageAssets(html.replace('./assets/index.css','/assets/index.css'))).toThrow('escapes');expect(()=>localPageAssets('<script src="./x.js"></script>')).toThrow('Missing');
  });
  it('staging is manual, exact fork/branch gated, explicitly acknowledged and never enables Pages settings',()=>{
   expect(workflow).toContain('workflow_dispatch:');expect(workflow).not.toMatch(/^\s+(push|pull_request|schedule):/m);
-  expect(workflow).toContain("github.repository == 'henryshuen/Audiocular-Aura'");expect(workflow).toContain("github.ref == 'refs/heads/fix/freedsp-conexant'");expect(workflow).toContain('inputs.acknowledge_static_only');expect(workflow).toContain('default: false');
-  expect(workflow).toContain('--base=/Audiocular-Aura/');expect(workflow).not.toContain('enablement: true');expect(workflow).not.toContain('dotnet');expect(workflow).not.toContain('query-freedsp');
+  expect(workflow).toContain("github.repository == 'henryshuen/AuraPEQ-FreeDSP-Edition'");expect(workflow).toContain("github.ref == 'refs/heads/fix/freedsp-conexant'");expect(workflow).toContain('inputs.acknowledge_static_only');expect(workflow).toContain('default: false');
+  expect(workflow).toContain('--base=/AuraPEQ-FreeDSP-Edition/');expect(workflow).not.toContain('enablement: true');expect(workflow).not.toContain('dotnet');expect(workflow).not.toContain('query-freedsp');
  });
 });

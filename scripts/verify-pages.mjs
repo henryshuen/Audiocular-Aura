@@ -3,7 +3,7 @@ import {readFileSync,existsSync} from 'node:fs';
 import {resolve,join} from 'node:path';
 import {pathToFileURL} from 'node:url';
 import {createServer} from 'node:http';
-export const pagesBase='/Audiocular-Aura/';
+export const pagesBase='/AuraPEQ-FreeDSP-Edition/';
 export function localPageAssets(html){
  const assets=[];
  for(const match of html.matchAll(/(?:src|href)="([^"]+)"/g)){

@@ -1,6 +1,6 @@
 # AuraPEQ FreeDSP Edition — Windows Preview v0.1.0
 
-An independent, FreeDSP-focused fork of [Audiocular-Aura by mandy321](https://github.com/mandy321/Audiocular-Aura). This unofficial preview is maintained at [henryshuen/Audiocular-Aura](https://github.com/henryshuen/Audiocular-Aura); it is not endorsed by the original maintainer or hardware vendors.
+An independent, FreeDSP-focused fork of [Audiocular-Aura by mandy321](https://github.com/mandy321/Audiocular-Aura). This unofficial preview is maintained at [henryshuen/AuraPEQ-FreeDSP-Edition](https://github.com/henryshuen/AuraPEQ-FreeDSP-Edition); it is not endorsed by the original maintainer or hardware vendors.
 
 ## Download and start
 

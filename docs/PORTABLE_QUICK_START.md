@@ -1,6 +1,6 @@
 # AuraPEQ FreeDSP Edition
 
-An independent, FreeDSP-focused fork of [Audiocular-Aura by mandy321](https://github.com/mandy321/Audiocular-Aura). [Download this edition](https://github.com/henryshuen/Audiocular-Aura/releases).
+An independent, FreeDSP-focused fork of [Audiocular-Aura by mandy321](https://github.com/mandy321/Audiocular-Aura). [Download this edition](https://github.com/henryshuen/AuraPEQ-FreeDSP-Edition/releases).
 
 Windows 11 x64: **v0.1.2**.
 

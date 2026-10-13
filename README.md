@@ -2,7 +2,7 @@
 
 AuraPEQ FreeDSP Edition is an independent, FreeDSP-focused fork of Audiocular-Aura by mandy321.
 
-[Original project](https://github.com/mandy321/Audiocular-Aura) · [This edition](https://github.com/henryshuen/Audiocular-Aura) · **[Download the Windows portable edition](https://github.com/henryshuen/Audiocular-Aura/releases)**
+[Original project](https://github.com/mandy321/Audiocular-Aura) · [This edition](https://github.com/henryshuen/AuraPEQ-FreeDSP-Edition) · **[Download the Windows portable edition](https://github.com/henryshuen/AuraPEQ-FreeDSP-Edition/releases)**
 
 An unofficial Windows 11 x64 portable application for the **original Moondrop FreeDSP**. Edit nine stereo EQ bands in your browser, apply them to RAM, or save them to the device. The upstream author does not maintain or endorse this edition.
 
@@ -24,7 +24,7 @@ Screenshots of the portable edition connected to FreeDSP:
 
 ## Download and quick start
 
-1. Open this edition's [Releases page](https://github.com/henryshuen/Audiocular-Aura/releases) and download the **Windows x64 ZIP** for `v0.1.2`. The accompanying `.sha256` file identifies its checksum.
+1. Open this edition's [Releases page](https://github.com/henryshuen/AuraPEQ-FreeDSP-Edition/releases) and download the **Windows x64 ZIP** for `v0.1.2`. The accompanying `.sha256` file identifies its checksum.
 2. Extract **all** files to a normal folder. Do not run the application from inside the ZIP.
 3. Double-click **Start AuraPEQ FreeDSP Edition.exe** and keep its window running.
 4. Your default browser opens **http://localhost:5173/** after the local services are ready. Use Chrome or Edge with WebHID support; if needed, open that URL in a supported browser yourself.
@@ -110,7 +110,7 @@ This is a local browser interface backed by a bundled Windows helper, **not** a 
 
 ## Source, license and credits
 
-Based on [Audiocular-Aura by mandy321](https://github.com/mandy321/Audiocular-Aura). Its original design, architecture and generic DAC work are credited to the upstream authors and contributors. FreeDSP integration and portable packaging are maintained in [this independent fork](https://github.com/henryshuen/Audiocular-Aura).
+Based on [Audiocular-Aura by mandy321](https://github.com/mandy321/Audiocular-Aura). Its original design, architecture and generic DAC work are credited to the upstream authors and contributors. FreeDSP integration and portable packaging are maintained in [this independent fork](https://github.com/henryshuen/AuraPEQ-FreeDSP-Edition).
 
 The application is distributed under **GPL-3.0**; see [LICENSE](LICENSE). Packages include `LICENSE.txt`, `ACKNOWLEDGMENTS.md`, corresponding buildable `SOURCE.zip`, and Microsoft runtime licenses and third-party notices in `RUNTIME-NOTICES/`. No official APK or firmware binary is included. Product names belong to their owners; this edition is not endorsed by Moondrop, Conexant or the upstream maintainer.
 
