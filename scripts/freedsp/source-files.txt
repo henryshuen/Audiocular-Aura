@@ -259,3 +259,7 @@ tsconfig.json
 tsconfig.tests.json
 vite.config.ts
 vitest.config.ts
+
+docs/RELEASE_NOTES_FREEDSP_V0_1_2.md
+tests/freedsp/flashConfirmation.test.ts
+tests/freedsp/jsdom.d.ts

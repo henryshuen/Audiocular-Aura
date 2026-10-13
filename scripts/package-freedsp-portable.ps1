@@ -2,7 +2,7 @@ param([string]$OutputDirectory = '../AuraPEQ-FreeDSP-releases', [switch]$SkipFro
 $ErrorActionPreference = 'Stop'
 $repo = Split-Path -Parent $PSScriptRoot
 Set-Location -LiteralPath $repo
-$version = 'v0.1.1'
+$version = 'v0.1.2'
 $name = "AuraPEQ-FreeDSP-$version-win-x64"
 $out = if ([IO.Path]::IsPathRooted($OutputDirectory)) { [IO.Path]::GetFullPath($OutputDirectory) } else { [IO.Path]::GetFullPath((Join-Path $repo $OutputDirectory)) }
 if ($out -eq $repo -or $out -eq [IO.Path]::GetPathRoot($out)) { throw 'Use a separate artifact output directory.' }
@@ -28,7 +28,7 @@ try {
     foreach ($file in @('manifest.json','icon-192.png','icon-512.png')) { Copy-Item -LiteralPath (Join-Path 'dist' $file) -Destination $www }
     # Production-only edition marker. Keep existing presets/settings at the same origin.
     $html = [IO.File]::ReadAllText((Join-Path $www 'index.html'))
-    $bootstrap = '<script>window.__AURAPEQ_PORTABLE__="v0.1.1";if(!localStorage.getItem("aura_lang"))localStorage.setItem("aura_lang","en");if("serviceWorker" in navigator)navigator.serviceWorker.getRegistrations().then(rs=>Promise.all(rs.filter(r=>r.scope===location.origin+"/").map(r=>r.unregister()))).catch(console.error);</script>'
+    $bootstrap = '<script>window.__AURAPEQ_PORTABLE__="v0.1.2";if(!localStorage.getItem("aura_lang"))localStorage.setItem("aura_lang","en");if("serviceWorker" in navigator)navigator.serviceWorker.getRegistrations().then(rs=>Promise.all(rs.filter(r=>r.scope===location.origin+"/").map(r=>r.unregister()))).catch(console.error);</script>'
     [IO.File]::WriteAllText((Join-Path $www 'index.html'), $html.Replace('<head>', '<head>' + $bootstrap), [Text.UTF8Encoding]::new($false))
     # Retire the old cache worker on this loopback origin without clearing localStorage.
     [IO.File]::WriteAllText((Join-Path $www 'sw.js'), "self.addEventListener('install',e=>e.waitUntil(self.skipWaiting()));self.addEventListener('activate',e=>e.waitUntil((async()=>{await self.clients.claim();for(const k of await caches.keys())if(k.startsWith('aurapeq-cache-'))await caches.delete(k);await self.registration.unregister();for(const c of await self.clients.matchAll({type:'window'}))await c.navigate(c.url);})()));", [Text.UTF8Encoding]::new($false))
@@ -38,7 +38,7 @@ try {
     Copy-Item -LiteralPath 'LICENSE' -Destination (Join-Path $package 'LICENSE')
     Copy-Item -LiteralPath 'docs/PORTABLE_QUICK_START.md' -Destination (Join-Path $package 'README.md')
     Copy-Item -LiteralPath 'docs/PORTABLE_ACKNOWLEDGMENTS.md' -Destination (Join-Path $package 'ACKNOWLEDGMENTS.md')
-    Copy-Item -LiteralPath 'docs/RELEASE_NOTES_FREEDSP_V0_1_1.md' -Destination (Join-Path $package 'RELEASE_NOTES.md')
+    Copy-Item -LiteralPath 'docs/RELEASE_NOTES_FREEDSP_V0_1_2.md' -Destination (Join-Path $package 'RELEASE_NOTES.md')
     Copy-Item -LiteralPath 'LICENSE' -Destination (Join-Path $package 'LICENSE.txt')
     $globalPackages = ((& dotnet nuget locals global-packages --list) -replace '^global-packages:\s*','').Trim()
     $notices = Join-Path $package 'RUNTIME-NOTICES'

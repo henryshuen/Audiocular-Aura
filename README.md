@@ -24,7 +24,7 @@ Screenshots of the portable edition connected to FreeDSP:
 
 ## Download and quick start
 
-1. Open this edition's [Releases page](https://github.com/henryshuen/Audiocular-Aura/releases) and download the **Windows x64 ZIP** for `v0.1.1`. The accompanying `.sha256` file identifies its checksum.
+1. Open this edition's [Releases page](https://github.com/henryshuen/Audiocular-Aura/releases) and download the **Windows x64 ZIP** for `v0.1.2`. The accompanying `.sha256` file identifies its checksum.
 2. Extract **all** files to a normal folder. Do not run the application from inside the ZIP.
 3. Double-click **Start AuraPEQ FreeDSP Edition.exe** and keep its window running.
 4. Your default browser opens **http://localhost:5173/** after the local services are ready. Use Chrome or Edge with WebHID support; if needed, open that URL in a supported browser yourself.
@@ -116,7 +116,7 @@ The application is distributed under **GPL-3.0**; see [LICENSE](LICENSE). Packag
 
 ## Source and release provenance
 
-The v0.1.1 tag identifies the corresponding source revision. The portable package includes SOURCE.zip and a package manifest recording that revision and frontend asset hashes. Native hardware-control source and packet formats are unchanged from the hardware-validated v0.1.0 baseline; this update changes frontend guidance/progress, launcher version metadata and source packaging.
+The v0.1.2 tag identifies the corresponding source revision. The portable package includes SOURCE.zip and a package manifest recording that revision and frontend asset hashes. Native hardware-control source and packet formats are unchanged from the hardware-validated v0.1.0 baseline; v0.1.2 fixes only the FreeDSP Flash confirmation dialog, with corresponding launcher version metadata and source packaging.
 
 Earlier release assets have been withdrawn because their bundled source contained private development provenance. Historical GitHub tags refer to cleaned source revisions. External downloads and cached old commits cannot be recalled.
 

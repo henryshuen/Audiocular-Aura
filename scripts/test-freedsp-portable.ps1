@@ -1,4 +1,4 @@
-param([string]$Zip = '../AuraPEQ-FreeDSP-releases/AuraPEQ-FreeDSP-v0.1.1-win-x64.zip')
+param([string]$Zip = '../AuraPEQ-FreeDSP-releases/AuraPEQ-FreeDSP-v0.1.2-win-x64.zip')
 $ErrorActionPreference = 'Stop'
 Set-Location -LiteralPath (Split-Path -Parent $PSScriptRoot)
 $zipPath = (Resolve-Path -LiteralPath $Zip).Path
@@ -49,7 +49,7 @@ try {
     foreach($f in @('README.md','LICENSE.txt','ACKNOWLEDGMENTS.md','SOURCE.zip','RUNTIME-NOTICES','package-manifest.json')) { Check (Test-Path -LiteralPath (Join-Path $root $f)) "Package contains $f" }
     Check (-not (Test-Path -LiteralPath (Join-Path $root 'node_modules'))) 'No node_modules or developer server in package'
     $p = Start-Candidate @('--smoke','--no-browser'); $health = Wait-Ready $p
-    Check ($health.version -eq 'v0.1.1') 'Extracted self-contained launcher ready with empty PATH and absent DOTNET_ROOT'
+    Check ($health.version -eq 'v0.1.2') 'Extracted self-contained launcher ready with empty PATH and absent DOTNET_ROOT'
     $p.Refresh()
     $installedModules=@($p.Modules | Where-Object { $_.FileName.StartsWith((Join-Path $env:ProgramFiles 'dotnet'), [StringComparison]::OrdinalIgnoreCase) })
     Check ($health.framework -eq '.NET 10.0.12' -and $installedModules.Count -eq 0) 'Pinned single-file runtime active; no modules from installed dotnet'

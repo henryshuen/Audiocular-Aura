@@ -7,7 +7,7 @@ namespace AuraPEQ.Portable;
 
 public static class Launcher
 {
-    public const string Version="v0.1.1";
+    public const string Version="v0.1.2";
     private record Owner(int Pid,long StartUtcTicks,string Path,string Instance,string Version);
     private static string OwnerFile=>Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),"AuraPEQ FreeDSP Edition","owner.json");
     public static async Task<int> RunAsync(bool openBrowser,bool smoke)

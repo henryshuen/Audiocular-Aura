@@ -180,7 +180,7 @@ async function saveFreeDspFlash(){
   setFreeDspRamStatus(`Saving Flash: ${p.acknowledged}/56 acknowledged. Do not disconnect.`);
  };
  try{
-  await freeDspFlashGate.run({snapshot,lock,confirm:()=>confirmFreeDspReset(flashSafetyMessage),save:async progress=>{
+  await freeDspFlashGate.run({snapshot,lock,confirm:()=>confirmFreeDspReset(flashSafetyMessage,document,true),save:async progress=>{
    const saved=await flashToFlash(progress);
    if(attempt!==getConnectionAttempt()&&getDevice())return;
    if(saved===true){setFreeDspRamStatus('Flash save complete: 56/56 acknowledged, including commit. Reconnect to read device EQ.');

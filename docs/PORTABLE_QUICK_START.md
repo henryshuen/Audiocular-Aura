@@ -2,7 +2,7 @@
 
 An independent, FreeDSP-focused fork of [Audiocular-Aura by mandy321](https://github.com/mandy321/Audiocular-Aura). [Download this edition](https://github.com/henryshuen/Audiocular-Aura/releases).
 
-Windows 11 x64: **v0.1.1**.
+Windows 11 x64: **v0.1.2**.
 
 1. Download the Windows x64 ZIP and verify its SHA-256 if desired.
 2. Extract the entire ZIP into a normal folder. Do not run from inside the ZIP.
